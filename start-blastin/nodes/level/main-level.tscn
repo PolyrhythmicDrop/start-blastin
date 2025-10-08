@@ -21,4 +21,4 @@ stretch_mode = 5
 [node name="PlayAreaBorder" parent="." instance=ExtResource("2_cw5wp")]
 
 [node name="Player" parent="." instance=ExtResource("3_pxe5x")]
-position = Vector2(986, 842)
+position = Vector2(933, 883)

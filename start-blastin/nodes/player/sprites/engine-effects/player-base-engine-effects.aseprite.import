@@ -1,0 +1,14 @@
+[remap]
+
+importer="aseprite_wizard.plugin.noop"
+type="PackedDataContainer"
+uid="uid://b3uhtwc2wjoia"
+path="res://.godot/imported/player-base-engine-effects.aseprite-e51e28c3dedb3f3e91f3483a22eb477c.res"
+
+[deps]
+
+source_file="res://nodes/player/sprites/engine-effects/player-base-engine-effects.aseprite"
+dest_files=["res://.godot/imported/player-base-engine-effects.aseprite-e51e28c3dedb3f3e91f3483a22eb477c.res"]
+
+[params]
+

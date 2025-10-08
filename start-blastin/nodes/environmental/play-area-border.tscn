@@ -1,0 +1,49 @@
+[gd_scene load_steps=5 format=3 uid="uid://dl7j0usiolxux"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rvdan"]
+resource_local_to_scene = true
+resource_name = "left-border"
+size = Vector2(50, 1080)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cw5wp"]
+resource_local_to_scene = true
+resource_name = "right-border"
+size = Vector2(50, 1080)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pxe5x"]
+resource_local_to_scene = true
+resource_name = "bottom-border"
+size = Vector2(1920, 50)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rl1rb"]
+resource_local_to_scene = true
+resource_name = "top-border"
+size = Vector2(1920, 50)
+
+[node name="PlayAreaBorder" type="StaticBody2D"]
+disable_mode = 1
+collision_layer = 2
+
+[node name="LeftBorder" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(-25, 540)
+shape = SubResource("RectangleShape2D_rvdan")
+debug_color = Color(0.9197264, 0.24762714, 0.35803878, 0.41960785)
+
+[node name="RightBorder" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(1945, 540)
+shape = SubResource("RectangleShape2D_cw5wp")
+debug_color = Color(0.9197264, 0.24762714, 0.35803878, 0.41960785)
+
+[node name="BottomBorder" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(960, 1107)
+shape = SubResource("RectangleShape2D_pxe5x")
+debug_color = Color(0.9197264, 0.24762714, 0.35803878, 0.41960785)
+
+[node name="TopBorder" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(960, -26)
+shape = SubResource("RectangleShape2D_rl1rb")
+debug_color = Color(0.92156863, 0.24705882, 0.35686275, 0.41960785)

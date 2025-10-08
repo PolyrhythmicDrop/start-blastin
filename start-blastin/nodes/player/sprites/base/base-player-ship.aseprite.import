@@ -1,0 +1,14 @@
+[remap]
+
+importer="aseprite_wizard.plugin.noop"
+type="PackedDataContainer"
+uid="uid://b337qq55iskop"
+path="res://.godot/imported/base-player-ship.aseprite-db2c5ae8e11b97ec9eca884f85fe8cf8.res"
+
+[deps]
+
+source_file="res://nodes/player/sprites/base/base-player-ship.aseprite"
+dest_files=["res://.godot/imported/base-player-ship.aseprite-db2c5ae8e11b97ec9eca884f85fe8cf8.res"]
+
+[params]
+

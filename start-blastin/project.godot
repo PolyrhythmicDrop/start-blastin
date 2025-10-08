@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Start Blastin"
-config/features=PackedStringArray("4.5", "Forward Plus")
+config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [display]
@@ -26,3 +26,20 @@ window/vsync/vsync_mode=0
 [dotnet]
 
 project/assembly_name="Start Blastin"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg")
+
+[file_customization]
+
+folder_colors={
+"res://nodes/": "blue",
+"res://nodes/player/sprites/": "pink"
+}
+
+[layer_names]
+
+2d_physics/layer_1="Player"
+2d_physics/layer_2="Borders"
+2d_physics/layer_3="Enemies"

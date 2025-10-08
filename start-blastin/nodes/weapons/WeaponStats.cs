@@ -25,6 +25,10 @@ namespace Weapons
             set => _damage = value;
         }
 
+        /// <summary>
+        /// Rate of fire for the weapon, used in the FireTimer.
+        /// Lower values mean a faster fire rate.
+        /// </summary>
         [Export]
         public float FireRate
         {

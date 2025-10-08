@@ -2,26 +2,29 @@ using System;
 using Entities;
 using Godot;
 
-[GlobalClass]
-public partial class MovementComponent : Node
+namespace PlayerComponents
 {
-    private Player _player;
-    private float _speed = 300;
-
-    [Export]
-    public float Speed
+    [GlobalClass]
+    public partial class MovementComponent : Node
     {
-        get => _speed;
-        set { _speed = value > 1 ? value : 1; }
-    }
+        private Player _player;
+        private float _speed = 300;
 
-    public void Initialize(Player player)
-    {
-        _player = player;
-    }
+        [Export]
+        public float Speed
+        {
+            get => _speed;
+            set { _speed = value > 1 ? value : 1; }
+        }
 
-    public Vector2 SetVelocity(float xInput, float yInput)
-    {
-        return new Vector2(xInput * _speed, yInput * _speed);
+        public void Initialize(Player player)
+        {
+            _player = player;
+        }
+
+        public Vector2 SetVelocity(float xInput, float yInput)
+        {
+            return new Vector2(xInput * _speed, yInput * _speed);
+        }
     }
 }

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://d3g6il5unykx1"]
+
+[ext_resource type="Script" uid="uid://b3qxctixni4r5" path="res://nodes/weapons/Blaster.cs" id="1_3tslr"]
+
+[node name="Blaster" type="Node2D"]
+script = ExtResource("1_3tslr")

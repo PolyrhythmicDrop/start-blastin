@@ -1,7 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://nenl15kjphyb"]
+[gd_scene load_steps=8 format=3 uid="uid://nenl15kjphyb"]
 
 [ext_resource type="Script" uid="uid://ceknkp5q1onls" path="res://nodes/player/Player.cs" id="1_4j62c"]
 [ext_resource type="PackedScene" uid="uid://dh0533qm5cf41" path="res://nodes/player/components/animation_component.tscn" id="2_osu55"]
+[ext_resource type="Script" uid="uid://wvxahp2d8k6f" path="res://nodes/player/components/WeaponComponent.cs" id="5_4j62c"]
+[ext_resource type="Resource" uid="uid://13wggaxc31as" path="res://resources/weapons/blaster.tres" id="6_1fmtd"]
 [ext_resource type="Script" uid="uid://djgcr0lno2mdr" path="res://nodes/player/components/MovementComponent.cs" id="6_hs1md"]
 [ext_resource type="Script" uid="uid://dcupxkt621nuk" path="res://nodes/player/components/PlayerController.cs" id="7_1fmtd"]
 
@@ -25,8 +27,12 @@ unique_name_in_owner = true
 [node name="MovementComponent" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("6_hs1md")
-Speed = 300.0
 
 [node name="PlayerController" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("7_1fmtd")
+
+[node name="WeaponComponent" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("5_4j62c")
+InitWeaponResource = ExtResource("6_1fmtd")

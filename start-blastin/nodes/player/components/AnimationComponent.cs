@@ -2,7 +2,7 @@ using System;
 using Entities;
 using Godot;
 
-namespace Animation
+namespace PlayerComponents
 {
     public partial class AnimationComponent : Node2D
     {

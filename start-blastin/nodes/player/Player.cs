@@ -1,6 +1,6 @@
 using System;
-using Animation;
 using Godot;
+using PlayerComponents;
 
 namespace Entities
 {
@@ -9,6 +9,7 @@ namespace Entities
     {
         private AnimationComponent _animationComponent;
         private MovementComponent _movementComponent;
+        private WeaponComponent _weaponComponent;
         private CollisionShape2D _hitBox;
         private PlayerController _controller;
 
@@ -17,6 +18,7 @@ namespace Entities
             _animationComponent.Initialize(this);
             _movementComponent.Initialize(this);
             _controller.Initialize(this);
+            _weaponComponent.Initialize(this);
         }
 
         public override void _Ready()
@@ -25,6 +27,8 @@ namespace Entities
             _hitBox = GetNode<CollisionShape2D>("%HitBox");
             _movementComponent = GetNode<MovementComponent>("%MovementComponent");
             _controller = GetNode<PlayerController>("%PlayerController");
+            _weaponComponent = GetNode<WeaponComponent>("%WeaponComponent");
+
             InitializeComponents();
         }
 

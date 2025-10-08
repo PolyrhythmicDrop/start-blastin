@@ -2,43 +2,46 @@ using System;
 using Entities;
 using Godot;
 
-public partial class PlayerController : Node
+namespace PlayerComponents
 {
-    private Player _player;
-    private float _xDir;
-    private float _yDir;
-    private bool _firing;
-
-    public float xDirection => _xDir;
-    public float yDirection => _yDir;
-    public bool Firing => _firing;
-
-    public void Initialize(Player player)
+    public partial class PlayerController : Node
     {
-        _player = player;
-    }
+        private Player _player;
+        private float _xDir;
+        private float _yDir;
+        private bool _firing;
 
-    public override void _Process(double delta)
-    {
-        SetMovementDirection();
-        SetFiring();
-    }
+        public float xDirection => _xDir;
+        public float yDirection => _yDir;
+        public bool Firing => _firing;
 
-    public void SetMovementDirection()
-    {
-        _xDir = Input.GetAxis("move-left", "move-right");
-        _yDir = Input.GetAxis("move-up", "move-down");
-    }
-
-    public void SetFiring()
-    {
-        if (Input.IsActionPressed("fire"))
+        public void Initialize(Player player)
         {
-            _firing = true;
+            _player = player;
         }
-        else
+
+        public override void _Process(double delta)
         {
-            _firing = false;
+            SetMovementDirection();
+            SetFiring();
+        }
+
+        public void SetMovementDirection()
+        {
+            _xDir = Input.GetAxis("move-left", "move-right");
+            _yDir = Input.GetAxis("move-up", "move-down");
+        }
+
+        public void SetFiring()
+        {
+            if (Input.IsActionPressed("fire"))
+            {
+                _firing = true;
+            }
+            else
+            {
+                _firing = false;
+            }
         }
     }
 }

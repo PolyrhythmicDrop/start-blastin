@@ -15,6 +15,12 @@ run/main_scene="uid://dgcswjykgey5y"
 config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
+[debug]
+
+file_logging/enable_file_logging=true
+file_logging/log_path="res://logs/godot.log"
+file_logging/max_log_files=1
+
 [display]
 
 window/size/viewport_width=1920
@@ -28,16 +34,21 @@ window/vsync/vsync_mode=0
 
 project/assembly_name="Start Blastin"
 
+[editor]
+
+run/main_run_args="--verbose --debug-stringnames"
+
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg")
+enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg", "res://addons/safe_resource_picker/plugin.cfg")
 
 [file_customization]
 
 folder_colors={
-"res://nodes/": "blue",
+"res://nodes/": "green",
 "res://nodes/player/components/": "purple",
-"res://nodes/player/sprites/": "pink"
+"res://nodes/player/sprites/": "pink",
+"res://resources/": "yellow"
 }
 
 [input]

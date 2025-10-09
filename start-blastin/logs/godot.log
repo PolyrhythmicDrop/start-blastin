@@ -1,83 +1,139 @@
 Godot Engine v4.5.stable.mono.official.876b29033 - https://godotengine.org
 Vulkan 1.4.312 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3060 Ti
 
-Weapon equipped! <Node2D#36507223480>
+Weapon equipped! <Node2D#36624663964>
 Stats: 0.5 | 1 | Bullet | 1500
 Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
-Projectile Bullet-167118341 requested and provided!
-Bullet-167118341 position = (933, 883)
-Projectile Bullet-167089387 requested and provided!
-Bullet-167089387 position = (861.4898, 883)
-Projectile Bullet-167088914 requested and provided!
-Bullet-167088914 position = (798.53406, 883)
-Projectile Bullet-167088486 requested and provided!
-Bullet-167088486 position = (901.7804, 883)
-Projectile Bullet-167087684 requested and provided!
-Bullet-167087684 position = (1051.7906, 883)
-Projectile Bullet-138062994 requested and provided!
-Bullet-138062994 position = (1201.7892, 872.16693)
-Projectile Bullet-133071218 requested and provided!
-Bullet-133071218 position = (1351.7833, 779.7711)
-Projectile Bullet-128070238 requested and provided!
-Bullet-128070238 position = (1405.8795, 737.753)
-Projectile Bullet-123069944 requested and provided!
-Bullet-123069944 position = (1255.8851, 737.753)
-Projectile Bullet-118065933 requested and provided!
-Bullet-118065933 position = (1105.7946, 782.8208)
-Projectile Bullet-167118341 requested and provided!
-Bullet-167118341 position = (955.83936, 782.8208)
-Projectile Bullet-108059003 requested and provided!
-Bullet-108059003 position = (805.8643, 761.9228)
-Projectile Bullet-167089387 requested and provided!
-Bullet-167089387 position = (655.8447, 627.471)
-Projectile Bullet-167088914 requested and provided!
-Bullet-167088914 position = (505.86108, 696.8895)
-Projectile Bullet-167088486 requested and provided!
-Bullet-167088486 position = (565.5915, 774.41205)
-Projectile Bullet-167087684 requested and provided!
-Bullet-167087684 position = (715.6207, 774.41205)
-Projectile Bullet-138062994 requested and provided!
-Bullet-138062994 position = (865.57776, 830.2388)
-Projectile Bullet-133071218 requested and provided!
-Bullet-133071218 position = (1015.6342, 830.2388)
-Projectile Bullet-128070238 requested and provided!
-Bullet-128070238 position = (1165.6128, 900.4373)
-Projectile Bullet-123069944 requested and provided!
-Bullet-123069944 position = (1315.6077, 886.87)
-Projectile Bullet-118065933 requested and provided!
-Bullet-118065933 position = (1465.5905, 741.39404)
-Projectile Bullet-108059003 requested and provided!
-Bullet-108059003 position = (1452.9307, 741.39404)
-Projectile Bullet-53050492 requested and provided!
-Bullet-53050492 position = (1302.9186, 741.39404)
-Projectile Bullet-48057735 requested and provided!
-Bullet-48057735 position = (1152.9329, 817.63354)
-Projectile Bullet-43057225 requested and provided!
-Bullet-43057225 position = (1002.94196, 817.63354)
-Projectile Bullet-38049298 requested and provided!
-Bullet-38049298 position = (852.95624, 817.63354)
-Projectile Bullet-33056749 requested and provided!
-Bullet-33056749 position = (702.9506, 740.0325)
-Projectile Bullet-28055263 requested and provided!
-Bullet-28055263 position = (552.9176, 681.4538)
-Projectile Bullet-23055481 requested and provided!
-Bullet-23055481 position = (402.94012, 746.8451)
-Projectile Bullet-18054024 requested and provided!
-Bullet-18054024 position = (252.91737, 746.8451)
-Projectile Bullet-13054407 requested and provided!
-Bullet-13054407 position = (378.02405, 746.8451)
-Projectile Bullet-8052655 requested and provided!
-Bullet-8052655 position = (528.02515, 746.8451)
-Projectile Bullet-3043469 requested and provided!
-Bullet-3043469 position = (678.0812, 746.8451)
-Projectile Bullet-53050492 requested and provided!
-Bullet-53050492 position = (828.0964, 746.8451)
-Projectile Bullet-48057735 requested and provided!
-Bullet-48057735 position = (978.0629, 746.8451)
-Projectile Bullet-43057225 requested and provided!
-Bullet-43057225 position = (1128.1042, 746.8451)
-Projectile Bullet-38049298 requested and provided!
-Bullet-38049298 position = (1278.0792, 746.8451)
-WARNING: 21 RIDs of type "CanvasItem" were leaked.
+Projectile Bullet1857796185 requested and provided!
+Bullet1857796185 position = (933, 883)
+Projectile Bullet1857826781 requested and provided!
+Bullet1857826781 position = (933, 883)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857796185 entered OOB! Deactivating...
+Projectile Bullet1857796185 requested and provided!
+Bullet1857796185 position = (933, 883)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857826781 entered OOB! Deactivating...
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857796185 entered OOB! Deactivating...
+Projectile Bullet1857796185 requested and provided!
+Bullet1857796185 position = (679.8475, 609.335)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857796185 entered OOB! Deactivating...
+Projectile Bullet1857796185 requested and provided!
+Bullet1857796185 position = (989.5262, 726.9893)
+Projectile Bullet1857826781 requested and provided!
+Bullet1857826781 position = (989.5262, 726.9893)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857796185 entered OOB! Deactivating...
+Projectile Bullet1857796185 requested and provided!
+Bullet1857796185 position = (989.5262, 726.9893)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857826781 entered OOB! Deactivating...
+Projectile Bullet1857826781 requested and provided!
+Bullet1857826781 position = (989.5262, 726.9893)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857796185 entered OOB! Deactivating...
+Projectile Bullet1857796185 requested and provided!
+Bullet1857796185 position = (989.5262, 726.9893)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857826781 entered OOB! Deactivating...
+Projectile Bullet1857826781 requested and provided!
+Bullet1857826781 position = (1092.7362, 726.9893)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857796185 entered OOB! Deactivating...
+Projectile Bullet1857796185 requested and provided!
+Bullet1857796185 position = (1092.7362, 726.9893)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857826781 entered OOB! Deactivating...
+Projectile Bullet1857826781 requested and provided!
+Bullet1857826781 position = (993.8316, 715.72504)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857796185 entered OOB! Deactivating...
+Projectile Bullet1857796185 requested and provided!
+Bullet1857796185 position = (843.78766, 639.41266)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857826781 entered OOB! Deactivating...
+Projectile Bullet1857826781 requested and provided!
+Bullet1857826781 position = (693.5167, 668.9565)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857796185 entered OOB! Deactivating...
+Projectile Bullet1857796185 requested and provided!
+Bullet1857796185 position = (543.84174, 709.5788)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857826781 entered OOB! Deactivating...
+Projectile Bullet1857826781 requested and provided!
+Bullet1857826781 position = (446.29266, 709.5788)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857796185 entered OOB! Deactivating...
+Projectile Bullet1857796185 requested and provided!
+Bullet1857796185 position = (596.24756, 803.768)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857826781 entered OOB! Deactivating...
+Projectile Bullet1857826781 requested and provided!
+Bullet1857826781 position = (746.2765, 803.768)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857796185 entered OOB! Deactivating...
+Projectile Bullet1857796185 requested and provided!
+Bullet1857796185 position = (896.26715, 691.1897)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857826781 entered OOB! Deactivating...
+Projectile Bullet1857826781 requested and provided!
+Bullet1857826781 position = (1046.2399, 678.378)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857796185 entered OOB! Deactivating...
+Projectile Bullet1857796185 requested and provided!
+Bullet1857796185 position = (1196.2683, 768.38043)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857826781 entered OOB! Deactivating...
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857796185 entered OOB! Deactivating...
+Projectile Bullet1857796185 requested and provided!
+Bullet1857796185 position = (1281.799, 768.38043)
+Projectile Bullet1857826781 requested and provided!
+Bullet1857826781 position = (1250.138, 768.38043)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857796185 entered OOB! Deactivating...
+Projectile Bullet1857796185 requested and provided!
+Bullet1857796185 position = (1143.2769, 768.38043)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857826781 entered OOB! Deactivating...
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857796185 entered OOB! Deactivating...
+Projectile Bullet1857796185 requested and provided!
+Bullet1857796185 position = (1143.2769, 768.38043)
+Projectile Bullet1857826781 requested and provided!
+Bullet1857826781 position = (1143.2769, 768.38043)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857796185 entered OOB! Deactivating...
+Projectile Bullet1857796185 requested and provided!
+Bullet1857796185 position = (1204.575, 768.38043)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857826781 entered OOB! Deactivating...
+Projectile Bullet1857826781 requested and provided!
+Bullet1857826781 position = (1339.529, 768.38043)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857796185 entered OOB! Deactivating...
+Projectile Bullet1857796185 requested and provided!
+Bullet1857796185 position = (1220.6733, 768.38043)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857826781 entered OOB! Deactivating...
+Projectile Bullet1857826781 requested and provided!
+Bullet1857826781 position = (1070.6772, 768.38043)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857796185 entered OOB! Deactivating...
+Projectile Bullet1857796185 requested and provided!
+Bullet1857796185 position = (920.62775, 768.38043)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857826781 entered OOB! Deactivating...
+Projectile Bullet1857826781 requested and provided!
+Bullet1857826781 position = (770.6148, 685.54193)
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857796185 entered OOB! Deactivating...
+Area entered OOB-Area...
+Environmental.OobArea.OnAreaEntered: Bullet1857826781 entered OOB! Deactivating...
+ERROR: 5 RID allocations of type 'P11GodotArea2D' were leaked at exit.
+ERROR: 1 RID allocations of type 'P12GodotShape2D' were leaked at exit.
+WARNING: 25 RIDs of type "CanvasItem" were leaked.
    at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2678)
 ERROR: 1 RID allocations of type 'N10RendererRD14TextureStorage7TextureE' were leaked at exit.

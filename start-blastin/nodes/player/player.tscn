@@ -1,11 +1,11 @@
 [gd_scene load_steps=8 format=3 uid="uid://nenl15kjphyb"]
 
 [ext_resource type="Script" uid="uid://ceknkp5q1onls" path="res://nodes/player/Player.cs" id="1_4j62c"]
-[ext_resource type="PackedScene" uid="uid://dh0533qm5cf41" path="res://nodes/player/components/animation_component.tscn" id="2_osu55"]
-[ext_resource type="Script" uid="uid://wvxahp2d8k6f" path="res://nodes/player/components/WeaponComponent.cs" id="5_4j62c"]
+[ext_resource type="PackedScene" uid="uid://cr3k7kv44d7a6" path="res://nodes/player/player-components/animation-component.tscn" id="2_hs1md"]
+[ext_resource type="Script" uid="uid://djgcr0lno2mdr" path="res://nodes/player/player-components/MovementComponent.cs" id="3_hs1md"]
+[ext_resource type="Script" uid="uid://dcupxkt621nuk" path="res://nodes/player/player-components/PlayerController.cs" id="4_1fmtd"]
+[ext_resource type="Script" uid="uid://wvxahp2d8k6f" path="res://nodes/player/player-components/WeaponComponent.cs" id="5_5h4ma"]
 [ext_resource type="Resource" uid="uid://13wggaxc31as" path="res://resources/weapons/blaster.tres" id="6_1fmtd"]
-[ext_resource type="Script" uid="uid://djgcr0lno2mdr" path="res://nodes/player/components/MovementComponent.cs" id="6_hs1md"]
-[ext_resource type="Script" uid="uid://dcupxkt621nuk" path="res://nodes/player/components/PlayerController.cs" id="7_1fmtd"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fn53c"]
 radius = 20.0
@@ -21,18 +21,18 @@ script = ExtResource("1_4j62c")
 unique_name_in_owner = true
 shape = SubResource("CapsuleShape2D_fn53c")
 
-[node name="AnimationComponent" parent="." instance=ExtResource("2_osu55")]
+[node name="AnimationComponent" parent="." instance=ExtResource("2_hs1md")]
 unique_name_in_owner = true
 
 [node name="MovementComponent" type="Node" parent="."]
 unique_name_in_owner = true
-script = ExtResource("6_hs1md")
+script = ExtResource("3_hs1md")
 
 [node name="PlayerController" type="Node" parent="."]
 unique_name_in_owner = true
-script = ExtResource("7_1fmtd")
+script = ExtResource("4_1fmtd")
 
-[node name="WeaponComponent" type="Node" parent="."]
+[node name="WeaponComponent" type="Node2D" parent="."]
 unique_name_in_owner = true
-script = ExtResource("5_4j62c")
+script = ExtResource("5_5h4ma")
 InitWeaponResource = ExtResource("6_1fmtd")

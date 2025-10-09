@@ -6,7 +6,7 @@ using Weapons;
 namespace PlayerComponents
 {
     [GlobalClass]
-    public partial class WeaponComponent : Node
+    public partial class WeaponComponent : Node2D
     {
         private Player _player;
         private WeaponResource _initWeaponResource;
@@ -39,7 +39,32 @@ namespace PlayerComponents
                 );
 
                 AddChild(_equippedWeapon);
+                ConnectFireTimerSignals();
             }
+        }
+
+        private void ConnectFireTimerSignals()
+        {
+            if (_equippedWeapon != null)
+            {
+                _equippedWeapon.FireTimer.Timeout += _equippedWeapon.Fire;
+            }
+        }
+
+        public void FireWeapon()
+        {
+            Timer fireTimer = _equippedWeapon.FireTimer;
+
+            if (fireTimer.IsStopped())
+            {
+                _equippedWeapon.Fire();
+                fireTimer.Start();
+            }
+        }
+
+        public void StopWeapon()
+        {
+            _equippedWeapon.FireTimer.Stop();
         }
     }
 }

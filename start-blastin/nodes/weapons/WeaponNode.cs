@@ -13,6 +13,10 @@ namespace Weapons
         public WeaponStats Stats => _stats;
         public ProjectilePool Pool => _pool;
         public Node ProjectileParent;
+        public virtual Vector2 ProjSpawnPoint
+        {
+            get => GlobalPosition;
+        }
         public Timer FireTimer;
         public Callable HitCallable;
 
@@ -21,6 +25,12 @@ namespace Weapons
             HitCallable = Callable.From(
                 (CollisionComponent collision) => OnProjectileCollision(collision)
             );
+        }
+
+        public override void _Ready()
+        {
+            InitializeProjectilePool();
+            InitializeFireTimer();
         }
 
         public void InitializeStats(WeaponStats stats)
@@ -44,11 +54,22 @@ namespace Weapons
             }
             else
             {
-                FireTimer.WaitTime = Stats.FireRate;
+                FireTimer.WaitTime = _stats.FireRate;
+                GD.Print(
+                    $"Setting FireTimer wait time from FireRate. FireRate = {_stats.FireRate} | WaitTime = {FireTimer.WaitTime}"
+                );
             }
             AddChild(FireTimer);
         }
 
         public virtual void OnProjectileCollision(CollisionComponent collision) { }
+
+        public virtual void Fire()
+        {
+            Projectile projectile = _pool.RequestProjectile();
+            GD.Print($"Projectile {projectile.Name} requested and provided!");
+            projectile.Position = ProjSpawnPoint;
+            GD.Print($"{projectile.Name} position = {projectile.Position}");
+        }
     }
 }

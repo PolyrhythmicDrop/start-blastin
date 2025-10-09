@@ -36,7 +36,7 @@ project/assembly_name="Start Blastin"
 
 [editor]
 
-run/main_run_args="--verbose --debug-stringnames"
+run/main_run_args="--debug-stringnames"
 
 [editor_plugins]
 

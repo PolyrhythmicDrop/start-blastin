@@ -1,6 +1,91 @@
-[gd_scene load_steps=2 format=3 uid="uid://07rkya3u10jt"]
+[gd_scene load_steps=9 format=3 uid="uid://07rkya3u10jt"]
 
 [ext_resource type="Script" uid="uid://c581icoxx0s37" path="res://nodes/weapons/projectiles/Bullet/Bullet.cs" id="1_ajx7a"]
+[ext_resource type="Texture2D" uid="uid://d2bgkt4md412u" path="res://nodes/weapons/projectiles/Bullet/bullet-sprite.png" id="2_nppro"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wwm4v"]
+atlas = ExtResource("2_nppro")
+region = Rect2(0, 0, 19, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_66whw"]
+atlas = ExtResource("2_nppro")
+region = Rect2(19, 0, 19, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_14woa"]
+atlas = ExtResource("2_nppro")
+region = Rect2(38, 0, 19, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wxvk3"]
+atlas = ExtResource("2_nppro")
+region = Rect2(0, 18, 19, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_obge1"]
+atlas = ExtResource("2_nppro")
+region = Rect2(19, 18, 19, 18)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_oihmc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wwm4v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_66whw")
+}],
+"loop": true,
+"name": &"flight",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_14woa")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wxvk3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_obge1")
+}, {
+"duration": 1.0,
+"texture": null
+}],
+"loop": false,
+"name": &"impact",
+"speed": 10.0
+}]
 
 [node name="Bullet" type="Node2D"]
 script = ExtResource("1_ajx7a")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
+texture_filter = 1
+rotation = 4.712389
+sprite_frames = SubResource("SpriteFrames_oihmc")
+animation = &"flight"
+autoplay = "flight"
+frame_progress = 0.6931232
+metadata/_aseprite_wizard_interface_config_ = {
+"animation_section": false,
+"layer_section": false,
+"output_section": true,
+"pending_changes": {}
+}
+metadata/_aseprite_wizard_config_ = {
+"embed_tex": false,
+"layers": [],
+"o_ex_p": "",
+"o_folder": "res://nodes/weapons/projectiles/Bullet",
+"o_name": "bullet-sprite",
+"only_visible": false,
+"scale": "1.0",
+"should_round_fps": true,
+"slice": "",
+"source": "res://nodes/weapons/projectiles/Bullet/bullet-alt.aseprite",
+"source_uid": 8919909460203320629
+}
+metadata/_aseprite_wizard_source_file_hash_ = "0c6dfed3e2dfef714e6b29018b88c7b9"
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+target_position = Vector2(0, -20)
+collision_mask = 4

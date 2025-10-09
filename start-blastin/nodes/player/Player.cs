@@ -46,5 +46,9 @@ namespace Entities
 
             MoveAndSlide();
         }
+
+        public void Fire() => _weaponComponent.FireWeapon();
+
+        public void StopFire() => _weaponComponent.StopWeapon();
     }
 }

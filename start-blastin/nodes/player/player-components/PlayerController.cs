@@ -24,6 +24,14 @@ namespace PlayerComponents
         {
             SetMovementDirection();
             SetFiring();
+            if (_firing)
+            {
+                _player.Fire();
+            }
+            else
+            {
+                _player.StopFire();
+            }
         }
 
         public void SetMovementDirection()

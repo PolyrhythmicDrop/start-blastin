@@ -14,6 +14,7 @@ namespace Projectiles
         {
             _weapon = weapon;
             Capacity = initCapacity;
+            Initialize();
         }
 
         private void Initialize()
@@ -50,7 +51,7 @@ namespace Projectiles
             }
             Projectile proj = ProjectileFactory.CreateProjectile(_weapon.Stats.ProjType);
             // Assign the Z-index so it always appears behind the weapon
-            proj.ZIndex = _weapon.ZIndex - 1;
+            // proj.ZIndex = _weapon.ZIndex - 1;
 
             // Give the projectile a unique Godot-valid name
             proj.Name = StringExtensions.ValidateNodeName(

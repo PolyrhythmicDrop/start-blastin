@@ -8,19 +8,12 @@ namespace Projectiles
         private AnimatedSprite2D _sprite;
         private RayCast2D _ray;
 
-        private float _speed = 500f;
-
         public RayCast2D Ray => _ray;
         public static string ScenePath => "res://nodes/weapons/projectiles/Bullet/Bullet.tscn";
 
-        public override float Speed
-        {
-            get => _speed;
-            set => _speed = value;
-        }
-
         public override void _Ready()
         {
+            base._Ready();
             _sprite = GetNode<AnimatedSprite2D>("Sprite");
             _ray = GetNode<RayCast2D>("RayCast2D");
         }
@@ -30,7 +23,7 @@ namespace Projectiles
             if (Active)
             {
                 CastRay(delta);
-                Position += Speed * (float)delta * Vector2.Up;
+                Position += _speed * (float)delta * Vector2.Up;
             }
         }
 

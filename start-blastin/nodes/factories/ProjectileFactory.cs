@@ -7,17 +7,17 @@ namespace Factories
 {
     public class ProjectileFactory
     {
-        public static Projectile CreateProjectile(WeaponStats weaponStats)
+        public static Projectile CreateProjectile(WeaponNode weapon)
         {
             Projectile ammo = null;
-            switch (weaponStats.ProjType)
+            switch (weapon.Stats.ProjType)
             {
                 default:
                 case ProjectileType.Bullet:
                     ammo = GD.Load<PackedScene>(Bullet.ScenePath).Instantiate<Bullet>();
                     break;
             }
-            ammo.Speed = weaponStats.ProjSpeed;
+            ammo.SourceWeapon = weapon;
             return ammo;
         }
     }

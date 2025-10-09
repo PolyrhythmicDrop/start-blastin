@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://dgcswjykgey5y"]
+[gd_scene load_steps=5 format=3 uid="uid://dgcswjykgey5y"]
 
 [ext_resource type="Texture2D" uid="uid://cilgl08og1qhy" path="res://nodes/backgrounds/background-purple-nebulae-stars.png" id="1_rvdan"]
 [ext_resource type="PackedScene" uid="uid://dl7j0usiolxux" path="res://nodes/environmental/play-area-border.tscn" id="2_cw5wp"]
 [ext_resource type="PackedScene" uid="uid://nenl15kjphyb" path="res://nodes/player/player.tscn" id="3_pxe5x"]
+[ext_resource type="PackedScene" uid="uid://bsyev7gatn1jy" path="res://nodes/environmental/oob-area.tscn" id="4_rl1rb"]
 
 [node name="MainLevel" type="Node"]
 
@@ -22,3 +23,5 @@ stretch_mode = 5
 
 [node name="Player" parent="." instance=ExtResource("3_pxe5x")]
 position = Vector2(933, 883)
+
+[node name="OOB-Area" parent="." instance=ExtResource("4_rl1rb")]

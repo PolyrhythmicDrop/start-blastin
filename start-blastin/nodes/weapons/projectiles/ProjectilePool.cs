@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Factories;
 using Godot;
 using Weapons;
@@ -33,25 +34,27 @@ namespace Projectiles
 
         public Projectile CreateProjectile()
         {
-            if (_weapon == null)
+            try
             {
-                GD.PrintErr("ProjectilePool: _weapon is null in CreateProjectile!");
-                throw new InvalidOperationException(
-                    "ProjectilePool: _weapon is null in CreateProjectile!"
-                );
+                if (_weapon == null)
+                {
+                    throw new InvalidOperationException(
+                        $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: _weapon is null!"
+                    );
+                }
+                if (_weapon.Stats == null)
+                {
+                    throw new InvalidOperationException(
+                        $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: {_weapon.Name}.Stats is null!"
+                    );
+                }
             }
-            if (_weapon.Stats == null)
+            catch (Exception e)
             {
-                GD.PrintErr(
-                    $"ProjectilePool: _weapon.Stats is null in CreateProjectile for {_weapon.Name}!"
-                );
-                throw new InvalidOperationException(
-                    "ProjectilePool: _weapon.Stats is null in CreateProjectile!"
-                );
+                GD.PrintErr(e.Message);
             }
-            Projectile proj = ProjectileFactory.CreateProjectile(_weapon.Stats);
-            // Assign the Z-index so it always appears behind the weapon
-            // proj.ZIndex = _weapon.ZIndex - 1;
+
+            Projectile proj = ProjectileFactory.CreateProjectile(_weapon);
 
             // Give the projectile a unique Godot-valid name
             proj.Name = StringExtensions.ValidateNodeName(
@@ -76,8 +79,8 @@ namespace Projectiles
                 if (!_weapon.ProjectileParent.IsAncestorOf(proj) && !proj.Active)
                 {
                     proj.Active = true;
-                    _weapon.ProjectileParent.CallDeferred(Node.MethodName.AddChild, proj);
-                    proj.DeactivationTimer.Timeout += () => DeactivateProjectile(proj);
+                    // _weapon.ProjectileParent.CallDeferred(Node.MethodName.AddChild, proj);
+                    _weapon.ProjectileParent.AddChild(proj);
                 }
                 else
                 {
@@ -119,7 +122,8 @@ namespace Projectiles
                 {
                     proj.DeactivationTimer.Stop();
                     proj.Active = false;
-                    _weapon.ProjectileParent.CallDeferred(Node.MethodName.RemoveChild, proj);
+                    // _weapon.ProjectileParent.CallDeferred(Node.MethodName.RemoveChild, proj);
+                    _weapon.ProjectileParent.RemoveChild(proj);
                 }
                 else
                 {

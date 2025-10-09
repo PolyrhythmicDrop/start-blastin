@@ -8,6 +8,7 @@ namespace Projectiles
     public abstract partial class Projectile : Node2D
     {
         private bool _sourceInitialized;
+        private Callable _deactivateCallable;
         protected bool _active;
         protected Timer _deactivationTimer;
         protected float _speed;
@@ -49,27 +50,70 @@ namespace Projectiles
         {
             _deactivationTimer = new Timer();
             _deactivationTimer.WaitTime = 5;
+            _deactivateCallable = Callable.From(() => ToggleActive(false));
         }
 
         public override void _Ready()
         {
-            SetDeactivationTimer();
             Initialize();
         }
 
+        /// <summary>
+        /// Called as part of ready, when the Projectile is added to the scene tree.
+        /// </summary>
         private void Initialize()
         {
+            // Set the projectile's speed.
+            // We need to do this here rather than in the constructor in case the player's weapon gets modified to increase projectile speed.
             _speed = _sourceWeapon.Stats.ProjSpeed;
         }
 
-        private void SetDeactivationTimer()
+        private void ToggleDeactivationTimer(bool on)
         {
             if (!IsAncestorOf(_deactivationTimer))
             {
                 AddChild(_deactivationTimer);
             }
-            _deactivationTimer.Timeout += () => ToggleActive(false);
-            _deactivationTimer.Start();
+            if (on)
+            {
+                if (!_deactivationTimer.IsConnected(Timer.SignalName.Timeout, _deactivateCallable))
+                {
+                    _deactivationTimer.Connect(Timer.SignalName.Timeout, _deactivateCallable);
+                }
+                _deactivationTimer.Start();
+            }
+            else
+            {
+                if (_deactivationTimer.IsConnected(Timer.SignalName.Timeout, _deactivateCallable))
+                {
+                    _deactivationTimer.Disconnect(Timer.SignalName.Timeout, _deactivateCallable);
+                }
+                _deactivationTimer.Stop();
+            }
+        }
+
+        private void ToggleCollisionSignalConnection(bool connect)
+        {
+            if (connect)
+            {
+                if (!IsConnected(SignalName.Collision, _sourceWeapon.HitCallable))
+                {
+                    Connect(SignalName.Collision, _sourceWeapon.HitCallable, 4);
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        Name + " is already connected to " + SignalName.Collision
+                    );
+                }
+            }
+            else
+            {
+                if (IsConnected(SignalName.Collision, _sourceWeapon.HitCallable))
+                {
+                    Disconnect(SignalName.Collision, _sourceWeapon.HitCallable);
+                }
+            }
         }
 
         /// <summary>
@@ -80,12 +124,17 @@ namespace Projectiles
         {
             if (active)
             {
-                _sourceWeapon.Pool.ActivateProjectile(this);
+                _sourceWeapon.ProjectileParent.AddChild(this);
             }
             else
             {
-                _sourceWeapon.Pool.DeactivateProjectile(this);
+                // Add items from projectile pool
+                _sourceWeapon.ProjectileParent.RemoveChild(this);
             }
+
+            _active = active;
+            ToggleDeactivationTimer(active);
+            ToggleCollisionSignalConnection(active);
         }
     }
 }

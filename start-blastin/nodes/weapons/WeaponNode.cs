@@ -42,6 +42,7 @@ namespace Weapons
         {
             _pool = new ProjectilePool(this, 5);
             ProjectileParent = new();
+            ProjectileParent.Name = "ProjectileParent";
             AddChild(ProjectileParent);
         }
 
@@ -67,9 +68,7 @@ namespace Weapons
         public virtual void Fire()
         {
             Projectile projectile = _pool.RequestProjectile();
-            GD.Print($"Projectile {projectile.Name} requested and provided!");
             projectile.Position = ProjSpawnPoint;
-            GD.Print($"{projectile.Name} position = {projectile.Position}");
         }
     }
 }

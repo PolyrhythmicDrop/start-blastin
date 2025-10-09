@@ -56,11 +56,6 @@ namespace Projectiles
 
             Projectile proj = ProjectileFactory.CreateProjectile(_weapon);
 
-            // Give the projectile a unique Godot-valid name
-            proj.Name = StringExtensions.ValidateNodeName(
-                proj.GetType().Name + (int)DateTime.Now.Ticks
-            );
-
             return proj;
         }
 
@@ -78,9 +73,7 @@ namespace Projectiles
 
                 if (!_weapon.ProjectileParent.IsAncestorOf(proj) && !proj.Active)
                 {
-                    proj.Active = true;
-                    // _weapon.ProjectileParent.CallDeferred(Node.MethodName.AddChild, proj);
-                    _weapon.ProjectileParent.AddChild(proj);
+                    proj.ToggleActive(true);
                 }
                 else
                 {
@@ -88,18 +81,6 @@ namespace Projectiles
                         proj.Name + " either has a parent already or is already active!"
                     );
                 }
-
-                // Connect signals
-                if (!proj.IsConnected(Projectile.SignalName.Collision, _weapon.HitCallable))
-                {
-                    proj.Connect(Projectile.SignalName.Collision, _weapon.HitCallable, 4);
-                }
-                else
-                {
-                    throw new InvalidOperationException(
-                        proj.Name + " is already connected to " + Projectile.SignalName.Collision
-                    );
-                }
             }
             catch (InvalidOperationException e)
             {
@@ -107,47 +88,40 @@ namespace Projectiles
             }
         }
 
-        public void DeactivateProjectile(Projectile proj)
-        {
-            try
-            {
-                if (!Contains(proj))
-                {
-                    throw new InvalidOperationException(
-                        proj.Name + " does not exist in the projectile pool!"
-                    );
-                }
+        // public void DeactivateProjectile(Projectile proj)
+        // {
+        //     try
+        //     {
+        //         if (!Contains(proj))
+        //         {
+        //             throw new InvalidOperationException(
+        //                 proj.Name + " does not exist in the projectile pool!"
+        //             );
+        //         }
 
-                if (_weapon.ProjectileParent.IsAncestorOf(proj) && proj.Active)
-                {
-                    proj.DeactivationTimer.Stop();
-                    proj.Active = false;
-                    // _weapon.ProjectileParent.CallDeferred(Node.MethodName.RemoveChild, proj);
-                    _weapon.ProjectileParent.RemoveChild(proj);
-                }
-                else
-                {
-                    throw new InvalidOperationException(
-                        proj.Name + " is not active or is not part of the scene tree!"
-                    );
-                }
-
-                if (proj.IsConnected(Projectile.SignalName.Collision, _weapon.HitCallable))
-                {
-                    proj.Disconnect(Projectile.SignalName.Collision, _weapon.HitCallable);
-                }
-            }
-            catch (InvalidOperationException e)
-            {
-                GD.PushError(e);
-            }
-        }
+        //         if (_weapon.ProjectileParent.IsAncestorOf(proj) && proj.Active)
+        //         {
+        //             proj.ToggleActive(false);
+        //         }
+        //         else
+        //         {
+        //             throw new InvalidOperationException(
+        //                 proj.Name + " is not active or is not part of the scene tree!"
+        //             );
+        //         }
+        //     }
+        //     catch (InvalidOperationException e)
+        //     {
+        //         GD.PushError(e);
+        //     }
+        // }
 
         public Projectile RequestProjectile()
         {
             // Search for any inactive projectiles already existing in the pool.
             foreach (Projectile proj in this)
             {
+                // If the projectile is active and in the scene tree...
                 if (!proj.Active && !proj.IsAncestorOf(_weapon))
                 {
                     // Enable processing by re-adding the projectile as a child and activating it.

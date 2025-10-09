@@ -20,7 +20,6 @@ namespace Environmental
 
         private void OnAreaEntered(Area2D area)
         {
-            GD.Print($"Area entered {Name}...");
             if (area.GetParent() is Projectile projectile)
             {
                 GD.Print(

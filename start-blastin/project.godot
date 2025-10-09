@@ -51,6 +51,10 @@ folder_colors={
 "res://resources/": "yellow"
 }
 
+[global_group]
+
+projectiles=""
+
 [input]
 
 move-left={

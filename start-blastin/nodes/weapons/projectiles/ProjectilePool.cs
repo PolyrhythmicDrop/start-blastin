@@ -49,7 +49,7 @@ namespace Projectiles
                     "ProjectilePool: _weapon.Stats is null in CreateProjectile!"
                 );
             }
-            Projectile proj = ProjectileFactory.CreateProjectile(_weapon.Stats.ProjType);
+            Projectile proj = ProjectileFactory.CreateProjectile(_weapon.Stats);
             // Assign the Z-index so it always appears behind the weapon
             // proj.ZIndex = _weapon.ZIndex - 1;
 

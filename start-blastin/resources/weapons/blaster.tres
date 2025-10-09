@@ -5,8 +5,7 @@
 
 [sub_resource type="Resource" id="Resource_pd5pf"]
 script = ExtResource("1_bv6pg")
-FireRate = 0.1
-ProjSpeed = 500.0
+ProjSpeed = 1500.0
 metadata/_custom_type_script = "uid://bytfm61mpkr5u"
 
 [resource]

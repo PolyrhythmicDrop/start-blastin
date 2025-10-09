@@ -54,7 +54,7 @@ animations = [{
 "speed": 10.0
 }]
 
-[node name="Bullet" type="Node2D"]
+[node name="Bullet" type="Node2D" groups=["projectiles"]]
 script = ExtResource("1_ajx7a")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
@@ -64,7 +64,7 @@ rotation = 4.712389
 sprite_frames = SubResource("SpriteFrames_oihmc")
 animation = &"flight"
 autoplay = "flight"
-frame_progress = 0.6931232
+frame_progress = 0.91497546
 metadata/_aseprite_wizard_interface_config_ = {
 "animation_section": false,
 "layer_section": false,

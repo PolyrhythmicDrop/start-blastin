@@ -32,14 +32,7 @@ namespace Enemies
         public override void _Process(double delta)
         {
             _lastPosition = _currentPosition;
-            _currentPosition = GlobalPosition;
-
-            if (_currentPosition != _lastPosition)
-            {
-                GD.Print(
-                    $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Position changed! Current position = {_currentPosition} | Last position = {_lastPosition}"
-                );
-            }
+            _currentPosition = _characterBody.GlobalPosition;
 
             // if (_pathFollow.ProgressRatio <= 0.2)
             // {
@@ -54,11 +47,11 @@ namespace Enemies
         {
             if (_currentPosition != _lastPosition)
             {
-                _engine.Animation = "moving";
+                _engine.Play("moving");
             }
             else
             {
-                _engine.Animation = "idle";
+                _engine.Play("idle");
             }
         }
 

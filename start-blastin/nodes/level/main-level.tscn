@@ -28,4 +28,6 @@ position = Vector2(933, 883)
 [node name="OOB-Area" parent="." instance=ExtResource("4_rl1rb")]
 
 [node name="EnemySpawner" parent="." instance=ExtResource("5_l8aks")]
-position = Vector2(0, 407)
+position = Vector2(50, -82)
+SpawnInterval = 1.0
+SpawnPointMoveDuration = 2.3

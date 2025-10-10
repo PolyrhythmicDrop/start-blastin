@@ -20,6 +20,7 @@ curve = ExtResource("2_u3nr5")
 
 [node name="PathFollow2D" type="PathFollow2D" parent="Path2D"]
 unique_name_in_owner = true
+position = Vector2(50, 0)
 rotates = false
 
 [node name="SpawnPoint" type="Node2D" parent="Path2D/PathFollow2D"]

@@ -27,7 +27,254 @@ Enemies.EnemyNode._Ready called!
 Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
 Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
 Enemies.EnemyNode.FollowPath: setting duration and following path.
-@Node2D@6 tweener stats:
+@Node2D@7 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@11 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: @Node2D@9 entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@15 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
+Environmental.OobArea.OnAreaEntered: @Node2D@13 entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@17 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
+Environmental.OobArea.OnAreaEntered: @Node2D@9 entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@19 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
+Environmental.OobArea.OnAreaEntered: @Node2D@9 entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@21 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@23 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: @Node2D@9 entered OOB! Deactivating...
+Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@25 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: @Node2D@9 entered OOB! Deactivating...
+Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@27 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: @Node2D@13 entered OOB! Deactivating...
+Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@29 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: @Node2D@9 entered OOB! Deactivating...
+Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@31 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: @Node2D@9 entered OOB! Deactivating...
+Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@33 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: @Node2D@9 entered OOB! Deactivating...
+Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@35 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: @Node2D@13 entered OOB! Deactivating...
+Environmental.OobArea.OnAreaEntered: @Node2D@9 entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@37 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
+Environmental.OobArea.OnAreaEntered: @Node2D@13 entered OOB! Deactivating...
+Environmental.OobArea.OnAreaEntered: @Node2D@9 entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@39 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
+Environmental.OobArea.OnAreaEntered: @Node2D@9 entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@41 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
+Environmental.OobArea.OnAreaEntered: @Node2D@9 entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@43 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
+Environmental.OobArea.OnAreaEntered: @Node2D@13 entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@45 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
+Environmental.OobArea.OnAreaEntered: @Node2D@9 entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@47 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
+Environmental.OobArea.OnAreaEntered: @Node2D@9 entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@49 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
+Environmental.OobArea.OnAreaEntered: @Node2D@9 entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@51 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
+Environmental.OobArea.OnAreaEntered: @Node2D@9 entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@53 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
+Environmental.OobArea.OnAreaEntered: @Node2D@13 entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@55 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
+Environmental.OobArea.OnAreaEntered: @Node2D@9 entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@57 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
+Environmental.OobArea.OnAreaEntered: @Node2D@9 entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@59 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
+Returning <Resource#-9223372000414661175> from foreach loop!
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@61 tweener stats:
 Speed: 200 | Path Length: 1200 | Duration: 6
 Returning <Resource#-9223372000414661175> from foreach loop!
 Enemies.Drone._Ready called!
@@ -35,7 +282,7 @@ Enemies.EnemyNode._Ready called!
 Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
 Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
 Enemies.EnemyNode.FollowPath: setting duration and following path.
-@Node2D@8 tweener stats:
+@Node2D@63 tweener stats:
 Speed: 200 | Path Length: 1200 | Duration: 6
 Returning <Resource#-9223372000414661175> from foreach loop!
 Enemies.Drone._Ready called!
@@ -43,7 +290,7 @@ Enemies.EnemyNode._Ready called!
 Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
 Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
 Enemies.EnemyNode.FollowPath: setting duration and following path.
-@Node2D@10 tweener stats:
+@Node2D@65 tweener stats:
 Speed: 200 | Path Length: 1200 | Duration: 6
 Returning <Resource#-9223372000414661175> from foreach loop!
 Enemies.Drone._Ready called!
@@ -51,7 +298,7 @@ Enemies.EnemyNode._Ready called!
 Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
 Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
 Enemies.EnemyNode.FollowPath: setting duration and following path.
-@Node2D@12 tweener stats:
+@Node2D@67 tweener stats:
 Speed: 200 | Path Length: 1200 | Duration: 6
 Returning <Resource#-9223372000414661175> from foreach loop!
 Enemies.Drone._Ready called!
@@ -59,20 +306,10 @@ Enemies.EnemyNode._Ready called!
 Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
 Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
 Enemies.EnemyNode.FollowPath: setting duration and following path.
-@Node2D@14 tweener stats:
+@Node2D@69 tweener stats:
 Speed: 200 | Path Length: 1200 | Duration: 6
-Returning <Resource#-9223372000414661175> from foreach loop!
-Enemies.Drone._Ready called!
-Enemies.EnemyNode._Ready called!
-Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
-Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
-Enemies.EnemyNode.FollowPath: setting duration and following path.
-@Node2D@16 tweener stats:
-Speed: 200 | Path Length: 1200 | Duration: 6
-ERROR: 45 RID allocations of type 'P11GodotArea2D' were leaked at exit.
+ERROR: 165 RID allocations of type 'P11GodotArea2D' were leaked at exit.
 ERROR: 1 RID allocations of type 'P12GodotShape2D' were leaked at exit.
-WARNING: 225 RIDs of type "CanvasItem" were leaked.
+WARNING: 825 RIDs of type "CanvasItem" were leaked.
    at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2678)
 ERROR: 1 RID allocations of type 'N10RendererRD14TextureStorage7TextureE' were leaked at exit.
-WARNING: 2 RIDs of type "Texture" were leaked.
-   at: finalize (servers/rendering/rendering_device.cpp:7191)

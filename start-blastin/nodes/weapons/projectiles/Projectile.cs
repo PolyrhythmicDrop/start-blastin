@@ -56,6 +56,8 @@ namespace Projectiles
         public override void _Ready()
         {
             Initialize();
+            // Rotate the projectile to its parent's global rotation so that it fires in the direction the weapon is "facing".
+            GlobalRotation = _sourceWeapon.GlobalRotation;
         }
 
         /// <summary>

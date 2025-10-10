@@ -27,17 +27,16 @@ namespace Enemies
 
             _currentPosition = _characterBody.GlobalPosition;
             _lastPosition = _currentPosition;
+
+            // Start the weapon fire timer to fire on a set interval.
+            _weapon.FireTimer.Timeout += FireWeapon;
+            _weapon.FireTimer.Start();
         }
 
         public override void _Process(double delta)
         {
             _lastPosition = _currentPosition;
             _currentPosition = _characterBody.GlobalPosition;
-
-            // if (_pathFollow.ProgressRatio <= 0.2)
-            // {
-            //     PrintRotation();
-            // }
 
             base._Process(delta);
             SetMoveAnimation();
@@ -58,12 +57,7 @@ namespace Enemies
         protected override void FireWeapon()
         {
             base.FireWeapon();
-            _base.Animation = "fire";
-
-            _base.AnimationFinished += () =>
-            {
-                _base.Animation = "default";
-            };
+            _base.Play("fire");
         }
     }
 }

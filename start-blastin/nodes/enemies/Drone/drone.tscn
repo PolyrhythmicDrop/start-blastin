@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://dwhfr6b04sn3"]
+[gd_scene load_steps=29 format=3 uid="uid://dwhfr6b04sn3"]
 
 [ext_resource type="Script" uid="uid://bf4nsy5w0ftaq" path="res://nodes/enemies/Drone/Drone.cs" id="1_2lfs3"]
 [ext_resource type="Texture2D" uid="uid://dniqs2y5gnx25" path="res://nodes/enemies/Drone/sprites/drone-engine.png" id="2_ijs4g"]
@@ -9,10 +9,6 @@
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ijs4g"]
 radius = 20.0
 height = 50.0
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_k5dt5"]
-atlas = ExtResource("2_ijs4g")
-region = Rect2(256, 128, 128, 128)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_owq5x"]
 atlas = ExtResource("2_ijs4g")
@@ -38,9 +34,9 @@ region = Rect2(128, 128, 128, 128)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_k5dt5")
+"texture": null
 }],
-"loop": true,
+"loop": false,
 "name": &"idle",
 "speed": 5.0
 }, {
@@ -62,7 +58,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"moving",
-"speed": 15.0
+"speed": 10.0
 }]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vn1kh"]
@@ -91,14 +87,11 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_vn1kh")
 }],
-"loop": false,
+"loop": true,
 "name": &"default",
-"speed": 15.0
+"speed": 10.0
 }, {
 "frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_vn1kh")
-}, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_a70gs")
 }, {
@@ -162,6 +155,9 @@ animations = [{
 "texture": SubResource("AtlasTexture_josik")
 }, {
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_josik")
+}, {
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_8rn6x")
 }, {
 "duration": 1.0,
@@ -185,9 +181,9 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_4whpq")
 }],
-"loop": false,
-"name": &"explode",
-"speed": 15.0
+"loop": true,
+"name": &"default",
+"speed": 10.0
 }]
 
 [node name="Drone" type="Node2D"]
@@ -199,11 +195,9 @@ curve = ExtResource("2_owq5x")
 
 [node name="PathFollow2D" type="PathFollow2D" parent="Path2D"]
 unique_name_in_owner = true
-rotation = 1.5707964
 
 [node name="DroneBody" type="Area2D" parent="Path2D/PathFollow2D"]
 unique_name_in_owner = true
-rotation = 1.5707964
 collision_layer = 4
 collision_mask = 11
 
@@ -219,102 +213,81 @@ unique_name_in_owner = true
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_vn1kh")
 animation = &"moving"
-frame_progress = 0.79709953
 metadata/_aseprite_wizard_interface_config_ = {
 "animation_section": true,
 "layer_section": true,
 "output_section": true,
-"pending_changes": {
-"should_round_fps": true
-}
+"pending_changes": {},
+"slice_section": false
 }
 metadata/_aseprite_wizard_config_ = {
-"convert_fps_field": 60.0,
-"convert_ms_field": 16.0,
-"convert_to_fps": false,
 "embed_tex": false,
-"i_mode": 0,
-"keep_anim_length": false,
 "layers": [],
 "o_ex_p": "",
 "o_folder": "res://nodes/enemies/Drone/sprites",
 "o_name": "drone-engine",
 "only_visible": true,
-"player": "SpriteContainer/AnimationPlayer",
 "scale": "2.0",
-"set_vis_track": true,
+"should_round_fps": true,
 "slice": "",
 "source": "res://nodes/enemies/Drone/sprites/drone-engine.aseprite",
 "source_uid": 854491598059660170
 }
-metadata/_aseprite_wizard_source_file_hash_ = "7ff1f10729d4704096234e8679f1c6af"
+metadata/_aseprite_wizard_source_file_hash_ = "99faf7464c1d53c1a8541867cba5c37c"
 
 [node name="Base" type="AnimatedSprite2D" parent="Path2D/PathFollow2D/DroneBody/SpriteContainer"]
 unique_name_in_owner = true
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_josik")
+animation = &"fire"
+autoplay = "default"
+frame = 4
+frame_progress = 1.0
 metadata/_aseprite_wizard_interface_config_ = {
 "animation_section": true,
 "layer_section": true,
 "output_section": true,
-"pending_changes": {
-"should_round_fps": true
-}
+"pending_changes": {}
 }
 metadata/_aseprite_wizard_config_ = {
-"convert_fps_field": 60.0,
-"convert_ms_field": 16.0,
-"convert_to_fps": false,
 "embed_tex": false,
-"i_mode": 0,
-"keep_anim_length": false,
 "layers": [],
 "o_ex_p": "",
 "o_folder": "res://nodes/enemies/Drone/sprites",
 "o_name": "drone-base",
 "only_visible": true,
-"player": "SpriteContainer/AnimationPlayer",
 "scale": "2.0",
-"set_vis_track": true,
+"should_round_fps": true,
 "slice": "",
 "source": "res://nodes/enemies/Drone/sprites/drone-base.aseprite",
 "source_uid": 3091884809254475686
 }
-metadata/_aseprite_wizard_source_file_hash_ = "e8bcd92c35f4aaffb92660b273397bb5"
+metadata/_aseprite_wizard_source_file_hash_ = "552ca6811f507bf31ca8961fec08bd78"
 
 [node name="Destruction" type="AnimatedSprite2D" parent="Path2D/PathFollow2D/DroneBody/SpriteContainer"]
 unique_name_in_owner = true
 visible = false
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_tff5w")
-animation = &"explode"
-frame = 8
-frame_progress = 1.0
+frame = 2
+frame_progress = 0.9902605
 metadata/_aseprite_wizard_interface_config_ = {
 "animation_section": true,
 "layer_section": true,
 "output_section": true,
-"pending_changes": {
-"should_round_fps": true
-}
+"pending_changes": {}
 }
 metadata/_aseprite_wizard_config_ = {
-"convert_fps_field": 60.0,
-"convert_ms_field": 16.0,
-"convert_to_fps": false,
 "embed_tex": false,
-"i_mode": 0,
-"keep_anim_length": false,
 "layers": [],
 "o_ex_p": "",
 "o_folder": "res://nodes/enemies/Drone/sprites",
 "o_name": "drone-destruction",
 "only_visible": true,
-"player": "SpriteContainer/AnimationPlayer",
 "scale": "2.0",
-"set_vis_track": true,
+"should_round_fps": true,
 "slice": "",
 "source": "res://nodes/enemies/Drone/sprites/drone-destruction.aseprite",
 "source_uid": 4422597658842684733
 }
-metadata/_aseprite_wizard_source_file_hash_ = "789c1fc2c75ff23f731025a5121438ed"
+metadata/_aseprite_wizard_source_file_hash_ = "619bbfa9dec3e9f2fd42a06f5dedf62e"

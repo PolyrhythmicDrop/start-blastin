@@ -22,9 +22,9 @@ namespace Environmental
         {
             if (area.GetParent() is Projectile projectile)
             {
-                GD.Print(
-                    $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: {projectile.Name} entered OOB! Deactivating..."
-                );
+                // GD.Print(
+                //     $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: {projectile.Name} entered OOB! Deactivating..."
+                // );
                 projectile.ToggleActive(false);
             }
         }

@@ -20,10 +20,11 @@ namespace Projectiles
 
         public override void _PhysicsProcess(double delta)
         {
+            Vector2 fireAngle = Vector2.Right.Rotated(GlobalRotation);
             if (Active)
             {
                 CastRay(delta);
-                Position += _speed * (float)delta * Vector2.Up;
+                Position += _speed * (float)delta * fireAngle;
             }
         }
 

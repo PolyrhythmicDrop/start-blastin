@@ -29,11 +29,11 @@ namespace PlayerComponents
         {
             if (_player.Velocity != Vector2.Zero)
             {
-                _engineEffectSprite.Animation = "full-power";
+                _engineEffectSprite.Play("full-power");
             }
             else
             {
-                _engineEffectSprite.Animation = "idle";
+                _engineEffectSprite.Play("idle");
             }
         }
     }

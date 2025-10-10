@@ -46,6 +46,7 @@ enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg", "res://addon
 
 folder_colors={
 "res://nodes/": "green",
+"res://nodes/enemies/Drone/sprites/": "pink",
 "res://nodes/player/components/": "purple",
 "res://nodes/player/sprites/": "pink",
 "res://resources/": "yellow"

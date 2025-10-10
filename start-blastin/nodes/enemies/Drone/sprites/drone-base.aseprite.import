@@ -1,0 +1,14 @@
+[remap]
+
+importer="aseprite_wizard.plugin.noop"
+type="PackedDataContainer"
+uid="uid://bkby5kc7e172a"
+path="res://.godot/imported/drone-base.aseprite-ec3b05075f00791bafdee39aea9bceb2.res"
+
+[deps]
+
+source_file="res://nodes/enemies/Drone/sprites/drone-base.aseprite"
+dest_files=["res://.godot/imported/drone-base.aseprite-ec3b05075f00791bafdee39aea9bceb2.res"]
+
+[params]
+

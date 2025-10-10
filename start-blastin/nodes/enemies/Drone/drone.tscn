@@ -1,0 +1,314 @@
+[gd_scene load_steps=29 format=3 uid="uid://dwhfr6b04sn3"]
+
+[ext_resource type="Script" uid="uid://bf4nsy5w0ftaq" path="res://nodes/enemies/Drone/Drone.cs" id="1_2lfs3"]
+[ext_resource type="Texture2D" uid="uid://dniqs2y5gnx25" path="res://nodes/enemies/Drone/sprites/drone-engine.png" id="2_ijs4g"]
+[ext_resource type="Texture2D" uid="uid://dm0dl4ev8bx27" path="res://nodes/enemies/Drone/sprites/drone-base.png" id="2_likh3"]
+[ext_resource type="Texture2D" uid="uid://baym56lbmyrdk" path="res://nodes/enemies/Drone/sprites/drone-destruction.png" id="4_k5dt5"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ijs4g"]
+radius = 20.0
+height = 50.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k5dt5"]
+atlas = ExtResource("2_ijs4g")
+region = Rect2(256, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_owq5x"]
+atlas = ExtResource("2_ijs4g")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eyaxp"]
+atlas = ExtResource("2_ijs4g")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_aakgy"]
+atlas = ExtResource("2_ijs4g")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yivey"]
+atlas = ExtResource("2_ijs4g")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_imcty"]
+atlas = ExtResource("2_ijs4g")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vn1kh"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k5dt5")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_owq5x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eyaxp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_aakgy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yivey")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_imcty")
+}],
+"loop": true,
+"name": &"moving",
+"speed": 15.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vn1kh"]
+atlas = ExtResource("2_likh3")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a70gs"]
+atlas = ExtResource("2_likh3")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mbith"]
+atlas = ExtResource("2_likh3")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gq3ky"]
+atlas = ExtResource("2_likh3")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ygghy"]
+atlas = ExtResource("2_likh3")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_josik"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vn1kh")
+}],
+"loop": false,
+"name": &"default",
+"speed": 15.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vn1kh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a70gs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mbith")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gq3ky")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ygghy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vn1kh")
+}],
+"loop": false,
+"name": &"fire",
+"speed": 15.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_josik"]
+atlas = ExtResource("4_k5dt5")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8rn6x"]
+atlas = ExtResource("4_k5dt5")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d747i"]
+atlas = ExtResource("4_k5dt5")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2x42u"]
+atlas = ExtResource("4_k5dt5")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7mhfj"]
+atlas = ExtResource("4_k5dt5")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sx3r7"]
+atlas = ExtResource("4_k5dt5")
+region = Rect2(256, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_36m6t"]
+atlas = ExtResource("4_k5dt5")
+region = Rect2(0, 256, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cnsom"]
+atlas = ExtResource("4_k5dt5")
+region = Rect2(128, 256, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4whpq"]
+atlas = ExtResource("4_k5dt5")
+region = Rect2(256, 256, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_tff5w"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_josik")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8rn6x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d747i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2x42u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7mhfj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sx3r7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_36m6t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cnsom")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4whpq")
+}],
+"loop": false,
+"name": &"explode",
+"speed": 15.0
+}]
+
+[node name="Drone" type="Node2D"]
+script = ExtResource("1_2lfs3")
+
+[node name="Path2D" type="Path2D" parent="."]
+unique_name_in_owner = true
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Path2D"]
+unique_name_in_owner = true
+
+[node name="DroneBody" type="CharacterBody2D" parent="Path2D/PathFollow2D"]
+unique_name_in_owner = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Path2D/PathFollow2D/DroneBody"]
+position = Vector2(0, 3)
+shape = SubResource("CapsuleShape2D_ijs4g")
+
+[node name="SpriteContainer" type="Node2D" parent="Path2D/PathFollow2D/DroneBody"]
+unique_name_in_owner = true
+
+[node name="Engine" type="AnimatedSprite2D" parent="Path2D/PathFollow2D/DroneBody/SpriteContainer"]
+unique_name_in_owner = true
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_vn1kh")
+animation = &"moving"
+frame_progress = 0.79709953
+metadata/_aseprite_wizard_interface_config_ = {
+"animation_section": true,
+"layer_section": true,
+"output_section": true,
+"pending_changes": {
+"should_round_fps": true
+}
+}
+metadata/_aseprite_wizard_config_ = {
+"convert_fps_field": 60.0,
+"convert_ms_field": 16.0,
+"convert_to_fps": false,
+"embed_tex": false,
+"i_mode": 0,
+"keep_anim_length": false,
+"layers": [],
+"o_ex_p": "",
+"o_folder": "res://nodes/enemies/Drone/sprites",
+"o_name": "drone-engine",
+"only_visible": true,
+"player": "SpriteContainer/AnimationPlayer",
+"scale": "2.0",
+"set_vis_track": true,
+"slice": "",
+"source": "res://nodes/enemies/Drone/sprites/drone-engine.aseprite",
+"source_uid": 854491598059660170
+}
+metadata/_aseprite_wizard_source_file_hash_ = "7ff1f10729d4704096234e8679f1c6af"
+
+[node name="Base" type="AnimatedSprite2D" parent="Path2D/PathFollow2D/DroneBody/SpriteContainer"]
+unique_name_in_owner = true
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_josik")
+metadata/_aseprite_wizard_interface_config_ = {
+"animation_section": true,
+"layer_section": true,
+"output_section": true,
+"pending_changes": {
+"should_round_fps": true
+}
+}
+metadata/_aseprite_wizard_config_ = {
+"convert_fps_field": 60.0,
+"convert_ms_field": 16.0,
+"convert_to_fps": false,
+"embed_tex": false,
+"i_mode": 0,
+"keep_anim_length": false,
+"layers": [],
+"o_ex_p": "",
+"o_folder": "res://nodes/enemies/Drone/sprites",
+"o_name": "drone-base",
+"only_visible": true,
+"player": "SpriteContainer/AnimationPlayer",
+"scale": "2.0",
+"set_vis_track": true,
+"slice": "",
+"source": "res://nodes/enemies/Drone/sprites/drone-base.aseprite",
+"source_uid": 3091884809254475686
+}
+metadata/_aseprite_wizard_source_file_hash_ = "e8bcd92c35f4aaffb92660b273397bb5"
+
+[node name="Destruction" type="AnimatedSprite2D" parent="Path2D/PathFollow2D/DroneBody/SpriteContainer"]
+unique_name_in_owner = true
+visible = false
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_tff5w")
+animation = &"explode"
+frame = 8
+frame_progress = 1.0
+metadata/_aseprite_wizard_interface_config_ = {
+"animation_section": true,
+"layer_section": true,
+"output_section": true,
+"pending_changes": {
+"should_round_fps": true
+}
+}
+metadata/_aseprite_wizard_config_ = {
+"convert_fps_field": 60.0,
+"convert_ms_field": 16.0,
+"convert_to_fps": false,
+"embed_tex": false,
+"i_mode": 0,
+"keep_anim_length": false,
+"layers": [],
+"o_ex_p": "",
+"o_folder": "res://nodes/enemies/Drone/sprites",
+"o_name": "drone-destruction",
+"only_visible": true,
+"player": "SpriteContainer/AnimationPlayer",
+"scale": "2.0",
+"set_vis_track": true,
+"slice": "",
+"source": "res://nodes/enemies/Drone/sprites/drone-destruction.aseprite",
+"source_uid": 4422597658842684733
+}
+metadata/_aseprite_wizard_source_file_hash_ = "789c1fc2c75ff23f731025a5121438ed"

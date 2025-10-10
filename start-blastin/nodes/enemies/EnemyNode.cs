@@ -1,0 +1,75 @@
+using Components;
+using Factories;
+using Godot;
+using Weapons;
+
+namespace Enemies
+{
+    [GlobalClass]
+    public abstract partial class EnemyNode : Node2D
+    {
+        protected HealthComponent _healthComponent;
+        protected WeaponNode _weapon;
+        protected Curve2D _curve;
+        protected Path2D _path;
+        protected PathFollow2D _pathFollow;
+        protected CharacterBody2D _characterBody;
+
+        protected EnemyState _state;
+
+        public HealthComponent HealthComp => _healthComponent;
+        public WeaponNode Weapon => _weapon;
+
+        public Path2D Path => _path;
+
+        public virtual void Initialize(EnemyResource enemyResource)
+        {
+            _healthComponent = enemyResource.HealthComponent;
+            _weapon = WeaponFactory.CreateWeapon(enemyResource.WeaponResource);
+            _curve = enemyResource.PathCurve;
+        }
+
+        public override void _Ready()
+        {
+            base._Ready();
+            _path = GetNode<Path2D>("%Path2D");
+            _path.Curve = _curve;
+
+            _pathFollow = _path.GetNode<PathFollow2D>("%PathFollow2D");
+            _characterBody = _pathFollow.GetNode<CharacterBody2D>("%DroneBody");
+
+            _characterBody.AddChild(_weapon);
+        }
+
+        protected virtual void SetState()
+        {
+            EnemyMoveState moveState;
+            EnemyFireState fireState;
+
+            if (_characterBody.Velocity != Vector2.Zero)
+            {
+                moveState = EnemyMoveState.Moving;
+            }
+            else
+            {
+                moveState = EnemyMoveState.Idle;
+            }
+
+            if (_weapon.FireTimer.IsStopped())
+            {
+                fireState = EnemyFireState.Hold;
+            }
+            else
+            {
+                fireState = EnemyFireState.Fire;
+            }
+
+            _state = new EnemyState(moveState, fireState);
+        }
+
+        protected virtual void FireWeapon()
+        {
+            _weapon.Fire();
+        }
+    }
+}

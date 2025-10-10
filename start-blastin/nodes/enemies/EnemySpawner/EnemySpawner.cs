@@ -87,7 +87,7 @@ namespace Enemies
 
         private EnemyResource GetEnemyFromPool()
         {
-            GD.Print($"{MethodBase.GetCurrentMethod().Name} -> \n");
+            // GD.Print($"{MethodBase.GetCurrentMethod().Name} -> \n");
             if (_enemyPool == null || _enemyPool.Count == 0)
                 return null;
 
@@ -98,12 +98,12 @@ namespace Enemies
                 totalWeight += num;
             }
 
-            GD.Print($"Total weight: {totalWeight}");
+            // GD.Print($"Total weight: {totalWeight}");
 
             // Generate random number within total weight
             int randomValue = GD.RandRange(0, totalWeight - 1);
 
-            GD.Print($"Random value: {randomValue}");
+            // GD.Print($"Random value: {randomValue}");
 
             // Find the enemy that corresponds to this weight
             int currentWeight = 0;
@@ -126,19 +126,19 @@ namespace Enemies
 
         private void SpawnEnemy()
         {
-            GD.Print($"{MethodBase.GetCurrentMethod().Name}: Attempting to spawn enemy...");
+            // GD.Print($"{MethodBase.GetCurrentMethod().Name}: Attempting to spawn enemy...");
             EnemyResource enemyResource = GetEnemyFromPool();
             EnemyNode enemy = EnemyFactory.CreateEnemy(enemyResource);
 
-            GD.Print($"{MethodBase.GetCurrentMethod().Name}: {enemy.Name} created from factory!");
+            // GD.Print($"{MethodBase.GetCurrentMethod().Name}: {enemy.Name} created from factory!");
             enemy.GlobalPosition = _spawnPoint.GlobalPosition;
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().Name}: {enemy} global position set to {enemy.GlobalPosition}."
-            );
+            // GD.Print(
+            //     $"{MethodBase.GetCurrentMethod().Name}: {enemy} global position set to {enemy.GlobalPosition}."
+            // );
             _spawnParent.AddChild(enemy);
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().Name}: {enemy} added to tree! Enemy global position: {enemy.GlobalPosition}."
-            );
+            // GD.Print(
+            //     $"{MethodBase.GetCurrentMethod().Name}: {enemy} added to tree! Enemy global position: {enemy.GlobalPosition}."
+            // );
         }
 
         private void MoveSpawnPoint()

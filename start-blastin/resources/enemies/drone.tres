@@ -13,6 +13,7 @@ metadata/_custom_type_script = "uid://de8iusxhs0qem"
 [resource]
 script = ExtResource("1_oggcu")
 ScenePath = "res://nodes/enemies/Drone/drone.tscn"
+Speed = 200.0
 HealthComponent = SubResource("Resource_0bm52")
 WeaponResource = ExtResource("2_gfeuq")
 PathCurve = ExtResource("2_64nox")

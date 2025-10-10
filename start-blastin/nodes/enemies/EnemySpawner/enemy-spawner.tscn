@@ -8,6 +8,7 @@
 script = ExtResource("1_dbpvi")
 Curve = ExtResource("2_u3nr5")
 SpawnInterval = 1.5
+SpawnPointMoveDuration = 4.0
 EnemyPool = Dictionary[Object, int]({
 ExtResource("3_aan0h"): 10
 })

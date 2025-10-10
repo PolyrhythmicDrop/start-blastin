@@ -29,5 +29,3 @@ position = Vector2(933, 883)
 
 [node name="EnemySpawner" parent="." instance=ExtResource("5_l8aks")]
 position = Vector2(0, 407)
-SpawnInterval = 1.0
-SpawnPointMoveDuration = 5.0

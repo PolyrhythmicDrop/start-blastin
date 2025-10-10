@@ -11,12 +11,20 @@ namespace Enemies
         protected HealthComponent _healthComponent;
         protected WeaponResource _weaponResource;
         protected Curve2D _pathCurve;
+        protected float _speed;
 
         [Export]
         public string ScenePath
         {
             get => _scenePath;
             set => _scenePath = value;
+        }
+
+        [Export]
+        public float Speed
+        {
+            get => _speed;
+            set => _speed = value;
         }
 
         [Export]

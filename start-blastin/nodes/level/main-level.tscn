@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://dgcswjykgey5y"]
+[gd_scene load_steps=6 format=3 uid="uid://dgcswjykgey5y"]
 
 [ext_resource type="Texture2D" uid="uid://cilgl08og1qhy" path="res://nodes/backgrounds/background-purple-nebulae-stars.png" id="1_rvdan"]
 [ext_resource type="PackedScene" uid="uid://dl7j0usiolxux" path="res://nodes/environmental/play-area-border.tscn" id="2_cw5wp"]
 [ext_resource type="PackedScene" uid="uid://nenl15kjphyb" path="res://nodes/player/player.tscn" id="3_pxe5x"]
 [ext_resource type="PackedScene" uid="uid://bsyev7gatn1jy" path="res://nodes/environmental/oob-area.tscn" id="4_rl1rb"]
+[ext_resource type="PackedScene" uid="uid://b5ki3kbchln2j" path="res://nodes/enemies/EnemySpawner/enemy-spawner.tscn" id="5_l8aks"]
 
 [node name="MainLevel" type="Node"]
 
@@ -25,3 +26,8 @@ stretch_mode = 5
 position = Vector2(933, 883)
 
 [node name="OOB-Area" parent="." instance=ExtResource("4_rl1rb")]
+
+[node name="EnemySpawner" parent="." instance=ExtResource("5_l8aks")]
+position = Vector2(0, 407)
+SpawnInterval = 1.0
+SpawnPointMoveDuration = 5.0

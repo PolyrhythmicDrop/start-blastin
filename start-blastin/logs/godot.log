@@ -1,38 +1,242 @@
 Godot Engine v4.5.stable.mono.official.876b29033 - https://godotengine.org
 Vulkan 1.4.312 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3060 Ti
 
-Weapon equipped! <Node2D#36624663964>
-Stats: 0.5 | 1 | Bullet | 1500
+Weapon equipped! <Node2D#37664851388>
+Stats: 0.5 | 1 | Bullet | 1000
 Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
-Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: @Node2D@4 entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: @Node2D@4 entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: @Node2D@4 entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: @Node2D@4 entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: @Node2D@4 entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: @Node2D@4 entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: @Node2D@4 entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: @Node2D@4 entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: @Node2D@4 entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: @Node2D@4 entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: @Node2D@4 entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: @Node2D@4 entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
-Environmental.OobArea.OnAreaEntered: Bullet entered OOB! Deactivating...
-ERROR: 5 RID allocations of type 'P11GodotArea2D' were leaked at exit.
+Enemies.EnemySpawner._Ready called!
+SpawnEnemy: Attempting to spawn enemy...
+GetEnemyFromPool -> 
+
+Total weight: 10
+Random value: 1
+Returning <Resource#-9223372000414661175> from foreach loop!
+SpawnEnemy: Drone created from factory!
+SpawnEnemy: <Node2D#49023026725> global position set to (383.99792, 407).
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+SpawnEnemy: <Node2D#49023026725> added to tree! Enemy global position: (383.99792, 407).
+SpawnEnemy: Attempting to spawn enemy...
+GetEnemyFromPool -> 
+
+Total weight: 10
+Random value: 9
+Returning <Resource#-9223372000414661175> from foreach loop!
+SpawnEnemy: Drone created from factory!
+SpawnEnemy: <Node2D#50214209050> global position set to (767.9465, 407).
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+SpawnEnemy: <Node2D#50214209050> added to tree! Enemy global position: (767.9465, 407).
+SpawnEnemy: Attempting to spawn enemy...
+GetEnemyFromPool -> 
+
+Total weight: 10
+Random value: 0
+Returning <Resource#-9223372000414661175> from foreach loop!
+SpawnEnemy: Drone created from factory!
+SpawnEnemy: <Node2D#51858376167> global position set to (1151.8485, 407).
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+SpawnEnemy: <Node2D#51858376167> added to tree! Enemy global position: (1151.8485, 407).
+SpawnEnemy: Attempting to spawn enemy...
+GetEnemyFromPool -> 
+
+Total weight: 10
+Random value: 3
+Returning <Resource#-9223372000414661175> from foreach loop!
+SpawnEnemy: Drone created from factory!
+SpawnEnemy: <Node2D#54223963718> global position set to (1535.9663, 407).
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+SpawnEnemy: <Node2D#54223963718> added to tree! Enemy global position: (1535.9663, 407).
+SpawnEnemy: Attempting to spawn enemy...
+GetEnemyFromPool -> 
+
+Total weight: 10
+Random value: 9
+Returning <Resource#-9223372000414661175> from foreach loop!
+SpawnEnemy: Drone created from factory!
+SpawnEnemy: <Node2D#55230596748> global position set to (1919.9956, 407).
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+SpawnEnemy: <Node2D#55230596748> added to tree! Enemy global position: (1919.9956, 407).
+SpawnEnemy: Attempting to spawn enemy...
+GetEnemyFromPool -> 
+
+Total weight: 10
+Random value: 5
+Returning <Resource#-9223372000414661175> from foreach loop!
+SpawnEnemy: Drone created from factory!
+SpawnEnemy: <Node2D#56405001918> global position set to (1536.0105, 407).
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+SpawnEnemy: <Node2D#56405001918> added to tree! Enemy global position: (1536.0105, 407).
+SpawnEnemy: Attempting to spawn enemy...
+GetEnemyFromPool -> 
+
+Total weight: 10
+Random value: 0
+Returning <Resource#-9223372000414661175> from foreach loop!
+SpawnEnemy: Drone created from factory!
+SpawnEnemy: <Node2D#57411634913> global position set to (1152.0132, 407).
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+SpawnEnemy: <Node2D#57411634913> added to tree! Enemy global position: (1152.0132, 407).
+SpawnEnemy: Attempting to spawn enemy...
+GetEnemyFromPool -> 
+
+Total weight: 10
+Random value: 2
+Returning <Resource#-9223372000414661175> from foreach loop!
+SpawnEnemy: Drone created from factory!
+SpawnEnemy: <Node2D#58502154082> global position set to (768.0014, 407).
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+SpawnEnemy: <Node2D#58502154082> added to tree! Enemy global position: (768.0014, 407).
+SpawnEnemy: Attempting to spawn enemy...
+GetEnemyFromPool -> 
+
+Total weight: 10
+Random value: 5
+Returning <Resource#-9223372000414661175> from foreach loop!
+SpawnEnemy: Drone created from factory!
+SpawnEnemy: <Node2D#60733523781> global position set to (384.10672, 407).
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+SpawnEnemy: <Node2D#60733523781> added to tree! Enemy global position: (384.10672, 407).
+SpawnEnemy: Attempting to spawn enemy...
+GetEnemyFromPool -> 
+
+Total weight: 10
+Random value: 5
+Returning <Resource#-9223372000414661175> from foreach loop!
+SpawnEnemy: Drone created from factory!
+SpawnEnemy: <Node2D#63233329081> global position set to (0.05111067, 407).
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+SpawnEnemy: <Node2D#63233329081> added to tree! Enemy global position: (0.05111067, 407).
+SpawnEnemy: Attempting to spawn enemy...
+GetEnemyFromPool -> 
+
+Total weight: 10
+Random value: 5
+Returning <Resource#-9223372000414661175> from foreach loop!
+SpawnEnemy: Drone created from factory!
+SpawnEnemy: <Node2D#65162708970> global position set to (383.99908, 407).
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+SpawnEnemy: <Node2D#65162708970> added to tree! Enemy global position: (383.99908, 407).
+SpawnEnemy: Attempting to spawn enemy...
+GetEnemyFromPool -> 
+
+Total weight: 10
+Random value: 5
+Returning <Resource#-9223372000414661175> from foreach loop!
+SpawnEnemy: Drone created from factory!
+SpawnEnemy: <Node2D#66421000087> global position set to (767.97986, 407).
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+SpawnEnemy: <Node2D#66421000087> added to tree! Enemy global position: (767.97986, 407).
+SpawnEnemy: Attempting to spawn enemy...
+GetEnemyFromPool -> 
+
+Total weight: 10
+Random value: 4
+Returning <Resource#-9223372000414661175> from foreach loop!
+SpawnEnemy: Drone created from factory!
+SpawnEnemy: <Node2D#67511519289> global position set to (1151.9714, 407).
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+SpawnEnemy: <Node2D#67511519289> added to tree! Enemy global position: (1151.9714, 407).
+SpawnEnemy: Attempting to spawn enemy...
+GetEnemyFromPool -> 
+
+Total weight: 10
+Random value: 5
+Returning <Resource#-9223372000414661175> from foreach loop!
+SpawnEnemy: Drone created from factory!
+SpawnEnemy: <Node2D#68518152206> global position set to (1535.9083, 407).
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+SpawnEnemy: <Node2D#68518152206> added to tree! Enemy global position: (1535.9083, 407).
+SpawnEnemy: Attempting to spawn enemy...
+GetEnemyFromPool -> 
+
+Total weight: 10
+Random value: 4
+Returning <Resource#-9223372000414661175> from foreach loop!
+SpawnEnemy: Drone created from factory!
+SpawnEnemy: <Node2D#70564972658> global position set to (1919.9421, 407).
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+SpawnEnemy: <Node2D#70564972658> added to tree! Enemy global position: (1919.9421, 407).
+SpawnEnemy: Attempting to spawn enemy...
+GetEnemyFromPool -> 
+
+Total weight: 10
+Random value: 9
+Returning <Resource#-9223372000414661175> from foreach loop!
+SpawnEnemy: Drone created from factory!
+SpawnEnemy: <Node2D#71856818289> global position set to (1536.0875, 407).
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+SpawnEnemy: <Node2D#71856818289> added to tree! Enemy global position: (1536.0875, 407).
+SpawnEnemy: Attempting to spawn enemy...
+GetEnemyFromPool -> 
+
+Total weight: 10
+Random value: 5
+Returning <Resource#-9223372000414661175> from foreach loop!
+SpawnEnemy: Drone created from factory!
+SpawnEnemy: <Node2D#72863451281> global position set to (1152.1088, 407).
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+SpawnEnemy: <Node2D#72863451281> added to tree! Enemy global position: (1152.1088, 407).
+SpawnEnemy: Attempting to spawn enemy...
+GetEnemyFromPool -> 
+
+Total weight: 10
+Random value: 0
+Returning <Resource#-9223372000414661175> from foreach loop!
+SpawnEnemy: Drone created from factory!
+SpawnEnemy: <Node2D#74121742565> global position set to (768.079, 407).
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+SpawnEnemy: <Node2D#74121742565> added to tree! Enemy global position: (768.079, 407).
+SpawnEnemy: Attempting to spawn enemy...
+GetEnemyFromPool -> 
+
+Total weight: 10
+Random value: 5
+Returning <Resource#-9223372000414661175> from foreach loop!
+SpawnEnemy: Drone created from factory!
+SpawnEnemy: <Node2D#75380033808> global position set to (384.07648, 407).
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+SpawnEnemy: <Node2D#75380033808> added to tree! Enemy global position: (384.07648, 407).
+SpawnEnemy: Attempting to spawn enemy...
+GetEnemyFromPool -> 
+
+Total weight: 10
+Random value: 7
+Returning <Resource#-9223372000414661175> from foreach loop!
+SpawnEnemy: Drone created from factory!
+SpawnEnemy: <Node2D#76470552934> global position set to (1.7866051, 407).
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+SpawnEnemy: <Node2D#76470552934> added to tree! Enemy global position: (1.7866051, 407).
+SpawnEnemy: Attempting to spawn enemy...
+GetEnemyFromPool -> 
+
+Total weight: 10
+Random value: 8
+Returning <Resource#-9223372000414661175> from foreach loop!
+SpawnEnemy: Drone created from factory!
+SpawnEnemy: <Node2D#77309413777> global position set to (383.97147, 407).
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+SpawnEnemy: <Node2D#77309413777> added to tree! Enemy global position: (383.97147, 407).
+SpawnEnemy: Attempting to spawn enemy...
+GetEnemyFromPool -> 
+
+Total weight: 10
+Random value: 1
+Returning <Resource#-9223372000414661175> from foreach loop!
+SpawnEnemy: Drone created from factory!
+SpawnEnemy: <Node2D#80010545602> global position set to (767.92914, 407).
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+SpawnEnemy: <Node2D#80010545602> added to tree! Enemy global position: (767.92914, 407).
+SpawnEnemy: Attempting to spawn enemy...
+GetEnemyFromPool -> 
+
+Total weight: 10
+Random value: 9
+Returning <Resource#-9223372000414661175> from foreach loop!
+SpawnEnemy: Drone created from factory!
+SpawnEnemy: <Node2D#80899738046> global position set to (1151.8286, 407).
+Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+SpawnEnemy: <Node2D#80899738046> added to tree! Enemy global position: (1151.8286, 407).
+ERROR: 120 RID allocations of type 'P11GodotArea2D' were leaked at exit.
 ERROR: 1 RID allocations of type 'P12GodotShape2D' were leaked at exit.
-WARNING: 25 RIDs of type "CanvasItem" were leaked.
+WARNING: 600 RIDs of type "CanvasItem" were leaked.
    at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2678)
 ERROR: 1 RID allocations of type 'N10RendererRD14TextureStorage7TextureE' were leaked at exit.

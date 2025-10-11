@@ -6,7 +6,13 @@ namespace Factories
 {
     public class WeaponFactory
     {
-        public static WeaponNode CreateWeapon(WeaponResource weaponResource)
+        /// <summary>
+        /// Instantiates and builds a weapon based on a passed resource.
+        /// </summary>
+        /// <param name="weaponResource">The resource to create the weapon from. Resource contains the weapon's scene path and stats.</param>
+        /// <param name="enemyWeapon">True if the weapon belongs to an enemy. False if it belongs to the player. Used to apply the correct shader material to projectiles.</param>
+        /// <returns></returns>
+        public static WeaponNode CreateWeapon(WeaponResource weaponResource, bool enemyWeapon)
         {
             try
             {
@@ -24,6 +30,7 @@ namespace Factories
 
                 if (builtWeapon is WeaponNode weaponNode)
                 {
+                    weaponNode.EnemyOwned = enemyWeapon;
                     weaponNode.InitializeStats(weaponResource.Stats);
                     return weaponNode;
                 }

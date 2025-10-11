@@ -6,103 +6,334 @@ Stats: 0.5 | 1 | Bullet | 1000
 Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
 Enemies.EnemySpawner._Ready called!
 Returning <Resource#-9223372000448215609> from foreach loop!
+Enemies.EnemyNode.Initialize: _weapon.EnemyOwned = True
 Enemies.Drone._Ready called!
 Enemies.EnemyNode._Ready called!
 Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
-Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Setting FireTimer wait time from FireRate. FireRate = 0.8 | WaitTime = 0.800000011920929
 Enemies.EnemyNode.FollowPath: setting duration and following path.
 Drone tweener stats:
 Speed: 200 | Path Length: 1200 | Duration: 6
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
 Returning <Resource#-9223372000448215609> from foreach loop!
+Enemies.EnemyNode.Initialize: _weapon.EnemyOwned = True
 Enemies.Drone._Ready called!
 Enemies.EnemyNode._Ready called!
 Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
-Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Setting FireTimer wait time from FireRate. FireRate = 0.8 | WaitTime = 0.800000011920929
 Enemies.EnemyNode.FollowPath: setting duration and following path.
-@Node2D@12 tweener stats:
+@Node2D@5 tweener stats:
 Speed: 200 | Path Length: 1200 | Duration: 6
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
 Returning <Resource#-9223372000448215609> from foreach loop!
+Enemies.EnemyNode.Initialize: _weapon.EnemyOwned = True
 Enemies.Drone._Ready called!
 Enemies.EnemyNode._Ready called!
 Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
-Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Setting FireTimer wait time from FireRate. FireRate = 0.8 | WaitTime = 0.800000011920929
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@10 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Returning <Resource#-9223372000448215609> from foreach loop!
+Enemies.EnemyNode.Initialize: _weapon.EnemyOwned = True
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Setting FireTimer wait time from FireRate. FireRate = 0.8 | WaitTime = 0.800000011920929
 Enemies.EnemyNode.FollowPath: setting duration and following path.
 @Node2D@17 tweener stats:
 Speed: 200 | Path Length: 1200 | Duration: 6
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: .
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: .
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
 Returning <Resource#-9223372000448215609> from foreach loop!
+Enemies.EnemyNode.Initialize: _weapon.EnemyOwned = True
 Enemies.Drone._Ready called!
 Enemies.EnemyNode._Ready called!
 Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
-Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Setting FireTimer wait time from FireRate. FireRate = 0.8 | WaitTime = 0.800000011920929
 Enemies.EnemyNode.FollowPath: setting duration and following path.
-@Node2D@24 tweener stats:
+@Node2D@27 tweener stats:
 Speed: 200 | Path Length: 1200 | Duration: 6
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: .
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: .
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
 Returning <Resource#-9223372000448215609> from foreach loop!
+Enemies.EnemyNode.Initialize: _weapon.EnemyOwned = True
 Enemies.Drone._Ready called!
 Enemies.EnemyNode._Ready called!
 Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
-Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Setting FireTimer wait time from FireRate. FireRate = 0.8 | WaitTime = 0.800000011920929
 Enemies.EnemyNode.FollowPath: setting duration and following path.
-@Node2D@31 tweener stats:
+@Node2D@36 tweener stats:
 Speed: 200 | Path Length: 1200 | Duration: 6
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: .
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: .
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
 Returning <Resource#-9223372000448215609> from foreach loop!
+Enemies.EnemyNode.Initialize: _weapon.EnemyOwned = True
 Enemies.Drone._Ready called!
 Enemies.EnemyNode._Ready called!
 Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
-Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Setting FireTimer wait time from FireRate. FireRate = 0.8 | WaitTime = 0.800000011920929
 Enemies.EnemyNode.FollowPath: setting duration and following path.
-@Node2D@40 tweener stats:
+@Node2D@43 tweener stats:
 Speed: 200 | Path Length: 1200 | Duration: 6
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: .
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: .
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
 Returning <Resource#-9223372000448215609> from foreach loop!
+Enemies.EnemyNode.Initialize: _weapon.EnemyOwned = True
 Enemies.Drone._Ready called!
 Enemies.EnemyNode._Ready called!
 Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
-Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Setting FireTimer wait time from FireRate. FireRate = 0.8 | WaitTime = 0.800000011920929
 Enemies.EnemyNode.FollowPath: setting duration and following path.
-@Node2D@45 tweener stats:
+@Node2D@50 tweener stats:
 Speed: 200 | Path Length: 1200 | Duration: 6
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: .
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: .
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
 Returning <Resource#-9223372000448215609> from foreach loop!
+Enemies.EnemyNode.Initialize: _weapon.EnemyOwned = True
 Enemies.Drone._Ready called!
 Enemies.EnemyNode._Ready called!
 Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
-Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Setting FireTimer wait time from FireRate. FireRate = 0.8 | WaitTime = 0.800000011920929
 Enemies.EnemyNode.FollowPath: setting duration and following path.
-@Node2D@52 tweener stats:
+@Node2D@57 tweener stats:
 Speed: 200 | Path Length: 1200 | Duration: 6
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: .
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: .
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
 Returning <Resource#-9223372000448215609> from foreach loop!
+Enemies.EnemyNode.Initialize: _weapon.EnemyOwned = True
 Enemies.Drone._Ready called!
 Enemies.EnemyNode._Ready called!
 Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
-Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Setting FireTimer wait time from FireRate. FireRate = 0.8 | WaitTime = 0.800000011920929
 Enemies.EnemyNode.FollowPath: setting duration and following path.
-@Node2D@61 tweener stats:
+@Node2D@64 tweener stats:
 Speed: 200 | Path Length: 1200 | Duration: 6
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: .
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: .
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
 Returning <Resource#-9223372000448215609> from foreach loop!
+Enemies.EnemyNode.Initialize: _weapon.EnemyOwned = True
 Enemies.Drone._Ready called!
 Enemies.EnemyNode._Ready called!
 Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
-Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Setting FireTimer wait time from FireRate. FireRate = 0.8 | WaitTime = 0.800000011920929
 Enemies.EnemyNode.FollowPath: setting duration and following path.
-@Node2D@68 tweener stats:
+@Node2D@71 tweener stats:
 Speed: 200 | Path Length: 1200 | Duration: 6
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: .
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: .
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
 Returning <Resource#-9223372000448215609> from foreach loop!
+Enemies.EnemyNode.Initialize: _weapon.EnemyOwned = True
 Enemies.Drone._Ready called!
 Enemies.EnemyNode._Ready called!
 Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
-Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Setting FireTimer wait time from FireRate. FireRate = 0.8 | WaitTime = 0.800000011920929
 Enemies.EnemyNode.FollowPath: setting duration and following path.
-@Node2D@73 tweener stats:
+@Node2D@78 tweener stats:
 Speed: 200 | Path Length: 1200 | Duration: 6
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: .
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: .
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
 Returning <Resource#-9223372000448215609> from foreach loop!
+Enemies.EnemyNode.Initialize: _weapon.EnemyOwned = True
 Enemies.Drone._Ready called!
 Enemies.EnemyNode._Ready called!
 Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
-Setting FireTimer wait time from FireRate. FireRate = 0.5 | WaitTime = 0.5
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Setting FireTimer wait time from FireRate. FireRate = 0.8 | WaitTime = 0.800000011920929
 Enemies.EnemyNode.FollowPath: setting duration and following path.
-@Node2D@80 tweener stats:
+@Node2D@85 tweener stats:
 Speed: 200 | Path Length: 1200 | Duration: 6
-ERROR: 58 RID allocations of type 'P11GodotArea2D' were leaked at exit.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Projectiles.ProjectilePool.RequestProjectile: Activated projectile has this Material: <ShaderMaterial#-9223371982412708266>.
+Returning <Resource#-9223372000448215609> from foreach loop!
+Enemies.EnemyNode.Initialize: _weapon.EnemyOwned = True
+Enemies.Drone._Ready called!
+Enemies.EnemyNode._Ready called!
+Enemies.EnemyNode._Ready: _pathFollow initial rotation: 1.5707964
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Factories.ProjectileFactory.CreateProjectile: shaderMaterial = <ShaderMaterial#-9223371982412708266>
+Setting FireTimer wait time from FireRate. FireRate = 0.8 | WaitTime = 0.800000011920929
+Enemies.EnemyNode.FollowPath: setting duration and following path.
+@Node2D@92 tweener stats:
+Speed: 200 | Path Length: 1200 | Duration: 6
+ERROR: 69 RID allocations of type 'P11GodotArea2D' were leaked at exit.
 ERROR: 1 RID allocations of type 'P12GodotShape2D' were leaked at exit.
-WARNING: 290 RIDs of type "CanvasItem" were leaked.
+WARNING: 345 RIDs of type "CanvasItem" were leaked.
    at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2678)
+ERROR: 1 shaders of type CanvasShaderRD were never freed
+   at: ~ShaderRD (servers/rendering/renderer_rd/shader_rd.cpp:1044)
+ERROR: 1 RID allocations of type 'N10RendererRD15MaterialStorage8MaterialE' were leaked at exit.
+ERROR: 1 RID allocations of type 'N10RendererRD15MaterialStorage6ShaderE' were leaked at exit.
 ERROR: 1 RID allocations of type 'N10RendererRD14TextureStorage7TextureE' were leaked at exit.

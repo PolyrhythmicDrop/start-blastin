@@ -1,4 +1,4 @@
-using System;
+using System.Reflection;
 using Godot;
 using Projectiles;
 using Weapons;
@@ -18,6 +18,15 @@ namespace Factories
                     break;
             }
             ammo.SourceWeapon = weapon;
+
+            // If the weapon belongs to an enemy, apply the relevant shader to its projectiles.
+            if (weapon.EnemyOwned)
+            {
+                ShaderMaterial shaderMaterial = ResourceLoader.Load<ShaderMaterial>(
+                    "res://resources/materials/enemy-bullet-palette-swap.tres"
+                );
+                ammo.Material = shaderMaterial;
+            }
             return ammo;
         }
     }

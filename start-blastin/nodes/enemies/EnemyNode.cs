@@ -27,25 +27,18 @@ namespace Enemies
         public virtual void Initialize(EnemyResource enemyResource)
         {
             _healthComponent = enemyResource.HealthComponent;
-            _weapon = WeaponFactory.CreateWeapon(enemyResource.WeaponResource);
+            _weapon = WeaponFactory.CreateWeapon(enemyResource.WeaponResource, true);
             _curve = enemyResource.PathCurve;
             _speed = enemyResource.Speed;
         }
 
         public override void _Ready()
         {
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name} called!"
-            );
-
             base._Ready();
             _path = GetNode<Path2D>("%Path2D");
             _path.Curve = _curve;
 
             _pathFollow = _path.GetNode<PathFollow2D>("%PathFollow2D");
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: _pathFollow initial rotation: {_pathFollow.Rotation}"
-            );
             _characterBody = _pathFollow.GetNode<Area2D>("%DroneBody");
 
             _characterBody.AddChild(_weapon);
@@ -86,15 +79,8 @@ namespace Enemies
 
         protected virtual void FollowPath()
         {
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: setting duration and following path."
-            );
             float pathLength = _curve.GetBakedLength();
             float duration = pathLength / _speed;
-
-            GD.Print(
-                $"{Name} tweener stats:\nSpeed: {_speed} | Path Length: {pathLength} | Duration: {duration}"
-            );
 
             Tween tween = CreateTween();
             tween.TweenProperty(_pathFollow, "progress_ratio", 1.0, duration);

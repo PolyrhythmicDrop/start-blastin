@@ -8,6 +8,8 @@ namespace Projectiles
         private AnimatedSprite2D _sprite;
         private RayCast2D _ray;
 
+        private Vector2 _trajectory;
+
         public RayCast2D Ray => _ray;
         public static string ScenePath => "res://nodes/weapons/projectiles/Bullet/Bullet.tscn";
 
@@ -20,11 +22,10 @@ namespace Projectiles
 
         public override void _PhysicsProcess(double delta)
         {
-            Vector2 fireAngle = Vector2.Right.Rotated(GlobalRotation);
             if (Active)
             {
                 CastRay(delta);
-                Position += _speed * (float)delta * fireAngle;
+                Position += SetTrajectory(delta);
             }
         }
 
@@ -34,7 +35,7 @@ namespace Projectiles
         /// <param name="delta">The physics frame delta time.</param>
         public void CastRay(double delta)
         {
-            var nextPos = ToLocal(Speed * (float)delta * Vector2.Up);
+            var nextPos = ToLocal(SetTrajectory(delta));
             Ray.TargetPosition = nextPos;
             if (Ray.Enabled == false)
             {
@@ -55,6 +56,12 @@ namespace Projectiles
 
                 EmitSignal(SignalName.Collision, collision);
             }
+        }
+
+        private Vector2 SetTrajectory(double delta)
+        {
+            Vector2 fireAngle = Vector2.Right.Rotated(GlobalRotation);
+            return _speed * (float)delta * fireAngle;
         }
 
 #nullable enable

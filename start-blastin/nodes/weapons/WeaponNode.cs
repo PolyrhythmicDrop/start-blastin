@@ -1,3 +1,4 @@
+using System;
 using Components;
 using Godot;
 using Projectiles;
@@ -8,9 +9,29 @@ namespace Weapons
     public partial class WeaponNode : Node2D
     {
         private WeaponStats _stats;
+        private bool _enemyOwned;
+        private bool _ownerSet;
         private ProjectilePool _pool;
 
         public WeaponStats Stats => _stats;
+        public bool EnemyOwned
+        {
+            get => _enemyOwned;
+            set
+            {
+                if (_ownerSet)
+                {
+                    throw new InvalidOperationException(
+                        $"{Name}: Cannot assign an owner after owner already set!"
+                    );
+                }
+                else
+                {
+                    _ownerSet = true;
+                    _enemyOwned = value;
+                }
+            }
+        }
         public ProjectilePool Pool => _pool;
         public Node ProjectileParent;
         public virtual Vector2 ProjSpawnPoint

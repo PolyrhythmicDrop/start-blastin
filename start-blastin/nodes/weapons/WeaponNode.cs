@@ -77,9 +77,6 @@ namespace Weapons
             else
             {
                 FireTimer.WaitTime = _stats.FireRate;
-                GD.Print(
-                    $"Setting FireTimer wait time from FireRate. FireRate = {_stats.FireRate} | WaitTime = {FireTimer.WaitTime}"
-                );
             }
             AddChild(FireTimer);
         }

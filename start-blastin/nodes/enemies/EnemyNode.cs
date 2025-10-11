@@ -2,12 +2,13 @@ using System.Reflection;
 using Components;
 using Factories;
 using Godot;
+using Interfaces;
 using Weapons;
 
 namespace Enemies
 {
     [GlobalClass]
-    public abstract partial class EnemyNode : Node2D
+    public abstract partial class EnemyNode : Node2D, IDie, IHealthful
     {
         protected HealthComponent _healthComponent;
         protected WeaponNode _weapon;
@@ -24,9 +25,14 @@ namespace Enemies
 
         public Path2D Path => _path;
 
+        public void TakeDamage(int damage) => _healthComponent.TakeDamage(damage);
+
+        public void Heal(int healAmount) => _healthComponent.Heal(healAmount);
+
         public virtual void Initialize(EnemyResource enemyResource)
         {
             _healthComponent = enemyResource.HealthComponent;
+            _healthComponent.Owner = this;
             _weapon = WeaponFactory.CreateWeapon(enemyResource.WeaponResource, true);
             _curve = enemyResource.PathCurve;
             _speed = enemyResource.Speed;
@@ -46,32 +52,6 @@ namespace Enemies
             FollowPath();
         }
 
-        // protected virtual void SetState()
-        // {
-        //     EnemyMoveState moveState;
-        //     EnemyFireState fireState;
-
-        //     if (_characterBody.Velocity != Vector2.Zero)
-        //     {
-        //         moveState = EnemyMoveState.Moving;
-        //     }
-        //     else
-        //     {
-        //         moveState = EnemyMoveState.Idle;
-        //     }
-
-        //     if (_weapon.FireTimer.IsStopped())
-        //     {
-        //         fireState = EnemyFireState.Hold;
-        //     }
-        //     else
-        //     {
-        //         fireState = EnemyFireState.Fire;
-        //     }
-
-        //     _state = new EnemyState(moveState, fireState);
-        // }
-
         protected virtual void FireWeapon()
         {
             _weapon.Fire();
@@ -86,10 +66,9 @@ namespace Enemies
             tween.TweenProperty(_pathFollow, "progress_ratio", 1.0, duration);
         }
 
-        protected void PrintRotation()
+        public virtual void Die()
         {
-            GD.Print($"{Name}.{_pathFollow.Name} rotation: {_pathFollow.Rotation}");
-            GD.Print($"{Name}.{_characterBody.Name} rotation: {_characterBody.Rotation}");
+            // Do the dying
         }
     }
 }

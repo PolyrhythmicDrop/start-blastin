@@ -1,17 +1,35 @@
 using System;
+using Components;
 using Godot;
+using Interfaces;
 using PlayerComponents;
 
 namespace Entities
 {
     [GlobalClass]
-    public partial class Player : CharacterBody2D
+    public partial class Player : CharacterBody2D, IDie, IHealthful
     {
         private AnimationComponent _animationComponent;
         private MovementComponent _movementComponent;
         private WeaponComponent _weaponComponent;
         private CollisionShape2D _hitBox;
         private PlayerController _controller;
+        private HealthComponent _healthComponent;
+
+        [Export]
+        public HealthComponent HealthComponent
+        {
+            get => _healthComponent;
+            set => _healthComponent = value;
+        }
+
+        public void TakeDamage(int damage) => _healthComponent.TakeDamage(damage);
+
+        public void Heal(int healAmount) => _healthComponent.Heal(healAmount);
+
+        public void Fire() => _weaponComponent.FireWeapon();
+
+        public void StopFire() => _weaponComponent.StopWeapon();
 
         private void InitializeComponents()
         {
@@ -19,6 +37,8 @@ namespace Entities
             _movementComponent.Initialize(this);
             _controller.Initialize(this);
             _weaponComponent.Initialize(this);
+
+            _healthComponent.Owner = this;
         }
 
         public override void _Ready()
@@ -47,8 +67,6 @@ namespace Entities
             MoveAndSlide();
         }
 
-        public void Fire() => _weaponComponent.FireWeapon();
-
-        public void StopFire() => _weaponComponent.StopWeapon();
+        public void Die() { }
     }
 }

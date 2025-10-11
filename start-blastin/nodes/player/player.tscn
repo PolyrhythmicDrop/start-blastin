@@ -1,11 +1,17 @@
-[gd_scene load_steps=8 format=3 uid="uid://nenl15kjphyb"]
+[gd_scene load_steps=10 format=3 uid="uid://nenl15kjphyb"]
 
 [ext_resource type="Script" uid="uid://ceknkp5q1onls" path="res://nodes/player/Player.cs" id="1_4j62c"]
+[ext_resource type="Script" uid="uid://de8iusxhs0qem" path="res://nodes/components/HealthComponent.cs" id="2_1fmtd"]
 [ext_resource type="PackedScene" uid="uid://cr3k7kv44d7a6" path="res://nodes/player/player-components/animation-component.tscn" id="2_hs1md"]
 [ext_resource type="Script" uid="uid://djgcr0lno2mdr" path="res://nodes/player/player-components/MovementComponent.cs" id="3_hs1md"]
 [ext_resource type="Script" uid="uid://dcupxkt621nuk" path="res://nodes/player/player-components/PlayerController.cs" id="4_1fmtd"]
 [ext_resource type="Script" uid="uid://wvxahp2d8k6f" path="res://nodes/player/player-components/WeaponComponent.cs" id="5_5h4ma"]
 [ext_resource type="Resource" uid="uid://13wggaxc31as" path="res://resources/weapons/blaster.tres" id="6_1fmtd"]
+
+[sub_resource type="Resource" id="Resource_5h4ma"]
+script = ExtResource("2_1fmtd")
+MaxHealth = 5
+metadata/_custom_type_script = "uid://de8iusxhs0qem"
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fn53c"]
 radius = 25.0
@@ -17,6 +23,7 @@ collision_mask = 6
 motion_mode = 1
 platform_on_leave = 2
 script = ExtResource("1_4j62c")
+HealthComponent = SubResource("Resource_5h4ma")
 
 [node name="AnimationComponent" parent="." instance=ExtResource("2_hs1md")]
 unique_name_in_owner = true

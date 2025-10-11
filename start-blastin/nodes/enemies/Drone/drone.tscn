@@ -1,9 +1,8 @@
-[gd_scene load_steps=29 format=3 uid="uid://dwhfr6b04sn3"]
+[gd_scene load_steps=28 format=3 uid="uid://dwhfr6b04sn3"]
 
 [ext_resource type="Script" uid="uid://bf4nsy5w0ftaq" path="res://nodes/enemies/Drone/Drone.cs" id="1_2lfs3"]
 [ext_resource type="Texture2D" uid="uid://dniqs2y5gnx25" path="res://nodes/enemies/Drone/sprites/drone-engine.png" id="2_ijs4g"]
 [ext_resource type="Texture2D" uid="uid://dm0dl4ev8bx27" path="res://nodes/enemies/Drone/sprites/drone-base.png" id="2_likh3"]
-[ext_resource type="Curve2D" uid="uid://bnvfjkrio8lfp" path="res://resources/curves/straight-down.tres" id="2_owq5x"]
 [ext_resource type="Texture2D" uid="uid://baym56lbmyrdk" path="res://nodes/enemies/Drone/sprites/drone-destruction.png" id="4_k5dt5"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ijs4g"]
@@ -191,10 +190,10 @@ script = ExtResource("1_2lfs3")
 
 [node name="Path2D" type="Path2D" parent="."]
 unique_name_in_owner = true
-curve = ExtResource("2_owq5x")
 
 [node name="PathFollow2D" type="PathFollow2D" parent="Path2D"]
 unique_name_in_owner = true
+rotation = 1.9695266
 
 [node name="DroneBody" type="Area2D" parent="Path2D/PathFollow2D"]
 unique_name_in_owner = true
@@ -202,7 +201,6 @@ collision_layer = 4
 collision_mask = 11
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Path2D/PathFollow2D/DroneBody"]
-position = Vector2(0, 3)
 shape = SubResource("CapsuleShape2D_ijs4g")
 
 [node name="SpriteContainer" type="Node2D" parent="Path2D/PathFollow2D/DroneBody"]

@@ -12,6 +12,7 @@ namespace PlayerComponents
         private Sprite2D _engineSprite;
         private Sprite2D _bodySprite;
         private AnimatedSprite2D _destructionSprite;
+        private ShaderMaterial _hitEffectShaderMat;
 
         public override void _Ready()
         {
@@ -20,6 +21,9 @@ namespace PlayerComponents
             _engineSprite = _spriteContainer.GetNode<Sprite2D>("%Engine");
             _bodySprite = _spriteContainer.GetNode<Sprite2D>("%Body");
             _destructionSprite = _spriteContainer.GetNode<AnimatedSprite2D>("%Destruction");
+            _hitEffectShaderMat = ResourceLoader.Load<ShaderMaterial>(
+                "res://resources/materials/hit-effect.tres"
+            );
         }
 
         public void Initialize(Player player)
@@ -51,6 +55,31 @@ namespace PlayerComponents
             _destructionSprite.Visible = true;
             _destructionSprite.Play("full-explosion");
             _destructionSprite.AnimationFinished += _player.Despawn;
+        }
+
+        public void PlayDamageAnimation()
+        {
+            string mixRatioPath = "mix_ratio";
+            string currentFramePath = "current_frame";
+
+            if (Material is ShaderMaterial shaderMaterial)
+            {
+                shaderMaterial.SetShaderParameter(mixRatioPath, 1.0);
+
+                Tween tween = CreateTween();
+                tween.TweenMethod(
+                    Callable.From(
+                        (int currentFrame) =>
+                            shaderMaterial.SetShaderParameter(currentFramePath, currentFrame)
+                    ),
+                    0,
+                    30,
+                    0.5
+                );
+                tween.TweenCallback(
+                    Callable.From(() => shaderMaterial.SetShaderParameter(mixRatioPath, 0))
+                );
+            }
         }
     }
 }

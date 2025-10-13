@@ -1,29 +1,29 @@
 Godot Engine v4.5.stable.mono.official.876b29033 - https://godotengine.org
 Vulkan 1.4.312 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3060 Ti
 
-Weapon equipped! <Node2D#38302385617>
+Weapon equipped! <Node2D#38738593235>
 Stats: 0.5 | 1 | Bullet | 1000
 Enemies.EnemySpawner._Ready called!
 Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <CharacterBody2D#37362861526> | Collision Point: (882.45734, 858.01105) | Normal: (-0.029750936, 0.9995574)
-<CharacterBody2D#37362861526> is taking damage!
+Source: Bullet | Collider: <CharacterBody2D#37648074200> | Collision Point: (882.49225, 742.45276) | Normal: (-0.14830318, 0.98894197)
+<CharacterBody2D#37648074200> is taking damage!
 Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: @Area2D@10 | Collider: <CharacterBody2D#37362861526> | Collision Point: (882.45734, 858.01105) | Normal: (-0.029750936, 0.9995574)
-<CharacterBody2D#37362861526> is taking damage!
+Source: Bullet | Collider: <CharacterBody2D#37648074200> | Collision Point: (569.58545, 776.5748) | Normal: (0.5987891, 0.8009068)
+<CharacterBody2D#37648074200> is taking damage!
 Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <CharacterBody2D#37362861526> | Collision Point: (882.45734, 913.8697) | Normal: (-0.029750936, 0.9995574)
-<CharacterBody2D#37362861526> is taking damage!
+Source: @Area2D@27 | Collider: <CharacterBody2D#37648074200> | Collision Point: (569.58545, 751.205) | Normal: (0.3362183, 0.94178414)
+<CharacterBody2D#37648074200> is taking damage!
 Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <CharacterBody2D#37362861526> | Collision Point: (882.45734, 960.6579) | Normal: (-0.7230664, 0.6907786)
-<CharacterBody2D#37362861526> is taking damage!
+Source: Bullet | Collider: <CharacterBody2D#37648074200> | Collision Point: (413.04047, 916.28204) | Normal: (0.63788086, 0.77013505)
+<CharacterBody2D#37648074200> is taking damage!
 Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <CharacterBody2D#37362861526> | Collision Point: (569.63983, 955.22986) | Normal: (0.30000004, 0.9539392)
-<CharacterBody2D#37362861526> is taking damage!
+Source: @Area2D@34 | Collider: <CharacterBody2D#37648074200> | Collision Point: (413.04047, 842.6729) | Normal: (-0, -0)
+<CharacterBody2D#37648074200> is taking damage!
 Components.HealthComponent.Die called!
 Game over, man! Game over!
-ERROR: 48 RID allocations of type 'P11GodotArea2D' were leaked at exit.
+ERROR: 58 RID allocations of type 'P11GodotArea2D' were leaked at exit.
 ERROR: 1 RID allocations of type 'P12GodotShape2D' were leaked at exit.
-WARNING: 192 RIDs of type "CanvasItem" were leaked.
+WARNING: 232 RIDs of type "CanvasItem" were leaked.
    at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2678)
 ERROR: 1 shaders of type CanvasShaderRD were never freed
    at: ~ShaderRD (servers/rendering/renderer_rd/shader_rd.cpp:1044)

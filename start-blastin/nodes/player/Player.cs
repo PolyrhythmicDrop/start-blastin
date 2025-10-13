@@ -23,9 +23,16 @@ namespace Entities
             set => _healthComponent = value;
         }
 
+        [Signal]
+        public delegate void PlayerDiedEventHandler();
+
         public bool Dying = false;
 
-        public void TakeDamage(int damage) => _healthComponent.TakeDamage(damage);
+        public void TakeDamage(int damage)
+        {
+            _animationComponent.PlayDamageAnimation();
+            _healthComponent.TakeDamage(damage);
+        }
 
         public void Heal(int healAmount) => _healthComponent.Heal(healAmount);
 
@@ -78,6 +85,7 @@ namespace Entities
         public void Despawn()
         {
             GD.Print("Game over, man! Game over!");
+            EmitSignal(SignalName.PlayerDied);
             QueueFree();
         }
     }

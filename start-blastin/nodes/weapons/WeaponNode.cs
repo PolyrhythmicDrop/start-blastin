@@ -86,12 +86,12 @@ namespace Weapons
         public virtual void OnProjectileCollision(CollisionComponent collision)
         {
             GD.Print(
-                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Collision detected!\nSource: {collision.Source.Name} | Collider: {collision.Collider.Owner} | Collision Point: {collision.GlobalCollisionPoint} | Normal: {collision.CollisionNormal}"
+                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Collision detected!\nSource: {collision.Source.Name} | Collider: {collision.Collider} | Collision Point: {collision.GlobalCollisionPoint} | Normal: {collision.CollisionNormal}"
             );
 
-            if (collision.Collider.Owner is IHealthful healthful)
+            if (collision.Collider is IHealthful healthful)
             {
-                GD.Print($"{collision.Collider.Owner.Name} is taking damage!");
+                GD.Print($"{collision.Collider} is taking damage!");
                 healthful.TakeDamage(_stats.Damage);
             }
 

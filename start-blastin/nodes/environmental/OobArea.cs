@@ -19,11 +19,8 @@ namespace Environmental
 
         private void OnBodyEntered(Node2D body)
         {
-            GD.Print($"{body.Name} in OOB...");
-
             if (body is EnemyNode enemy)
             {
-                GD.Print($"{body.Name} entered OOB! Queuing free...");
                 enemy.QueueFree();
             }
         }
@@ -32,9 +29,6 @@ namespace Environmental
         {
             if (area.GetParent() is Projectile projectile)
             {
-                // GD.Print(
-                //     $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: {projectile.Name} entered OOB! Deactivating..."
-                // );
                 projectile.ToggleActive(false);
             }
         }

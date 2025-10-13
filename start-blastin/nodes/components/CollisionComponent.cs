@@ -13,7 +13,7 @@ namespace Components
         /// <summary>
         /// The object the <paramref name="Source"/> is colliding with.
         /// </summary>
-        public Node? Collider;
+        public GodotObject? Collider;
 
         /// <summary>
         /// The global position where the collision occurred.

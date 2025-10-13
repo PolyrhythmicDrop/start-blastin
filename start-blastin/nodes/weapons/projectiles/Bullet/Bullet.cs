@@ -64,7 +64,7 @@ namespace Projectiles
                 CollisionComponent collision = new CollisionComponent()
                 {
                     Source = this,
-                    Collider = (Node)Ray.GetCollider(),
+                    Collider = Ray.GetCollider(),
                     GlobalCollisionPoint = Ray.GetCollisionPoint(),
                     CollisionNormal = Ray.GetCollisionNormal() * -1,
                 };

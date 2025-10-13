@@ -66,7 +66,10 @@ namespace Enemies
             // GD.Print(
             //     $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name} called!"
             // );
-            QueueFree();
+
+            // Queue free after all child projectiles die
+            _weapon.AllProjectilesDisabled += QueueFree;
+            // QueueFree();
         }
     }
 }

@@ -58,9 +58,11 @@ namespace Enemies
 
         public override void Die()
         {
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name} called!"
-            );
+            // GD.Print(
+            //     $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name} called!"
+            // );
+
+            _weapon.FireTimer.Stop();
 
             _shape.Disabled = true;
 

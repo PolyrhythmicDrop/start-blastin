@@ -88,34 +88,6 @@ namespace Projectiles
             }
         }
 
-        // public void DeactivateProjectile(Projectile proj)
-        // {
-        //     try
-        //     {
-        //         if (!Contains(proj))
-        //         {
-        //             throw new InvalidOperationException(
-        //                 proj.Name + " does not exist in the projectile pool!"
-        //             );
-        //         }
-
-        //         if (_weapon.ProjectileParent.IsAncestorOf(proj) && proj.Active)
-        //         {
-        //             proj.ToggleActive(false);
-        //         }
-        //         else
-        //         {
-        //             throw new InvalidOperationException(
-        //                 proj.Name + " is not active or is not part of the scene tree!"
-        //             );
-        //         }
-        //     }
-        //     catch (InvalidOperationException e)
-        //     {
-        //         GD.PushError(e);
-        //     }
-        // }
-
         public Projectile RequestProjectile()
         {
             // Search for any inactive projectiles already existing in the pool.

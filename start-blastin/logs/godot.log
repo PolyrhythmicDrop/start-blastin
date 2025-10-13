@@ -1,12 +1,316 @@
 Godot Engine v4.5.stable.mono.official.876b29033 - https://godotengine.org
 Vulkan 1.4.312 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3060 Ti
 
-Weapon equipped! <Node2D#38117836216>
+Weapon equipped! <Node2D#37899732423>
 Stats: 0.5 | 1 | Bullet | 1000
 Enemies.EnemySpawner._Ready called!
-ERROR: 193 RID allocations of type 'P11GodotArea2D' were leaked at exit.
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@7 | Collider: <AnimatableBody2D#41506833946> | Collision Point: (866.4161, 164.66873) | Normal: (0.55418706, -0.8323922)
+<AnimatableBody2D#41506833946> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#41506833946> | Collision Point: (900.8524, 406.1946) | Normal: (-0.66763, -0.74449325)
+<AnimatableBody2D#41506833946> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <AnimatableBody2D#45818578617> | Collision Point: (581.58234, 346.76382) | Normal: (-0.3462768, -0.9381324)
+<AnimatableBody2D#45818578617> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#45818578617> | Collision Point: (555.73315, 429.528) | Normal: (-0, -0)
+<AnimatableBody2D#45818578617> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <AnimatableBody2D#46992983578> | Collision Point: (399.0528, 882.6317) | Normal: (0.44235387, -0.89684063)
+<AnimatableBody2D#46992983578> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@7 | Collider: <Area2D#52479133370> | Collision Point: (256.99118, 650.3524) | Normal: (-0.05832409, -0.9982977)
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <AnimatableBody2D#52210697833> | Collision Point: (248.59741, 621.10406) | Normal: (0.1521912, -0.98835105)
+<AnimatableBody2D#52210697833> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#52210697833> | Collision Point: (248.25742, 794.3374) | Normal: (0.169191, -0.9855833)
+<AnimatableBody2D#52210697833> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <AnimatableBody2D#57092867849> | Collision Point: (745.6419, 792.2388) | Normal: (-0.7058471, -0.70836425)
+<AnimatableBody2D#57092867849> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#57092867849> | Collision Point: (738.92725, 880.5971) | Normal: (-0, -0)
+<AnimatableBody2D#57092867849> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@7 | Collider: <AnimatableBody2D#63484987177> | Collision Point: (394.63382, 252.79692) | Normal: (0.67276615, -0.7398552)
+<AnimatableBody2D#63484987177> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <Area2D#63753422980> | Collision Point: (413.2365, 596.99365) | Normal: (-0.024561472, -0.99969834)
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <AnimatableBody2D#63484987177> | Collision Point: (434.26813, 606.4325) | Normal: (-0.8089493, -0.5878784)
+<AnimatableBody2D#63484987177> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <CharacterBody2D#36993762764> | Collision Point: (413.08914, 837.2091) | Normal: (0.8071594, 0.5903335)
+<CharacterBody2D#36993762764> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@7 | Collider: <Area2D#69575117066> | Collision Point: (877.1228, 740.02893) | Normal: (0.9238893, -0.38266)
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#68820141631> | Collision Point: (898.8865, 707.89905) | Normal: (-0.56101596, -0.827805)
+<AnimatableBody2D#68820141631> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@145 | Collider: <CharacterBody2D#36993762764> | Collision Point: (882.66614, 910.7005) | Normal: (0.6088111, 0.7933153)
+<CharacterBody2D#36993762764> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#68820141631> | Collision Point: (898.8864, 791.1782) | Normal: (-0.56101376, -0.8278065)
+<AnimatableBody2D#68820141631> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@156 | Collider: <CharacterBody2D#36993762764> | Collision Point: (882.5878, 897.2294) | Normal: (-0.09770747, 0.9952152)
+<CharacterBody2D#36993762764> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <CharacterBody2D#36993762764> | Collision Point: (569.8129, 995.29315) | Normal: (-0.64219725, 0.76653945)
+<CharacterBody2D#36993762764> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <AnimatableBody2D#75111598470> | Collision Point: (552.758, 637.3442) | Normal: (0.60274667, -0.7979327)
+<AnimatableBody2D#75111598470> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <Area2D#75866573227> | Collision Point: (575.6093, 939.2786) | Normal: (-0.9660644, -0.25830165)
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <Area2D#75749132481> | Collision Point: (575.6093, 912.62067) | Normal: (-0.96606445, -0.25830132)
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#75111598470> | Collision Point: (575.6094, 891.3755) | Normal: (-0.039822347, -0.9992068)
+<AnimatableBody2D#75111598470> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#82158028360> | Collision Point: (249.01257, 366.24445) | Normal: (-0, -0)
+<AnimatableBody2D#82158028360> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#82158028360> | Collision Point: (275.16394, 446.05273) | Normal: (-0.6748367, -0.73796713)
+<AnimatableBody2D#82158028360> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@216 | Collider: <CharacterBody2D#36993762764> | Collision Point: (726.07007, 909.3595) | Normal: (-0.11124264, 0.9937933)
+<CharacterBody2D#36993762764> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <AnimatableBody2D#83516983180> | Collision Point: (739.77313, 712.6014) | Normal: (-0.43515316, -0.9003565)
+<AnimatableBody2D#83516983180> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <AnimatableBody2D#83516983180> | Collision Point: (719.517, 801.2739) | Normal: (0.07765202, -0.99698055)
+<AnimatableBody2D#83516983180> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <Area2D#87577070289> | Collision Point: (721.0965, 687.22314) | Normal: (0.87634915, -0.4816765)
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <AnimatableBody2D#87308634598> | Collision Point: (750.01245, 541.93536) | Normal: (-0.93289185, -0.36015666)
+<AnimatableBody2D#87308634598> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#87308634598> | Collision Point: (750.01245, 625.22876) | Normal: (-0.93289185, -0.36015674)
+<AnimatableBody2D#87308634598> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@235 | Collider: <CharacterBody2D#36993762764> | Collision Point: (726.3546, 943.42316) | Normal: (0.90631354, 0.42260605)
+<CharacterBody2D#36993762764> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@7 | Collider: <AnimatableBody2D#90009765312> | Collision Point: (1025.3766, 545.9539) | Normal: (0.4363159, -0.89979357)
+<AnimatableBody2D#90009765312> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#90009765312> | Collision Point: (1055.3805, 634.49023) | Normal: (-0.5638794, -0.82585716)
+<AnimatableBody2D#90009765312> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <AnimatableBody2D#92643788513> | Collision Point: (1205.989, 470.61392) | Normal: (-0.2606445, -0.96543485)
+<AnimatableBody2D#92643788513> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@7 | Collider: <AnimatableBody2D#92643788513> | Collision Point: (1213.3962, 551.0964) | Normal: (-0, -0)
+<AnimatableBody2D#92643788513> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#96687097404> | Collision Point: (1370.4413, 362.89243) | Normal: (-0.6665161, -0.7454907)
+<AnimatableBody2D#96687097404> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#96687097404> | Collision Point: (1370.4413, 456.2006) | Normal: (-0.6665161, -0.7454907)
+<AnimatableBody2D#96687097404> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#101938367426> | Collision Point: (901.6315, 881.93085) | Normal: (-0.7177337, -0.69631773)
+<AnimatableBody2D#101938367426> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <CharacterBody2D#36993762764> | Collision Point: (569.635, 979.3642) | Normal: (0.5940064, 0.80446035)
+<CharacterBody2D#36993762764> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@7 | Collider: <AnimatableBody2D#105763572552> | Collision Point: (577.9744, 637.67346) | Normal: (-0.1669708, -0.98596185)
+<AnimatableBody2D#105763572552> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <Area2D#106518547496> | Collision Point: (571.1596, 936.8046) | Normal: (-0.25409952, -0.9671781)
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@348 | Collider: <CharacterBody2D#36993762764> | Collision Point: (1039.333, 965.372) | Normal: (4.371139E-08, 1)
+<CharacterBody2D#36993762764> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <AnimatableBody2D#111451048900> | Collision Point: (1026.5723, 719.7503) | Normal: (0.38803712, -0.92164373)
+<AnimatableBody2D#111451048900> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <Area2D#111954365608> | Collision Point: (1042.1174, 905.70526) | Normal: (-0, -0)
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#111451048900> | Collision Point: (1040.3011, 888.00977) | Normal: (4.371139E-08, -1)
+<AnimatableBody2D#111451048900> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@7 | Collider: <AnimatableBody2D#114403838971> | Collision Point: (717.00604, 794.303) | Normal: (0.1953919, -0.9807253)
+<AnimatableBody2D#114403838971> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@371 | Collider: <CharacterBody2D#36993762764> | Collision Point: (725.9139, 933.67664) | Normal: (-0.65851074, 0.7525714)
+<CharacterBody2D#36993762764> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#114403838971> | Collision Point: (740.9195, 878.624) | Normal: (-0.50028074, -0.86586326)
+<AnimatableBody2D#114403838971> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#118279376144> | Collision Point: (740.9195, 472.14056) | Normal: (-0.48237607, -0.8759643)
+<AnimatableBody2D#118279376144> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <AnimatableBody2D#118279376144> | Collision Point: (740.9195, 555.49756) | Normal: (-0.48237607, -0.8759643)
+<AnimatableBody2D#118279376144> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@7 | Collider: <Area2D#121047616895> | Collision Point: (1037.7432, 676.9317) | Normal: (0.21299246, -0.9770539)
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <AnimatableBody2D#120779181426> | Collision Point: (1059.1418, 624.37213) | Normal: (-0.7560363, -0.6545297)
+<AnimatableBody2D#120779181426> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <AnimatableBody2D#120779181426> | Collision Point: (1059.1418, 714.4126) | Normal: (-0.7560364, -0.65452963)
+<AnimatableBody2D#120779181426> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#123446758839> | Collision Point: (1188.399, 471.2333) | Normal: (0.12920536, -0.99161786)
+<AnimatableBody2D#123446758839> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <CharacterBody2D#36993762764> | Collision Point: (1195.9832, 893.8381) | Normal: (0.44340822, 0.8963198)
+<CharacterBody2D#36993762764> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <CharacterBody2D#36993762764> | Collision Point: (1195.9832, 1002.73615) | Normal: (-0, -0)
+<CharacterBody2D#36993762764> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <AnimatableBody2D#127406179777> | Collision Point: (1358.6158, 538.7238) | Normal: (-0, -0)
+<AnimatableBody2D#127406179777> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <Area2D#130895842900> | Collision Point: (883.44617, 817.02124) | Normal: (-0.098826, -0.99510473)
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@7 | Collider: <AnimatableBody2D#130258308458> | Collision Point: (907.3757, 789.073) | Normal: (-0.9761231, -0.21721818)
+<AnimatableBody2D#130258308458> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@7 | Collider: <Area2D#133982850717> | Collision Point: (880.3949, 723.3712) | Normal: (0.31566373, -0.9488712)
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <AnimatableBody2D#133110435249> | Collision Point: (871.3526, 877.1573) | Normal: (0.29681402, -0.9549354)
+<AnimatableBody2D#133110435249> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <Area2D#138009382644> | Collision Point: (570.7342, 936.96185) | Normal: (-0.17570992, -0.984442)
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#137623504321> | Collision Point: (591.42395, 795.5572) | Normal: (-0.8372008, -0.54689556)
+<AnimatableBody2D#137623504321> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@479 | Collider: <CharacterBody2D#36993762764> | Collision Point: (569.67993, 1026.0905) | Normal: (-0.3704053, 0.92887026)
+<CharacterBody2D#36993762764> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#137623504321> | Collision Point: (559.4198, 897.244) | Normal: (0.26300663, -0.96479404)
+<AnimatableBody2D#137623504321> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <CharacterBody2D#36993762764> | Collision Point: (569.67993, 1026.0905) | Normal: (-0.37040526, 0.92887026)
+<CharacterBody2D#36993762764> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <Area2D#145760456050> | Collision Point: (725.1403, 797.5375) | Normal: (-0, -0)
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@7 | Collider: <Area2D#145760456050> | Collision Point: (724.15295, 903.4066) | Normal: (0.31597912, -0.94876623)
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <AnimatableBody2D#149401112084> | Collision Point: (736.4261, 610.6497) | Normal: (-0.26272887, -0.96486974)
+<AnimatableBody2D#149401112084> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@530 | Collider: <CharacterBody2D#36993762764> | Collision Point: (726.1715, 929.596) | Normal: (0.37018314, 0.92895883)
+<CharacterBody2D#36993762764> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#149401112084> | Collision Point: (736.42615, 697.3146) | Normal: (-0.26273113, -0.96486914)
+<AnimatableBody2D#149401112084> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@539 | Collider: <CharacterBody2D#36993762764> | Collision Point: (726.1715, 931.54254) | Normal: (0.5250049, 0.85109925)
+<CharacterBody2D#36993762764> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@544 | Collider: <CharacterBody2D#36993762764> | Collision Point: (1038.8352, 910.91974) | Normal: (0.21587895, 0.97642016)
+<CharacterBody2D#36993762764> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#152051912270> | Collision Point: (1062.8839, 667.4196) | Normal: (-0.9524353, -0.30474102)
+<AnimatableBody2D#152051912270> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <Area2D#152555229261> | Collision Point: (1041.2866, 833.9968) | Normal: (-0, -0)
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#152051912270> | Collision Point: (1041.2866, 798.06195) | Normal: (4.371139E-08, -1)
+<AnimatableBody2D#152051912270> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <AnimatableBody2D#160071422137> | Collision Point: (577.00507, 891.14825) | Normal: (-0.13692623, -0.9905813)
+<AnimatableBody2D#160071422137> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#164399943740> | Collision Point: (892.57733, 607.52216) | Normal: (-0.23364255, -0.9723226)
+<AnimatableBody2D#164399943740> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#164399943740> | Collision Point: (903.0733, 774.34937) | Normal: (-0.75844115, -0.6517416)
+<AnimatableBody2D#164399943740> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#167134629314> | Collision Point: (890.3305, 744.4993) | Normal: (-0.14963375, -0.9887415)
+<AnimatableBody2D#167134629314> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@5 | Collider: <AnimatableBody2D#167134629314> | Collision Point: (862.74023, 896.2439) | Normal: (-0, -0)
+<AnimatableBody2D#167134629314> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <CharacterBody2D#36993762764> | Collision Point: (882.3378, 964.2035) | Normal: (-0.7439038, 0.6682868)
+<CharacterBody2D#36993762764> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#171396042686> | Collision Point: (584.2741, 642.23883) | Normal: (-0.47941285, -0.8775895)
+<AnimatableBody2D#171396042686> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#171396042686> | Collision Point: (547.0046, 761.95355) | Normal: (0.8840637, -0.46736637)
+<AnimatableBody2D#171396042686> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@644 | Collider: <CharacterBody2D#36993762764> | Collision Point: (412.94525, 895.1558) | Normal: (0.7457813, 0.6661909)
+<CharacterBody2D#36993762764> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#172604000869> | Collision Point: (409.59866, 874.6332) | Normal: (4.371139E-08, -1)
+<AnimatableBody2D#172604000869> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <Area2D#173241535852> | Collision Point: (409.5987, 922.6488) | Normal: (0.5577597, -0.83000255)
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#172604000869> | Collision Point: (409.59866, 947.97815) | Normal: (4.371139E-08, -1)
+<AnimatableBody2D#172604000869> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <AnimatableBody2D#178123706757> | Collision Point: (265.051, 547.70966) | Normal: (-0.17313838, -0.9848975)
+<AnimatableBody2D#178123706757> is taking damage!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: @Area2D@548 | Collider: <AnimatableBody2D#178123706757> | Collision Point: (265.051, 584.3487) | Normal: (-0.17313838, -0.9848975)
+<AnimatableBody2D#178123706757> is taking damage!
+Components.HealthComponent.Die called!
+Weapons.WeaponNode.OnProjectileCollision: Collision detected!
+Source: Bullet | Collider: <Area2D#184280945107> | Collision Point: (722.1918, 815.6163) | Normal: (0.65526336, -0.7554006)
+ERROR: 548 RID allocations of type 'P11GodotArea2D' were leaked at exit.
 ERROR: 1 RID allocations of type 'P12GodotShape2D' were leaked at exit.
-WARNING: 772 RIDs of type "CanvasItem" were leaked.
+WARNING: 2192 RIDs of type "CanvasItem" were leaked.
    at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2678)
 ERROR: 1 shaders of type CanvasShaderRD were never freed
    at: ~ShaderRD (servers/rendering/renderer_rd/shader_rd.cpp:1044)
+ERROR: 1 RID allocations of type 'N10RendererRD15MaterialStorage8MaterialE' were leaked at exit.
+ERROR: 1 RID allocations of type 'N10RendererRD15MaterialStorage6ShaderE' were leaked at exit.
+ERROR: 1 RID allocations of type 'N10RendererRD14TextureStorage7TextureE' were leaked at exit.

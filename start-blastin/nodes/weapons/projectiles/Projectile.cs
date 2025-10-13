@@ -130,27 +130,18 @@ namespace Projectiles
             if (active)
             {
                 _sourceWeapon.ProjectileParent.AddChild(this);
+                _sourceWeapon.ActiveProjectileCount++;
             }
             else
             {
                 // Add items from projectile pool
                 _sourceWeapon.ProjectileParent.RemoveChild(this);
+                _sourceWeapon.ActiveProjectileCount--;
             }
 
             _active = active;
             ToggleDeactivationTimer(active);
             ToggleCollisionSignalConnection(active);
         }
-
-        // private void OnAreaEntered(Area2D area)
-        // {
-        //     CollisionComponent collisionComp = new CollisionComponent();
-        //     collisionComp.Source = this;
-        //     collisionComp.Collider = area.Owner;
-        //     collisionComp.GlobalCollisionPoint = GlobalPosition;
-        //     collisionComp.CollisionNormal = Vector2.Right.Rotated(area.GlobalRotation);
-
-        //     EmitSignal(SignalName.Collision, collisionComp);
-        // }
     }
 }

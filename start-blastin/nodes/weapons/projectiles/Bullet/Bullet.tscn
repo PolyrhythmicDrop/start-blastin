@@ -52,7 +52,7 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nppro"]
-radius = 4.0
+radius = 6.0
 
 [node name="Bullet" type="Area2D" groups=["projectiles"]]
 collision_layer = 8

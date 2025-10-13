@@ -1,4 +1,5 @@
 using System.Reflection;
+using Enemies;
 using Godot;
 using Projectiles;
 
@@ -16,7 +17,15 @@ namespace Environmental
             AreaEntered += OnAreaEntered;
         }
 
-        private void OnBodyEntered(Node2D body) { }
+        private void OnBodyEntered(Node2D body)
+        {
+            GD.Print($"{body.Name} in OOB...");
+            if (body is EnemyNode enemy)
+            {
+                GD.Print($"{body.Owner.Name} entered OOB! Queuing free...");
+                enemy.QueueFree();
+            }
+        }
 
         private void OnAreaEntered(Area2D area)
         {

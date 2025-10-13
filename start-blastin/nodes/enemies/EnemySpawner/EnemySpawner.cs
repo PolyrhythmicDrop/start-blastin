@@ -112,7 +112,6 @@ namespace Enemies
                 currentWeight += kvp.Value;
                 if (randomValue < currentWeight)
                 {
-                    GD.Print($"Returning {kvp.Key} from foreach loop!");
                     return kvp.Key;
                 }
             }
@@ -126,19 +125,32 @@ namespace Enemies
 
         private void SpawnEnemy()
         {
-            // GD.Print($"{MethodBase.GetCurrentMethod().Name}: Attempting to spawn enemy...");
-            EnemyResource enemyResource = GetEnemyFromPool();
+            // Duplicate the enemy resource and create a new EnemyNody based on it.
+            EnemyResource enemyResource = (EnemyResource)
+                GetEnemyFromPool().DuplicateDeep(Resource.DeepDuplicateMode.Internal);
             EnemyNode enemy = EnemyFactory.CreateEnemy(enemyResource);
 
-            // GD.Print($"{MethodBase.GetCurrentMethod().Name}: {enemy.Name} created from factory!");
-            enemy.GlobalPosition = _spawnPoint.GlobalPosition;
-            // GD.Print(
-            //     $"{MethodBase.GetCurrentMethod().Name}: {enemy} global position set to {enemy.GlobalPosition}."
-            // );
-            _spawnParent.AddChild(enemy);
-            // GD.Print(
-            //     $"{MethodBase.GetCurrentMethod().Name}: {enemy} added to tree! Enemy global position: {enemy.GlobalPosition}."
-            // );
+            GD.Print($"{MethodBase.GetCurrentMethod().Name}: EnemyNode {enemy} created!");
+
+            // Create a new path scene for the new EnemyNode to follow.
+            EntityPath entityPath = GD.Load<PackedScene>(EntityPath.ScenePath)
+                .Instantiate<EntityPath>();
+            entityPath.Curve = enemyResource.PathCurve;
+            entityPath.GlobalPosition = _spawnPoint.GlobalPosition;
+
+            GD.Print(
+                $"{MethodBase.GetCurrentMethod().Name}: EntityPath {entityPath} created and variables set! Curve: {entityPath.Curve} | GlobalPosition/spawnPointGloPos: {entityPath.GlobalPosition}/{_spawnPoint.GlobalPosition}"
+            );
+
+            enemy.SetPath(entityPath);
+
+            _spawnParent.AddChild(entityPath);
+
+            entityPath.PathFollow.AddChild(enemy);
+
+            // enemy.GlobalPosition = _spawnPoint.GlobalPosition;
+
+            // _spawnParent.AddChild(enemy);
         }
 
         private void MoveSpawnPoint()

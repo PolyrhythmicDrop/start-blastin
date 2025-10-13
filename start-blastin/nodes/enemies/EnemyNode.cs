@@ -8,22 +8,21 @@ using Weapons;
 namespace Enemies
 {
     [GlobalClass]
-    public abstract partial class EnemyNode : Node2D, IDie, IHealthful
+    public abstract partial class EnemyNode : AnimatableBody2D, IDie, IHealthful
     {
         protected HealthComponent _healthComponent;
         protected WeaponNode _weapon;
         protected float _speed;
-        protected Curve2D _curve;
-        protected Path2D _path;
-        protected PathFollow2D _pathFollow;
-        protected Area2D _characterBody;
+        protected CollisionShape2D _shape;
+
+        protected EntityPath _path;
 
         protected EnemyState _state;
 
         public HealthComponent HealthComp => _healthComponent;
         public WeaponNode Weapon => _weapon;
 
-        public Path2D Path => _path;
+        public EntityPath Path => _path;
 
         public void TakeDamage(int damage) => _healthComponent.TakeDamage(damage);
 
@@ -31,25 +30,41 @@ namespace Enemies
 
         public virtual void Initialize(EnemyResource enemyResource)
         {
-            _healthComponent = enemyResource.HealthComponent;
-            _healthComponent.Owner = this;
+            _healthComponent = (HealthComponent)enemyResource.HealthComponent.Duplicate(true);
+            _healthComponent.Initialize(this);
+
             _weapon = WeaponFactory.CreateWeapon(enemyResource.WeaponResource, true);
-            _curve = enemyResource.PathCurve;
+            // GD.Print(
+            //     $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Weapon created for {Name}! Weapon: {_weapon.Name}"
+            // );
+            // _curve = enemyResource.PathCurve;
             _speed = enemyResource.Speed;
+        }
+
+        public void SetPath(EntityPath path)
+        {
+            _path = path;
         }
 
         public override void _Ready()
         {
             base._Ready();
-            _path = GetNode<Path2D>("%Path2D");
-            _path.Curve = _curve;
+            // _path = GetNode<Path2D>("%Path2D");
+            // _path.Curve = _curve;
+            // _pathFollow = _path.GetNode<PathFollow2D>("%PathFollow2D");
 
-            _pathFollow = _path.GetNode<PathFollow2D>("%PathFollow2D");
-            _characterBody = _pathFollow.GetNode<Area2D>("%DroneBody");
+            _shape = GetNode<CollisionShape2D>("CollisionShape2D");
 
-            _characterBody.AddChild(_weapon);
+            AddChild(_weapon);
 
-            FollowPath();
+            // Start the weapon fire timer to fire on a set interval.
+            _weapon.FireTimer.Timeout += FireWeapon;
+            _weapon.FireTimer.Start();
+
+            GD.Print(
+                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Following path of {_path.Name}..."
+            );
+            _path.FollowPath(_speed);
         }
 
         protected virtual void FireWeapon()
@@ -57,18 +72,12 @@ namespace Enemies
             _weapon.Fire();
         }
 
-        protected virtual void FollowPath()
-        {
-            float pathLength = _curve.GetBakedLength();
-            float duration = pathLength / _speed;
-
-            Tween tween = CreateTween();
-            tween.TweenProperty(_pathFollow, "progress_ratio", 1.0, duration);
-        }
-
         public virtual void Die()
         {
-            // Do the dying
+            GD.Print(
+                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name} called!"
+            );
+            QueueFree();
         }
     }
 }

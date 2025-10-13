@@ -9,6 +9,8 @@ namespace Projectiles
     {
         private bool _sourceInitialized;
         private Callable _deactivateCallable;
+
+        protected Area2D _area;
         protected bool _active;
         protected Timer _deactivationTimer;
         protected float _speed;
@@ -55,6 +57,7 @@ namespace Projectiles
 
         public override void _Ready()
         {
+            _area = GetNode<Area2D>("%Area2D");
             Initialize();
             // Rotate the projectile to its parent's global rotation so that it fires in the direction the weapon is "facing".
             GlobalRotation = _sourceWeapon.GlobalRotation;
@@ -138,5 +141,16 @@ namespace Projectiles
             ToggleDeactivationTimer(active);
             ToggleCollisionSignalConnection(active);
         }
+
+        // private void OnAreaEntered(Area2D area)
+        // {
+        //     CollisionComponent collisionComp = new CollisionComponent();
+        //     collisionComp.Source = this;
+        //     collisionComp.Collider = area.Owner;
+        //     collisionComp.GlobalCollisionPoint = GlobalPosition;
+        //     collisionComp.CollisionNormal = Vector2.Right.Rotated(area.GlobalRotation);
+
+        //     EmitSignal(SignalName.Collision, collisionComp);
+        // }
     }
 }

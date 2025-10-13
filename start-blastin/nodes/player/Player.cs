@@ -37,8 +37,7 @@ namespace Entities
             _movementComponent.Initialize(this);
             _controller.Initialize(this);
             _weaponComponent.Initialize(this);
-
-            _healthComponent.Owner = this;
+            _healthComponent.Initialize(this);
         }
 
         public override void _Ready()

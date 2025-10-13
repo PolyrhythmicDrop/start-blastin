@@ -31,7 +31,9 @@ namespace Factories
                 if (builtWeapon is WeaponNode weaponNode)
                 {
                     weaponNode.EnemyOwned = enemyWeapon;
-                    weaponNode.InitializeStats(weaponResource.Stats);
+                    WeaponResource newResource = (WeaponResource)
+                        weaponResource.DuplicateDeep(Resource.DeepDuplicateMode.Internal);
+                    weaponNode.InitializeStats(newResource.Stats);
                     return weaponNode;
                 }
                 else

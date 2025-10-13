@@ -6,11 +6,13 @@
 [ext_resource type="Resource" uid="uid://088uyxln030c" path="res://resources/weapons/drone-blaster.tres" id="2_gfeuq"]
 
 [sub_resource type="Resource" id="Resource_0bm52"]
+resource_local_to_scene = true
 script = ExtResource("1_gfeuq")
 MaxHealth = 2
 metadata/_custom_type_script = "uid://de8iusxhs0qem"
 
 [resource]
+resource_local_to_scene = true
 script = ExtResource("1_oggcu")
 ScenePath = "res://nodes/enemies/Drone/drone.tscn"
 Speed = 200.0

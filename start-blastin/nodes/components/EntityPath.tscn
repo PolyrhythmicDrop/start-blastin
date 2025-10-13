@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://da7sqkjhcrp8a"]
+
+[ext_resource type="Script" uid="uid://dc7up85m78i4d" path="res://nodes/components/EntityPath.cs" id="1_g26qx"]
+
+[node name="Path2D" type="Path2D"]
+script = ExtResource("1_g26qx")
+
+[node name="PathFollow2D" type="PathFollow2D" parent="."]
+unique_name_in_owner = true
+rotation = 1.9695266

@@ -180,33 +180,26 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_4whpq")
 }],
-"loop": true,
+"loop": false,
 "name": &"default",
 "speed": 10.0
 }]
 
-[node name="Drone" type="Node2D"]
-script = ExtResource("1_2lfs3")
-
-[node name="Path2D" type="Path2D" parent="."]
-unique_name_in_owner = true
-
-[node name="PathFollow2D" type="PathFollow2D" parent="Path2D"]
-unique_name_in_owner = true
-rotation = 1.9695266
-
-[node name="DroneBody" type="Area2D" parent="Path2D/PathFollow2D"]
-unique_name_in_owner = true
+[node name="Drone" type="AnimatableBody2D"]
+scale = Vector2(0.99999994, 0.99999994)
 collision_layer = 4
 collision_mask = 11
+script = ExtResource("1_2lfs3")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Path2D/PathFollow2D/DroneBody"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
 shape = SubResource("CapsuleShape2D_ijs4g")
 
-[node name="SpriteContainer" type="Node2D" parent="Path2D/PathFollow2D/DroneBody"]
+[node name="SpriteContainer" type="Node2D" parent="."]
 unique_name_in_owner = true
+scale = Vector2(1.0000001, 1.0000001)
 
-[node name="Engine" type="AnimatedSprite2D" parent="Path2D/PathFollow2D/DroneBody/SpriteContainer"]
+[node name="Engine" type="AnimatedSprite2D" parent="SpriteContainer"]
 unique_name_in_owner = true
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_vn1kh")
@@ -233,7 +226,7 @@ metadata/_aseprite_wizard_config_ = {
 }
 metadata/_aseprite_wizard_source_file_hash_ = "99faf7464c1d53c1a8541867cba5c37c"
 
-[node name="Base" type="AnimatedSprite2D" parent="Path2D/PathFollow2D/DroneBody/SpriteContainer"]
+[node name="Base" type="AnimatedSprite2D" parent="SpriteContainer"]
 unique_name_in_owner = true
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_josik")
@@ -262,7 +255,7 @@ metadata/_aseprite_wizard_config_ = {
 }
 metadata/_aseprite_wizard_source_file_hash_ = "552ca6811f507bf31ca8961fec08bd78"
 
-[node name="Destruction" type="AnimatedSprite2D" parent="Path2D/PathFollow2D/DroneBody/SpriteContainer"]
+[node name="Destruction" type="AnimatedSprite2D" parent="SpriteContainer"]
 unique_name_in_owner = true
 visible = false
 texture_filter = 1

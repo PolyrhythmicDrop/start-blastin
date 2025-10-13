@@ -11,32 +11,28 @@ namespace Enemies
         private AnimatedSprite2D _engine;
         private AnimatedSprite2D _destruction;
 
-        private Vector2 _currentPosition;
-        private Vector2 _lastPosition;
+        private Vector2 _currentGlobalPosition;
+        private Vector2 _lastGlobalPosition;
 
         public override void _Ready()
         {
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name} called!"
-            );
+            // GD.Print(
+            //     $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name} called!"
+            // );
             base._Ready();
             _spriteContainer = GetNode<Node2D>("%SpriteContainer");
             _base = _spriteContainer.GetNode<AnimatedSprite2D>("%Base");
             _engine = _spriteContainer.GetNode<AnimatedSprite2D>("%Engine");
             _destruction = _spriteContainer.GetNode<AnimatedSprite2D>("%Destruction");
 
-            _currentPosition = _characterBody.GlobalPosition;
-            _lastPosition = _currentPosition;
-
-            // Start the weapon fire timer to fire on a set interval.
-            _weapon.FireTimer.Timeout += FireWeapon;
-            _weapon.FireTimer.Start();
+            _currentGlobalPosition = GlobalPosition;
+            _lastGlobalPosition = _currentGlobalPosition;
         }
 
         public override void _Process(double delta)
         {
-            _lastPosition = _currentPosition;
-            _currentPosition = _characterBody.GlobalPosition;
+            _lastGlobalPosition = _currentGlobalPosition;
+            _currentGlobalPosition = GlobalPosition;
 
             base._Process(delta);
             SetMoveAnimation();
@@ -44,7 +40,7 @@ namespace Enemies
 
         private void SetMoveAnimation()
         {
-            if (_currentPosition != _lastPosition)
+            if (_currentGlobalPosition != _lastGlobalPosition)
             {
                 _engine.Play("moving");
             }
@@ -58,6 +54,36 @@ namespace Enemies
         {
             base.FireWeapon();
             _base.Play("fire");
+        }
+
+        public override void Die()
+        {
+            GD.Print(
+                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name} called!"
+            );
+
+            _shape.Disabled = true;
+
+            // Make the base and engine sprites invisible.
+            _base.Visible = false;
+            _engine.Visible = false;
+
+            _destruction.Visible = true;
+            _destruction.Play();
+
+            if (
+                !_destruction.IsConnected(
+                    AnimatedSprite2D.SignalName.AnimationFinished,
+                    Callable.From(base.Die)
+                )
+            )
+            // Free the node when the animation is finished.
+            {
+                _destruction.Connect(
+                    AnimatedSprite2D.SignalName.AnimationFinished,
+                    Callable.From(base.Die)
+                );
+            }
         }
     }
 }

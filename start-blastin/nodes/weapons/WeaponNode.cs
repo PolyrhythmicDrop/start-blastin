@@ -1,6 +1,8 @@
 using System;
+using System.Reflection;
 using Components;
 using Godot;
+using Interfaces;
 using Projectiles;
 
 namespace Weapons
@@ -81,7 +83,23 @@ namespace Weapons
             AddChild(FireTimer);
         }
 
-        public virtual void OnProjectileCollision(CollisionComponent collision) { }
+        public virtual void OnProjectileCollision(CollisionComponent collision)
+        {
+            GD.Print(
+                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Collision detected!\nSource: {collision.Source.Name} | Collider: {collision.Collider.Owner} | Collision Point: {collision.GlobalCollisionPoint} | Normal: {collision.CollisionNormal}"
+            );
+
+            if (collision.Collider.Owner is IHealthful healthful)
+            {
+                GD.Print($"{collision.Collider.Owner.Name} is taking damage!");
+                healthful.TakeDamage(_stats.Damage);
+            }
+
+            if (collision.Source is Projectile projectile)
+            {
+                projectile.ToggleActive(false);
+            }
+        }
 
         public virtual void Fire()
         {

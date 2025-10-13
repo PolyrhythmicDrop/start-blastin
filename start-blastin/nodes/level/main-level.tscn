@@ -1,10 +1,30 @@
-[gd_scene load_steps=6 format=3 uid="uid://dgcswjykgey5y"]
+[gd_scene load_steps=12 format=3 uid="uid://dgcswjykgey5y"]
 
 [ext_resource type="Texture2D" uid="uid://cilgl08og1qhy" path="res://nodes/backgrounds/background-purple-nebulae-stars.png" id="1_rvdan"]
 [ext_resource type="PackedScene" uid="uid://dl7j0usiolxux" path="res://nodes/environmental/play-area-border.tscn" id="2_cw5wp"]
 [ext_resource type="PackedScene" uid="uid://nenl15kjphyb" path="res://nodes/player/player.tscn" id="3_pxe5x"]
 [ext_resource type="PackedScene" uid="uid://bsyev7gatn1jy" path="res://nodes/environmental/oob-area.tscn" id="4_rl1rb"]
 [ext_resource type="PackedScene" uid="uid://b5ki3kbchln2j" path="res://nodes/enemies/EnemySpawner/enemy-spawner.tscn" id="5_l8aks"]
+[ext_resource type="Script" uid="uid://de8iusxhs0qem" path="res://nodes/components/HealthComponent.cs" id="6_ltqac"]
+[ext_resource type="Curve2D" uid="uid://bnvfjkrio8lfp" path="res://resources/curves/straight-down.tres" id="7_4foro"]
+[ext_resource type="Resource" uid="uid://088uyxln030c" path="res://resources/weapons/drone-blaster.tres" id="8_bfdlf"]
+[ext_resource type="Script" uid="uid://cf7pn6qd7aa15" path="res://nodes/enemies/EnemyResource.cs" id="9_kuid2"]
+
+[sub_resource type="Resource" id="Resource_encfm"]
+resource_local_to_scene = true
+script = ExtResource("6_ltqac")
+MaxHealth = 2
+metadata/_custom_type_script = "uid://de8iusxhs0qem"
+
+[sub_resource type="Resource" id="Resource_ujvro"]
+resource_local_to_scene = true
+script = ExtResource("9_kuid2")
+ScenePath = "res://nodes/enemies/Drone/drone.tscn"
+Speed = 200.0
+HealthComponent = SubResource("Resource_encfm")
+WeaponResource = ExtResource("8_bfdlf")
+PathCurve = ExtResource("7_4foro")
+metadata/_custom_type_script = "uid://cf7pn6qd7aa15"
 
 [node name="MainLevel" type="Node"]
 
@@ -31,3 +51,6 @@ position = Vector2(933, 883)
 position = Vector2(50, -82)
 SpawnInterval = 1.0
 SpawnPointMoveDuration = 2.3
+EnemyPool = Dictionary[Object, int]({
+SubResource("Resource_ujvro"): 10
+})

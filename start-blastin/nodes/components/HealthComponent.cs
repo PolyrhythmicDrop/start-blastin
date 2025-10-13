@@ -30,18 +30,7 @@ namespace Components
         public int CurrentHealth
         {
             get => _currentHealth;
-            private set
-            {
-                if (_currentHealth - value <= 0)
-                {
-                    _currentHealth = 0;
-                    Die();
-                }
-                else
-                {
-                    _currentHealth = value;
-                }
-            }
+            private set => _currentHealth = value;
         }
 
         public IDie Owner
@@ -50,25 +39,33 @@ namespace Components
             set => _owner = value;
         }
 
+        public void Initialize(IDie owner)
+        {
+            _currentHealth = _maxHealth;
+            _owner = owner;
+        }
+
         public void TakeDamage(int damage)
         {
-            CurrentHealth -= damage;
+            _currentHealth -= damage;
+
+            if (_currentHealth <= 0)
+            {
+                _currentHealth = 0;
+                Die();
+            }
         }
 
         public void Heal(int healAmount)
         {
-            if (_currentHealth + healAmount >= _maxHealth)
-            {
-                CurrentHealth = _maxHealth;
-            }
-            else
-            {
-                CurrentHealth += healAmount;
-            }
+            _currentHealth = Mathf.Min(_currentHealth + healAmount, _maxHealth);
         }
 
         public void Die()
         {
+            GD.Print(
+                $"{System.Reflection.MethodBase.GetCurrentMethod().ReflectedType}.{System.Reflection.MethodBase.GetCurrentMethod().Name} called!"
+            );
             _owner.Die();
         }
     }

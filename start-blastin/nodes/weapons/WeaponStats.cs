@@ -7,7 +7,7 @@ namespace Weapons
     public partial class WeaponStats : Resource
     {
         private ProjectileType _projType = ProjectileType.Bullet;
-        private float _damage = 1;
+        private int _damage = 1;
         private float _fireRate = 0.5f;
         private float _projSpeed = 200;
 
@@ -19,7 +19,7 @@ namespace Weapons
         }
 
         [Export]
-        public float Damage
+        public int Damage
         {
             get => _damage;
             set => _damage = value;

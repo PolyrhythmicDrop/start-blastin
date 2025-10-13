@@ -1,8 +1,9 @@
-[gd_scene load_steps=28 format=3 uid="uid://dwhfr6b04sn3"]
+[gd_scene load_steps=29 format=3 uid="uid://dwhfr6b04sn3"]
 
 [ext_resource type="Script" uid="uid://bf4nsy5w0ftaq" path="res://nodes/enemies/Drone/Drone.cs" id="1_2lfs3"]
 [ext_resource type="Texture2D" uid="uid://dniqs2y5gnx25" path="res://nodes/enemies/Drone/sprites/drone-engine.png" id="2_ijs4g"]
 [ext_resource type="Texture2D" uid="uid://dm0dl4ev8bx27" path="res://nodes/enemies/Drone/sprites/drone-base.png" id="2_likh3"]
+[ext_resource type="Material" uid="uid://c2utwn3c0waxt" path="res://resources/materials/enemy-hit-effect.tres" id="2_owq5x"]
 [ext_resource type="Texture2D" uid="uid://baym56lbmyrdk" path="res://nodes/enemies/Drone/sprites/drone-destruction.png" id="4_k5dt5"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ijs4g"]
@@ -198,11 +199,13 @@ shape = SubResource("CapsuleShape2D_ijs4g")
 
 [node name="SpriteContainer" type="Node2D" parent="."]
 unique_name_in_owner = true
+material = ExtResource("2_owq5x")
 scale = Vector2(1.0000001, 1.0000001)
 
 [node name="Engine" type="AnimatedSprite2D" parent="SpriteContainer"]
 unique_name_in_owner = true
 texture_filter = 1
+use_parent_material = true
 sprite_frames = SubResource("SpriteFrames_vn1kh")
 animation = &"moving"
 metadata/_aseprite_wizard_interface_config_ = {
@@ -230,6 +233,7 @@ metadata/_aseprite_wizard_source_file_hash_ = "99faf7464c1d53c1a8541867cba5c37c"
 [node name="Base" type="AnimatedSprite2D" parent="SpriteContainer"]
 unique_name_in_owner = true
 texture_filter = 1
+use_parent_material = true
 sprite_frames = SubResource("SpriteFrames_josik")
 animation = &"fire"
 autoplay = "default"

@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://c2utwn3c0waxt"]
+
+[ext_resource type="Shader" uid="uid://bmacriris3r2k" path="res://nodes/shaders/color-cycling-hit-effect.gdshader" id="1_xpdna"]
+
+[resource]
+resource_local_to_scene = true
+shader = ExtResource("1_xpdna")
+shader_parameter/start_frame = 0
+shader_parameter/current_frame = 0
+shader_parameter/mix_ratio = 0.0
+shader_parameter/color_array = PackedColorArray(0.90325063, 0.71606773, 0.13664433, 1, 0.9286023, 0.44844162, 0.029969092, 1, 0.9297021, 0.55911386, 0.73078054, 1, 0.49905097, 0.24068788, 0.34344208, 1, 0.14509805, 0.49019608, 0.60784316, 1, 0.14509805, 0.7372549, 0.7764706, 1)

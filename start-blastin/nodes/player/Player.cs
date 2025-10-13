@@ -77,6 +77,7 @@ namespace Entities
 
         public void Die()
         {
+            _controller.Enabled = false;
             Dying = true;
             _hitBox.Disabled = true;
             _animationComponent.PlayDieAnimation();

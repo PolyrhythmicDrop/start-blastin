@@ -21,7 +21,11 @@ namespace Enemies
         public WeaponNode Weapon => _weapon;
         public EntityPath Path => _path;
 
-        public void TakeDamage(int damage) => _healthComponent.TakeDamage(damage);
+        public void TakeDamage(int damage)
+        {
+            PlayDamageAnimation();
+            _healthComponent.TakeDamage(damage);
+        }
 
         public void Heal(int healAmount) => _healthComponent.Heal(healAmount);
 
@@ -71,5 +75,7 @@ namespace Enemies
             _weapon.AllProjectilesDisabled += QueueFree;
             // QueueFree();
         }
+
+        public virtual void PlayDamageAnimation() { }
     }
 }

@@ -14,14 +14,11 @@ namespace Enemies
         protected WeaponNode _weapon;
         protected float _speed;
         protected CollisionShape2D _shape;
-
         protected EntityPath _path;
-
         protected EnemyState _state;
 
         public HealthComponent HealthComp => _healthComponent;
         public WeaponNode Weapon => _weapon;
-
         public EntityPath Path => _path;
 
         public void TakeDamage(int damage) => _healthComponent.TakeDamage(damage);
@@ -32,12 +29,7 @@ namespace Enemies
         {
             _healthComponent = (HealthComponent)enemyResource.HealthComponent.Duplicate(true);
             _healthComponent.Initialize(this);
-
             _weapon = WeaponFactory.CreateWeapon(enemyResource.WeaponResource, true);
-            // GD.Print(
-            //     $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Weapon created for {Name}! Weapon: {_weapon.Name}"
-            // );
-            // _curve = enemyResource.PathCurve;
             _speed = enemyResource.Speed;
         }
 
@@ -49,9 +41,6 @@ namespace Enemies
         public override void _Ready()
         {
             base._Ready();
-            // _path = GetNode<Path2D>("%Path2D");
-            // _path.Curve = _curve;
-            // _pathFollow = _path.GetNode<PathFollow2D>("%PathFollow2D");
 
             _shape = GetNode<CollisionShape2D>("CollisionShape2D");
 

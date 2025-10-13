@@ -20,9 +20,10 @@ namespace Environmental
         private void OnBodyEntered(Node2D body)
         {
             GD.Print($"{body.Name} in OOB...");
+
             if (body is EnemyNode enemy)
             {
-                GD.Print($"{body.Owner.Name} entered OOB! Queuing free...");
+                GD.Print($"{body.Name} entered OOB! Queuing free...");
                 enemy.QueueFree();
             }
         }

@@ -10,18 +10,18 @@
 [ext_resource type="Resource" uid="uid://088uyxln030c" path="res://resources/weapons/drone-blaster.tres" id="8_bfdlf"]
 [ext_resource type="Script" uid="uid://cf7pn6qd7aa15" path="res://nodes/enemies/EnemyResource.cs" id="9_kuid2"]
 
-[sub_resource type="Resource" id="Resource_encfm"]
+[sub_resource type="Resource" id="Resource_ltqac"]
 resource_local_to_scene = true
 script = ExtResource("6_ltqac")
 MaxHealth = 2
 metadata/_custom_type_script = "uid://de8iusxhs0qem"
 
-[sub_resource type="Resource" id="Resource_ujvro"]
+[sub_resource type="Resource" id="Resource_4foro"]
 resource_local_to_scene = true
 script = ExtResource("9_kuid2")
 ScenePath = "res://nodes/enemies/Drone/drone.tscn"
 Speed = 200.0
-HealthComponent = SubResource("Resource_encfm")
+HealthComponent = SubResource("Resource_ltqac")
 WeaponResource = ExtResource("8_bfdlf")
 PathCurve = ExtResource("7_4foro")
 metadata/_custom_type_script = "uid://cf7pn6qd7aa15"
@@ -52,5 +52,5 @@ position = Vector2(50, -82)
 SpawnInterval = 1.0
 SpawnPointMoveDuration = 2.3
 EnemyPool = Dictionary[Object, int]({
-SubResource("Resource_ujvro"): 10
+SubResource("Resource_4foro"): 10
 })

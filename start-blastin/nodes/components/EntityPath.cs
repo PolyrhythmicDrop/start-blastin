@@ -24,9 +24,9 @@ public partial class EntityPath : Path2D
     /// <param name="speed">The speed at which the child should follow the path.</param>
     public void FollowPath(float speed)
     {
-        GD.Print(
-            $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Following {Name} at {speed}..."
-        );
+        // GD.Print(
+        //     $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Following {Name} at {speed}..."
+        // );
         float pathLength = Curve.GetBakedLength();
         float duration = pathLength / speed;
 

@@ -141,6 +141,9 @@ namespace Enemies
             _spawnParent.AddChild(entityPath);
 
             entityPath.PathFollow.AddChild(enemy);
+
+            // Free the path after its associated enemy has left the tree/been despawned.
+            enemy.TreeExited += entityPath.QueueFree;
         }
 
         private void MoveSpawnPoint()

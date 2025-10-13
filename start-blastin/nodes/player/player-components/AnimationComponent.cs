@@ -11,6 +11,7 @@ namespace PlayerComponents
         private AnimatedSprite2D _engineEffectSprite;
         private Sprite2D _engineSprite;
         private Sprite2D _bodySprite;
+        private AnimatedSprite2D _destructionSprite;
 
         public override void _Ready()
         {
@@ -18,6 +19,7 @@ namespace PlayerComponents
             _engineEffectSprite = _spriteContainer.GetNode<AnimatedSprite2D>("%EngineEffect");
             _engineSprite = _spriteContainer.GetNode<Sprite2D>("%Engine");
             _bodySprite = _spriteContainer.GetNode<Sprite2D>("%Body");
+            _destructionSprite = _spriteContainer.GetNode<AnimatedSprite2D>("%Destruction");
         }
 
         public void Initialize(Player player)
@@ -27,14 +29,28 @@ namespace PlayerComponents
 
         public override void _Process(double delta)
         {
-            if (_player.Velocity != Vector2.Zero)
+            if (!_player.Dying)
             {
-                _engineEffectSprite.Play("full-power");
+                if (_player.Velocity != Vector2.Zero)
+                {
+                    _engineEffectSprite.Play("full-power");
+                }
+                else
+                {
+                    _engineEffectSprite.Play("idle");
+                }
             }
-            else
-            {
-                _engineEffectSprite.Play("idle");
-            }
+        }
+
+        public void PlayDieAnimation()
+        {
+            _engineEffectSprite.Hide();
+            _engineSprite.Hide();
+            _bodySprite.Hide();
+
+            _destructionSprite.Visible = true;
+            _destructionSprite.Play("full-explosion");
+            _destructionSprite.AnimationFinished += _player.Despawn;
         }
     }
 }

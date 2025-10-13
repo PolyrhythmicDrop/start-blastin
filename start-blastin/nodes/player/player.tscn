@@ -9,6 +9,8 @@
 [ext_resource type="Resource" uid="uid://coiv5i1pkqvv8" path="res://resources/weapons/blaster.tres" id="6_1fmtd"]
 
 [sub_resource type="Resource" id="Resource_5h4ma"]
+resource_local_to_scene = true
+resource_name = "player-health"
 script = ExtResource("2_1fmtd")
 MaxHealth = 5
 metadata/_custom_type_script = "uid://de8iusxhs0qem"

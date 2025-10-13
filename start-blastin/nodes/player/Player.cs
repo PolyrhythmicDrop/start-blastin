@@ -23,6 +23,8 @@ namespace Entities
             set => _healthComponent = value;
         }
 
+        public bool Dying = false;
+
         public void TakeDamage(int damage) => _healthComponent.TakeDamage(damage);
 
         public void Heal(int healAmount) => _healthComponent.Heal(healAmount);
@@ -66,6 +68,17 @@ namespace Entities
             MoveAndSlide();
         }
 
-        public void Die() { }
+        public void Die()
+        {
+            Dying = true;
+            _hitBox.Disabled = true;
+            _animationComponent.PlayDieAnimation();
+        }
+
+        public void Despawn()
+        {
+            GD.Print("Game over, man! Game over!");
+            QueueFree();
+        }
     }
 }

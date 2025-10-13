@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://cr3k7kv44d7a6"]
+[gd_scene load_steps=20 format=3 uid="uid://cr3k7kv44d7a6"]
 
 [ext_resource type="Script" uid="uid://dts5f07qgh2ne" path="res://nodes/player/player-components/AnimationComponent.cs" id="1_cfdjm"]
 [ext_resource type="Texture2D" uid="uid://c8ayxfoaokcup" path="res://nodes/player/sprites/engine-effects/player-base-engine-effect.png" id="2_3m6sw"]
 [ext_resource type="Texture2D" uid="uid://bbiq4mhjc38js" path="res://nodes/player/sprites/engines/base-player-engine.png" id="3_cfdjm"]
 [ext_resource type="Texture2D" uid="uid://h872er43ihna" path="res://nodes/player/sprites/base/base-player-ship.png" id="4_nyy4m"]
+[ext_resource type="Texture2D" uid="uid://dh23q3ptif5kk" path="res://nodes/player/sprites/destruction/player-destruction.png" id="5_3m6sw"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cfdjm"]
 atlas = ExtResource("2_3m6sw")
@@ -47,6 +48,73 @@ animations = [{
 "loop": true,
 "name": &"idle",
 "speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rwwbc"]
+atlas = ExtResource("5_3m6sw")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gpnrd"]
+atlas = ExtResource("5_3m6sw")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2ydqi"]
+atlas = ExtResource("5_3m6sw")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uod1e"]
+atlas = ExtResource("5_3m6sw")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t2oqm"]
+atlas = ExtResource("5_3m6sw")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vobid"]
+atlas = ExtResource("5_3m6sw")
+region = Rect2(256, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o2h7l"]
+atlas = ExtResource("5_3m6sw")
+region = Rect2(0, 256, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_26iir"]
+atlas = ExtResource("5_3m6sw")
+region = Rect2(128, 256, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_p5t35"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rwwbc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gpnrd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2ydqi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uod1e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t2oqm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vobid")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o2h7l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_26iir")
+}, {
+"duration": 1.0,
+"texture": null
+}],
+"loop": false,
+"name": &"full-explosion",
+"speed": 10.0
 }]
 
 [node name="AnimationComponent" type="Node2D"]
@@ -141,3 +209,32 @@ metadata/_aseprite_wizard_config_ = {
 "source_uid": 4411483287234894435
 }
 metadata/_aseprite_wizard_source_file_hash_ = "e931710045318158d74c64bb8b99b1db"
+
+[node name="Destruction" type="AnimatedSprite2D" parent="SpriteContainer"]
+unique_name_in_owner = true
+visible = false
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_p5t35")
+animation = &"full-explosion"
+frame = 8
+frame_progress = 1.0
+metadata/_aseprite_wizard_interface_config_ = {
+"animation_section": true,
+"layer_section": true,
+"output_section": true,
+"pending_changes": {}
+}
+metadata/_aseprite_wizard_config_ = {
+"embed_tex": false,
+"layers": [],
+"o_ex_p": "",
+"o_folder": "res://nodes/player/sprites/destruction",
+"o_name": "player-destruction",
+"only_visible": true,
+"scale": "2.0",
+"should_round_fps": true,
+"slice": "",
+"source": "res://nodes/player/sprites/destruction/full-explosion.aseprite",
+"source_uid": 6700895633904091207
+}
+metadata/_aseprite_wizard_source_file_hash_ = "648485a507c424b246e61521102ea1b0"

@@ -95,9 +95,14 @@ namespace Weapons
                 healthful.TakeDamage(_stats.Damage);
             }
 
-            if (collision.Source is Projectile projectile)
+            if (collision.Collider is Projectile projectile)
             {
                 projectile.ToggleActive(false);
+            }
+
+            if (collision.Source is Projectile sourceProj)
+            {
+                sourceProj.ToggleActive(false);
             }
         }
 

@@ -54,7 +54,9 @@ animations = [{
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nppro"]
 radius = 4.0
 
-[node name="Bullet" type="Node2D" groups=["projectiles"]]
+[node name="Bullet" type="Area2D" groups=["projectiles"]]
+collision_layer = 8
+collision_mask = 15
 script = ExtResource("1_ajx7a")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
@@ -89,15 +91,11 @@ metadata/_aseprite_wizard_source_file_hash_ = "0c6dfed3e2dfef714e6b29018b88c7b9"
 [node name="RayCast2D" type="RayCast2D" parent="."]
 position = Vector2(18, 0)
 target_position = Vector2(0, 0)
-collision_mask = 5
+collision_mask = 13
 hit_from_inside = true
+collide_with_areas = true
 
-[node name="Area2D" type="Area2D" parent="."]
-unique_name_in_owner = true
-collision_layer = 24
-collision_mask = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(4, 0)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_nppro")

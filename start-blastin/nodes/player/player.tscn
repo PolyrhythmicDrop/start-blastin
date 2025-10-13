@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://djgcr0lno2mdr" path="res://nodes/player/player-components/MovementComponent.cs" id="3_hs1md"]
 [ext_resource type="Script" uid="uid://dcupxkt621nuk" path="res://nodes/player/player-components/PlayerController.cs" id="4_1fmtd"]
 [ext_resource type="Script" uid="uid://wvxahp2d8k6f" path="res://nodes/player/player-components/WeaponComponent.cs" id="5_5h4ma"]
-[ext_resource type="Resource" uid="uid://13wggaxc31as" path="res://resources/weapons/blaster.tres" id="6_1fmtd"]
+[ext_resource type="Resource" uid="uid://coiv5i1pkqvv8" path="res://resources/weapons/blaster.tres" id="6_1fmtd"]
 
 [sub_resource type="Resource" id="Resource_5h4ma"]
 script = ExtResource("2_1fmtd")

@@ -27,8 +27,14 @@ namespace Environmental
 
         private void OnAreaEntered(Area2D area)
         {
-            if (area.GetParent() is Projectile projectile)
+            // GD.Print(
+            //     $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: {area} entered! Deducing type..."
+            // );
+            if (area is Projectile projectile)
             {
+                // GD.Print(
+                //     $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: {projectile.Name} entered! Deactivating..."
+                // );
                 projectile.ToggleActive(false);
             }
         }

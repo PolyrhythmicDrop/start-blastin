@@ -50,9 +50,9 @@ namespace Enemies
             _weapon.FireTimer.Timeout += FireWeapon;
             _weapon.FireTimer.Start();
 
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Following path of {_path.Name}..."
-            );
+            // GD.Print(
+            //     $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Following path of {_path.Name}..."
+            // );
             _path.FollowPath(_speed);
         }
 
@@ -63,9 +63,9 @@ namespace Enemies
 
         public virtual void Die()
         {
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name} called!"
-            );
+            // GD.Print(
+            //     $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name} called!"
+            // );
             QueueFree();
         }
     }

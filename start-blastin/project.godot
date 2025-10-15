@@ -55,6 +55,7 @@ folder_colors={
 [global_group]
 
 projectiles=""
+enemy-spawners="Enemy spawners"
 
 [input]
 

@@ -28,13 +28,13 @@ namespace Entities
 
         public bool Dying = false;
 
-        public void TakeDamage(int damage)
+        public void TakeDamage(float damage)
         {
             _animationComponent.PlayDamageAnimation();
             _healthComponent.TakeDamage(damage);
         }
 
-        public void Heal(int healAmount) => _healthComponent.Heal(healAmount);
+        public void Heal(float healAmount) => _healthComponent.Heal(healAmount);
 
         public void Fire() => _weaponComponent.FireWeapon();
 

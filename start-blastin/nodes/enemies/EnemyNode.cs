@@ -4,6 +4,7 @@ using Entities;
 using Factories;
 using Godot;
 using Interfaces;
+using WaveManagement;
 using Weapons;
 
 namespace Enemies
@@ -14,7 +15,7 @@ namespace Enemies
         protected HealthComponent _healthComponent;
         protected WeaponNode _weapon;
         protected float _speed;
-        protected int _crashDamage;
+        protected float _crashDamage;
         protected CollisionShape2D _shape;
         protected EntityPath _path;
         protected EnemyState _state;
@@ -23,24 +24,33 @@ namespace Enemies
         public WeaponNode Weapon => _weapon;
         public EntityPath Path => _path;
 
-        public void TakeDamage(int damage)
+        public void TakeDamage(float damage)
         {
             PlayDamageAnimation();
             _healthComponent.TakeDamage(damage);
         }
 
-        public void Heal(int healAmount) => _healthComponent.Heal(healAmount);
+        public void Heal(float healAmount) => _healthComponent.Heal(healAmount);
 
         public virtual void Initialize(EnemyResource enemyResource)
         {
-            _healthComponent = (HealthComponent)enemyResource.HealthComponent.Duplicate(true);
+            _healthComponent = enemyResource.HealthComponent;
             _healthComponent.Initialize(this);
             _weapon = WeaponFactory.CreateWeapon(enemyResource.WeaponResource, true);
             _speed = enemyResource.Speed;
-            GD.Print($"New enemy speed: {enemyResource.Speed} | {_speed}");
             _crashDamage = enemyResource.CrashDamage;
+        }
+
+        public virtual void ApplyWaveConfig(EnemyWaveConfig config)
+        {
+            _healthComponent.MaxHealth += config.MaxHealthModifier * _healthComponent.MaxHealth;
+            _crashDamage += config.CrashDamageModifier * _crashDamage;
+            _speed += config.SpeedModifier * _speed;
+            _weapon.Stats.FireRate += config.FireRateModifier * _weapon.Stats.FireRate;
+            _weapon.Stats.Damage += config.WeaponDamageModifier * _weapon.Stats.Damage;
+
             GD.Print(
-                $"Enemy initialized: Resource crash damage: {enemyResource.CrashDamage} | New enemy crash damage {_crashDamage}"
+                $"{MethodBase.GetCurrentMethod().Name}: Wave Config {config.ResourceName} applied! New stats:\nMaxHealth: {_healthComponent.MaxHealth} | Crash Damage {_crashDamage} | Speed {_speed}\nFire Rate {_weapon.Stats.FireRate} | Damage {_weapon.Stats.Damage}"
             );
         }
 

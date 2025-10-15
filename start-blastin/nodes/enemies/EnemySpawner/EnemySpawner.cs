@@ -2,6 +2,7 @@ using System.Linq;
 using System.Reflection;
 using Factories;
 using Godot;
+using WaveManagement;
 
 namespace Enemies
 {
@@ -21,6 +22,8 @@ namespace Enemies
 
         // Point where the enemies spawn from. Should be the child of _path.
         private Node2D _spawnPoint;
+
+        private EnemyWaveConfig _enemyWaveConfig;
 
         [Export]
         public Curve2D Curve
@@ -75,7 +78,7 @@ namespace Enemies
             _spawnTimer = GetNode<Timer>("%SpawnTimer");
             _spawnTimer.WaitTime = _spawnInterval;
             _spawnTimer.Timeout += SpawnEnemy;
-            _spawnTimer.Start();
+            // _spawnTimer.Start();
 
             MoveSpawnPoint();
         }
@@ -87,7 +90,7 @@ namespace Enemies
 
         private EnemyResource GetEnemyFromPool()
         {
-            GD.Print($"{MethodBase.GetCurrentMethod().Name}:\n");
+            // GD.Print($"{MethodBase.GetCurrentMethod().Name}:\n");
             if (_spawnPool == null || _spawnPool.Count == 0)
                 return null;
 
@@ -98,12 +101,12 @@ namespace Enemies
                 totalWeight += data.Weight;
             }
 
-            GD.Print($"Total weight: {totalWeight}");
+            // GD.Print($"Total weight: {totalWeight}");
 
             // Generate random number within total weight
             int randomValue = GD.RandRange(0, totalWeight - 1);
 
-            GD.Print($"Random value: {randomValue}");
+            // GD.Print($"Random value: {randomValue}");
 
             // Find the enemy that corresponds to this weight
             int currentWeight = 0;
@@ -129,13 +132,9 @@ namespace Enemies
             EnemyResource enemyResource = (EnemyResource)
                 GetEnemyFromPool().DuplicateDeep(Resource.DeepDuplicateMode.Internal);
 
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().Name}: New enemy resource retrieved! Resource: {enemyResource} | Speed: {enemyResource.Speed} | Crash Damage: {enemyResource.CrashDamage}"
-            );
-
+            // Create an enemy from the factory and apply the current wave configuration.
             EnemyNode enemy = EnemyFactory.CreateEnemy(enemyResource);
-
-            GD.Print($"Enemy created from factory! Name: {enemy.Name}");
+            enemy.ApplyWaveConfig(_enemyWaveConfig);
 
             // Create a new path scene for the new EnemyNode to follow.
             EntityPath entityPath = GD.Load<PackedScene>(EntityPath.ScenePath)
@@ -159,6 +158,28 @@ namespace Enemies
             tween.TweenProperty(_pathFollow, "progress_ratio", 1.0, _pointMoveDuration);
             tween.TweenProperty(_pathFollow, "progress_ratio", 0, _pointMoveDuration);
             tween.SetLoops();
+        }
+
+        public void SetEnemyWaveConfig(EnemyWaveConfig config)
+        {
+            _enemyWaveConfig = config;
+        }
+
+        /// <summary>
+        /// Toggles spawn behavior on and off.
+        /// </summary>
+        /// <param name="spawn">Whether or not to spawn enemies.</param>
+        public void ToggleSpawning(bool spawn)
+        {
+            GD.Print($"{MethodBase.GetCurrentMethod().Name}: Toggling spawning to {spawn}!");
+            if (spawn)
+            {
+                _spawnTimer.Start();
+            }
+            else
+            {
+                _spawnTimer.Stop();
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using WaveManagement;
 using Weapons;
 
 namespace Factories
@@ -11,8 +12,13 @@ namespace Factories
         /// </summary>
         /// <param name="weaponResource">The resource to create the weapon from. Resource contains the weapon's scene path and stats.</param>
         /// <param name="enemyWeapon">True if the weapon belongs to an enemy. False if it belongs to the player. Used to apply the correct shader material to projectiles.</param>
-        /// <returns></returns>
-        public static WeaponNode CreateWeapon(WeaponResource weaponResource, bool enemyWeapon)
+        /// <param name="enemyWaveConfig">Modifies the created weapon based on a wave configuration.</param>
+        /// <returns>A built <see cref="WeaponNode"/> with its stats set by the passed <see cref="WeaponResource"/> and (optionally) <see cref="EnemyWaveConfig"/>.</returns>
+        public static WeaponNode CreateWeapon(
+            WeaponResource weaponResource,
+            bool enemyWeapon,
+            EnemyWaveConfig enemyWaveConfig = null
+        )
         {
             try
             {
@@ -33,7 +39,13 @@ namespace Factories
                     weaponNode.EnemyOwned = enemyWeapon;
                     WeaponResource newResource = (WeaponResource)
                         weaponResource.DuplicateDeep(Resource.DeepDuplicateMode.Internal);
-                    weaponNode.InitializeStats(newResource.Stats);
+                    // If weapon is for an enemy and we have a wave config, apply the wave configuration to the weapon.
+                    WeaponStats weaponStats = newResource.Stats;
+                    if (enemyWeapon && enemyWaveConfig != null)
+                    {
+                        ApplyWaveConfigToWeaponStats(weaponStats, enemyWaveConfig);
+                    }
+                    weaponNode.InitializeStats(weaponStats);
                     return weaponNode;
                 }
                 else
@@ -49,6 +61,17 @@ namespace Factories
                 GD.PrintErr(e.Message);
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Applies a wave configuration to a weapon, typically for an enemy's weapon.
+        /// </summary>
+        /// <param name="stats">The original WeaponStats resource to modify.</param>
+        /// <param name="config">The wave configuration that modifies the <paramref name="stats"/>.</param>
+        private static void ApplyWaveConfigToWeaponStats(WeaponStats stats, EnemyWaveConfig config)
+        {
+            stats.FireRate += config.FireRateModifier * stats.FireRate;
+            stats.Damage += config.WeaponDamageModifier * stats.Damage;
         }
     }
 }

@@ -1,54 +1,196 @@
 Godot Engine v4.5.stable.mono.official.876b29033 - https://godotengine.org
 Vulkan 1.4.312 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3060 Ti
 
+Weapon equipped! <Node2D#39342573003>
+Stats: 0.5 | 1 | Bullet | 1000
+Enemies.EnemySpawner._Ready called!
 Base difficulty modifier set: Easy - 0.1
 LoadConfigPool: Adding resource from res://resources/wave-configurations/enemy-wave-configs/default-enemy-wave-config.tres to enemy config pool...
 LoadConfigPool: Adding resource from res://resources/wave-configurations/enemy-wave-configs/tier-1.tres to enemy config pool...
 LoadConfigPool: Adding resource from res://resources/wave-configurations/enemy-wave-configs/tier-2.tres to enemy config pool...
 LoadConfigPool: Adding resource from res://resources/wave-configurations/enemy-wave-configs/tier-3.tres to enemy config pool...
-SetCurrentWaveConfig: Current enmy config set! Selection: 0 | Config = tier-1-enemy-wave-config
-Weapon equipped! <Node2D#39929775563>
-Stats: 0.5 | 1 | Bullet | 1000
-Enemies.EnemySpawner._Ready called!
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 17
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371991673731527> | Speed: 500 | Crash Damage: 2
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
-New enemy speed: 500 | 500
-Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
-Enemy created from factory! Name: Drone
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 14
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371977262102584> | Speed: 500 | Crash Damage: 2
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
-New enemy speed: 500 | 500
-Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
-Enemy created from factory! Name: Drone
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 1
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371965618714705> | Speed: 300 | Crash Damage: 3
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 3 | Speed: 300
-New enemy speed: 300 | 300
-Enemy initialized: Resource crash damage: 3 | New enemy crash damage 3
-Enemy created from factory! Name: Drone
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 11
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371940620661281> | Speed: 500 | Crash Damage: 2
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
-New enemy speed: 500 | 500
-Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
-Enemy created from factory! Name: Drone
-ERROR: 18 RID allocations of type 'P11GodotArea2D' were leaked at exit.
+SetCurrentWaveConfig: Current enemy config set! Selection: 0 | Config = tier-1-enemy-wave-config
+StartWave
+ToggleSpawning: Toggling spawning to True!
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
+Fire Rate 1.32 | Damage 1.3
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
+Fire Rate 1.32 | Damage 1.3
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
+Fire Rate 1.32 | Damage 1.3
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
+Fire Rate 1.32 | Damage 1.3
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
+Fire Rate 1.32 | Damage 1.3
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
+Fire Rate 1.32 | Damage 1.3
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
+Fire Rate 1.32 | Damage 1.3
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
+Fire Rate 1.32 | Damage 1.3
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
+Fire Rate 1.32 | Damage 1.3
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 1.2 | Crash Damage 2.4 | Speed 550
+Fire Rate 0.55 | Damage 1.3
+EndWave
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+SetCurrentWaveConfig: Current enemy config set! Selection: 0 | Config = tier-1-enemy-wave-config
+Difficulty modifier applied to tier-1-enemy-wave-config!
+StartWave
+ToggleSpawning: Toggling spawning to True!
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 1.3 | Crash Damage 2.6 | Speed 600
+Fire Rate 0.6 | Damage 1.4
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 3.9 | Speed 360
+Fire Rate 1.44 | Damage 1.4
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 3.9 | Speed 360
+Fire Rate 1.44 | Damage 1.4
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 3.9 | Speed 360
+Fire Rate 1.44 | Damage 1.4
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 1.3 | Crash Damage 2.6 | Speed 600
+Fire Rate 0.6 | Damage 1.4
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 3.9 | Speed 360
+Fire Rate 1.44 | Damage 1.4
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 3.9 | Speed 360
+Fire Rate 1.44 | Damage 1.4
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 1.3 | Crash Damage 2.6 | Speed 600
+Fire Rate 0.6 | Damage 1.4
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 3.9 | Speed 360
+Fire Rate 1.44 | Damage 1.4
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 3.9 | Speed 360
+Fire Rate 1.44 | Damage 1.4
+EndWave
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+SetCurrentWaveConfig: Current enemy config set! Selection: 0 | Config = tier-2-enemy-wave-config
+Difficulty modifier applied to tier-2-enemy-wave-config!
+StartWave
+ToggleSpawning: Toggling spawning to True!
+ApplyWaveConfig: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2.8 | Crash Damage 4.2 | Speed 390
+Fire Rate 1.5600001 | Damage 1.5
+ApplyWaveConfig: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2.8 | Crash Damage 4.2 | Speed 390
+Fire Rate 1.5600001 | Damage 1.5
+ApplyWaveConfig: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2.8 | Crash Damage 4.2 | Speed 390
+Fire Rate 1.5600001 | Damage 1.5
+ApplyWaveConfig: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2.8 | Crash Damage 4.2 | Speed 390
+Fire Rate 1.5600001 | Damage 1.5
+ApplyWaveConfig: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2.8 | Crash Damage 4.2 | Speed 390
+Fire Rate 1.5600001 | Damage 1.5
+ApplyWaveConfig: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2.8 | Crash Damage 4.2 | Speed 390
+Fire Rate 1.5600001 | Damage 1.5
+ApplyWaveConfig: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2.8 | Crash Damage 4.2 | Speed 390
+Fire Rate 1.5600001 | Damage 1.5
+ApplyWaveConfig: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2.8 | Crash Damage 4.2 | Speed 390
+Fire Rate 1.5600001 | Damage 1.5
+ApplyWaveConfig: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2.8 | Crash Damage 4.2 | Speed 390
+Fire Rate 1.5600001 | Damage 1.5
+ApplyWaveConfig: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2.8 | Crash Damage 4.2 | Speed 390
+Fire Rate 1.5600001 | Damage 1.5
+EndWave
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+SetCurrentWaveConfig: Current enemy config set! Selection: 1 | Config = tier-3-enemy-wave-config
+Difficulty modifier applied to tier-3-enemy-wave-config!
+StartWave
+ToggleSpawning: Toggling spawning to True!
+ApplyWaveConfig: Wave Config tier-3-enemy-wave-config applied! New stats:
+MaxHealth: 3.2 | Crash Damage 4.5 | Speed 420
+Fire Rate 1.6800001 | Damage 1.6
+ApplyWaveConfig: Wave Config tier-3-enemy-wave-config applied! New stats:
+MaxHealth: 3.2 | Crash Damage 4.5 | Speed 420
+Fire Rate 1.6800001 | Damage 1.6
+ApplyWaveConfig: Wave Config tier-3-enemy-wave-config applied! New stats:
+MaxHealth: 3.2 | Crash Damage 4.5 | Speed 420
+Fire Rate 1.6800001 | Damage 1.6
+ApplyWaveConfig: Wave Config tier-3-enemy-wave-config applied! New stats:
+MaxHealth: 3.2 | Crash Damage 4.5 | Speed 420
+Fire Rate 1.6800001 | Damage 1.6
+ApplyWaveConfig: Wave Config tier-3-enemy-wave-config applied! New stats:
+MaxHealth: 3.2 | Crash Damage 4.5 | Speed 420
+Fire Rate 1.6800001 | Damage 1.6
+ApplyWaveConfig: Wave Config tier-3-enemy-wave-config applied! New stats:
+MaxHealth: 3.2 | Crash Damage 4.5 | Speed 420
+Fire Rate 1.6800001 | Damage 1.6
+ApplyWaveConfig: Wave Config tier-3-enemy-wave-config applied! New stats:
+MaxHealth: 3.2 | Crash Damage 4.5 | Speed 420
+Fire Rate 1.6800001 | Damage 1.6
+ApplyWaveConfig: Wave Config tier-3-enemy-wave-config applied! New stats:
+MaxHealth: 3.2 | Crash Damage 4.5 | Speed 420
+Fire Rate 1.6800001 | Damage 1.6
+ApplyWaveConfig: Wave Config tier-3-enemy-wave-config applied! New stats:
+MaxHealth: 3.2 | Crash Damage 4.5 | Speed 420
+Fire Rate 1.6800001 | Damage 1.6
+ApplyWaveConfig: Wave Config tier-3-enemy-wave-config applied! New stats:
+MaxHealth: 3.2 | Crash Damage 4.5 | Speed 420
+Fire Rate 1.6800001 | Damage 1.6
+EndWave
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+SetCurrentWaveConfig: Current enemy config set! Selection: 0 | Config = tier-3-enemy-wave-config
+Difficulty modifier applied to tier-3-enemy-wave-config!
+StartWave
+ToggleSpawning: Toggling spawning to True!
+ApplyWaveConfig: Wave Config tier-3-enemy-wave-config applied! New stats:
+MaxHealth: 3.4 | Crash Damage 4.8 | Speed 450
+Fire Rate 1.8000001 | Damage 1.7
+ApplyWaveConfig: Wave Config tier-3-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 3.2 | Speed 750
+Fire Rate 0.75 | Damage 1.7
+ApplyWaveConfig: Wave Config tier-3-enemy-wave-config applied! New stats:
+MaxHealth: 3.4 | Crash Damage 4.8 | Speed 450
+Fire Rate 1.8000001 | Damage 1.7
+ApplyWaveConfig: Wave Config tier-3-enemy-wave-config applied! New stats:
+MaxHealth: 3.4 | Crash Damage 4.8 | Speed 450
+Fire Rate 1.8000001 | Damage 1.7
+ApplyWaveConfig: Wave Config tier-3-enemy-wave-config applied! New stats:
+MaxHealth: 3.4 | Crash Damage 4.8 | Speed 450
+Fire Rate 1.8000001 | Damage 1.7
+ApplyWaveConfig: Wave Config tier-3-enemy-wave-config applied! New stats:
+MaxHealth: 3.4 | Crash Damage 4.8 | Speed 450
+Fire Rate 1.8000001 | Damage 1.7
+ApplyWaveConfig: Wave Config tier-3-enemy-wave-config applied! New stats:
+MaxHealth: 3.4 | Crash Damage 4.8 | Speed 450
+Fire Rate 1.8000001 | Damage 1.7
+ApplyWaveConfig: Wave Config tier-3-enemy-wave-config applied! New stats:
+MaxHealth: 3.4 | Crash Damage 4.8 | Speed 450
+Fire Rate 1.8000001 | Damage 1.7
+ERROR: 230 RID allocations of type 'P11GodotArea2D' were leaked at exit.
 ERROR: 1 RID allocations of type 'P12GodotShape2D' were leaked at exit.
-WARNING: 72 RIDs of type "CanvasItem" were leaked.
+WARNING: 920 RIDs of type "CanvasItem" were leaked.
    at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2678)
 ERROR: 1 shaders of type CanvasShaderRD were never freed
    at: ~ShaderRD (servers/rendering/renderer_rd/shader_rd.cpp:1044)

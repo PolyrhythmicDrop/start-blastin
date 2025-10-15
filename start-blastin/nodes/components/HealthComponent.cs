@@ -6,12 +6,12 @@ namespace Components
     [GlobalClass]
     public partial class HealthComponent : Resource
     {
-        private int _maxHealth;
-        private int _currentHealth;
+        private float _maxHealth;
+        private float _currentHealth;
         private IDie _owner;
 
         [Export]
-        public int MaxHealth
+        public float MaxHealth
         {
             get => _maxHealth;
             set
@@ -27,7 +27,7 @@ namespace Components
             }
         }
 
-        public int CurrentHealth
+        public float CurrentHealth
         {
             get => _currentHealth;
             private set => _currentHealth = value;
@@ -45,7 +45,7 @@ namespace Components
             _owner = owner;
         }
 
-        public void TakeDamage(int damage)
+        public void TakeDamage(float damage)
         {
             _currentHealth -= damage;
 
@@ -56,7 +56,7 @@ namespace Components
             }
         }
 
-        public void Heal(int healAmount)
+        public void Heal(float healAmount)
         {
             _currentHealth = Mathf.Min(_currentHealth + healAmount, _maxHealth);
         }

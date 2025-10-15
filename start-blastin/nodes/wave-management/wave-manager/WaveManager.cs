@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Enemies;
 using Godot;
 using SafeResourcePicker;
 
@@ -10,25 +11,27 @@ namespace WaveManagement
     public partial class WaveManager : Node
     {
         private int _wave = 1;
-        private Timer _waveTimer;
         private float _difficultyModifier = 0.1f;
+        private Timer _waveTimer;
+        private double _waveTime;
         private string _defaultEnemyConfig;
         private EnemyWaveConfig _currentEnemyConfig;
         private List<EnemyWaveConfig> _enemyConfigPool = new();
 
         public int Wave => _wave;
 
-        public Timer WaveTimer
-        {
-            get => _waveTimer;
-            set => _waveTimer = value;
-        }
-
         /// <summary>
         /// Player-selected difficulty. Adjusts the difficulty modifier, which affects per-wave stat scaling.
         /// </summary>
         [Export]
         public Difficulty Difficulty { get; set; } = Difficulty.Easy;
+
+        [Export]
+        public double WaveTime
+        {
+            get => _waveTime;
+            set => _waveTime = value;
+        }
 
         [Export(SRP_HINT.RESOURCE_PATH, "EnemyWaveConfig")]
         public string DefaultEnemyConfig
@@ -37,16 +40,34 @@ namespace WaveManagement
             set => _defaultEnemyConfig = value;
         }
 
+        [Signal]
+        public delegate void WaveStartedEventHandler();
+
+        [Signal]
+        public delegate void WaveEndedEventHandler();
+
         #region Initialization
 
         public override void _Ready()
         {
             _waveTimer = GetNode<Timer>("%WaveTimer");
-            _waveTimer.Timeout += IncrementWave;
+            _waveTimer.Timeout += EndWave;
+            _waveTimer.WaitTime = _waveTime;
 
             SetBaseDifficultyModifier();
             LoadConfigPool();
             SetCurrentWaveConfig();
+
+            // If there are any spawners currently in the scene, connect their spawn timer to the WaveManager to start and stop spawning.
+            var spawners = GetTree().GetNodesInGroup("enemy-spawners");
+            foreach (EnemySpawner spawner in spawners)
+            {
+                WaveStarted += () => spawner.ToggleSpawning(true);
+                WaveEnded += () => spawner.ToggleSpawning(false);
+            }
+            ScaleSpawners();
+
+            StartWave();
         }
 
         /// <summary>
@@ -92,7 +113,7 @@ namespace WaveManagement
 
         #endregion
 
-        #region Wave Advancing
+        #region Scaling
 
         /// <summary>
         /// Sets the current enemy wave configuration based on the available configurations in the pool.
@@ -125,7 +146,7 @@ namespace WaveManagement
                     int selection = GD.RandRange(0, matchingConfigs.Count - 1);
                     _currentEnemyConfig = matchingConfigs[selection];
                     GD.Print(
-                        $"{MethodBase.GetCurrentMethod().Name}: Current enmy config set! Selection: {selection} | Config = {_currentEnemyConfig.ResourceName}"
+                        $"{MethodBase.GetCurrentMethod().Name}: Current enemy config set! Selection: {selection} | Config = {_currentEnemyConfig.ResourceName}"
                     );
                 }
             }
@@ -136,16 +157,72 @@ namespace WaveManagement
             }
         }
 
+        /// <summary>
+        /// Applies the current difficulty modifier to all properties of the current wave configuration.
+        /// </summary>
+        private void ApplyDifficultyScaling()
+        {
+            _currentEnemyConfig.ApplyDifficultyModifier(_difficultyModifier);
+        }
+
+        /// <summary>
+        /// Sets each spawner's enemy wave configuration.
+        /// </summary>
+        private void ScaleSpawners()
+        {
+            var spawners = GetTree().GetNodesInGroup("enemy-spawners");
+            foreach (EnemySpawner spawner in spawners)
+            {
+                spawner.SetEnemyWaveConfig(_currentEnemyConfig);
+            }
+        }
+
+        #endregion
+
+        #region Wave Play
+
+
+        private void StartWave()
+        {
+            GD.Print($"{MethodBase.GetCurrentMethod().Name}");
+            _waveTimer.WaitTime = _waveTime;
+            _waveTimer.Start();
+            EmitSignal(SignalName.WaveStarted);
+        }
+
+        private void EndWave()
+        {
+            GD.Print($"{MethodBase.GetCurrentMethod().Name}");
+            EmitSignal(SignalName.WaveEnded);
+            IncrementWave();
+        }
+
         private void IncrementWave()
         {
+            GD.Print($"{MethodBase.GetCurrentMethod().Name}");
             _wave++;
+            ScaleWave();
+            // Automatically start the next wave for now.
+            // TODO: Don't call this here. Instead, call it at the end of the shop, once the player is ready to move on to the next wave.
+            StartWave();
+        }
+
+        /// <summary>
+        /// Apply all relevant scaling to the current wave.
+        /// </summary>
+        private void ScaleWave()
+        {
+            GD.Print($"{MethodBase.GetCurrentMethod().Name}");
             SetCurrentWaveConfig();
+            ApplyDifficultyScaling();
+            ScaleSpawners();
         }
 
         public void ResetWave()
         {
+            GD.Print($"{MethodBase.GetCurrentMethod().Name}");
             _wave = 1;
-            SetCurrentWaveConfig();
+            ScaleWave();
         }
 
         #endregion

@@ -15,10 +15,10 @@ metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
 [sub_resource type="Resource" id="Resource_dp2e5"]
 script = ExtResource("4_7ruga")
 EnemyResource = ExtResource("5_43td7")
-Weight = 15
+Weight = 2
 metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
 
-[node name="EnemySpawner" type="Node2D"]
+[node name="EnemySpawner" type="Node2D" groups=["enemy-spawners"]]
 script = ExtResource("1_dbpvi")
 Curve = ExtResource("2_u3nr5")
 SpawnInterval = 1.5

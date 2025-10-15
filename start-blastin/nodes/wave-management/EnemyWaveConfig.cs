@@ -80,6 +80,8 @@ namespace WaveManagement
             _enemyMaxHealthModifier += difficultyMod;
             _enemyFireRateModifier += difficultyMod;
             _enemyWeaponDamageModifier += difficultyMod;
+
+            GD.Print($"Difficulty modifier applied to {ResourceName}!");
         }
     }
 }

@@ -12,6 +12,7 @@ namespace Enemies
         protected WeaponResource _weaponResource;
         protected Curve2D _pathCurve;
         protected float _speed;
+        protected int _crashDamage;
 
         [Export]
         public string ScenePath
@@ -28,6 +29,13 @@ namespace Enemies
         }
 
         [Export]
+        public int CrashDamage
+        {
+            get => _crashDamage;
+            set => _crashDamage = value;
+        }
+
+        [Export]
         public HealthComponent HealthComponent
         {
             get => _healthComponent;
@@ -41,15 +49,31 @@ namespace Enemies
             set => _weaponResource = value;
         }
 
-        /// <summary>
-        /// The Curve2D describing the movement path of this enemy once it is spawned.
-        /// This Curve2D should be applied to the enemy scene's Path2D node.
-        /// </summary>
         [Export]
         public Curve2D PathCurve
         {
             get => _pathCurve;
             set => _pathCurve = value;
+        }
+
+        public EnemyResource()
+            : this(0, null, null, "", 0, null) { }
+
+        public EnemyResource(
+            int crashDamage,
+            HealthComponent health,
+            Curve2D pathCurve,
+            string scenePath,
+            float speed,
+            WeaponResource weaponResource
+        )
+        {
+            _crashDamage = crashDamage;
+            _healthComponent = health;
+            _pathCurve = pathCurve;
+            _scenePath = scenePath;
+            _speed = speed;
+            _weaponResource = weaponResource;
         }
     }
 }

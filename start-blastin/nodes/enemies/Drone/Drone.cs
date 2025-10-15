@@ -1,4 +1,5 @@
 using System.Reflection;
+using Entities;
 using Godot;
 
 namespace Enemies
@@ -34,8 +35,17 @@ namespace Enemies
             _lastGlobalPosition = _currentGlobalPosition;
             _currentGlobalPosition = GlobalPosition;
 
+            Vector2 motion = _currentGlobalPosition - _lastGlobalPosition;
+
             base._Process(delta);
             SetMoveAnimation();
+
+            KinematicCollision2D collision = MoveAndCollide(motion, true);
+
+            if (collision != null)
+            {
+                OnCrash(collision);
+            }
         }
 
         private void SetMoveAnimation()

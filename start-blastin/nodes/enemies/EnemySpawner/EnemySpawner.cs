@@ -14,7 +14,7 @@ namespace Enemies
         private float _pointMoveDuration;
         private float _spawnInterval;
         private Timer _spawnTimer;
-        private Godot.Collections.Dictionary<EnemyResource, int> _enemyPool;
+        private Godot.Collections.Array<SpawnData> _spawnPool;
 
         // Position-less Node. Add enemies as the child of this node so that their position is not relative to the spawner.
         private Node _spawnParent;
@@ -54,10 +54,10 @@ namespace Enemies
         /// Weighted pool of enemies that the spawn point can spawn. The key is the type of enemy, the value is the weighted value of that enemy.
         /// </summary>
         [Export]
-        public Godot.Collections.Dictionary<EnemyResource, int> EnemyPool
+        public Godot.Collections.Array<SpawnData> SpawnPool
         {
-            get => _enemyPool;
-            set => _enemyPool = value;
+            get => _spawnPool;
+            set => _spawnPool = value;
         }
 
         public override void _Ready()
@@ -87,40 +87,40 @@ namespace Enemies
 
         private EnemyResource GetEnemyFromPool()
         {
-            // GD.Print($"{MethodBase.GetCurrentMethod().Name} -> \n");
-            if (_enemyPool == null || _enemyPool.Count == 0)
+            GD.Print($"{MethodBase.GetCurrentMethod().Name}:\n");
+            if (_spawnPool == null || _spawnPool.Count == 0)
                 return null;
 
             // Calculate total weight
             int totalWeight = 0;
-            foreach (int num in _enemyPool.Values)
+            foreach (SpawnData data in _spawnPool)
             {
-                totalWeight += num;
+                totalWeight += data.Weight;
             }
 
-            // GD.Print($"Total weight: {totalWeight}");
+            GD.Print($"Total weight: {totalWeight}");
 
             // Generate random number within total weight
             int randomValue = GD.RandRange(0, totalWeight - 1);
 
-            // GD.Print($"Random value: {randomValue}");
+            GD.Print($"Random value: {randomValue}");
 
             // Find the enemy that corresponds to this weight
             int currentWeight = 0;
-            foreach (var kvp in _enemyPool)
+            foreach (SpawnData data in _spawnPool)
             {
-                currentWeight += kvp.Value;
+                currentWeight += data.Weight;
                 if (randomValue < currentWeight)
                 {
-                    return kvp.Key;
+                    return data.EnemyResource;
                 }
             }
 
             // Fallback
-            GD.Print(
-                $"Something went wrong! Returning first key in enemy pool, which is: {_enemyPool.Keys.First()}"
+            GD.PrintErr(
+                $"Something went wrong! Returning first EnemyResource in enemy pool, which is: {_spawnPool[0].EnemyResource}"
             );
-            return _enemyPool.Keys.First();
+            return _spawnPool[0].EnemyResource;
         }
 
         private void SpawnEnemy()
@@ -128,7 +128,14 @@ namespace Enemies
             // Duplicate the enemy resource and create a new EnemyNody based on it.
             EnemyResource enemyResource = (EnemyResource)
                 GetEnemyFromPool().DuplicateDeep(Resource.DeepDuplicateMode.Internal);
+
+            GD.Print(
+                $"{MethodBase.GetCurrentMethod().Name}: New enemy resource retrieved! Resource: {enemyResource} | Speed: {enemyResource.Speed} | Crash Damage: {enemyResource.CrashDamage}"
+            );
+
             EnemyNode enemy = EnemyFactory.CreateEnemy(enemyResource);
+
+            GD.Print($"Enemy created from factory! Name: {enemy.Name}");
 
             // Create a new path scene for the new EnemyNode to follow.
             EntityPath entityPath = GD.Load<PackedScene>(EntityPath.ScenePath)

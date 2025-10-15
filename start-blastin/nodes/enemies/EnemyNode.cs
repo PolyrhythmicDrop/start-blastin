@@ -1,5 +1,6 @@
 using System.Reflection;
 using Components;
+using Entities;
 using Factories;
 using Godot;
 using Interfaces;
@@ -13,6 +14,7 @@ namespace Enemies
         protected HealthComponent _healthComponent;
         protected WeaponNode _weapon;
         protected float _speed;
+        protected int _crashDamage;
         protected CollisionShape2D _shape;
         protected EntityPath _path;
         protected EnemyState _state;
@@ -35,6 +37,11 @@ namespace Enemies
             _healthComponent.Initialize(this);
             _weapon = WeaponFactory.CreateWeapon(enemyResource.WeaponResource, true);
             _speed = enemyResource.Speed;
+            GD.Print($"New enemy speed: {enemyResource.Speed} | {_speed}");
+            _crashDamage = enemyResource.CrashDamage;
+            GD.Print(
+                $"Enemy initialized: Resource crash damage: {enemyResource.CrashDamage} | New enemy crash damage {_crashDamage}"
+            );
         }
 
         public void SetPath(EntityPath path)
@@ -77,5 +84,15 @@ namespace Enemies
         }
 
         public virtual void PlayDamageAnimation() { }
+
+        public virtual void OnCrash(KinematicCollision2D collision)
+        {
+            if (collision.GetCollider() is Player player)
+            {
+                GD.Print($"{player.Name} was crashed into! Player takes {_crashDamage} damage.");
+                player.TakeDamage(_crashDamage);
+                Die();
+            }
+        }
     }
 }

@@ -1,0 +1,14 @@
+[remap]
+
+importer="aseprite_wizard.plugin.noop"
+type="PackedDataContainer"
+uid="uid://c2p71iryxkhud"
+path="res://.godot/imported/full-explosion.aseprite-8e8ef384a5166772f729da657245c9ae.res"
+
+[deps]
+
+source_file="res://nodes/player/sprites/destruction/full-explosion.aseprite"
+dest_files=["res://.godot/imported/full-explosion.aseprite-8e8ef384a5166772f729da657245c9ae.res"]
+
+[params]
+

@@ -1,5 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 using Components;
 using Godot;
+using Interfaces;
 using Projectiles;
 
 namespace Weapons
@@ -8,10 +12,38 @@ namespace Weapons
     public partial class WeaponNode : Node2D
     {
         private WeaponStats _stats;
+        private bool _enemyOwned;
+        private bool _ownerSet;
         private ProjectilePool _pool;
+        private int _activeProjectileCount;
+        private bool _allProjectilesDisabledSignalEmitted;
 
         public WeaponStats Stats => _stats;
+        public bool EnemyOwned
+        {
+            get => _enemyOwned;
+            set
+            {
+                if (_ownerSet)
+                {
+                    throw new InvalidOperationException(
+                        $"{Name}: Cannot assign an owner after owner already set!"
+                    );
+                }
+                else
+                {
+                    _ownerSet = true;
+                    _enemyOwned = value;
+                }
+            }
+        }
         public ProjectilePool Pool => _pool;
+        public int ActiveProjectileCount
+        {
+            get => _activeProjectileCount;
+            set => _activeProjectileCount = value;
+        }
+
         public Node ProjectileParent;
         public virtual Vector2 ProjSpawnPoint
         {
@@ -26,6 +58,9 @@ namespace Weapons
                 (CollisionComponent collision) => OnProjectileCollision(collision)
             );
         }
+
+        [Signal]
+        public delegate void AllProjectilesDisabledEventHandler();
 
         public override void _Ready()
         {
@@ -56,19 +91,49 @@ namespace Weapons
             else
             {
                 FireTimer.WaitTime = _stats.FireRate;
-                GD.Print(
-                    $"Setting FireTimer wait time from FireRate. FireRate = {_stats.FireRate} | WaitTime = {FireTimer.WaitTime}"
-                );
             }
             AddChild(FireTimer);
         }
 
-        public virtual void OnProjectileCollision(CollisionComponent collision) { }
+        public override void _Process(double delta)
+        {
+            // Only emit once when transitioning from active to inactive
+            if (_activeProjectileCount <= 0 && !_allProjectilesDisabledSignalEmitted)
+            {
+                EmitSignal(SignalName.AllProjectilesDisabled);
+                _allProjectilesDisabledSignalEmitted = true;
+            }
+        }
+
+        public virtual void OnProjectileCollision(CollisionComponent collision)
+        {
+            GD.Print(
+                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Collision detected!\nSource: {collision.Source.Name} | Collider: {collision.Collider} | Collision Point: {collision.GlobalCollisionPoint} | Normal: {collision.CollisionNormal}"
+            );
+
+            if (collision.Collider is IHealthful healthful)
+            {
+                GD.Print($"{collision.Collider} is taking damage!");
+                healthful.TakeDamage(_stats.Damage);
+            }
+
+            if (collision.Collider is Projectile projectile)
+            {
+                projectile.ToggleActive(false);
+            }
+
+            if (collision.Source is Projectile sourceProj)
+            {
+                sourceProj.ToggleActive(false);
+            }
+        }
 
         public virtual void Fire()
         {
             Projectile projectile = _pool.RequestProjectile();
             projectile.Position = ProjSpawnPoint;
+
+            _allProjectilesDisabledSignalEmitted = false;
         }
     }
 }

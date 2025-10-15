@@ -1,0 +1,11 @@
+<Project Sdk="Godot.NET.Sdk/4.5">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net9.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <RootNamespace>StartBlastin</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="nodes\utility\" />
+  </ItemGroup>
+</Project>

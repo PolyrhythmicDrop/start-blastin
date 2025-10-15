@@ -1,28 +1,44 @@
-[gd_scene load_steps=8 format=3 uid="uid://nenl15kjphyb"]
+[gd_scene load_steps=12 format=3 uid="uid://nenl15kjphyb"]
 
 [ext_resource type="Script" uid="uid://ceknkp5q1onls" path="res://nodes/player/Player.cs" id="1_4j62c"]
+[ext_resource type="Script" uid="uid://de8iusxhs0qem" path="res://nodes/components/HealthComponent.cs" id="2_1fmtd"]
 [ext_resource type="PackedScene" uid="uid://cr3k7kv44d7a6" path="res://nodes/player/player-components/animation-component.tscn" id="2_hs1md"]
 [ext_resource type="Script" uid="uid://djgcr0lno2mdr" path="res://nodes/player/player-components/MovementComponent.cs" id="3_hs1md"]
 [ext_resource type="Script" uid="uid://dcupxkt621nuk" path="res://nodes/player/player-components/PlayerController.cs" id="4_1fmtd"]
+[ext_resource type="Shader" uid="uid://bmacriris3r2k" path="res://nodes/shaders/color-cycling-hit-effect.gdshader" id="4_5h4ma"]
 [ext_resource type="Script" uid="uid://wvxahp2d8k6f" path="res://nodes/player/player-components/WeaponComponent.cs" id="5_5h4ma"]
-[ext_resource type="Resource" uid="uid://13wggaxc31as" path="res://resources/weapons/blaster.tres" id="6_1fmtd"]
+[ext_resource type="Resource" uid="uid://coiv5i1pkqvv8" path="res://resources/weapons/blaster.tres" id="6_1fmtd"]
+
+[sub_resource type="Resource" id="Resource_5h4ma"]
+resource_local_to_scene = true
+resource_name = "player-health"
+script = ExtResource("2_1fmtd")
+MaxHealth = 5
+metadata/_custom_type_script = "uid://de8iusxhs0qem"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xl06i"]
+resource_local_to_scene = true
+shader = ExtResource("4_5h4ma")
+shader_parameter/start_frame = 0
+shader_parameter/current_frame = 0
+shader_parameter/mix_ratio = 0.0
+shader_parameter/color_array = PackedColorArray(1, 0.60784316, 0.7137255, 1, 1, 0.32941177, 0.4392157, 1, 0.74509805, 0.60784316, 1, 1, 0.34509805, 0.29803923, 0.5176471, 1, 0.14509805, 0.49019608, 0.60784316, 1, 0.14509805, 0.7372549, 0.7764706, 1)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fn53c"]
-radius = 20.0
+radius = 25.0
 height = 52.0
 
 [node name="Player" type="CharacterBody2D"]
+rotation = -1.5707964
 collision_mask = 6
 motion_mode = 1
 platform_on_leave = 2
 script = ExtResource("1_4j62c")
-
-[node name="HitBox" type="CollisionShape2D" parent="."]
-unique_name_in_owner = true
-shape = SubResource("CapsuleShape2D_fn53c")
+HealthComponent = SubResource("Resource_5h4ma")
 
 [node name="AnimationComponent" parent="." instance=ExtResource("2_hs1md")]
 unique_name_in_owner = true
+material = SubResource("ShaderMaterial_xl06i")
 
 [node name="MovementComponent" type="Node" parent="."]
 unique_name_in_owner = true
@@ -36,3 +52,7 @@ script = ExtResource("4_1fmtd")
 unique_name_in_owner = true
 script = ExtResource("5_5h4ma")
 InitWeaponResource = ExtResource("6_1fmtd")
+
+[node name="HitBox" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
+shape = SubResource("CapsuleShape2D_fn53c")

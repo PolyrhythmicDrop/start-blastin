@@ -1,17 +1,44 @@
 using System;
+using Components;
 using Godot;
+using Interfaces;
 using PlayerComponents;
 
 namespace Entities
 {
     [GlobalClass]
-    public partial class Player : CharacterBody2D
+    public partial class Player : CharacterBody2D, IDie, IHealthful
     {
         private AnimationComponent _animationComponent;
         private MovementComponent _movementComponent;
         private WeaponComponent _weaponComponent;
         private CollisionShape2D _hitBox;
         private PlayerController _controller;
+        private HealthComponent _healthComponent;
+
+        [Export]
+        public HealthComponent HealthComponent
+        {
+            get => _healthComponent;
+            set => _healthComponent = value;
+        }
+
+        [Signal]
+        public delegate void PlayerDiedEventHandler();
+
+        public bool Dying = false;
+
+        public void TakeDamage(int damage)
+        {
+            _animationComponent.PlayDamageAnimation();
+            _healthComponent.TakeDamage(damage);
+        }
+
+        public void Heal(int healAmount) => _healthComponent.Heal(healAmount);
+
+        public void Fire() => _weaponComponent.FireWeapon();
+
+        public void StopFire() => _weaponComponent.StopWeapon();
 
         private void InitializeComponents()
         {
@@ -19,6 +46,7 @@ namespace Entities
             _movementComponent.Initialize(this);
             _controller.Initialize(this);
             _weaponComponent.Initialize(this);
+            _healthComponent.Initialize(this);
         }
 
         public override void _Ready()
@@ -47,8 +75,19 @@ namespace Entities
             MoveAndSlide();
         }
 
-        public void Fire() => _weaponComponent.FireWeapon();
+        public void Die()
+        {
+            _controller.Enabled = false;
+            Dying = true;
+            _hitBox.Disabled = true;
+            _animationComponent.PlayDieAnimation();
+        }
 
-        public void StopFire() => _weaponComponent.StopWeapon();
+        public void Despawn()
+        {
+            GD.Print("Game over, man! Game over!");
+            EmitSignal(SignalName.PlayerDied);
+            QueueFree();
+        }
     }
 }

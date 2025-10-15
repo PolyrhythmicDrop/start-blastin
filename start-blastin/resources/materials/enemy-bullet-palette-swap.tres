@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://b8modvdge3dq4"]
+
+[ext_resource type="Shader" uid="uid://dqd5mgfwuy3y7" path="res://nodes/shaders/eye-dropper.gdshader" id="1_vo3a5"]
+
+[resource]
+resource_name = "enemy-bullet-material"
+shader = ExtResource("1_vo3a5")
+shader_parameter/palette_array_size = 3
+shader_parameter/input_palette_array = PackedColorArray(1, 0.9137255, 0.78039217, 1, 1, 0.8, 0.5019608, 1, 1, 0.69411767, 0.23921569, 1)
+shader_parameter/output_palette_array = PackedColorArray(1, 0.75, 0.82500005, 1, 1, 0.58000004, 0.7060001, 1, 0.92, 0.14720003, 0.37904018, 1)

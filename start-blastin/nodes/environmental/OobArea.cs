@@ -1,4 +1,5 @@
 using System.Reflection;
+using Enemies;
 using Godot;
 using Projectiles;
 
@@ -16,15 +17,24 @@ namespace Environmental
             AreaEntered += OnAreaEntered;
         }
 
-        private void OnBodyEntered(Node2D body) { }
+        private void OnBodyEntered(Node2D body)
+        {
+            if (body is EnemyNode enemy)
+            {
+                enemy.QueueFree();
+            }
+        }
 
         private void OnAreaEntered(Area2D area)
         {
-            if (area.GetParent() is Projectile projectile)
+            // GD.Print(
+            //     $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: {area} entered! Deducing type..."
+            // );
+            if (area is Projectile projectile)
             {
-                GD.Print(
-                    $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: {projectile.Name} entered OOB! Deactivating..."
-                );
+                // GD.Print(
+                //     $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: {projectile.Name} entered! Deactivating..."
+                // );
                 projectile.ToggleActive(false);
             }
         }

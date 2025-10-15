@@ -1,3 +1,4 @@
+using System.Reflection;
 using Components;
 using Godot;
 
@@ -8,6 +9,8 @@ namespace Projectiles
         private AnimatedSprite2D _sprite;
         private RayCast2D _ray;
 
+        private Vector2 _trajectory;
+
         public RayCast2D Ray => _ray;
         public static string ScenePath => "res://nodes/weapons/projectiles/Bullet/Bullet.tscn";
 
@@ -16,6 +19,17 @@ namespace Projectiles
             base._Ready();
             _sprite = GetNode<AnimatedSprite2D>("Sprite");
             _ray = GetNode<RayCast2D>("RayCast2D");
+
+            if (SourceWeapon.EnemyOwned)
+            {
+                _ray.SetCollisionMaskValue(1, true);
+                _ray.SetCollisionMaskValue(3, false);
+            }
+            else
+            {
+                _ray.SetCollisionMaskValue(1, false);
+                _ray.SetCollisionMaskValue(3, true);
+            }
         }
 
         public override void _PhysicsProcess(double delta)
@@ -23,7 +37,7 @@ namespace Projectiles
             if (Active)
             {
                 CastRay(delta);
-                Position += _speed * (float)delta * Vector2.Up;
+                Position += SetTrajectory(delta);
             }
         }
 
@@ -33,8 +47,11 @@ namespace Projectiles
         /// <param name="delta">The physics frame delta time.</param>
         public void CastRay(double delta)
         {
-            var nextPos = ToLocal(Speed * (float)delta * Vector2.Up);
-            Ray.TargetPosition = nextPos;
+            var nextPos = Position + SetTrajectory(delta);
+            Ray.TargetPosition = ToLocal(nextPos);
+            // GD.Print(
+            //     $"{MethodBase.GetCurrentMethod().Name}: Target position is {Ray.TargetPosition}. New position is {Position}."
+            // );
             if (Ray.Enabled == false)
             {
                 Ray.Enabled = true;
@@ -54,6 +71,12 @@ namespace Projectiles
 
                 EmitSignal(SignalName.Collision, collision);
             }
+        }
+
+        private Vector2 SetTrajectory(double delta)
+        {
+            Vector2 fireAngle = Vector2.Right.Rotated(GlobalRotation);
+            return _speed * (float)delta * fireAngle;
         }
 
 #nullable enable

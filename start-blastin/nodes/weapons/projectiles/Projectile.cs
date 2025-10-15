@@ -5,10 +5,12 @@ using Weapons;
 
 namespace Projectiles
 {
-    public abstract partial class Projectile : Node2D
+    public abstract partial class Projectile : Area2D
     {
         private bool _sourceInitialized;
         private Callable _deactivateCallable;
+
+        // protected Area2D _area;
         protected bool _active;
         protected Timer _deactivationTimer;
         protected float _speed;
@@ -55,7 +57,10 @@ namespace Projectiles
 
         public override void _Ready()
         {
+            // _area = GetNode<Area2D>("%Area2D");
             Initialize();
+            // Rotate the projectile to its parent's global rotation so that it fires in the direction the weapon is "facing".
+            GlobalRotation = _sourceWeapon.GlobalRotation;
         }
 
         /// <summary>
@@ -125,11 +130,13 @@ namespace Projectiles
             if (active)
             {
                 _sourceWeapon.ProjectileParent.AddChild(this);
+                _sourceWeapon.ActiveProjectileCount++;
             }
             else
             {
                 // Add items from projectile pool
                 _sourceWeapon.ProjectileParent.RemoveChild(this);
+                _sourceWeapon.ActiveProjectileCount--;
             }
 
             _active = active;

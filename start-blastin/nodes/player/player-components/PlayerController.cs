@@ -10,10 +10,16 @@ namespace PlayerComponents
         private float _xDir;
         private float _yDir;
         private bool _firing;
+        private bool _enabled = true;
 
         public float xDirection => _xDir;
         public float yDirection => _yDir;
         public bool Firing => _firing;
+        public bool Enabled
+        {
+            get => _enabled;
+            set => _enabled = value;
+        }
 
         public void Initialize(Player player)
         {
@@ -22,15 +28,18 @@ namespace PlayerComponents
 
         public override void _Process(double delta)
         {
-            SetMovementDirection();
-            SetFiring();
-            if (_firing)
+            if (_enabled)
             {
-                _player.Fire();
-            }
-            else
-            {
-                _player.StopFire();
+                SetMovementDirection();
+                SetFiring();
+                if (_firing)
+                {
+                    _player.Fire();
+                }
+                else
+                {
+                    _player.StopFire();
+                }
             }
         }
 

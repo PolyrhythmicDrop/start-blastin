@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Start Blastin"
 run/main_scene="uid://dgcswjykgey5y"
-config/features=PackedStringArray("4.4", "C#", "Forward Plus")
+config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [debug]
@@ -46,6 +46,7 @@ enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg", "res://addon
 
 folder_colors={
 "res://nodes/": "green",
+"res://nodes/enemies/Drone/sprites/": "pink",
 "res://nodes/player/components/": "purple",
 "res://nodes/player/sprites/": "pink",
 "res://resources/": "yellow"

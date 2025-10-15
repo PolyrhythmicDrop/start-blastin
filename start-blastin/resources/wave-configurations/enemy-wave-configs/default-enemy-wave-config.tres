@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EnemyWaveConfig" load_steps=2 format=3 uid="uid://clpli5o3gobm6"]
+
+[ext_resource type="Script" uid="uid://cjers0xbt0i73" path="res://nodes/wave-management/EnemyWaveConfig.cs" id="1_3h7vd"]
+
+[resource]
+resource_local_to_scene = true
+resource_name = "default-enemy-wave-config"
+script = ExtResource("1_3h7vd")
+MinWave = 0
+MaxWave = 0
+SpeedModifier = 0.1
+CrashDamageModifier = 0.1
+MaxHealthModifier = 0.1
+FireRateModifier = 0.1
+WeaponDamageModifier = 0.1
+metadata/_custom_type_script = "uid://cjers0xbt0i73"

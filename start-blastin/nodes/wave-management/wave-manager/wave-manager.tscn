@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://dxdlpe5yuamuy"]
+
+[ext_resource type="Script" uid="uid://fgb4t1vv8rw6" path="res://nodes/wave-management/wave-manager/WaveManager.cs" id="1_qioyi"]
+
+[node name="WaveManager" type="Node"]
+script = ExtResource("1_qioyi")
+DefaultEnemyConfig = "uid://clpli5o3gobm6"
+
+[node name="WaveTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+process_mode = 1
+wait_time = 60.0
+one_shot = true

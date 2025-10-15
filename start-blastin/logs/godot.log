@@ -1,86 +1,29 @@
 Godot Engine v4.5.stable.mono.official.876b29033 - https://godotengine.org
 Vulkan 1.4.312 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3060 Ti
 
-Weapon equipped! <Node2D#39174800857>
+Base difficulty modifier set: Easy - 0.1
+LoadConfigPool: Adding resource from res://resources/wave-configurations/enemy-wave-configs/default-enemy-wave-config.tres to enemy config pool...
+LoadConfigPool: Adding resource from res://resources/wave-configurations/enemy-wave-configs/tier-1.tres to enemy config pool...
+LoadConfigPool: Adding resource from res://resources/wave-configurations/enemy-wave-configs/tier-2.tres to enemy config pool...
+LoadConfigPool: Adding resource from res://resources/wave-configurations/enemy-wave-configs/tier-3.tres to enemy config pool...
+SetCurrentWaveConfig: Current enmy config set! Selection: 0 | Config = tier-1-enemy-wave-config
+Weapon equipped! <Node2D#39929775563>
 Stats: 0.5 | 1 | Bullet | 1000
 Enemies.EnemySpawner._Ready called!
 GetEnemyFromPool:
 
 Total weight: 25
-Random value: 10
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371994945288670> | Speed: 500 | Crash Damage: 2
+Random value: 17
+SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371991673731527> | Speed: 500 | Crash Damage: 2
 Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
 New enemy speed: 500 | 500
 Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
-Enemy created from factory! Name: Drone
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 21
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371980953089795> | Speed: 500 | Crash Damage: 2
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
-New enemy speed: 500 | 500
-Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
-Enemy created from factory! Name: Drone
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 11
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371969930459415> | Speed: 500 | Crash Damage: 2
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
-New enemy speed: 500 | 500
-Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
-Enemy created from factory! Name: Drone
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 23
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371949109933293> | Speed: 500 | Crash Damage: 2
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
-New enemy speed: 500 | 500
-Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
-Enemy created from factory! Name: Drone
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 7
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371930772435450> | Speed: 300 | Crash Damage: 3
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 3 | Speed: 300
-New enemy speed: 300 | 300
-Enemy initialized: Resource crash damage: 3 | New enemy crash damage 3
-Enemy created from factory! Name: Drone
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 13
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371908408407146> | Speed: 500 | Crash Damage: 2
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
-New enemy speed: 500 | 500
-Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
-Enemy created from factory! Name: Drone
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 0
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371890674890559> | Speed: 300 | Crash Damage: 3
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 3 | Speed: 300
-New enemy speed: 300 | 300
-Enemy initialized: Resource crash damage: 3 | New enemy crash damage 3
-Enemy created from factory! Name: Drone
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 8
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371877957758790> | Speed: 300 | Crash Damage: 3
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 3 | Speed: 300
-New enemy speed: 300 | 300
-Enemy initialized: Resource crash damage: 3 | New enemy crash damage 3
 Enemy created from factory! Name: Drone
 GetEnemyFromPool:
 
 Total weight: 25
 Random value: 14
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371849201612154> | Speed: 500 | Crash Damage: 2
+SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371977262102584> | Speed: 500 | Crash Damage: 2
 Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
 New enemy speed: 500 | 500
 Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
@@ -88,334 +31,24 @@ Enemy created from factory! Name: Drone
 GetEnemyFromPool:
 
 Total weight: 25
-Random value: 5
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371837507890429> | Speed: 300 | Crash Damage: 3
+Random value: 1
+SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371965618714705> | Speed: 300 | Crash Damage: 3
 Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 3 | Speed: 300
 New enemy speed: 300 | 300
 Enemy initialized: Resource crash damage: 3 | New enemy crash damage 3
 Enemy created from factory! Name: Drone
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: @Area2D@5 | Collider: <AnimatableBody2D#158947348668> | Collision Point: (1062.2885, 576.74664) | Normal: (-0.8990418, -0.4378629)
-<AnimatableBody2D#158947348668> is taking damage!
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: @Area2D@5 | Collider: <AnimatableBody2D#158947348668> | Collision Point: (1015.4926, 699.803) | Normal: (0.9407506, -0.3390993)
-<AnimatableBody2D#158947348668> is taking damage!
-Components.HealthComponent.Die called!
 GetEnemyFromPool:
 
 Total weight: 25
-Random value: 13
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371818264424084> | Speed: 500 | Crash Damage: 2
+Random value: 11
+SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371940620661281> | Speed: 500 | Crash Damage: 2
 Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
 New enemy speed: 500 | 500
 Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
 Enemy created from factory! Name: Drone
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 5
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371800346357560> | Speed: 300 | Crash Damage: 3
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 3 | Speed: 300
-New enemy speed: 300 | 300
-Enemy initialized: Resource crash damage: 3 | New enemy crash damage 3
-Enemy created from factory! Name: Drone
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: @Area2D@8 | Collider: <AnimatableBody2D#199397215752> | Collision Point: (713.11584, 581.2779) | Normal: (0.39715576, -0.91775125)
-<AnimatableBody2D#199397215752> is taking damage!
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <AnimatableBody2D#199397215752> | Collision Point: (745.24164, 707.0673) | Normal: (-0.70913345, -0.70507437)
-<AnimatableBody2D#199397215752> is taking damage!
-Components.HealthComponent.Die called!
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 15
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371788585530966> | Speed: 500 | Crash Damage: 2
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
-New enemy speed: 500 | 500
-Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
-Enemy created from factory! Name: Drone
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: @Area2D@5 | Collider: <AnimatableBody2D#248353130926> | Collision Point: (781.96924, 86.71614) | Normal: (0.555588, -0.83145773)
-<AnimatableBody2D#248353130926> is taking damage!
-Components.HealthComponent.Die called!
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 13
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371772663952982> | Speed: 500 | Crash Damage: 2
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
-New enemy speed: 500 | 500
-Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
-Enemy created from factory! Name: Drone
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 22
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371760617909602> | Speed: 500 | Crash Damage: 2
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
-New enemy speed: 500 | 500
-Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
-Enemy created from factory! Name: Drone
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 17
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371744092354198> | Speed: 500 | Crash Damage: 2
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
-New enemy speed: 500 | 500
-Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
-Enemy created from factory! Name: Drone
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#218959448753> | Collision Point: (1508.7667, 1177.514) | Normal: (0.8065659, 0.59114414)
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 16
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371707971006084> | Speed: 500 | Crash Damage: 2
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
-New enemy speed: 500 | 500
-Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
-Enemy created from factory! Name: Drone
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264912243167> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 15
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371692401749454> | Speed: 500 | Crash Damage: 2
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
-New enemy speed: 500 | 500
-Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
-Enemy created from factory! Name: Drone
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-Player was crashed into! Player takes 2 damage.
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 17
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371677201591289> | Speed: 500 | Crash Damage: 2
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
-New enemy speed: 500 | 500
-Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
-Enemy created from factory! Name: Drone
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 0
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371669031087404> | Speed: 300 | Crash Damage: 3
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 3 | Speed: 300
-New enemy speed: 300 | 300
-Enemy initialized: Resource crash damage: 3 | New enemy crash damage 3
-Enemy created from factory! Name: Drone
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 16
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371650894916835> | Speed: 500 | Crash Damage: 2
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
-New enemy speed: 500 | 500
-Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
-Enemy created from factory! Name: Drone
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 4
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371636432956643> | Speed: 300 | Crash Damage: 3
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 3 | Speed: 300
-New enemy speed: 300 | 300
-Enemy initialized: Resource crash damage: 3 | New enemy crash damage 3
-Enemy created from factory! Name: Drone
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#360374604840> | Collision Point: (578.4345, 1203.7809) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#360022283289> | Collision Point: (578.4345, 1203.7809) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 24
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371626014305429> | Speed: 500 | Crash Damage: 2
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
-New enemy speed: 500 | 500
-Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
-Enemy created from factory! Name: Drone
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#360022283289> | Collision Point: (578.4345, 1203.7809) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: @Area2D@5 | Collider: <AnimatableBody2D#400472150812> | Collision Point: (894.26337, 382.06323) | Normal: (-0.31719664, -0.9483598)
-<AnimatableBody2D#400472150812> is taking damage!
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#360022283289> | Collision Point: (578.4345, 1203.7809) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <AnimatableBody2D#400472150812> | Collision Point: (890.6375, 497.9331) | Normal: (-0.1359039, -0.99072206)
-<AnimatableBody2D#400472150812> is taking damage!
-Components.HealthComponent.Die called!
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 24
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371606435296029> | Speed: 500 | Crash Damage: 2
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
-New enemy speed: 500 | 500
-Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
-Enemy created from factory! Name: Drone
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#386681278593> | Collision Point: (1673.8774, 1203.781) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#360022283289> | Collision Point: (578.4345, 1203.7809) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#67947726588> | Collision Point: (1352.1759, 1178.1448) | Normal: (0.8739132, 0.48608202)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#386328955935> | Collision Point: (1673.8774, 1203.781) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#360022283289> | Collision Point: (578.4345, 1203.7809) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 9
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371583416954648> | Speed: 300 | Crash Damage: 3
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 3 | Speed: 300
-New enemy speed: 300 | 300
-Enemy initialized: Resource crash damage: 3 | New enemy crash damage 3
-Enemy created from factory! Name: Drone
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#386328955935> | Collision Point: (1673.8774, 1203.781) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#360022283289> | Collision Point: (578.4345, 1203.7809) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#386328955935> | Collision Point: (1673.8774, 1203.781) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#360022283289> | Collision Point: (578.4345, 1203.7809) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 24
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371563049414161> | Speed: 500 | Crash Damage: 2
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
-New enemy speed: 500 | 500
-Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
-Enemy created from factory! Name: Drone
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#386328955935> | Collision Point: (1673.8774, 1203.781) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#360022283289> | Collision Point: (578.4345, 1203.7809) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-Player was crashed into! Player takes 2 damage.
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: @Area2D@212 | Collider: <CharacterBody2D#38134613473> | Collision Point: (823.5887, 1011.1226) | Normal: (0.7435984, 0.6686265)
-<CharacterBody2D#38134613473> is taking damage!
-Components.HealthComponent.Die called!
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#386328955935> | Collision Point: (1673.8774, 1203.781) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#360022283289> | Collision Point: (578.4345, 1203.7809) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 23
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371555214454685> | Speed: 500 | Crash Damage: 2
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
-New enemy speed: 500 | 500
-Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
-Enemy created from factory! Name: Drone
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#386328955935> | Collision Point: (1673.8774, 1203.781) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#360022283289> | Collision Point: (578.4345, 1203.7809) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-Game over, man! Game over!
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#386328955935> | Collision Point: (1673.8774, 1203.781) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#360022283289> | Collision Point: (578.4345, 1203.7809) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 16
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371547748593565> | Speed: 500 | Crash Damage: 2
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
-New enemy speed: 500 | 500
-Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
-Enemy created from factory! Name: Drone
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#386328955935> | Collision Point: (1673.8774, 1203.781) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#360022283289> | Collision Point: (578.4345, 1203.7809) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#386328955935> | Collision Point: (1673.8774, 1203.781) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#360022283289> | Collision Point: (578.4345, 1203.7809) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-GetEnemyFromPool:
-
-Total weight: 25
-Random value: 12
-SpawnEnemy: New enemy resource retrieved! Resource: <Resource#-9223371527146173595> | Speed: 500 | Crash Damage: 2
-Factories.EnemyFactory.CreateEnemy: Building new enemy from factory. Crash damage: 2 | Speed: 500
-New enemy speed: 500 | 500
-Enemy initialized: Resource crash damage: 2 | New enemy crash damage 2
-Enemy created from factory! Name: Drone
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#386328955935> | Collision Point: (1673.8774, 1203.781) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#474526779967> | Collision Point: (1361.0037, 1203.7802) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#360022283289> | Collision Point: (578.4345, 1203.7809) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#386328955935> | Collision Point: (1673.8774, 1203.781) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#474174458557> | Collision Point: (1361.0037, 1203.7802) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#360022283289> | Collision Point: (578.4345, 1203.7809) | Normal: (-0, -0)
-Weapons.WeaponNode.OnProjectileCollision: Collision detected!
-Source: Bullet | Collider: <Area2D#264559921621> | Collision Point: (265.4215, 1203.7803) | Normal: (-0, -0)
-ERROR: 139 RID allocations of type 'P11GodotArea2D' were leaked at exit.
+ERROR: 18 RID allocations of type 'P11GodotArea2D' were leaked at exit.
 ERROR: 1 RID allocations of type 'P12GodotShape2D' were leaked at exit.
-WARNING: 556 RIDs of type "CanvasItem" were leaked.
+WARNING: 72 RIDs of type "CanvasItem" were leaked.
    at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2678)
 ERROR: 1 shaders of type CanvasShaderRD were never freed
    at: ~ShaderRD (servers/rendering/renderer_rd/shader_rd.cpp:1044)

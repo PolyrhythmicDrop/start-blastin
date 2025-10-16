@@ -1,14 +1,19 @@
-[gd_scene load_steps=2 format=3 uid="uid://dxdlpe5yuamuy"]
+[gd_scene load_steps=3 format=3 uid="uid://dxdlpe5yuamuy"]
 
 [ext_resource type="Script" uid="uid://fgb4t1vv8rw6" path="res://nodes/wave-management/wave-manager/WaveManager.cs" id="1_qioyi"]
+[ext_resource type="Script" uid="uid://dg4vu6iqxyj5p" path="res://nodes/wave-management/wave-manager/EnemyScaleManager.cs" id="2_2lj5f"]
 
 [node name="WaveManager" type="Node"]
 script = ExtResource("1_qioyi")
-WaveTime = 60.0
-DefaultEnemyConfig = "uid://clpli5o3gobm6"
+WaveTime = 10.0
 
 [node name="WaveTimer" type="Timer" parent="."]
 unique_name_in_owner = true
 process_mode = 1
 wait_time = 60.0
 one_shot = true
+
+[node name="EnemyScaleManager" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_2lj5f")
+DefaultEnemyScaler = "uid://clpli5o3gobm6"

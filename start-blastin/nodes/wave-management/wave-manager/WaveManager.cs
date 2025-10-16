@@ -14,9 +14,11 @@ namespace WaveManagement
         private float _difficultyModifier = 0.1f;
         private Timer _waveTimer;
         private double _waveTime;
-        private string _defaultEnemyScaler;
-        private EnemyScaler _currentEnemyScaler;
-        private List<EnemyScaler> _enemyScalerPool = new();
+        private EnemyScaleManager _enemyScaleManager;
+
+        // private string _defaultEnemyScaler;
+        // private EnemyScaler _currentEnemyScaler;
+        // private List<EnemyScaler> _enemyScalerPool = new();
 
         public int Wave => _wave;
 
@@ -33,12 +35,12 @@ namespace WaveManagement
             set => _waveTime = value;
         }
 
-        [Export(SRP_HINT.RESOURCE_PATH, "EnemyScaler")]
-        public string DefaultEnemyScaler
-        {
-            get => _defaultEnemyScaler;
-            set => _defaultEnemyScaler = value;
-        }
+        // [Export(SRP_HINT.RESOURCE_PATH, "EnemyScaler")]
+        // public string DefaultEnemyScaler
+        // {
+        //     get => _defaultEnemyScaler;
+        //     set => _defaultEnemyScaler = value;
+        // }
 
         [Signal]
         public delegate void WaveStartedEventHandler();
@@ -54,9 +56,12 @@ namespace WaveManagement
             _waveTimer.Timeout += EndWave;
             _waveTimer.WaitTime = _waveTime;
 
+            _enemyScaleManager = GetNode<EnemyScaleManager>("%EnemyScaleManager");
+            _enemyScaleManager.Initialize(this);
+
             SetBaseDifficultyModifier();
-            LoadConfigPool();
-            SetCurrentWaveConfig();
+            // LoadConfigPools();
+            SetScalers();
 
             // If there are any spawners currently in the scene, connect their spawn timer to the WaveManager to start and stop spawning.
             var spawners = GetTree().GetNodesInGroup("enemy-spawners");
@@ -96,20 +101,7 @@ namespace WaveManagement
         /// Loads all configuration resources from their parent directory to populate their respective config pools.
         /// Runs once on _Ready(). Wave configurations are selected from the loaded resources based on the current wave and the resource's wave threshold.
         /// </summary>
-        private void LoadConfigPool()
-        {
-            string enemyScalerDir = "res://resources/wave-scalers/enemy-scalers/";
-            string[] configStrings = ResourceLoader.ListDirectory(enemyScalerDir);
-
-            foreach (string resourceName in configStrings)
-            {
-                string fullPath = enemyScalerDir + resourceName;
-                GD.Print(
-                    $"{MethodBase.GetCurrentMethod().Name}: Adding resource from {fullPath} to enemy config pool..."
-                );
-                _enemyScalerPool.Add(ResourceLoader.Load<EnemyScaler>(fullPath));
-            }
-        }
+        // private void LoadConfigPools() { }
 
         #endregion
 
@@ -118,43 +110,9 @@ namespace WaveManagement
         /// <summary>
         /// Sets the current enemy wave configuration based on the available configurations in the pool.
         /// </summary>
-        private void SetCurrentWaveConfig()
+        private void SetScalers()
         {
-            try
-            {
-                // All enemy config resources whose min and max wave encloses the current wave number
-                List<EnemyScaler> matchingConfigs = _enemyScalerPool.FindAll(config =>
-                    config.MinWave <= _wave && config.MaxWave >= _wave
-                );
-
-                if (matchingConfigs.Count <= 0)
-                {
-                    // If we can't find something within our wave range, see if we can find a "default" with a -1 max range.
-                    matchingConfigs = _enemyScalerPool.FindAll(config => config.MaxWave == -1);
-
-                    // If we STILL can't find anything, throw an exception
-                    if (matchingConfigs.Count <= 0)
-                    {
-                        throw new InvalidOperationException(
-                            $"Could not find a wave configuration that fits the current wave number or is set to infinite! Loading default config at {_defaultEnemyScaler}..."
-                        );
-                    }
-                }
-                else
-                {
-                    // Create a random number that lands somewhere within the number matching wave configs.
-                    int selection = GD.RandRange(0, matchingConfigs.Count - 1);
-                    _currentEnemyScaler = matchingConfigs[selection];
-                    GD.Print(
-                        $"{MethodBase.GetCurrentMethod().Name}: Current enemy config set! Selection: {selection} | Config = {_currentEnemyScaler.ResourceName}"
-                    );
-                }
-            }
-            catch (Exception e)
-            {
-                GD.PrintErr(e.Message);
-                _currentEnemyScaler = ResourceLoader.Load<EnemyScaler>(_defaultEnemyScaler);
-            }
+            _enemyScaleManager.SetCurrentScaler(_wave);
         }
 
         /// <summary>
@@ -162,7 +120,7 @@ namespace WaveManagement
         /// </summary>
         private void ApplyDifficultyScaling()
         {
-            _currentEnemyScaler.ApplyDifficultyModifier(_difficultyModifier);
+            _enemyScaleManager.CurrentEnemyScaler.ApplyDifficultyModifier(_difficultyModifier);
         }
 
         /// <summary>
@@ -173,7 +131,7 @@ namespace WaveManagement
             var spawners = GetTree().GetNodesInGroup("enemy-spawners");
             foreach (EnemySpawner spawner in spawners)
             {
-                spawner.SetEnemyWaveConfig(_currentEnemyScaler);
+                spawner.SetEnemyWaveConfig(_enemyScaleManager.CurrentEnemyScaler);
             }
         }
 
@@ -213,7 +171,7 @@ namespace WaveManagement
         private void ScaleWave()
         {
             GD.Print($"{MethodBase.GetCurrentMethod().Name}");
-            SetCurrentWaveConfig();
+            SetScalers();
             ApplyDifficultyScaling();
             ScaleSpawners();
         }

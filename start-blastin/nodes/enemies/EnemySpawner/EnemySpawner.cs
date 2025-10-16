@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Reflection;
+using Autoloads;
 using Factories;
 using Godot;
 using WaveManagement;
@@ -79,6 +80,17 @@ namespace Enemies
             _spawnTimer.WaitTime = _spawnInterval;
             _spawnTimer.Timeout += SpawnEnemy;
             // _spawnTimer.Start();
+
+            // Connect to wave signals
+            EventBus.Instance.Connect(
+                EventBus.SignalName.WaveStarted,
+                Callable.From((int wave) => ToggleSpawning(true))
+            );
+
+            EventBus.Instance.Connect(
+                EventBus.SignalName.WaveEnded,
+                Callable.From(() => ToggleSpawning(false))
+            );
 
             MoveSpawnPoint();
         }

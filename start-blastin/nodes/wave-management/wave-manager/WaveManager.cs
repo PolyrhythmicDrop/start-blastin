@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Autoloads;
 using Enemies;
 using Godot;
 using SafeResourcePicker;
@@ -16,10 +17,6 @@ namespace WaveManagement
         private double _waveTime;
         private EnemyScaleManager _enemyScaleManager;
 
-        // private string _defaultEnemyScaler;
-        // private EnemyScaler _currentEnemyScaler;
-        // private List<EnemyScaler> _enemyScalerPool = new();
-
         public int Wave => _wave;
 
         /// <summary>
@@ -34,19 +31,6 @@ namespace WaveManagement
             get => _waveTime;
             set => _waveTime = value;
         }
-
-        // [Export(SRP_HINT.RESOURCE_PATH, "EnemyScaler")]
-        // public string DefaultEnemyScaler
-        // {
-        //     get => _defaultEnemyScaler;
-        //     set => _defaultEnemyScaler = value;
-        // }
-
-        [Signal]
-        public delegate void WaveStartedEventHandler();
-
-        [Signal]
-        public delegate void WaveEndedEventHandler();
 
         #region Initialization
 
@@ -64,12 +48,12 @@ namespace WaveManagement
             SetScalers();
 
             // If there are any spawners currently in the scene, connect their spawn timer to the WaveManager to start and stop spawning.
-            var spawners = GetTree().GetNodesInGroup("enemy-spawners");
-            foreach (EnemySpawner spawner in spawners)
-            {
-                WaveStarted += () => spawner.ToggleSpawning(true);
-                WaveEnded += () => spawner.ToggleSpawning(false);
-            }
+            // var spawners = GetTree().GetNodesInGroup("enemy-spawners");
+            // foreach (EnemySpawner spawner in spawners)
+            // {
+            //     WaveStarted += () => spawner.ToggleSpawning(true);
+            //     WaveEnded += () => spawner.ToggleSpawning(false);
+            // }
             ScaleSpawners();
 
             StartWave();
@@ -96,12 +80,6 @@ namespace WaveManagement
             }
             GD.Print($"Base difficulty modifier set: {Difficulty} - {_difficultyModifier}");
         }
-
-        /// <summary>
-        /// Loads all configuration resources from their parent directory to populate their respective config pools.
-        /// Runs once on _Ready(). Wave configurations are selected from the loaded resources based on the current wave and the resource's wave threshold.
-        /// </summary>
-        // private void LoadConfigPools() { }
 
         #endregion
 
@@ -145,13 +123,13 @@ namespace WaveManagement
             GD.Print($"{MethodBase.GetCurrentMethod().Name}");
             _waveTimer.WaitTime = _waveTime;
             _waveTimer.Start();
-            EmitSignal(SignalName.WaveStarted);
+            EventBus.Instance.EmitSignal(EventBus.SignalName.WaveStarted, _wave);
         }
 
         private void EndWave()
         {
             GD.Print($"{MethodBase.GetCurrentMethod().Name}");
-            EmitSignal(SignalName.WaveEnded);
+            EventBus.Instance.EmitSignal(EventBus.SignalName.WaveEnded);
             IncrementWave();
         }
 

@@ -8,7 +8,6 @@
 [sub_resource type="Resource" id="Resource_0bm52"]
 resource_local_to_scene = true
 script = ExtResource("1_gfeuq")
-MaxHealth = 2
 metadata/_custom_type_script = "uid://de8iusxhs0qem"
 
 [resource]

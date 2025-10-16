@@ -1,7 +1,7 @@
 Godot Engine v4.5.1.stable.mono.official.f62fdbde1 - https://godotengine.org
 Vulkan 1.4.312 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3060 Ti
 
-Weapon equipped! <Node2D#39627785678>
+Weapon equipped! <Node2D#39594231248>
 Stats: 0.5 | 1 | Bullet | 1000
 Enemies.EnemySpawner._Ready called!
 LoadEnemyScalerPool: Adding resource from res://resources/wave-scalers/enemy-scalers/default-enemy-scaler.tres to enemy config pool...
@@ -13,41 +13,40 @@ SetCurrentScaler: Current enemy config set! Selection: 0 | Config = tier-1-enemy
 StartWave
 ToggleSpawning: Toggling spawning to True!
 ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 1.2 | Crash Damage 3.6 | Speed 330
+MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
 Fire Rate 1.08 | Damage 1.3
 ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 1.2 | Crash Damage 2.4 | Speed 550
-Fire Rate 0.45 | Damage 1.3
-<AnimatableBody2D#43889198648> is taking damage!
+MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
+Fire Rate 1.08 | Damage 1.3
+<AnimatableBody2D#46137345578> is taking damage!
+<AnimatableBody2D#46137345578> is taking damage!
 Components.HealthComponent.Die called!
 ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
+Fire Rate 1.08 | Damage 1.3
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
+Fire Rate 1.08 | Damage 1.3
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
+Fire Rate 1.08 | Damage 1.3
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
 MaxHealth: 1.2 | Crash Damage 2.4 | Speed 550
 Fire Rate 0.45 | Damage 1.3
 ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 1.2 | Crash Damage 3.6 | Speed 330
+MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
 Fire Rate 1.08 | Damage 1.3
-<AnimatableBody2D#79490452157> is taking damage!
+<AnimatableBody2D#130157644222> is taking damage!
 Components.HealthComponent.Die called!
+<CharacterBody2D#38537266658> is taking damage!
 ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 1.2 | Crash Damage 2.4 | Speed 550
-Fire Rate 0.45 | Damage 1.3
-ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 1.2 | Crash Damage 2.4 | Speed 550
-Fire Rate 0.45 | Damage 1.3
-Player was crashed into! Player takes 2.4 damage.
-Components.HealthComponent.Die called!
-ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 1.2 | Crash Damage 3.6 | Speed 330
-Fire Rate 1.08 | Damage 1.3
-Game over, man! Game over!
-ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 1.2 | Crash Damage 3.6 | Speed 330
+MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
 Fire Rate 1.08 | Damage 1.3
 ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 1.2 | Crash Damage 3.6 | Speed 330
+MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
 Fire Rate 1.08 | Damage 1.3
 ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 1.2 | Crash Damage 3.6 | Speed 330
+MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
 Fire Rate 1.08 | Damage 1.3
 EndWave
 ToggleSpawning: Toggling spawning to False!
@@ -57,9 +56,46 @@ SetCurrentScaler: Current enemy config set! Selection: 0 | Config = tier-1-enemy
 Difficulty modifier applied to tier-1-enemy-wave-config!
 StartWave
 ToggleSpawning: Toggling spawning to True!
-ERROR: 46 RID allocations of type 'P11GodotArea2D' were leaked at exit.
+<AnimatableBody2D#177318399146> is taking damage!
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 3.9 | Speed 360
+Fire Rate 0.96000004 | Damage 1.4
+<AnimatableBody2D#216073767610> is taking damage!
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 3.9 | Speed 360
+Fire Rate 0.96000004 | Damage 1.4
+<AnimatableBody2D#216073767610> is taking damage!
+Components.HealthComponent.Die called!
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 1.3 | Crash Damage 2.6 | Speed 600
+Fire Rate 0.4 | Damage 1.4
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 3.9 | Speed 360
+Fire Rate 0.96000004 | Damage 1.4
+<AnimatableBody2D#289641858621> is taking damage!
+Components.HealthComponent.Die called!
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 1.3 | Crash Damage 2.6 | Speed 600
+Fire Rate 0.4 | Damage 1.4
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 3.9 | Speed 360
+Fire Rate 0.96000004 | Damage 1.4
+Player was crashed into! Player takes 2.6 damage.
+<CharacterBody2D#38537266658> is taking damage!
+Components.HealthComponent.Die called!
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 3.9 | Speed 360
+Fire Rate 0.96000004 | Damage 1.4
+Game over, man! Game over!
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 3.9 | Speed 360
+Fire Rate 0.96000004 | Damage 1.4
+ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 3.9 | Speed 360
+Fire Rate 0.96000004 | Damage 1.4
+ERROR: 94 RID allocations of type 'P11GodotArea2D' were leaked at exit.
 ERROR: 1 RID allocations of type 'P12GodotShape2D' were leaked at exit.
-WARNING: 184 RIDs of type "CanvasItem" were leaked.
+WARNING: 376 RIDs of type "CanvasItem" were leaked.
    at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2678)
 ERROR: 1 shaders of type CanvasShaderRD were never freed
    at: ~ShaderRD (servers/rendering/renderer_rd/shader_rd.cpp:1044)

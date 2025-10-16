@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dgcswjykgey5y"]
+[gd_scene load_steps=7 format=3 uid="uid://dgcswjykgey5y"]
 
 [ext_resource type="PackedScene" uid="uid://dxdlpe5yuamuy" path="res://nodes/wave-management/wave-manager/wave-manager.tscn" id="1_esqth"]
 [ext_resource type="Texture2D" uid="uid://cilgl08og1qhy" path="res://nodes/backgrounds/background-purple-nebulae-stars.png" id="1_rvdan"]
@@ -6,13 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://nenl15kjphyb" path="res://nodes/player/player.tscn" id="3_pxe5x"]
 [ext_resource type="PackedScene" uid="uid://bsyev7gatn1jy" path="res://nodes/environmental/oob-area.tscn" id="4_rl1rb"]
 [ext_resource type="PackedScene" uid="uid://b5ki3kbchln2j" path="res://nodes/enemies/EnemySpawner/enemy-spawner.tscn" id="5_l8aks"]
-[ext_resource type="Script" uid="uid://de8iusxhs0qem" path="res://nodes/components/HealthComponent.cs" id="6_ltqac"]
-
-[sub_resource type="Resource" id="Resource_nqhc5"]
-resource_local_to_scene = true
-resource_name = "player-health"
-script = ExtResource("6_ltqac")
-metadata/_custom_type_script = "uid://de8iusxhs0qem"
 
 [node name="MainLevel" type="Node"]
 
@@ -32,7 +25,6 @@ stretch_mode = 5
 
 [node name="Player" parent="." instance=ExtResource("3_pxe5x")]
 position = Vector2(933, 883)
-HealthComponent = SubResource("Resource_nqhc5")
 
 [node name="OOB-Area" parent="." instance=ExtResource("4_rl1rb")]
 
@@ -42,5 +34,3 @@ SpawnInterval = 1.0
 SpawnPointMoveDuration = 2.3
 
 [node name="WaveManager" parent="." instance=ExtResource("1_esqth")]
-WaveTime = 10.0
-DefaultEnemyScaler = "uid://clpli5o3gobm6"

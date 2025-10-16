@@ -47,13 +47,6 @@ namespace WaveManagement
             // LoadConfigPools();
             SetScalers();
 
-            // If there are any spawners currently in the scene, connect their spawn timer to the WaveManager to start and stop spawning.
-            // var spawners = GetTree().GetNodesInGroup("enemy-spawners");
-            // foreach (EnemySpawner spawner in spawners)
-            // {
-            //     WaveStarted += () => spawner.ToggleSpawning(true);
-            //     WaveEnded += () => spawner.ToggleSpawning(false);
-            // }
             ScaleSpawners();
 
             StartWave();

@@ -79,7 +79,6 @@ namespace Enemies
             _spawnTimer = GetNode<Timer>("%SpawnTimer");
             _spawnTimer.WaitTime = _spawnInterval;
             _spawnTimer.Timeout += SpawnEnemy;
-            // _spawnTimer.Start();
 
             // Connect to wave signals
             EventBus.Instance.Connect(

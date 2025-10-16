@@ -13,7 +13,7 @@
 resource_local_to_scene = true
 resource_name = "player-health"
 script = ExtResource("2_1fmtd")
-MaxHealth = 5
+MaxHealth = 4.0
 metadata/_custom_type_script = "uid://de8iusxhs0qem"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_xl06i"]

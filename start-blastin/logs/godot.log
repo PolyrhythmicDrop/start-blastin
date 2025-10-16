@@ -1,104 +1,1431 @@
 Godot Engine v4.5.1.stable.mono.official.f62fdbde1 - https://godotengine.org
 Vulkan 1.4.312 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3060 Ti
 
-Weapon equipped! <Node2D#39594231248>
+Weapon equipped! <Node2D#39762003407>
 Stats: 0.5 | 1 | Bullet | 1000
-Enemies.EnemySpawner._Ready called!
+Enemies.Spawners.EnemySpawner._Ready called!
 LoadEnemyScalerPool: Adding resource from res://resources/wave-scalers/enemy-scalers/default-enemy-scaler.tres to enemy config pool...
 LoadEnemyScalerPool: Adding resource from res://resources/wave-scalers/enemy-scalers/tier-1.tres to enemy config pool...
 LoadEnemyScalerPool: Adding resource from res://resources/wave-scalers/enemy-scalers/tier-2.tres to enemy config pool...
 LoadEnemyScalerPool: Adding resource from res://resources/wave-scalers/enemy-scalers/tier-3.tres to enemy config pool...
+LoadSpawnerScalerPool: Adding resource from res://resources/wave-scalers/spawner-scalers/default-spawner-scaler.tres to spawner scaler pool...
+LoadSpawnerScalerPool: Adding resource from res://resources/wave-scalers/spawner-scalers/tier-1-spawner-scaler.tres to spawner scaler pool...
+LoadSpawnerScalerPool: Adding resource from res://resources/wave-scalers/spawner-scalers/tier-2-spawner-scaler.tres to spawner scaler pool...
+LoadSpawnerScalerPool: Adding resource from res://resources/wave-scalers/spawner-scalers/tier-3-spawner-scaler.tres to spawner scaler pool...
 Base difficulty modifier set: Easy - 0.1
-SetCurrentScaler: Current enemy config set! Selection: 0 | Config = tier-1-enemy-wave-config
+SetCurrentScaler: Current enemy scaler set! Selection: 0 | Config = tier-1-enemy-wave-config
+SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-1-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-1-spawner-scaler applied! Interval: 1 | Move Duration 2.3
 StartWave
 ToggleSpawning: Toggling spawning to True!
-ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
-Fire Rate 1.08 | Damage 1.3
-ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
-Fire Rate 1.08 | Damage 1.3
-<AnimatableBody2D#46137345578> is taking damage!
-<AnimatableBody2D#46137345578> is taking damage!
+ApplyWaveScaling: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.4 | Crash Damage 2.4 | Speed 110
+Fire Rate 1.8 | Damage 0.65
+ApplyWaveScaling: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.4 | Crash Damage 2.4 | Speed 110
+Fire Rate 1.8 | Damage 0.65
+ApplyWaveScaling: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.4 | Crash Damage 2.4 | Speed 110
+Fire Rate 1.8 | Damage 0.65
+<AnimatableBody2D#46271563341> is taking damage!
+<AnimatableBody2D#46271563341> is taking damage!
 Components.HealthComponent.Die called!
-ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
-Fire Rate 1.08 | Damage 1.3
-ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
-Fire Rate 1.08 | Damage 1.3
-ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
-Fire Rate 1.08 | Damage 1.3
-ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 1.2 | Crash Damage 2.4 | Speed 550
-Fire Rate 0.45 | Damage 1.3
-ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
-Fire Rate 1.08 | Damage 1.3
-<AnimatableBody2D#130157644222> is taking damage!
+ApplyWaveScaling: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.4 | Crash Damage 2.4 | Speed 110
+Fire Rate 1.8 | Damage 0.65
+ApplyWaveScaling: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.4 | Crash Damage 2.4 | Speed 110
+Fire Rate 1.8 | Damage 0.65
+ApplyWaveScaling: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.4 | Crash Damage 2.4 | Speed 110
+Fire Rate 1.8 | Damage 0.65
+ApplyWaveScaling: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.4 | Crash Damage 2.4 | Speed 110
+Fire Rate 1.8 | Damage 0.65
+ApplyWaveScaling: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.4 | Crash Damage 2.4 | Speed 110
+Fire Rate 1.8 | Damage 0.65
+ApplyWaveScaling: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.4 | Crash Damage 2.4 | Speed 110
+Fire Rate 1.8 | Damage 0.65
+<AnimatableBody2D#129771770289> is taking damage!
+<AnimatableBody2D#129771770289> is taking damage!
 Components.HealthComponent.Die called!
-<CharacterBody2D#38537266658> is taking damage!
-ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
-Fire Rate 1.08 | Damage 1.3
-ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
-Fire Rate 1.08 | Damage 1.3
-ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 2.4 | Crash Damage 3.6 | Speed 330
-Fire Rate 1.08 | Damage 1.3
+ApplyWaveScaling: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.4 | Crash Damage 2.4 | Speed 110
+Fire Rate 1.8 | Damage 0.65
 EndWave
 ToggleSpawning: Toggling spawning to False!
 IncrementWave
 ScaleWave
-SetCurrentScaler: Current enemy config set! Selection: 0 | Config = tier-1-enemy-wave-config
+SetCurrentScaler: Current enemy scaler set! Selection: 0 | Config = tier-1-enemy-wave-config
+SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-1-spawner-scaler
 Difficulty modifier applied to tier-1-enemy-wave-config!
+ApplySpawnerScaler: Spawner scaler tier-1-spawner-scaler applied! Interval: 0.9 | Move Duration 2.07
 StartWave
 ToggleSpawning: Toggling spawning to True!
-<AnimatableBody2D#177318399146> is taking damage!
-ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 2.6 | Crash Damage 3.9 | Speed 360
-Fire Rate 0.96000004 | Damage 1.4
-<AnimatableBody2D#216073767610> is taking damage!
-ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 2.6 | Crash Damage 3.9 | Speed 360
-Fire Rate 0.96000004 | Damage 1.4
-<AnimatableBody2D#216073767610> is taking damage!
+ApplyWaveScaling: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 2.6 | Speed 120.00001
+Fire Rate 1.6 | Damage 0.7
+ApplyWaveScaling: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 2.6 | Speed 120.00001
+Fire Rate 1.6 | Damage 0.7
+<AnimatableBody2D#235283680373> is taking damage!
+ApplyWaveScaling: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 2.6 | Speed 120.00001
+Fire Rate 1.6 | Damage 0.7
+<AnimatableBody2D#235283680373> is taking damage!
 Components.HealthComponent.Die called!
-ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 1.3 | Crash Damage 2.6 | Speed 600
-Fire Rate 0.4 | Damage 1.4
-ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 2.6 | Crash Damage 3.9 | Speed 360
-Fire Rate 0.96000004 | Damage 1.4
-<AnimatableBody2D#289641858621> is taking damage!
+ApplyWaveScaling: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 2.6 | Speed 120.00001
+Fire Rate 1.6 | Damage 0.7
+ApplyWaveScaling: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 2.6 | Speed 120.00001
+Fire Rate 1.6 | Damage 0.7
+ApplyWaveScaling: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 2.6 | Speed 120.00001
+Fire Rate 1.6 | Damage 0.7
+<AnimatableBody2D#448119444897> is taking damage!
+<AnimatableBody2D#301268469421> is taking damage!
+ApplyWaveScaling: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 2.6 | Speed 120.00001
+Fire Rate 1.6 | Damage 0.7
+<AnimatableBody2D#448119444897> is taking damage!
 Components.HealthComponent.Die called!
-ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 1.3 | Crash Damage 2.6 | Speed 600
-Fire Rate 0.4 | Damage 1.4
-ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 2.6 | Crash Damage 3.9 | Speed 360
-Fire Rate 0.96000004 | Damage 1.4
-Player was crashed into! Player takes 2.6 damage.
-<CharacterBody2D#38537266658> is taking damage!
+ApplyWaveScaling: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 2.6 | Speed 120.00001
+Fire Rate 1.6 | Damage 0.7
+ApplyWaveScaling: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 2.6 | Speed 120.00001
+Fire Rate 1.6 | Damage 0.7
+<AnimatableBody2D#555376186815> is taking damage!
+ApplyWaveScaling: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 2.6 | Speed 120.00001
+Fire Rate 1.6 | Damage 0.7
+<AnimatableBody2D#555376186815> is taking damage!
 Components.HealthComponent.Die called!
-ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 2.6 | Crash Damage 3.9 | Speed 360
-Fire Rate 0.96000004 | Damage 1.4
+ApplyWaveScaling: Wave Config tier-1-enemy-wave-config applied! New stats:
+MaxHealth: 2.6 | Crash Damage 2.6 | Speed 120.00001
+Fire Rate 1.6 | Damage 0.7
+EndWave
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+SetCurrentScaler: Current enemy scaler set! Selection: 0 | Config = tier-2-enemy-wave-config
+SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-2-spawner-scaler
+Difficulty modifier applied to tier-2-enemy-wave-config!
+ApplySpawnerScaler: Spawner scaler tier-2-spawner-scaler applied! Interval: 0.7 | Move Duration 1.38
+StartWave
+ToggleSpawning: Toggling spawning to True!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.4 | Crash Damage 1.4 | Speed 325
+Fire Rate 1.05 | Damage 1.5
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2.8 | Crash Damage 2.8 | Speed 130
+Fire Rate 1.4 | Damage 0.75
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2.8 | Crash Damage 2.8 | Speed 130
+Fire Rate 1.4 | Damage 0.75
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2.8 | Crash Damage 2.8 | Speed 130
+Fire Rate 1.4 | Damage 0.75
+<AnimatableBody2D#623877557484> is taking damage!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2.8 | Crash Damage 2.8 | Speed 130
+Fire Rate 1.4 | Damage 0.75
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.4 | Crash Damage 1.4 | Speed 325
+Fire Rate 1.05 | Damage 1.5
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.4 | Crash Damage 1.4 | Speed 325
+Fire Rate 1.05 | Damage 1.5
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2.8 | Crash Damage 2.8 | Speed 130
+Fire Rate 1.4 | Damage 0.75
+<AnimatableBody2D#900449965270> is taking damage!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2.8 | Crash Damage 2.8 | Speed 130
+Fire Rate 1.4 | Damage 0.75
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2.8 | Crash Damage 2.8 | Speed 130
+Fire Rate 1.4 | Damage 0.75
+<AnimatableBody2D#1082231101381> is taking damage!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2.8 | Crash Damage 2.8 | Speed 130
+Fire Rate 1.4 | Damage 0.75
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.4 | Crash Damage 1.4 | Speed 325
+Fire Rate 1.05 | Damage 1.5
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2.8 | Crash Damage 2.8 | Speed 130
+Fire Rate 1.4 | Damage 0.75
+<AnimatableBody2D#1082231101381> is taking damage!
+Components.HealthComponent.Die called!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2.8 | Crash Damage 2.8 | Speed 130
+Fire Rate 1.4 | Damage 0.75
+EndWave
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+SetCurrentScaler: Current enemy scaler set! Selection: 0 | Config = tier-2-enemy-wave-config
+SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+Difficulty modifier applied to tier-2-enemy-wave-config!
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler applied! Interval: 0.39999998 | Move Duration 0.9199999
+StartWave
+ToggleSpawning: Toggling spawning to True!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.5 | Crash Damage 1.5 | Speed 350
+Fire Rate 0.90000004 | Damage 1.6
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.5 | Crash Damage 1.5 | Speed 350
+Fire Rate 0.90000004 | Damage 1.6
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.5 | Crash Damage 1.5 | Speed 350
+Fire Rate 0.90000004 | Damage 1.6
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.5 | Crash Damage 1.5 | Speed 350
+Fire Rate 0.90000004 | Damage 1.6
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.5 | Crash Damage 1.5 | Speed 350
+Fire Rate 0.90000004 | Damage 1.6
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.5 | Crash Damage 1.5 | Speed 350
+Fire Rate 0.90000004 | Damage 1.6
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.5 | Crash Damage 1.5 | Speed 350
+Fire Rate 0.90000004 | Damage 1.6
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.5 | Crash Damage 1.5 | Speed 350
+Fire Rate 0.90000004 | Damage 1.6
+<AnimatableBody2D#1319897145074> is taking damage!
+Components.HealthComponent.Die called!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.5 | Crash Damage 1.5 | Speed 350
+Fire Rate 0.90000004 | Damage 1.6
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3 | Crash Damage 3 | Speed 140
+Fire Rate 1.2 | Damage 0.8
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.5 | Crash Damage 1.5 | Speed 350
+Fire Rate 0.90000004 | Damage 1.6
+<AnimatableBody2D#1434787515381> is taking damage!
+Components.HealthComponent.Die called!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.5 | Crash Damage 1.5 | Speed 350
+Fire Rate 0.90000004 | Damage 1.6
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.5 | Crash Damage 1.5 | Speed 350
+Fire Rate 0.90000004 | Damage 1.6
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3 | Crash Damage 3 | Speed 140
+Fire Rate 1.2 | Damage 0.8
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.5 | Crash Damage 1.5 | Speed 350
+Fire Rate 0.90000004 | Damage 1.6
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.5 | Crash Damage 1.5 | Speed 350
+Fire Rate 0.90000004 | Damage 1.6
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.5 | Crash Damage 1.5 | Speed 350
+Fire Rate 0.90000004 | Damage 1.6
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3 | Crash Damage 3 | Speed 140
+Fire Rate 1.2 | Damage 0.8
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.5 | Crash Damage 1.5 | Speed 350
+Fire Rate 0.90000004 | Damage 1.6
+<AnimatableBody2D#1571152731960> is taking damage!
+Components.HealthComponent.Die called!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.5 | Crash Damage 1.5 | Speed 350
+Fire Rate 0.90000004 | Damage 1.6
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.5 | Crash Damage 1.5 | Speed 350
+Fire Rate 0.90000004 | Damage 1.6
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3 | Crash Damage 3 | Speed 140
+Fire Rate 1.2 | Damage 0.8
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.5 | Crash Damage 1.5 | Speed 350
+Fire Rate 0.90000004 | Damage 1.6
+<AnimatableBody2D#1649133229295> is taking damage!
+Components.HealthComponent.Die called!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3 | Crash Damage 3 | Speed 140
+Fire Rate 1.2 | Damage 0.8
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.5 | Crash Damage 1.5 | Speed 350
+Fire Rate 0.90000004 | Damage 1.6
+EndWave
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+Difficulty modifier applied to tier-2-enemy-wave-config!
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler applied! Interval: 0.29999995 | Move Duration 0.6899999
+StartWave
+ToggleSpawning: Toggling spawning to True!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.6 | Crash Damage 1.6 | Speed 375
+Fire Rate 0.75 | Damage 1.7
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.2 | Crash Damage 3.2 | Speed 150
+Fire Rate 1 | Damage 0.85
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.6 | Crash Damage 1.6 | Speed 375
+Fire Rate 0.75 | Damage 1.7
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.2 | Crash Damage 3.2 | Speed 150
+Fire Rate 1 | Damage 0.85
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.6 | Crash Damage 1.6 | Speed 375
+Fire Rate 0.75 | Damage 1.7
+<AnimatableBody2D#1809187873755> is taking damage!
+Components.HealthComponent.Die called!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.6 | Crash Damage 1.6 | Speed 375
+Fire Rate 0.75 | Damage 1.7
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.2 | Crash Damage 3.2 | Speed 150
+Fire Rate 1 | Damage 0.85
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.6 | Crash Damage 1.6 | Speed 375
+Fire Rate 0.75 | Damage 1.7
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.2 | Crash Damage 3.2 | Speed 150
+Fire Rate 1 | Damage 0.85
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.6 | Crash Damage 1.6 | Speed 375
+Fire Rate 0.75 | Damage 1.7
+<AnimatableBody2D#1823800823747> is taking damage!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.6 | Crash Damage 1.6 | Speed 375
+Fire Rate 0.75 | Damage 1.7
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.6 | Crash Damage 1.6 | Speed 375
+Fire Rate 0.75 | Damage 1.7
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.2 | Crash Damage 3.2 | Speed 150
+Fire Rate 1 | Damage 0.85
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.2 | Crash Damage 3.2 | Speed 150
+Fire Rate 1 | Damage 0.85
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.6 | Crash Damage 1.6 | Speed 375
+Fire Rate 0.75 | Damage 1.7
+<AnimatableBody2D#1891194899033> is taking damage!
+Components.HealthComponent.Die called!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.6 | Crash Damage 1.6 | Speed 375
+Fire Rate 0.75 | Damage 1.7
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.6 | Crash Damage 1.6 | Speed 375
+Fire Rate 0.75 | Damage 1.7
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.6 | Crash Damage 1.6 | Speed 375
+Fire Rate 0.75 | Damage 1.7
+<AnimatableBody2D#2016990465349> is taking damage!
+Components.HealthComponent.Die called!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.6 | Crash Damage 1.6 | Speed 375
+Fire Rate 0.75 | Damage 1.7
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.6 | Crash Damage 1.6 | Speed 375
+Fire Rate 0.75 | Damage 1.7
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.6 | Crash Damage 1.6 | Speed 375
+Fire Rate 0.75 | Damage 1.7
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.2 | Crash Damage 3.2 | Speed 150
+Fire Rate 1 | Damage 0.85
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.2 | Crash Damage 3.2 | Speed 150
+Fire Rate 1 | Damage 0.85
+<AnimatableBody2D#2071449312324> is taking damage!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.2 | Crash Damage 3.2 | Speed 150
+Fire Rate 1 | Damage 0.85
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.6 | Crash Damage 1.6 | Speed 375
+Fire Rate 0.75 | Damage 1.7
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.2 | Crash Damage 3.2 | Speed 150
+Fire Rate 1 | Damage 0.85
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.6 | Crash Damage 1.6 | Speed 375
+Fire Rate 0.75 | Damage 1.7
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.2 | Crash Damage 3.2 | Speed 150
+Fire Rate 1 | Damage 0.85
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.6 | Crash Damage 1.6 | Speed 375
+Fire Rate 0.75 | Damage 1.7
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.2 | Crash Damage 3.2 | Speed 150
+Fire Rate 1 | Damage 0.85
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.2 | Crash Damage 3.2 | Speed 150
+Fire Rate 1 | Damage 0.85
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.6 | Crash Damage 1.6 | Speed 375
+Fire Rate 0.75 | Damage 1.7
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.6 | Crash Damage 1.6 | Speed 375
+Fire Rate 0.75 | Damage 1.7
+EndWave
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+Difficulty modifier applied to tier-2-enemy-wave-config!
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler applied! Interval: 0.19999993 | Move Duration 0.45999983
+StartWave
+ToggleSpawning: Toggling spawning to True!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.4 | Crash Damage 3.4 | Speed 160
+Fire Rate 0.79999995 | Damage 0.90000004
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.4 | Crash Damage 3.4 | Speed 160
+Fire Rate 0.79999995 | Damage 0.90000004
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+<AnimatableBody2D#2224021315765> is taking damage!
+Components.HealthComponent.Die called!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.4 | Crash Damage 3.4 | Speed 160
+Fire Rate 0.79999995 | Damage 0.90000004
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+<AnimatableBody2D#2267658854996> is taking damage!
+Components.HealthComponent.Die called!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.4 | Crash Damage 3.4 | Speed 160
+Fire Rate 0.79999995 | Damage 0.90000004
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+<AnimatableBody2D#2287187532293> is taking damage!
+Components.HealthComponent.Die called!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.4 | Crash Damage 3.4 | Speed 160
+Fire Rate 0.79999995 | Damage 0.90000004
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.4 | Crash Damage 3.4 | Speed 160
+Fire Rate 0.79999995 | Damage 0.90000004
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.4 | Crash Damage 3.4 | Speed 160
+Fire Rate 0.79999995 | Damage 0.90000004
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+<AnimatableBody2D#2405685010495> is taking damage!
+Components.HealthComponent.Die called!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.4 | Crash Damage 3.4 | Speed 160
+Fire Rate 0.79999995 | Damage 0.90000004
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.4 | Crash Damage 3.4 | Speed 160
+Fire Rate 0.79999995 | Damage 0.90000004
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.4 | Crash Damage 3.4 | Speed 160
+Fire Rate 0.79999995 | Damage 0.90000004
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.4 | Crash Damage 3.4 | Speed 160
+Fire Rate 0.79999995 | Damage 0.90000004
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.4 | Crash Damage 3.4 | Speed 160
+Fire Rate 0.79999995 | Damage 0.90000004
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.4 | Crash Damage 3.4 | Speed 160
+Fire Rate 0.79999995 | Damage 0.90000004
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.4 | Crash Damage 3.4 | Speed 160
+Fire Rate 0.79999995 | Damage 0.90000004
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+<AnimatableBody2D#2597918348882> is taking damage!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+<AnimatableBody2D#2597918348882> is taking damage!
+Components.HealthComponent.Die called!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.4 | Crash Damage 3.4 | Speed 160
+Fire Rate 0.79999995 | Damage 0.90000004
+<AnimatableBody2D#2593992484023> is taking damage!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.7 | Crash Damage 1.7 | Speed 400
+Fire Rate 0.59999996 | Damage 1.8000001
+EndWave
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+Difficulty modifier applied to tier-2-enemy-wave-config!
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler applied! Interval: 0.1 | Move Duration 0.22999978
+StartWave
+ToggleSpawning: Toggling spawning to True!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+<AnimatableBody2D#2682139974545> is taking damage!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+<AnimatableBody2D#2816307370470> is taking damage!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+<AnimatableBody2D#2816307370470> is taking damage!
+Components.HealthComponent.Die called!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+<AnimatableBody2D#2818941389468> is taking damage!
+Components.HealthComponent.Die called!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+<CharacterBody2D#38688261601> is taking damage!
+Player was crashed into! Player takes 1.8000001 damage.
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+<AnimatableBody2D#2875413506552> is taking damage!
+Components.HealthComponent.Die called!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+<AnimatableBody2D#2989112693556> is taking damage!
+Components.HealthComponent.Die called!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.6000001 | Crash Damage 3.6000001 | Speed 170
+Fire Rate 0.5999999 | Damage 0.95000005
+<AnimatableBody2D#3051440060244> is taking damage!
+Components.HealthComponent.Die called!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.8000001 | Crash Damage 1.8000001 | Speed 425
+Fire Rate 0.44999993 | Damage 1.9000001
+EndWave
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+Difficulty modifier applied to tier-2-enemy-wave-config!
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler applied! Interval: 0.1 | Move Duration 0.2
+StartWave
+ToggleSpawning: Toggling spawning to True!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+<AnimatableBody2D#3044091639216> is taking damage!
+Components.HealthComponent.Die called!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+<CharacterBody2D#38688261601> is taking damage!
+Components.HealthComponent.Die called!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+<AnimatableBody2D#3054879389736> is taking damage!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
 Game over, man! Game over!
-ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 2.6 | Crash Damage 3.9 | Speed 360
-Fire Rate 0.96000004 | Damage 1.4
-ApplyWaveConfig: Wave Config tier-1-enemy-wave-config applied! New stats:
-MaxHealth: 2.6 | Crash Damage 3.9 | Speed 360
-Fire Rate 0.96000004 | Damage 1.4
-ERROR: 94 RID allocations of type 'P11GodotArea2D' were leaked at exit.
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 3.8000002 | Crash Damage 3.8000002 | Speed 180
+Fire Rate 0.39999986 | Damage 1
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 1.9000001 | Crash Damage 1.9000001 | Speed 450.00003
+Fire Rate 0.2999999 | Damage 2
+EndWave
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+Difficulty modifier applied to tier-2-enemy-wave-config!
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler applied! Interval: 0.1 | Move Duration 0.2
+StartWave
+ToggleSpawning: Toggling spawning to True!
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 4 | Crash Damage 4 | Speed 190.00002
+Fire Rate 0.19999981 | Damage 1.0500001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 4 | Crash Damage 4 | Speed 190.00002
+Fire Rate 0.19999981 | Damage 1.0500001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 4 | Crash Damage 4 | Speed 190.00002
+Fire Rate 0.19999981 | Damage 1.0500001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 4 | Crash Damage 4 | Speed 190.00002
+Fire Rate 0.19999981 | Damage 1.0500001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 4 | Crash Damage 4 | Speed 190.00002
+Fire Rate 0.19999981 | Damage 1.0500001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 4 | Crash Damage 4 | Speed 190.00002
+Fire Rate 0.19999981 | Damage 1.0500001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 4 | Crash Damage 4 | Speed 190.00002
+Fire Rate 0.19999981 | Damage 1.0500001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 4 | Crash Damage 4 | Speed 190.00002
+Fire Rate 0.19999981 | Damage 1.0500001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 4 | Crash Damage 4 | Speed 190.00002
+Fire Rate 0.19999981 | Damage 1.0500001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 4 | Crash Damage 4 | Speed 190.00002
+Fire Rate 0.19999981 | Damage 1.0500001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 4 | Crash Damage 4 | Speed 190.00002
+Fire Rate 0.19999981 | Damage 1.0500001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 4 | Crash Damage 4 | Speed 190.00002
+Fire Rate 0.19999981 | Damage 1.0500001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 4 | Crash Damage 4 | Speed 190.00002
+Fire Rate 0.19999981 | Damage 1.0500001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 4 | Crash Damage 4 | Speed 190.00002
+Fire Rate 0.19999981 | Damage 1.0500001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 4 | Crash Damage 4 | Speed 190.00002
+Fire Rate 0.19999981 | Damage 1.0500001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 4 | Crash Damage 4 | Speed 190.00002
+Fire Rate 0.19999981 | Damage 1.0500001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 4 | Crash Damage 4 | Speed 190.00002
+Fire Rate 0.19999981 | Damage 1.0500001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 4 | Crash Damage 4 | Speed 190.00002
+Fire Rate 0.19999981 | Damage 1.0500001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 4 | Crash Damage 4 | Speed 190.00002
+Fire Rate 0.19999981 | Damage 1.0500001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 4 | Crash Damage 4 | Speed 190.00002
+Fire Rate 0.19999981 | Damage 1.0500001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 4 | Crash Damage 4 | Speed 190.00002
+Fire Rate 0.19999981 | Damage 1.0500001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 4 | Crash Damage 4 | Speed 190.00002
+Fire Rate 0.19999981 | Damage 1.0500001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 4 | Crash Damage 4 | Speed 190.00002
+Fire Rate 0.19999981 | Damage 1.0500001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ApplyWaveScaling: Wave Config tier-2-enemy-wave-config applied! New stats:
+MaxHealth: 2 | Crash Damage 2 | Speed 475.00003
+Fire Rate 0.14999986 | Damage 2.1000001
+ERROR: 2199 RID allocations of type 'P11GodotArea2D' were leaked at exit.
 ERROR: 1 RID allocations of type 'P12GodotShape2D' were leaked at exit.
-WARNING: 376 RIDs of type "CanvasItem" were leaked.
-   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2678)
-ERROR: 1 shaders of type CanvasShaderRD were never freed
-   at: ~ShaderRD (servers/rendering/renderer_rd/shader_rd.cpp:1044)
-ERROR: 1 RID allocations of type 'N10RendererRD15MaterialStorage8MaterialE' were leaked at exit.
-ERROR: 1 RID allocations of type 'N10RendererRD15MaterialStorage6ShaderE' were leaked at exit.
-ERROR: 1 RID allocations of type 'N10RendererRD14TextureStorage7TextureE' were leaked at exit.

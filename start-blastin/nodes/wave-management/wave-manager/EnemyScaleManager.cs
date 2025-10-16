@@ -70,7 +70,7 @@ namespace WaveManagement
                     if (matchingConfigs.Count <= 0)
                     {
                         throw new InvalidOperationException(
-                            $"Could not find a wave configuration that fits the current wave number or is set to infinite! Loading default config at {_defaultEnemyScaler}..."
+                            $"Could not find an enemy scaler that fits the current wave number or is set to infinite! Loading default config at {_defaultEnemyScaler}..."
                         );
                     }
                 }
@@ -80,7 +80,7 @@ namespace WaveManagement
                     int selection = GD.RandRange(0, matchingConfigs.Count - 1);
                     _currentEnemyScaler = matchingConfigs[selection];
                     GD.Print(
-                        $"{MethodBase.GetCurrentMethod().Name}: Current enemy config set! Selection: {selection} | Config = {_currentEnemyScaler.ResourceName}"
+                        $"{MethodBase.GetCurrentMethod().Name}: Current enemy scaler set! Selection: {selection} | Config = {_currentEnemyScaler.ResourceName}"
                     );
                 }
             }

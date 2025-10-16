@@ -20,6 +20,13 @@ namespace Enemies
         protected EntityPath _path;
         protected EnemyState _state;
 
+        // Base stats
+        protected float _baseSpeed;
+        protected float _baseCrashDamage;
+        protected float _baseMaxHealth;
+        protected float _baseFireRate;
+        protected float _baseWeaponDamage;
+
         public HealthComponent HealthComp => _healthComponent;
         public WeaponNode Weapon => _weapon;
         public EntityPath Path => _path;
@@ -36,22 +43,31 @@ namespace Enemies
         {
             _healthComponent = enemyResource.HealthComponent;
             _healthComponent.Initialize(this);
+            _baseMaxHealth = enemyResource.HealthComponent.MaxHealth;
+
             _weapon = WeaponFactory.CreateWeapon(enemyResource.WeaponResource, true);
+            _baseFireRate = enemyResource.WeaponResource.Stats.FireRate;
+            _baseWeaponDamage = enemyResource.WeaponResource.Stats.Damage;
+
             _speed = enemyResource.Speed;
+            _baseSpeed = enemyResource.Speed;
+
             _crashDamage = enemyResource.CrashDamage;
+            _baseCrashDamage = enemyResource.CrashDamage;
         }
 
-        public virtual void ApplyWaveConfig(EnemyScaler config)
+        public virtual void ApplyWaveScaling(EnemyScaler scaler)
         {
-            _healthComponent.MaxHealth += config.MaxHealthModifier * _healthComponent.MaxHealth;
-            _crashDamage += config.CrashDamageModifier * _crashDamage;
-            _speed += config.SpeedModifier * _speed;
+            _healthComponent.MaxHealth = _baseMaxHealth * (1 + scaler.MaxHealthModifier);
+            _crashDamage = _baseCrashDamage * (1 + scaler.CrashDamageModifier);
+            _speed = _baseSpeed * (1 + scaler.SpeedModifier);
+
             // Fire rate should be decreased, since lower fire rates result in faster firing.
-            _weapon.Stats.FireRate -= config.FireRateModifier * _weapon.Stats.FireRate;
-            _weapon.Stats.Damage += config.WeaponDamageModifier * _weapon.Stats.Damage;
+            _weapon.Stats.FireRate = Mathf.Max(0.1f, _baseFireRate * (1 - scaler.FireRateModifier));
+            _weapon.Stats.Damage = _baseWeaponDamage * (1 + scaler.WeaponDamageModifier);
 
             GD.Print(
-                $"{MethodBase.GetCurrentMethod().Name}: Wave Config {config.ResourceName} applied! New stats:\nMaxHealth: {_healthComponent.MaxHealth} | Crash Damage {_crashDamage} | Speed {_speed}\nFire Rate {_weapon.Stats.FireRate} | Damage {_weapon.Stats.Damage}"
+                $"{MethodBase.GetCurrentMethod().Name}: Wave Config {scaler.ResourceName} applied! New stats:\nMaxHealth: {_healthComponent.MaxHealth} | Crash Damage {_crashDamage} | Speed {_speed}\nFire Rate {_weapon.Stats.FireRate} | Damage {_weapon.Stats.Damage}"
             );
         }
 
@@ -72,9 +88,6 @@ namespace Enemies
             _weapon.FireTimer.Timeout += FireWeapon;
             _weapon.FireTimer.Start();
 
-            // GD.Print(
-            //     $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Following path of {_path.Name}..."
-            // );
             _path.FollowPath(_speed);
         }
 

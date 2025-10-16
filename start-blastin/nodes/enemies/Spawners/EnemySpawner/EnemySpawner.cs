@@ -1,11 +1,11 @@
-using System.Linq;
+using System;
 using System.Reflection;
 using Autoloads;
 using Factories;
 using Godot;
 using WaveManagement;
 
-namespace Enemies
+namespace Enemies.Spawners
 {
     [GlobalClass]
     public partial class EnemySpawner : Node2D
@@ -15,8 +15,14 @@ namespace Enemies
         private Curve2D _curve;
         private float _pointMoveDuration;
         private float _spawnInterval;
+
+        // Base stats
+        private float _baseMoveDuration;
+        private float _baseSpawnInterval;
+
         private Timer _spawnTimer;
-        private Godot.Collections.Array<SpawnData> _spawnPool;
+
+        private SpawnPool _spawnPool = new();
 
         // Position-less Node. Add enemies as the child of this node so that their position is not relative to the spawner.
         private Node _spawnParent;
@@ -24,7 +30,7 @@ namespace Enemies
         // Point where the enemies spawn from. Should be the child of _path.
         private Node2D _spawnPoint;
 
-        private EnemyScaler _enemyWaveConfig;
+        private EnemyScaler _enemyScaler;
 
         [Export]
         public Curve2D Curve
@@ -60,8 +66,8 @@ namespace Enemies
         [Export]
         public Godot.Collections.Array<SpawnData> SpawnPool
         {
-            get => _spawnPool;
-            set => _spawnPool = value;
+            get => _spawnPool.ConvertToGodotArray();
+            set => _spawnPool = new SpawnPool(value);
         }
 
         public override void _Ready()
@@ -69,10 +75,14 @@ namespace Enemies
             GD.Print(
                 $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name} called!"
             );
-            _path = GetNode<Path2D>("%Path2D");
-            // _path.Curve = _curve;
 
+            // Set base stats:
+            _baseMoveDuration = _pointMoveDuration;
+            _baseSpawnInterval = _spawnInterval;
+
+            _path = GetNode<Path2D>("%Path2D");
             _pathFollow = _path.GetNode<PathFollow2D>("%PathFollow2D");
+
             _spawnPoint = _pathFollow.GetNode<Node2D>("%SpawnPoint");
             _spawnParent = GetNode<Node>("%SpawnParent");
 
@@ -145,7 +155,7 @@ namespace Enemies
 
             // Create an enemy from the factory and apply the current wave configuration.
             EnemyNode enemy = EnemyFactory.CreateEnemy(enemyResource);
-            enemy.ApplyWaveConfig(_enemyWaveConfig);
+            enemy.ApplyWaveScaling(_enemyScaler);
 
             // Create a new path scene for the new EnemyNode to follow.
             EntityPath entityPath = GD.Load<PackedScene>(EntityPath.ScenePath)
@@ -171,9 +181,26 @@ namespace Enemies
             tween.SetLoops();
         }
 
-        public void SetEnemyWaveConfig(EnemyScaler config)
+        public void SetEnemyScaler(EnemyScaler config)
         {
-            _enemyWaveConfig = config;
+            _enemyScaler = config;
+        }
+
+        public void ApplySpawnerScaler(SpawnerScaler spawnerScaler)
+        {
+            _spawnPool = new SpawnPool(spawnerScaler.SpawnPool);
+            _spawnInterval = Mathf.Max(
+                0.1f,
+                _baseSpawnInterval * (1 - spawnerScaler.SpawnIntervalModifier)
+            );
+            _pointMoveDuration = Mathf.Max(
+                0.2f,
+                _baseMoveDuration * (1 - spawnerScaler.MoveDurationModifier)
+            );
+
+            GD.Print(
+                $"{MethodBase.GetCurrentMethod().Name}: Spawner scaler {spawnerScaler.ResourceName} applied! Interval: {_spawnInterval} | Move Duration {_pointMoveDuration}"
+            );
         }
 
         /// <summary>
@@ -185,7 +212,7 @@ namespace Enemies
             GD.Print($"{MethodBase.GetCurrentMethod().Name}: Toggling spawning to {spawn}!");
             if (spawn)
             {
-                _spawnTimer.Start();
+                _spawnTimer.Start(_spawnInterval);
             }
             else
             {

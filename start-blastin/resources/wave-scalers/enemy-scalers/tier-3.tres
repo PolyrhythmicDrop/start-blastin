@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="EnemyWaveConfig" load_steps=2 format=3 uid="uid://dgjurep3esy7j"]
+[gd_resource type="Resource" script_class="EnemyScaler" load_steps=2 format=3 uid="uid://dgjurep3esy7j"]
 
 [ext_resource type="Script" uid="uid://cjers0xbt0i73" path="res://nodes/wave-management/wave-scalers/EnemyScaler.cs" id="1_g2wuy"]
 
@@ -6,11 +6,10 @@
 resource_local_to_scene = true
 resource_name = "tier-3-enemy-wave-config"
 script = ExtResource("1_g2wuy")
-MinWave = 4
-MaxWave = 5
 SpeedModifier = 0.3
 CrashDamageModifier = 0.4
 MaxHealthModifier = 0.5
 FireRateModifier = 0.3
 WeaponDamageModifier = 0.5
+MinWave = 4
 metadata/_custom_type_script = "uid://cjers0xbt0i73"

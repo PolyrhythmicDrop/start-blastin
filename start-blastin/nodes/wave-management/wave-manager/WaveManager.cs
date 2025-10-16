@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Autoloads;
 using Enemies;
+using Enemies.Spawners;
 using Godot;
 using SafeResourcePicker;
 
@@ -16,6 +17,7 @@ namespace WaveManagement
         private Timer _waveTimer;
         private double _waveTime;
         private EnemyScaleManager _enemyScaleManager;
+        private SpawnerScaleManager _spawnerScaleManager;
 
         public int Wave => _wave;
 
@@ -42,6 +44,8 @@ namespace WaveManagement
 
             _enemyScaleManager = GetNode<EnemyScaleManager>("%EnemyScaleManager");
             _enemyScaleManager.Initialize(this);
+
+            _spawnerScaleManager = GetNode<SpawnerScaleManager>("%SpawnerScaleManager");
 
             SetBaseDifficultyModifier();
             // LoadConfigPools();
@@ -84,6 +88,7 @@ namespace WaveManagement
         private void SetScalers()
         {
             _enemyScaleManager.SetCurrentScaler(_wave);
+            _spawnerScaleManager.SetCurrentScaler(_wave);
         }
 
         /// <summary>
@@ -92,19 +97,14 @@ namespace WaveManagement
         private void ApplyDifficultyScaling()
         {
             _enemyScaleManager.CurrentEnemyScaler.ApplyDifficultyModifier(_difficultyModifier);
+            _spawnerScaleManager.CurrentSpawnerScaler.ApplyDifficultyModifier(_difficultyModifier);
         }
 
         /// <summary>
         /// Sets each spawner's enemy wave configuration.
         /// </summary>
-        private void ScaleSpawners()
-        {
-            var spawners = GetTree().GetNodesInGroup("enemy-spawners");
-            foreach (EnemySpawner spawner in spawners)
-            {
-                spawner.SetEnemyWaveConfig(_enemyScaleManager.CurrentEnemyScaler);
-            }
-        }
+        private void ScaleSpawners() =>
+            _spawnerScaleManager.ScaleSpawners(_enemyScaleManager.CurrentEnemyScaler);
 
         #endregion
 

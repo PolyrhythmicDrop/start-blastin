@@ -15,7 +15,8 @@ metadata/_custom_type_script = "uid://de8iusxhs0qem"
 [sub_resource type="Resource" id="Resource_7utlb"]
 resource_local_to_scene = true
 script = ExtResource("3_76l53")
-ProjSpeed = 400.0
+FireRate = 1.5
+ProjSpeed = 500.0
 metadata/_custom_type_script = "uid://bytfm61mpkr5u"
 
 [sub_resource type="Resource" id="Resource_e63ao"]
@@ -27,8 +28,8 @@ metadata/_custom_type_script = "uid://bytfm61mpkr5u"
 [resource]
 script = ExtResource("1_5071d")
 ScenePath = "res://nodes/enemies/Drone/drone.tscn"
-Speed = 500.0
-CrashDamage = 2
+Speed = 250.0
+CrashDamage = 1
 HealthComponent = SubResource("Resource_6f781")
 WeaponResource = SubResource("Resource_e63ao")
 PathCurve = ExtResource("2_76l53")

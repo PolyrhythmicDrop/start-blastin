@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using Godot;
 
@@ -28,7 +29,7 @@ public partial class EntityPath : Path2D
         //     $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Following {Name} at {speed}..."
         // );
         float pathLength = Curve.GetBakedLength();
-        float duration = pathLength / speed;
+        float duration = Mathf.Max(pathLength / speed, 0.5f);
 
         Tween tween = CreateTween();
         tween.TweenProperty(_pathFollow, "progress_ratio", 1.0, duration);

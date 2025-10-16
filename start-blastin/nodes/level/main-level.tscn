@@ -43,3 +43,4 @@ SpawnPointMoveDuration = 2.3
 
 [node name="WaveManager" parent="." instance=ExtResource("1_esqth")]
 WaveTime = 10.0
+DefaultEnemyScaler = "uid://clpli5o3gobm6"

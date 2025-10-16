@@ -41,12 +41,13 @@ namespace Enemies
             _crashDamage = enemyResource.CrashDamage;
         }
 
-        public virtual void ApplyWaveConfig(EnemyWaveConfig config)
+        public virtual void ApplyWaveConfig(EnemyScaler config)
         {
             _healthComponent.MaxHealth += config.MaxHealthModifier * _healthComponent.MaxHealth;
             _crashDamage += config.CrashDamageModifier * _crashDamage;
             _speed += config.SpeedModifier * _speed;
-            _weapon.Stats.FireRate += config.FireRateModifier * _weapon.Stats.FireRate;
+            // Fire rate should be decreased, since lower fire rates result in faster firing.
+            _weapon.Stats.FireRate -= config.FireRateModifier * _weapon.Stats.FireRate;
             _weapon.Stats.Damage += config.WeaponDamageModifier * _weapon.Stats.Damage;
 
             GD.Print(

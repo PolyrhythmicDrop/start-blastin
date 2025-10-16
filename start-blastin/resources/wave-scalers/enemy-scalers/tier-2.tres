@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="EnemyWaveConfig" load_steps=2 format=3 uid="uid://cv8bwu4tlmasf"]
 
-[ext_resource type="Script" uid="uid://cjers0xbt0i73" path="res://nodes/wave-management/EnemyWaveConfig.cs" id="1_fuqla"]
+[ext_resource type="Script" uid="uid://cjers0xbt0i73" path="res://nodes/wave-management/wave-scalers/EnemyScaler.cs" id="1_fuqla"]
 
 [resource]
 resource_local_to_scene = true

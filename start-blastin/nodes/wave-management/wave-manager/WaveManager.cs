@@ -14,9 +14,9 @@ namespace WaveManagement
         private float _difficultyModifier = 0.1f;
         private Timer _waveTimer;
         private double _waveTime;
-        private string _defaultEnemyConfig;
-        private EnemyWaveConfig _currentEnemyConfig;
-        private List<EnemyWaveConfig> _enemyConfigPool = new();
+        private string _defaultEnemyScaler;
+        private EnemyScaler _currentEnemyScaler;
+        private List<EnemyScaler> _enemyScalerPool = new();
 
         public int Wave => _wave;
 
@@ -33,11 +33,11 @@ namespace WaveManagement
             set => _waveTime = value;
         }
 
-        [Export(SRP_HINT.RESOURCE_PATH, "EnemyWaveConfig")]
-        public string DefaultEnemyConfig
+        [Export(SRP_HINT.RESOURCE_PATH, "EnemyScaler")]
+        public string DefaultEnemyScaler
         {
-            get => _defaultEnemyConfig;
-            set => _defaultEnemyConfig = value;
+            get => _defaultEnemyScaler;
+            set => _defaultEnemyScaler = value;
         }
 
         [Signal]
@@ -98,16 +98,16 @@ namespace WaveManagement
         /// </summary>
         private void LoadConfigPool()
         {
-            string enemyWaveConfigDir = "res://resources/wave-configurations/enemy-wave-configs/";
-            string[] configStrings = ResourceLoader.ListDirectory(enemyWaveConfigDir);
+            string enemyScalerDir = "res://resources/wave-scalers/enemy-scalers/";
+            string[] configStrings = ResourceLoader.ListDirectory(enemyScalerDir);
 
             foreach (string resourceName in configStrings)
             {
-                string fullPath = enemyWaveConfigDir + resourceName;
+                string fullPath = enemyScalerDir + resourceName;
                 GD.Print(
                     $"{MethodBase.GetCurrentMethod().Name}: Adding resource from {fullPath} to enemy config pool..."
                 );
-                _enemyConfigPool.Add(ResourceLoader.Load<EnemyWaveConfig>(fullPath));
+                _enemyScalerPool.Add(ResourceLoader.Load<EnemyScaler>(fullPath));
             }
         }
 
@@ -123,20 +123,20 @@ namespace WaveManagement
             try
             {
                 // All enemy config resources whose min and max wave encloses the current wave number
-                List<EnemyWaveConfig> matchingConfigs = _enemyConfigPool.FindAll(config =>
+                List<EnemyScaler> matchingConfigs = _enemyScalerPool.FindAll(config =>
                     config.MinWave <= _wave && config.MaxWave >= _wave
                 );
 
                 if (matchingConfigs.Count <= 0)
                 {
                     // If we can't find something within our wave range, see if we can find a "default" with a -1 max range.
-                    matchingConfigs = _enemyConfigPool.FindAll(config => config.MaxWave == -1);
+                    matchingConfigs = _enemyScalerPool.FindAll(config => config.MaxWave == -1);
 
                     // If we STILL can't find anything, throw an exception
                     if (matchingConfigs.Count <= 0)
                     {
                         throw new InvalidOperationException(
-                            $"Could not find a wave configuration that fits the current wave number or is set to infinite! Loading default config at {_defaultEnemyConfig}..."
+                            $"Could not find a wave configuration that fits the current wave number or is set to infinite! Loading default config at {_defaultEnemyScaler}..."
                         );
                     }
                 }
@@ -144,16 +144,16 @@ namespace WaveManagement
                 {
                     // Create a random number that lands somewhere within the number matching wave configs.
                     int selection = GD.RandRange(0, matchingConfigs.Count - 1);
-                    _currentEnemyConfig = matchingConfigs[selection];
+                    _currentEnemyScaler = matchingConfigs[selection];
                     GD.Print(
-                        $"{MethodBase.GetCurrentMethod().Name}: Current enemy config set! Selection: {selection} | Config = {_currentEnemyConfig.ResourceName}"
+                        $"{MethodBase.GetCurrentMethod().Name}: Current enemy config set! Selection: {selection} | Config = {_currentEnemyScaler.ResourceName}"
                     );
                 }
             }
             catch (Exception e)
             {
                 GD.PrintErr(e.Message);
-                _currentEnemyConfig = ResourceLoader.Load<EnemyWaveConfig>(_defaultEnemyConfig);
+                _currentEnemyScaler = ResourceLoader.Load<EnemyScaler>(_defaultEnemyScaler);
             }
         }
 
@@ -162,7 +162,7 @@ namespace WaveManagement
         /// </summary>
         private void ApplyDifficultyScaling()
         {
-            _currentEnemyConfig.ApplyDifficultyModifier(_difficultyModifier);
+            _currentEnemyScaler.ApplyDifficultyModifier(_difficultyModifier);
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace WaveManagement
             var spawners = GetTree().GetNodesInGroup("enemy-spawners");
             foreach (EnemySpawner spawner in spawners)
             {
-                spawner.SetEnemyWaveConfig(_currentEnemyConfig);
+                spawner.SetEnemyWaveConfig(_currentEnemyScaler);
             }
         }
 

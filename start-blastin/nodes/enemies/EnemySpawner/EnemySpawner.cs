@@ -23,7 +23,7 @@ namespace Enemies
         // Point where the enemies spawn from. Should be the child of _path.
         private Node2D _spawnPoint;
 
-        private EnemyWaveConfig _enemyWaveConfig;
+        private EnemyScaler _enemyWaveConfig;
 
         [Export]
         public Curve2D Curve
@@ -160,7 +160,7 @@ namespace Enemies
             tween.SetLoops();
         }
 
-        public void SetEnemyWaveConfig(EnemyWaveConfig config)
+        public void SetEnemyWaveConfig(EnemyScaler config)
         {
             _enemyWaveConfig = config;
         }

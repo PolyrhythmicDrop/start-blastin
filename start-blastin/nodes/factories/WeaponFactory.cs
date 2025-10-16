@@ -13,11 +13,11 @@ namespace Factories
         /// <param name="weaponResource">The resource to create the weapon from. Resource contains the weapon's scene path and stats.</param>
         /// <param name="enemyWeapon">True if the weapon belongs to an enemy. False if it belongs to the player. Used to apply the correct shader material to projectiles.</param>
         /// <param name="enemyWaveConfig">Modifies the created weapon based on a wave configuration.</param>
-        /// <returns>A built <see cref="WeaponNode"/> with its stats set by the passed <see cref="WeaponResource"/> and (optionally) <see cref="EnemyWaveConfig"/>.</returns>
+        /// <returns>A built <see cref="WeaponNode"/> with its stats set by the passed <see cref="WeaponResource"/> and (optionally) <see cref="EnemyScaler"/>.</returns>
         public static WeaponNode CreateWeapon(
             WeaponResource weaponResource,
             bool enemyWeapon,
-            EnemyWaveConfig enemyWaveConfig = null
+            EnemyScaler enemyWaveConfig = null
         )
         {
             try
@@ -68,7 +68,7 @@ namespace Factories
         /// </summary>
         /// <param name="stats">The original WeaponStats resource to modify.</param>
         /// <param name="config">The wave configuration that modifies the <paramref name="stats"/>.</param>
-        private static void ApplyWaveConfigToWeaponStats(WeaponStats stats, EnemyWaveConfig config)
+        private static void ApplyWaveConfigToWeaponStats(WeaponStats stats, EnemyScaler config)
         {
             stats.FireRate += config.FireRateModifier * stats.FireRate;
             stats.Damage += config.WeaponDamageModifier * stats.Damage;

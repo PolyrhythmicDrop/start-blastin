@@ -21,8 +21,8 @@ metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
 [node name="EnemySpawner" type="Node2D" groups=["enemy-spawners"]]
 script = ExtResource("1_dbpvi")
 Curve = ExtResource("2_u3nr5")
-SpawnInterval = 1.5
-SpawnPointMoveDuration = 4.0
+SpawnInterval = 2.0
+SpawnPointMoveDuration = 5.0
 SpawnPool = Array[Object]([SubResource("Resource_43td7"), SubResource("Resource_dp2e5")])
 metadata/_custom_type_script = "uid://by3cbr6m3eo5b"
 

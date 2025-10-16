@@ -55,13 +55,14 @@ namespace WaveManagement
             {
                 // All enemy config resources whose min and max wave encloses the current wave number
                 List<SpawnerScaler> matchingConfigs = _spawnerScalerPool.FindAll(config =>
-                    config.MinWave <= wave && config.MaxWave >= wave
+                    (config.MinWave <= wave || config.MinWave == -1)
+                    && (config.MaxWave >= wave || config.MaxWave == -1)
                 );
 
                 if (matchingConfigs.Count <= 0)
                 {
-                    // If we can't find something within our wave range, see if we can find a "default" with a -1 max range.
-                    matchingConfigs = _spawnerScalerPool.FindAll(config => config.MaxWave == -1);
+                    // // If we can't find something within our wave range, see if we can find a "default" with a -1 max range.
+                    // matchingConfigs = _spawnerScalerPool.FindAll(config => config.MaxWave == -1);
 
                     // If we STILL can't find anything, throw an exception
                     if (matchingConfigs.Count <= 0)
@@ -77,7 +78,7 @@ namespace WaveManagement
                     int selection = GD.RandRange(0, matchingConfigs.Count - 1);
                     _currentSpawnerScaler = matchingConfigs[selection];
                     GD.Print(
-                        $"{MethodBase.GetCurrentMethod().Name}: Current spawner scaler set! Selection: {selection} | Config = {_currentSpawnerScaler.ResourceName}"
+                        $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Current spawner scaler set! Selection: {selection} | Config = {_currentSpawnerScaler.ResourceName}"
                     );
                 }
             }
@@ -88,13 +89,26 @@ namespace WaveManagement
             }
         }
 
-        public void ScaleSpawners(EnemyScaler enemyScaler)
+        public void ScaleSpawners(EnemyScaler enemyScaler, float difficultyMod)
         {
+            int currentWave = _waveManager.Wave;
+            GD.Print(
+                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: currentWave = {currentWave} | passed enemyScaler = {enemyScaler} | currentSpawnScaler = {_currentSpawnerScaler}"
+            );
+            EnemyScaler adjustedEnemyScaler = enemyScaler.GetAdjustedScaler(
+                difficultyMod,
+                currentWave
+            );
+            SpawnerScaler adjustedSpawnerScaler = _currentSpawnerScaler.GetAdjustedScaler(
+                difficultyMod,
+                currentWave
+            );
+
             var spawners = GetTree().GetNodesInGroup("enemy-spawners");
             foreach (EnemySpawner spawner in spawners)
             {
-                spawner.SetEnemyScaler(enemyScaler);
-                spawner.ApplySpawnerScaler(_currentSpawnerScaler);
+                spawner.SetEnemyScaler(adjustedEnemyScaler);
+                spawner.ApplySpawnerScaler(adjustedSpawnerScaler, _waveManager.Wave);
             }
         }
     }

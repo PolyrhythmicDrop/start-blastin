@@ -41,8 +41,36 @@ namespace WaveManagement
 
         public override void ApplyDifficultyModifier(float difficultyMod)
         {
-            _moveDurationModifier += difficultyMod;
-            _spawnIntervalModifier += difficultyMod;
+            // _moveDurationModifier += difficultyMod;
+            // _spawnIntervalModifier += difficultyMod;
+        }
+
+        public SpawnerScaler GetAdjustedScaler(float difficultyMod, int wave)
+        {
+            float difficultyMultiplier = Mathf.Sqrt(wave) * difficultyMod * 0.1f;
+
+            if (wave == 1)
+            {
+                return this;
+            }
+            else
+            {
+                return new SpawnerScaler
+                {
+                    ResourceName = this.ResourceName + "-adjusted",
+                    SpawnPool = this._spawnPool.ConvertToGodotArray(),
+                    MoveDurationModifier = Mathf.Min(
+                        0.2f,
+                        this._moveDurationModifier + difficultyMultiplier
+                    ),
+                    SpawnIntervalModifier = Mathf.Min(
+                        0.1f,
+                        this._spawnIntervalModifier + difficultyMultiplier
+                    ),
+                    MinWave = this._minWave,
+                    MaxWave = this._maxWave,
+                };
+            }
         }
     }
 }

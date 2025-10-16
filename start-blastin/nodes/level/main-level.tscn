@@ -39,7 +39,5 @@ HealthComponent = SubResource("Resource_esqth")
 
 [node name="EnemySpawner" parent="." instance=ExtResource("5_l8aks")]
 position = Vector2(50, -82)
-SpawnInterval = 1.0
-SpawnPointMoveDuration = 2.3
 
 [node name="WaveManager" parent="." instance=ExtResource("1_esqth")]

@@ -43,6 +43,7 @@ material = SubResource("ShaderMaterial_xl06i")
 [node name="MovementComponent" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("3_hs1md")
+Speed = 500.0
 
 [node name="PlayerController" type="Node" parent="."]
 unique_name_in_owner = true

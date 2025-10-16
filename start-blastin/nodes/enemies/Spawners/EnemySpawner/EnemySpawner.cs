@@ -32,6 +32,8 @@ namespace Enemies.Spawners
 
         private EnemyScaler _enemyScaler;
 
+        private int _currentWave;
+
         [Export]
         public Curve2D Curve
         {
@@ -93,7 +95,13 @@ namespace Enemies.Spawners
             // Connect to wave signals
             EventBus.Instance.Connect(
                 EventBus.SignalName.WaveStarted,
-                Callable.From((int wave) => ToggleSpawning(true))
+                Callable.From(
+                    (int wave) =>
+                    {
+                        ToggleSpawning(true);
+                        _currentWave = wave;
+                    }
+                )
             );
 
             EventBus.Instance.Connect(
@@ -155,7 +163,7 @@ namespace Enemies.Spawners
 
             // Create an enemy from the factory and apply the current wave configuration.
             EnemyNode enemy = EnemyFactory.CreateEnemy(enemyResource);
-            enemy.ApplyWaveScaling(_enemyScaler);
+            enemy.ApplyWaveScaling(_enemyScaler, _currentWave);
 
             // Create a new path scene for the new EnemyNode to follow.
             EntityPath entityPath = GD.Load<PackedScene>(EntityPath.ScenePath)
@@ -186,17 +194,22 @@ namespace Enemies.Spawners
             _enemyScaler = config;
         }
 
-        public void ApplySpawnerScaler(SpawnerScaler spawnerScaler)
+        public void ApplySpawnerScaler(SpawnerScaler spawnerScaler, int wave)
         {
+            // Don't apply scaling on the first wave.
+            if (wave == 1)
+            {
+                return;
+            }
+            float waveMultiplier = Mathf.Log(1 + wave);
+
             _spawnPool = new SpawnPool(spawnerScaler.SpawnPool);
-            _spawnInterval = Mathf.Max(
-                0.1f,
-                _baseSpawnInterval * (1 - spawnerScaler.SpawnIntervalModifier)
-            );
-            _pointMoveDuration = Mathf.Max(
-                0.2f,
-                _baseMoveDuration * (1 - spawnerScaler.MoveDurationModifier)
-            );
+
+            float logSpawnModifier = spawnerScaler.SpawnIntervalModifier * waveMultiplier;
+            _spawnInterval = Mathf.Max(0.1f, _baseSpawnInterval * (1 - logSpawnModifier));
+
+            float logMoveModifier = spawnerScaler.MoveDurationModifier * waveMultiplier;
+            _pointMoveDuration = Mathf.Max(0.2f, _baseMoveDuration * (1 - logMoveModifier));
 
             GD.Print(
                 $"{MethodBase.GetCurrentMethod().Name}: Spawner scaler {spawnerScaler.ResourceName} applied! Interval: {_spawnInterval} | Move Duration {_pointMoveDuration}"

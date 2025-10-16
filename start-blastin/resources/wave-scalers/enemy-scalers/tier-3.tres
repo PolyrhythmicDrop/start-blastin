@@ -10,6 +10,6 @@ SpeedModifier = 0.3
 CrashDamageModifier = 0.4
 MaxHealthModifier = 0.5
 FireRateModifier = 0.3
-WeaponDamageModifier = 0.5
+WeaponDamageModifier = 1.0
 MinWave = 4
 metadata/_custom_type_script = "uid://cjers0xbt0i73"

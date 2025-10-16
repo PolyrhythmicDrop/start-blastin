@@ -15,5 +15,5 @@ resource_local_to_scene = true
 resource_name = "tier-1-spawner-scaler"
 script = ExtResource("1_iddpe")
 SpawnPool = Array[Object]([SubResource("Resource_cmqwa")])
-MaxWave = 2
+MaxWave = 3
 metadata/_custom_type_script = "uid://b2dathygef0kk"

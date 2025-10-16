@@ -57,13 +57,36 @@ namespace WaveManagement
         /// <param name="difficultyMod"></param>
         public override void ApplyDifficultyModifier(float difficultyMod)
         {
-            _enemySpeedModifier += difficultyMod;
-            _enemyCrashDamageModifier += difficultyMod;
-            _enemyMaxHealthModifier += difficultyMod;
-            _enemyFireRateModifier += difficultyMod;
-            _enemyWeaponDamageModifier += difficultyMod;
+            // _enemySpeedModifier += difficultyMod;
+            // _enemyCrashDamageModifier += difficultyMod;
+            // _enemyMaxHealthModifier += difficultyMod;
+            // _enemyFireRateModifier += difficultyMod;
+            // _enemyWeaponDamageModifier += difficultyMod;
 
-            GD.Print($"Difficulty modifier applied to {ResourceName}!");
+            // GD.Print($"Difficulty modifier applied to {ResourceName}!");
+        }
+
+        public EnemyScaler GetAdjustedScaler(float difficultyMod, int wave)
+        {
+            float difficultyMultiplier = Mathf.Log(1 + wave) * difficultyMod;
+            if (wave == 1)
+            {
+                return this;
+            }
+            else
+            {
+                return new EnemyScaler
+                {
+                    ResourceName = this.ResourceName + "-adjusted",
+                    SpeedModifier = this._enemySpeedModifier + difficultyMultiplier,
+                    CrashDamageModifier = this.CrashDamageModifier + difficultyMultiplier,
+                    MaxHealthModifier = this.MaxHealthModifier + difficultyMultiplier,
+                    FireRateModifier = this.FireRateModifier + difficultyMultiplier,
+                    WeaponDamageModifier = this.WeaponDamageModifier + difficultyMultiplier,
+                    MinWave = this._minWave,
+                    MaxWave = this._maxWave,
+                };
+            }
         }
     }
 }

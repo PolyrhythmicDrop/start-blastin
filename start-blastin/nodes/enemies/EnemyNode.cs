@@ -56,19 +56,34 @@ namespace Enemies
             _baseCrashDamage = enemyResource.CrashDamage;
         }
 
-        public virtual void ApplyWaveScaling(EnemyScaler scaler)
+        public virtual void ApplyWaveScaling(EnemyScaler scaler, int wave)
         {
-            _healthComponent.MaxHealth = _baseMaxHealth * (1 + scaler.MaxHealthModifier);
-            _crashDamage = _baseCrashDamage * (1 + scaler.CrashDamageModifier);
-            _speed = _baseSpeed * (1 + scaler.SpeedModifier);
+            // Don't apply scaling on the first wave.
+            if (wave == 1)
+            {
+                return;
+            }
 
+            float waveLogMultiplier = Mathf.Log(1 + wave);
+            float waveSqrtMultiplier = Mathf.Sqrt(wave) * 0.1f;
+
+            _healthComponent.MaxHealth =
+                _baseMaxHealth * (1 + (scaler.MaxHealthModifier * waveLogMultiplier));
+
+            _crashDamage =
+                _baseCrashDamage * (1 + (scaler.CrashDamageModifier * waveLogMultiplier));
+
+            _speed = _baseSpeed * (1 + (scaler.SpeedModifier * waveSqrtMultiplier));
+            _weapon.Stats.Damage =
+                _baseWeaponDamage * (1 + (scaler.WeaponDamageModifier * waveSqrtMultiplier));
+
+            float waveExpoMultiplier = Mathf.Pow(0.95f, wave * scaler.FireRateModifier);
             // Fire rate should be decreased, since lower fire rates result in faster firing.
-            _weapon.Stats.FireRate = Mathf.Max(0.1f, _baseFireRate * (1 - scaler.FireRateModifier));
-            _weapon.Stats.Damage = _baseWeaponDamage * (1 + scaler.WeaponDamageModifier);
+            _weapon.Stats.FireRate = Mathf.Max(0.1f, _baseFireRate * waveExpoMultiplier);
 
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().Name}: Wave Config {scaler.ResourceName} applied! New stats:\nMaxHealth: {_healthComponent.MaxHealth} | Crash Damage {_crashDamage} | Speed {_speed}\nFire Rate {_weapon.Stats.FireRate} | Damage {_weapon.Stats.Damage}"
-            );
+            // GD.Print(
+            //     $"{MethodBase.GetCurrentMethod().Name}: Wave Config {scaler.ResourceName} applied! New stats:\nMaxHealth: {_healthComponent.MaxHealth} | Crash Damage {_crashDamage} | Speed {_speed}\nFire Rate {_weapon.Stats.FireRate} | Damage {_weapon.Stats.Damage}"
+            // );
         }
 
         public void SetPath(EntityPath path)

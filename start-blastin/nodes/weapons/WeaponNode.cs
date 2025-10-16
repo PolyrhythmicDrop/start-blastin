@@ -109,7 +109,6 @@ namespace Weapons
         {
             if (collision.Collider is IHealthful healthful)
             {
-                GD.Print($"{collision.Collider} is taking damage!");
                 healthful.TakeDamage(_stats.Damage);
             }
 

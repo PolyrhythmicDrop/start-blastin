@@ -46,6 +46,7 @@ namespace WaveManagement
             _enemyScaleManager.Initialize(this);
 
             _spawnerScaleManager = GetNode<SpawnerScaleManager>("%SpawnerScaleManager");
+            _spawnerScaleManager.Initialize(this);
 
             SetBaseDifficultyModifier();
             // LoadConfigPools();
@@ -104,7 +105,10 @@ namespace WaveManagement
         /// Sets each spawner's enemy wave configuration.
         /// </summary>
         private void ScaleSpawners() =>
-            _spawnerScaleManager.ScaleSpawners(_enemyScaleManager.CurrentEnemyScaler);
+            _spawnerScaleManager.ScaleSpawners(
+                _enemyScaleManager.CurrentEnemyScaler,
+                _difficultyModifier
+            );
 
         #endregion
 
@@ -113,7 +117,7 @@ namespace WaveManagement
 
         private void StartWave()
         {
-            GD.Print($"{MethodBase.GetCurrentMethod().Name}");
+            GD.Print($"Wave {_wave} starting!");
             _waveTimer.WaitTime = _waveTime;
             _waveTimer.Start();
             EventBus.Instance.EmitSignal(EventBus.SignalName.WaveStarted, _wave);
@@ -121,7 +125,7 @@ namespace WaveManagement
 
         private void EndWave()
         {
-            GD.Print($"{MethodBase.GetCurrentMethod().Name}");
+            GD.Print($"Wave {_wave} ended!");
             EventBus.Instance.EmitSignal(EventBus.SignalName.WaveEnded);
             IncrementWave();
         }

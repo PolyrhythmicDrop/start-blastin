@@ -3,7 +3,6 @@ Vulkan 1.4.312 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3060 Ti
 
 Weapon equipped! <Node2D#39762003407>
 Stats: 0.5 | 1 | Bullet | 1000
-Enemies.Spawners.EnemySpawner._Ready called!
 LoadEnemyScalerPool: Adding resource from res://resources/wave-scalers/enemy-scalers/default-enemy-scaler.tres to enemy config pool...
 LoadEnemyScalerPool: Adding resource from res://resources/wave-scalers/enemy-scalers/tier-1.tres to enemy config pool...
 LoadEnemyScalerPool: Adding resource from res://resources/wave-scalers/enemy-scalers/tier-2.tres to enemy config pool...
@@ -12,10 +11,10 @@ LoadSpawnerScalerPool: Adding resource from res://resources/wave-scalers/spawner
 LoadSpawnerScalerPool: Adding resource from res://resources/wave-scalers/spawner-scalers/tier-1-spawner-scaler.tres to spawner scaler pool...
 LoadSpawnerScalerPool: Adding resource from res://resources/wave-scalers/spawner-scalers/tier-2-spawner-scaler.tres to spawner scaler pool...
 LoadSpawnerScalerPool: Adding resource from res://resources/wave-scalers/spawner-scalers/tier-3-spawner-scaler.tres to spawner scaler pool...
-Base difficulty modifier set: Easy - 0.1
+Base difficulty modifier set: Hard - 0.3
 SetCurrentScaler: Current enemy scaler set! Selection: 0 | Config = tier-1-enemy-wave-config
-WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = default-spawner-scaler
-WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 1 | passed enemyScaler = <Resource#-9223371995347941846> | currentSpawnScaler = <Resource#-9223371994827848143>
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 1 | Config = tier-1-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 1 | passed enemyScaler = tier-1-enemy-wave-config | currentSpawnScaler = tier-1-spawner-scaler
 Wave 1 starting!
 ToggleSpawning: Toggling spawning to True!
 Wave 1 ended!
@@ -23,48 +22,48 @@ ToggleSpawning: Toggling spawning to False!
 IncrementWave
 ScaleWave
 SetCurrentScaler: Current enemy scaler set! Selection: 0 | Config = tier-1-enemy-wave-config
-WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 1 | Config = tier-1-spawner-scaler
-WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 2 | passed enemyScaler = <Resource#-9223371995347941846> | currentSpawnScaler = <Resource#-9223371994660075981>
-ApplySpawnerScaler: Spawner scaler tier-1-spawner-scaler-adjusted applied! Interval: 1.9689265 | Move Duration 4.9223166
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 1 | Config = tier-2-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 2 | passed enemyScaler = tier-1-enemy-wave-config | currentSpawnScaler = tier-2-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-2-spawner-scaler-adjusted applied! Interval: 1.7802775 | Move Duration 3.9013877
 Wave 2 starting!
 ToggleSpawning: Toggling spawning to True!
 Wave 2 ended!
 ToggleSpawning: Toggling spawning to False!
 IncrementWave
 ScaleWave
-SetCurrentScaler: Current enemy scaler set! Selection: 0 | Config = tier-1-enemy-wave-config
-WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 1 | Config = tier-1-spawner-scaler
-WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 3 | passed enemyScaler = <Resource#-9223371995347941846> | currentSpawnScaler = <Resource#-9223371994660075981>
-ApplySpawnerScaler: Spawner scaler tier-1-spawner-scaler-adjusted applied! Interval: 1.9519774 | Move Duration 4.8799434
+SetCurrentScaler: Current enemy scaler set! Selection: 1 | Config = tier-2-enemy-wave-config
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-1-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 3 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-1-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-1-spawner-scaler-adjusted applied! Interval: 1.7227411 | Move Duration 3.6137056
 Wave 3 starting!
 ToggleSpawning: Toggling spawning to True!
+Player was crashed into! Player takes 3.1636143 damage.
+Game over, man! Game over!
 Wave 3 ended!
 ToggleSpawning: Toggling spawning to False!
 IncrementWave
 ScaleWave
 SetCurrentScaler: Current enemy scaler set! Selection: 0 | Config = tier-2-enemy-wave-config
-WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 1 | Config = tier-2-spawner-scaler
-WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 4 | passed enemyScaler = <Resource#-9223371995230501333> | currentSpawnScaler = <Resource#-9223371994458749385>
-ApplySpawnerScaler: Spawner scaler tier-2-spawner-scaler-adjusted applied! Interval: 1.7746787 | Move Duration 4.034337
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-2-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 4 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-2-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-2-spawner-scaler-adjusted applied! Interval: 1.6781124 | Move Duration 3.390562
 Wave 4 starting!
 ToggleSpawning: Toggling spawning to True!
-Components.HealthComponent.Die called!
 Wave 4 ended!
 ToggleSpawning: Toggling spawning to False!
 IncrementWave
 ScaleWave
-WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 2 | Config = tier-3-spawner-scaler
-WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 5 | passed enemyScaler = <Resource#-9223371995230501333> | currentSpawnScaler = <Resource#-9223371994257422790>
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 1 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 5 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
 ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.641648 | Move Duration 3.2082403
 Wave 5 starting!
 ToggleSpawning: Toggling spawning to True!
-Components.HealthComponent.Die called!
 Wave 5 ended!
 ToggleSpawning: Toggling spawning to False!
 IncrementWave
 ScaleWave
-WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 1 | Config = tier-3-spawner-scaler
-WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 6 | passed enemyScaler = <Resource#-9223371995230501333> | currentSpawnScaler = <Resource#-9223371994257422790>
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 6 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
 ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.6108179 | Move Duration 3.0540898
 Wave 6 starting!
 ToggleSpawning: Toggling spawning to True!
@@ -72,80 +71,311 @@ Wave 6 ended!
 ToggleSpawning: Toggling spawning to False!
 IncrementWave
 ScaleWave
-WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = default-spawner-scaler
-WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 7 | passed enemyScaler = <Resource#-9223371995230501333> | currentSpawnScaler = <Resource#-9223371994827848143>
-ApplySpawnerScaler: Spawner scaler default-spawner-scaler-adjusted applied! Interval: 1.8899662 | Move Duration 4.7249155
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 7 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.5841117 | Move Duration 2.9205585
 Wave 7 starting!
 ToggleSpawning: Toggling spawning to True!
-Components.HealthComponent.Die called!
-Components.HealthComponent.Die called!
 Wave 7 ended!
 ToggleSpawning: Toggling spawning to False!
 IncrementWave
 ScaleWave
-WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = default-spawner-scaler
-WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 8 | passed enemyScaler = <Resource#-9223371995230501333> | currentSpawnScaler = <Resource#-9223371994827848143>
-ApplySpawnerScaler: Spawner scaler default-spawner-scaler-adjusted applied! Interval: 1.8757062 | Move Duration 4.6892653
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 8 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.5605551 | Move Duration 2.8027754
 Wave 8 starting!
 ToggleSpawning: Toggling spawning to True!
-Components.HealthComponent.Die called!
-Components.HealthComponent.Die called!
-Components.HealthComponent.Die called!
-Components.HealthComponent.Die called!
 Wave 8 ended!
 ToggleSpawning: Toggling spawning to False!
 IncrementWave
 ScaleWave
-WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = default-spawner-scaler
-WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 9 | passed enemyScaler = <Resource#-9223371995230501333> | currentSpawnScaler = <Resource#-9223371994827848143>
-ApplySpawnerScaler: Spawner scaler default-spawner-scaler-adjusted applied! Interval: 1.8618449 | Move Duration 4.654612
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 9 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.539483 | Move Duration 2.6974149
 Wave 9 starting!
 ToggleSpawning: Toggling spawning to True!
-Components.HealthComponent.Die called!
-Components.HealthComponent.Die called!
 Wave 9 ended!
 ToggleSpawning: Toggling spawning to False!
 IncrementWave
 ScaleWave
-WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = default-spawner-scaler
-WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 10 | passed enemyScaler = <Resource#-9223371995230501333> | currentSpawnScaler = <Resource#-9223371994827848143>
-ApplySpawnerScaler: Spawner scaler default-spawner-scaler-adjusted applied! Interval: 1.8483437 | Move Duration 4.620859
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 10 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.5204209 | Move Duration 2.6021047
 Wave 10 starting!
 ToggleSpawning: Toggling spawning to True!
-Components.HealthComponent.Die called!
 Wave 10 ended!
 ToggleSpawning: Toggling spawning to False!
 IncrementWave
 ScaleWave
-WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 1 | Config = tier-3-spawner-scaler
-WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 11 | passed enemyScaler = <Resource#-9223371995230501333> | currentSpawnScaler = <Resource#-9223371994257422790>
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 11 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
 ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.5030186 | Move Duration 2.515093
 Wave 11 starting!
 ToggleSpawning: Toggling spawning to True!
-Components.HealthComponent.Die called!
-Components.HealthComponent.Die called!
 Wave 11 ended!
 ToggleSpawning: Toggling spawning to False!
 IncrementWave
 ScaleWave
-WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 1 | Config = tier-3-spawner-scaler
-WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 12 | passed enemyScaler = <Resource#-9223371995230501333> | currentSpawnScaler = <Resource#-9223371994257422790>
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 12 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
 ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.4870101 | Move Duration 2.4350505
 Wave 12 starting!
 ToggleSpawning: Toggling spawning to True!
-Components.HealthComponent.Die called!
 Wave 12 ended!
 ToggleSpawning: Toggling spawning to False!
 IncrementWave
 ScaleWave
-WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 1 | Config = tier-3-spawner-scaler
-WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 13 | passed enemyScaler = <Resource#-9223371995230501333> | currentSpawnScaler = <Resource#-9223371994257422790>
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 13 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
 ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.4721885 | Move Duration 2.3609426
 Wave 13 starting!
 ToggleSpawning: Toggling spawning to True!
-ERROR: 328 RID allocations of type 'P11GodotArea2D' were leaked at exit.
+Wave 13 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 14 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.45839 | Move Duration 2.2919497
+Wave 14 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 14 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 15 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.4454823 | Move Duration 2.2274113
+Wave 15 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 15 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 16 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.4333572 | Move Duration 2.1667864
+Wave 16 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 16 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 17 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.4219255 | Move Duration 2.109628
+Wave 17 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 17 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 18 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.4111122 | Move Duration 2.055561
+Wave 18 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 18 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 19 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.4008535 | Move Duration 2.0042677
+Wave 19 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 19 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 20 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.3910954 | Move Duration 1.9554772
+Wave 20 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 20 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 21 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.3817915 | Move Duration 1.9089574
+Wave 21 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 21 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 22 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.3729012 | Move Duration 1.8645058
+Wave 22 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 22 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 23 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.3643892 | Move Duration 1.8219461
+Wave 23 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 23 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 24 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.3562248 | Move Duration 1.7811241
+Wave 24 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 24 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 25 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.3483807 | Move Duration 1.7419034
+Wave 25 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 25 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 26 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.3408326 | Move Duration 1.704163
+Wave 26 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 26 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 27 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.333559 | Move Duration 1.6677954
+Wave 27 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 27 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 28 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.3265408 | Move Duration 1.6327041
+Wave 28 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 28 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 29 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.3197606 | Move Duration 1.5988026
+Wave 29 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 29 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 30 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.3132026 | Move Duration 1.5660129
+Wave 30 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 30 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 31 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.3068528 | Move Duration 1.5342641
+Wave 31 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 31 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 32 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.3006985 | Move Duration 1.5034924
+Wave 32 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 32 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 33 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.2947278 | Move Duration 1.4736392
+Wave 33 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 33 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 34 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.2889304 | Move Duration 1.4446518
+Wave 34 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 34 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 35 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.2832961 | Move Duration 1.4164808
+Wave 35 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 35 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 36 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.2778164 | Move Duration 1.3890821
+Wave 36 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 36 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 37 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.2724828 | Move Duration 1.3624138
+Wave 37 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 37 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 38 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.2672877 | Move Duration 1.3364384
+Wave 38 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 38 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 39 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.2622241 | Move Duration 1.3111204
+Wave 39 starting!
+ToggleSpawning: Toggling spawning to True!
+Wave 39 ended!
+ToggleSpawning: Toggling spawning to False!
+IncrementWave
+ScaleWave
+WaveManagement.SpawnerScaleManager.SetCurrentScaler: Current spawner scaler set! Selection: 0 | Config = tier-3-spawner-scaler
+WaveManagement.SpawnerScaleManager.ScaleSpawners: currentWave = 40 | passed enemyScaler = tier-2-enemy-wave-config | currentSpawnScaler = tier-3-spawner-scaler
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.2572856 | Move Duration 1.286428
+Wave 40 starting!
+ToggleSpawning: Toggling spawning to True!
+ERROR: 1502 RID allocations of type 'P11GodotArea2D' were leaked at exit.
 ERROR: 1 RID allocations of type 'P12GodotShape2D' were leaked at exit.
-WARNING: 1312 RIDs of type "CanvasItem" were leaked.
+WARNING: 6008 RIDs of type "CanvasItem" were leaked.
    at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2678)
 ERROR: 1 shaders of type CanvasShaderRD were never freed
    at: ~ShaderRD (servers/rendering/renderer_rd/shader_rd.cpp:1044)

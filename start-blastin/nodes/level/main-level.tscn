@@ -41,3 +41,4 @@ HealthComponent = SubResource("Resource_esqth")
 position = Vector2(50, -82)
 
 [node name="WaveManager" parent="." instance=ExtResource("1_esqth")]
+Difficulty = 2

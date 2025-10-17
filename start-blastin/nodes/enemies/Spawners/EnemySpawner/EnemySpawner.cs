@@ -74,10 +74,6 @@ namespace Enemies.Spawners
 
         public override void _Ready()
         {
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name} called!"
-            );
-
             // Set base stats:
             _baseMoveDuration = _pointMoveDuration;
             _baseSpawnInterval = _spawnInterval;

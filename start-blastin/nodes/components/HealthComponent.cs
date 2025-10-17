@@ -63,9 +63,6 @@ namespace Components
 
         public void Die()
         {
-            GD.Print(
-                $"{System.Reflection.MethodBase.GetCurrentMethod().ReflectedType}.{System.Reflection.MethodBase.GetCurrentMethod().Name} called!"
-            );
             _owner.Die();
         }
     }

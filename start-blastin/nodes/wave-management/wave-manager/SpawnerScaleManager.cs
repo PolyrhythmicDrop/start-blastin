@@ -93,7 +93,7 @@ namespace WaveManagement
         {
             int currentWave = _waveManager.Wave;
             GD.Print(
-                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: currentWave = {currentWave} | passed enemyScaler = {enemyScaler} | currentSpawnScaler = {_currentSpawnerScaler}"
+                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: currentWave = {currentWave} | passed enemyScaler = {enemyScaler.ResourceName} | currentSpawnScaler = {_currentSpawnerScaler.ResourceName}"
             );
             EnemyScaler adjustedEnemyScaler = enemyScaler.GetAdjustedScaler(
                 difficultyMod,

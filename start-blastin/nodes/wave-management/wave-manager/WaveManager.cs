@@ -88,7 +88,7 @@ namespace WaveManagement
         /// </summary>
         private void SetScalers()
         {
-            _enemyScaleManager.SetCurrentScaler(_wave);
+            _enemyScaleManager.SetCurrentScalers(_wave);
             _spawnerScaleManager.SetCurrentScalers(_wave);
         }
 

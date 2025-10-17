@@ -23,3 +23,4 @@ DefaultEnemyScaler = "uid://clpli5o3gobm6"
 unique_name_in_owner = true
 script = ExtResource("3_22e4w")
 DefaultSpawnerScaler = "uid://chgedvgubdd22"
+DefaultFormationScaler = "uid://dlqifjude3djo"

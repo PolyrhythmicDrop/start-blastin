@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=2 format=3 uid="uid://b1wm5lv14o07l"]
+
+[ext_resource type="Script" uid="uid://b40t8najievo0" path="res://nodes/wave-management/wave-scalers/SpawnerFormationScaler.cs" id="1_0nqgr"]
+
+[resource]
+resource_name = "surrounded-spawner-formation"
+script = ExtResource("1_0nqgr")
+Formation = Dictionary[int, int]({
+0: 1,
+1: 1,
+2: 1,
+3: 1
+})
+metadata/_custom_type_script = "uid://b40t8najievo0"

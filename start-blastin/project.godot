@@ -29,6 +29,7 @@ file_logging/max_log_files=1
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
+window/size/mode=2
 window/stretch/mode="viewport"
 window/stretch/aspect="keep_width"
 window/stretch/scale_mode="integer"
@@ -62,6 +63,7 @@ folder_colors={
 projectiles=""
 enemy-spawners="Enemy spawners"
 level="A level in the game."
+enemies=""
 
 [input]
 

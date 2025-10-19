@@ -31,6 +31,22 @@ namespace Enemies
         public WeaponNode Weapon => _weapon;
         public EntityPath Path => _path;
 
+        public override void _Ready()
+        {
+            base._Ready();
+            AddToGroup("enemies");
+
+            _shape = GetNode<CollisionShape2D>("CollisionShape2D");
+
+            AddChild(_weapon);
+
+            // Start the weapon fire timer to fire on a set interval.
+            _weapon.FireTimer.Timeout += FireWeapon;
+            _weapon.FireTimer.Start();
+
+            _path.FollowPath(_speed);
+        }
+
         public void TakeDamage(float damage)
         {
             PlayDamageAnimation();
@@ -91,35 +107,24 @@ namespace Enemies
             _path = path;
         }
 
-        public override void _Ready()
-        {
-            base._Ready();
-
-            _shape = GetNode<CollisionShape2D>("CollisionShape2D");
-
-            AddChild(_weapon);
-
-            // Start the weapon fire timer to fire on a set interval.
-            _weapon.FireTimer.Timeout += FireWeapon;
-            _weapon.FireTimer.Start();
-
-            _path.FollowPath(_speed);
-        }
-
         protected virtual void FireWeapon()
         {
             _weapon.Fire();
         }
 
-        public virtual void Die()
+        public virtual async void Die()
         {
             // GD.Print(
             //     $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name} called!"
             // );
 
             // Queue free after all child projectiles die
-            _weapon.AllProjectilesDisabled += QueueFree;
-            // QueueFree();
+            // _weapon.AllProjectilesDisabled += QueueFree;
+            bool projectilesDisabled = await _weapon.WaitForAllProjectilesDisabled();
+            GD.Print(
+                $"{System.Reflection.MethodBase.GetCurrentMethod().ReflectedType}: Projectiles disabled? {projectilesDisabled}"
+            );
+            QueueFree();
         }
 
         public virtual void PlayDamageAnimation() { }

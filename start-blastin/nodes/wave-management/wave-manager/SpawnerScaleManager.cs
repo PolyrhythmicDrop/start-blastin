@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Autoloads;
 using Enemies.Spawners;
 using Godot;
@@ -135,7 +136,7 @@ namespace WaveManagement
         /// <summary>
         /// Instantiates and adds spawners to the scene based on the currently-selected formation.
         /// </summary>
-        public void AssembleFormation()
+        public async Task AssembleFormation()
         {
             GD.Print($"Assembling formation...");
             // Get the number of spawners that should be in each location.
@@ -155,7 +156,7 @@ namespace WaveManagement
                     if (requestedQuantity > activeCount)
                     {
                         int quantityToAdd = requestedQuantity - activeCount;
-                        AddSpawner(activeKvp.Key, quantityToAdd);
+                        await AddSpawner(activeKvp.Key, quantityToAdd);
                     }
                     else if (requestedQuantity < activeCount)
                     {
@@ -176,7 +177,7 @@ namespace WaveManagement
         /// </summary>
         /// <param name="location"></param>
         /// <param name="quantity"></param>
-        private void AddSpawner(SpawnerLocation location, int quantity)
+        private async Task AddSpawner(SpawnerLocation location, int quantity)
         {
             if (quantity == 0)
             {
@@ -233,9 +234,10 @@ namespace WaveManagement
                 spawner.RotationDegrees = rotationDegrees;
                 spawner.Location = location;
                 _activeSpawners[location].Add(spawner);
-                // levelNode.CallDeferred(MethodName.AddChild, spawner);
+                // AddChild(spawner);
                 // levelNode.AddChild(spawner);
-                AddChild(spawner);
+                levelNode.CallDeferred(MethodName.AddChild, spawner);
+                await ToSignal(spawner, Node.SignalName.Ready);
             }
         }
 

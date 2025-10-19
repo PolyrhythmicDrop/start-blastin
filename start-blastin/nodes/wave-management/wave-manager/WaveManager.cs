@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 using Autoloads;
 using Enemies;
 using Enemies.Spawners;
@@ -119,11 +120,11 @@ namespace WaveManagement
 
         #region Wave Play
 
-        private void InitializeFirstWave()
+        private async void InitializeFirstWave()
         {
             _enemyScaleManager.Initialize(this);
             _spawnerScaleManager.Initialize(this);
-            _spawnerScaleManager.AssembleFormation();
+            await _spawnerScaleManager.AssembleFormation();
             ScaleSpawners();
         }
 
@@ -134,10 +135,14 @@ namespace WaveManagement
             EventBus.Instance.EmitSignal(EventBus.SignalName.WaveStarted, _wave);
         }
 
-        private void EndWave()
+        private async void EndWave()
         {
             GD.Print($"Wave {_wave} ended!");
             EventBus.Instance.EmitSignal(EventBus.SignalName.WaveEnded);
+
+            bool enemiesCleared = await WaitForEnemiesToClear();
+            GD.Print($"Enemies cleared: {enemiesCleared}");
+
             IncrementWave();
         }
 
@@ -151,15 +156,31 @@ namespace WaveManagement
             // StartWave();
         }
 
+        private async Task<bool> WaitForEnemiesToClear()
+        {
+            int enemyCount = GetTree().GetNodesInGroup("enemies").Count;
+            int prevEnemyCount = enemyCount;
+            while ((enemyCount = GetTree().GetNodesInGroup("enemies").Count) > 0)
+            {
+                if (enemyCount != prevEnemyCount)
+                {
+                    GD.Print($"Enemy count: {enemyCount}");
+                    prevEnemyCount = enemyCount;
+                }
+                await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+            }
+            return true;
+        }
+
         /// <summary>
         /// Apply all relevant scaling to the current wave.
         /// </summary>
-        private void ScaleWave()
+        private async void ScaleWave()
         {
             GD.Print($"{MethodBase.GetCurrentMethod().Name}");
             SetScalers();
             ApplyDifficultyScaling();
-            _spawnerScaleManager.AssembleFormation();
+            await _spawnerScaleManager.AssembleFormation();
             ScaleSpawners();
         }
 

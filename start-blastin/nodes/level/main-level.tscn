@@ -41,3 +41,7 @@ HealthComponent = SubResource("Resource_esqth")
 Difficulty = 2
 
 [node name="WaveStartUI" parent="." instance=ExtResource("7_esqth")]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(960, 540)
+zoom = Vector2(0.75, 0.75)

@@ -1,7 +1,7 @@
 Godot Engine v4.5.1.stable.mono.official.f62fdbde1 - https://godotengine.org
 Vulkan 1.4.312 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3060 Ti
 
-Weapon equipped! <Node2D#38822479315>
+Weapon equipped! <Node2D#39057360282>
 Stats: 0.5 | 1 | Bullet | 1000
 LoadResourcePool: Adding resource from res://resources/wave-scalers/enemy-scalers/default-enemy-scaler.tres to System.Collections.Generic.List`1[WaveManagement.EnemyScaler]...
 LoadResourcePool: Adding resource from res://resources/wave-scalers/enemy-scalers/tier-1.tres to System.Collections.Generic.List`1[WaveManagement.EnemyScaler]...
@@ -36,12 +36,19 @@ Location Left has 0 spawners!
 Location Right has 0 spawners!
 WaveManagement.SpawnerScaleManager.OnSpawnersReady: Emitting event bus SpawnersReady signal!
 Autoloads.EventBus+<>c: SpawnersReady signal emitted!
+WaveStartUi: Spawners ready signal received from event bus!
 Wave 1 starting!
 EnemySpawner.ToggleSpawning: Toggling spawning to True!
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
 Wave 1 ended!
 EnemySpawner.ToggleSpawning: Toggling spawning to False!
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Enemy count: 2
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Enemy count: 1
+Enemies cleared: True
 IncrementWave
-ScaleWave
+MoveNext
 WaveManagement.ScaleManager.SelectScaler: Selecting EnemyScaler for wave 2...
 Returning tier-1-enemy-wave-config as the selected scaler!
 WaveManagement.ScaleManager.SelectScaler: Selecting SpawnerScaler for wave 2...
@@ -56,7 +63,7 @@ currentWave = 2
 enemyScaler = tier-1-enemy-wave-config
 currentSpawnScaler = tier-2-spawner-scaler
 formation = y-pincer-spawn-formation
-WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to @Node2D@19 in location Bottom...
+WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to @Node2D@24 in location Bottom...
 Enemies.Spawners.EnemySpawner.ApplySpawnerScaler
 Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
  | Weight: 10
@@ -70,7 +77,7 @@ Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
 ApplySpawnerScaler: Spawner scaler tier-2-spawner-scaler-adjusted applied! Interval: 1.6870571 | Move Duration 4.217643
 All spawners ready and added to _activeSpawners variable! Spawners:
 Location Bottom has 1 spawners!
-Is @Node2D@19 in the tree? True
+Is @Node2D@24 in the tree? True
 Location Top has 1 spawners!
 Is EnemySpawner in the tree? True
 Location Left has 0 spawners!
@@ -80,59 +87,152 @@ Autoloads.EventBus+<>c: SpawnersReady signal emitted!
 WaveStartUi: Spawners ready signal received from event bus!
 Wave 2 starting!
 EnemySpawner.ToggleSpawning: Toggling spawning to True!
-@Node2D@19.ToggleSpawning: Toggling spawning to True!
+@Node2D@24.ToggleSpawning: Toggling spawning to True!
 Wave 2 ended!
 EnemySpawner.ToggleSpawning: Toggling spawning to False!
-@Node2D@19.ToggleSpawning: Toggling spawning to False!
+@Node2D@24.ToggleSpawning: Toggling spawning to False!
+Enemy count: 8
+Enemy count: 7
+Enemy count: 6
+Enemy count: 4
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Enemy count: 3
+Enemy count: 2
+Enemy count: 1
+Enemies cleared: True
 IncrementWave
-ScaleWave
+MoveNext
 WaveManagement.ScaleManager.SelectScaler: Selecting EnemyScaler for wave 3...
-Returning tier-2-enemy-wave-config as the selected scaler!
+Returning tier-1-enemy-wave-config as the selected scaler!
 WaveManagement.ScaleManager.SelectScaler: Selecting SpawnerScaler for wave 3...
 Returning tier-2-spawner-scaler as the selected scaler!
 WaveManagement.ScaleManager.SelectScaler: Selecting SpawnerFormationScaler for wave 3...
-Returning y-pincer-spawn-formation as the selected scaler!
+Returning x-pincer-spawn-formation as the selected scaler!
 Assembling formation...
+Attempting to remove 1 spawners from Bottom...
+Attempting to remove 1 spawners from Top...
+Attempting to add 1 spawners to Left...
+Enemies.Spawners.EnemySpawner._Ready finished!
+Attempting to add 1 spawners to Right...
+Enemies.Spawners.EnemySpawner._Ready finished!
 WaveManagement.SpawnerScaleManager.ScaleSpawners:
 currentWave = 3
-enemyScaler = tier-2-enemy-wave-config
+enemyScaler = tier-1-enemy-wave-config
 currentSpawnScaler = tier-2-spawner-scaler
-formation = y-pincer-spawn-formation
-WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to @Node2D@19 in location Bottom...
+formation = x-pincer-spawn-formation
+WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to @Node2D@72 in location Left...
 Enemies.Spawners.EnemySpawner.ApplySpawnerScaler
 Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
  | Weight: 10
  | Weight: 5
 ApplySpawnerScaler: Spawner scaler tier-2-spawner-scaler-adjusted applied! Interval: 1.5786732 | Move Duration 3.9466832
-WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to EnemySpawner in location Top...
+WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to @Node2D@73 in location Right...
 Enemies.Spawners.EnemySpawner.ApplySpawnerScaler
 Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
  | Weight: 10
  | Weight: 5
 ApplySpawnerScaler: Spawner scaler tier-2-spawner-scaler-adjusted applied! Interval: 1.5786732 | Move Duration 3.9466832
 All spawners ready and added to _activeSpawners variable! Spawners:
+Location Bottom has 0 spawners!
+Location Top has 0 spawners!
+Location Left has 1 spawners!
+Is @Node2D@72 in the tree? True
+Location Right has 1 spawners!
+Is @Node2D@73 in the tree? True
+WaveManagement.SpawnerScaleManager.OnSpawnersReady: Emitting event bus SpawnersReady signal!
+Autoloads.EventBus+<>c: SpawnersReady signal emitted!
+WaveStartUi: Spawners ready signal received from event bus!
+Wave 3 starting!
+@Node2D@72.ToggleSpawning: Toggling spawning to True!
+@Node2D@73.ToggleSpawning: Toggling spawning to True!
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Wave 3 ended!
+@Node2D@72.ToggleSpawning: Toggling spawning to False!
+@Node2D@73.ToggleSpawning: Toggling spawning to False!
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Enemy count: 10
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Enemy count: 9
+Enemy count: 7
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Enemy count: 6
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Enemy count: 5
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Enemy count: 4
+Enemy count: 3
+Enemy count: 2
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Enemy count: 1
+Enemies cleared: True
+IncrementWave
+MoveNext
+WaveManagement.ScaleManager.SelectScaler: Selecting EnemyScaler for wave 4...
+Returning tier-2-enemy-wave-config as the selected scaler!
+WaveManagement.ScaleManager.SelectScaler: Selecting SpawnerScaler for wave 4...
+Returning tier-2-spawner-scaler as the selected scaler!
+WaveManagement.ScaleManager.SelectScaler: Selecting SpawnerFormationScaler for wave 4...
+Returning y-pincer-spawn-formation as the selected scaler!
+Assembling formation...
+Attempting to add 1 spawners to Bottom...
+Enemies.Spawners.EnemySpawner._Ready finished!
+Attempting to add 1 spawners to Top...
+Enemies.Spawners.EnemySpawner._Ready finished!
+Attempting to remove 1 spawners from Left...
+Attempting to remove 1 spawners from Right...
+WaveManagement.SpawnerScaleManager.ScaleSpawners:
+currentWave = 4
+enemyScaler = tier-2-enemy-wave-config
+currentSpawnScaler = tier-2-spawner-scaler
+formation = y-pincer-spawn-formation
+WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to EnemySpawner in location Bottom...
+Enemies.Spawners.EnemySpawner.ApplySpawnerScaler
+Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
+ | Weight: 10
+ | Weight: 5
+ApplySpawnerScaler: Spawner scaler tier-2-spawner-scaler-adjusted applied! Interval: 1.4849799 | Move Duration 3.7124496
+WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to @Node2D@147 in location Top...
+Enemies.Spawners.EnemySpawner.ApplySpawnerScaler
+Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
+ | Weight: 10
+ | Weight: 5
+ApplySpawnerScaler: Spawner scaler tier-2-spawner-scaler-adjusted applied! Interval: 1.4849799 | Move Duration 3.7124496
+All spawners ready and added to _activeSpawners variable! Spawners:
 Location Bottom has 1 spawners!
-Is @Node2D@19 in the tree? True
-Location Top has 1 spawners!
 Is EnemySpawner in the tree? True
+Location Top has 1 spawners!
+Is @Node2D@147 in the tree? True
 Location Left has 0 spawners!
 Location Right has 0 spawners!
 WaveManagement.SpawnerScaleManager.OnSpawnersReady: Emitting event bus SpawnersReady signal!
 Autoloads.EventBus+<>c: SpawnersReady signal emitted!
 WaveStartUi: Spawners ready signal received from event bus!
-Wave 3 starting!
+Wave 4 starting!
 EnemySpawner.ToggleSpawning: Toggling spawning to True!
-@Node2D@19.ToggleSpawning: Toggling spawning to True!
-Wave 3 ended!
+@Node2D@147.ToggleSpawning: Toggling spawning to True!
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Wave 4 ended!
 EnemySpawner.ToggleSpawning: Toggling spawning to False!
-@Node2D@19.ToggleSpawning: Toggling spawning to False!
+@Node2D@147.ToggleSpawning: Toggling spawning to False!
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Enemy count: 6
+Enemy count: 5
+Enemy count: 4
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Enemy count: 3
+Enemy count: 2
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Enemy count: 1
+Enemies cleared: True
 IncrementWave
-ScaleWave
-WaveManagement.ScaleManager.SelectScaler: Selecting EnemyScaler for wave 4...
+MoveNext
+WaveManagement.ScaleManager.SelectScaler: Selecting EnemyScaler for wave 5...
 Returning tier-3-enemy-wave-config as the selected scaler!
-WaveManagement.ScaleManager.SelectScaler: Selecting SpawnerScaler for wave 4...
+WaveManagement.ScaleManager.SelectScaler: Selecting SpawnerScaler for wave 5...
 Returning tier-2-spawner-scaler as the selected scaler!
-WaveManagement.ScaleManager.SelectScaler: Selecting SpawnerFormationScaler for wave 4...
+WaveManagement.ScaleManager.SelectScaler: Selecting SpawnerFormationScaler for wave 5...
 Returning surrounded-spawner-formation as the selected scaler!
 Assembling formation...
 Attempting to add 1 spawners to Left...
@@ -140,120 +240,81 @@ Enemies.Spawners.EnemySpawner._Ready finished!
 Attempting to add 1 spawners to Right...
 Enemies.Spawners.EnemySpawner._Ready finished!
 WaveManagement.SpawnerScaleManager.ScaleSpawners:
-currentWave = 4
+currentWave = 5
 enemyScaler = tier-3-enemy-wave-config
 currentSpawnScaler = tier-2-spawner-scaler
 formation = surrounded-spawner-formation
-WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to @Node2D@19 in location Bottom...
+WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to EnemySpawner in location Bottom...
 Enemies.Spawners.EnemySpawner.ApplySpawnerScaler
 Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
  | Weight: 10
  | Weight: 5
-ApplySpawnerScaler: Spawner scaler tier-2-spawner-scaler-adjusted applied! Interval: 1.4849799 | Move Duration 3.7124496
-WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to EnemySpawner in location Top...
+ApplySpawnerScaler: Spawner scaler tier-2-spawner-scaler-adjusted applied! Interval: 1.4012583 | Move Duration 3.503146
+WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to @Node2D@147 in location Top...
 Enemies.Spawners.EnemySpawner.ApplySpawnerScaler
 Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
  | Weight: 10
  | Weight: 5
-ApplySpawnerScaler: Spawner scaler tier-2-spawner-scaler-adjusted applied! Interval: 1.4849799 | Move Duration 3.7124496
-WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to @Node2D@114 in location Left...
+ApplySpawnerScaler: Spawner scaler tier-2-spawner-scaler-adjusted applied! Interval: 1.4012583 | Move Duration 3.503146
+WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to @Node2D@212 in location Left...
 Enemies.Spawners.EnemySpawner.ApplySpawnerScaler
 Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
  | Weight: 10
  | Weight: 5
-ApplySpawnerScaler: Spawner scaler tier-2-spawner-scaler-adjusted applied! Interval: 1.4849799 | Move Duration 3.7124496
-WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to @Node2D@115 in location Right...
+ApplySpawnerScaler: Spawner scaler tier-2-spawner-scaler-adjusted applied! Interval: 1.4012583 | Move Duration 3.503146
+WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to @Node2D@213 in location Right...
 Enemies.Spawners.EnemySpawner.ApplySpawnerScaler
 Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
  | Weight: 10
  | Weight: 5
-ApplySpawnerScaler: Spawner scaler tier-2-spawner-scaler-adjusted applied! Interval: 1.4849799 | Move Duration 3.7124496
+ApplySpawnerScaler: Spawner scaler tier-2-spawner-scaler-adjusted applied! Interval: 1.4012583 | Move Duration 3.503146
 All spawners ready and added to _activeSpawners variable! Spawners:
 Location Bottom has 1 spawners!
-Is @Node2D@19 in the tree? True
-Location Top has 1 spawners!
 Is EnemySpawner in the tree? True
-Location Left has 1 spawners!
-Is @Node2D@114 in the tree? True
-Location Right has 1 spawners!
-Is @Node2D@115 in the tree? True
-WaveManagement.SpawnerScaleManager.OnSpawnersReady: Emitting event bus SpawnersReady signal!
-Autoloads.EventBus+<>c: SpawnersReady signal emitted!
-WaveStartUi: Spawners ready signal received from event bus!
-Wave 4 starting!
-EnemySpawner.ToggleSpawning: Toggling spawning to True!
-@Node2D@19.ToggleSpawning: Toggling spawning to True!
-@Node2D@114.ToggleSpawning: Toggling spawning to True!
-@Node2D@115.ToggleSpawning: Toggling spawning to True!
-Player was crashed into! Player takes 4.8417244 damage.
-Game over, man! Game over!
-Wave 4 ended!
-EnemySpawner.ToggleSpawning: Toggling spawning to False!
-@Node2D@19.ToggleSpawning: Toggling spawning to False!
-@Node2D@114.ToggleSpawning: Toggling spawning to False!
-@Node2D@115.ToggleSpawning: Toggling spawning to False!
-IncrementWave
-ScaleWave
-WaveManagement.ScaleManager.SelectScaler: Selecting EnemyScaler for wave 5...
-Returning tier-3-enemy-wave-config as the selected scaler!
-WaveManagement.ScaleManager.SelectScaler: Selecting SpawnerScaler for wave 5...
-Returning tier-3-spawner-scaler as the selected scaler!
-WaveManagement.ScaleManager.SelectScaler: Selecting SpawnerFormationScaler for wave 5...
-Returning surrounded-spawner-formation as the selected scaler!
-Assembling formation...
-WaveManagement.SpawnerScaleManager.ScaleSpawners:
-currentWave = 5
-enemyScaler = tier-3-enemy-wave-config
-currentSpawnScaler = tier-3-spawner-scaler
-formation = surrounded-spawner-formation
-WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to @Node2D@19 in location Bottom...
-Enemies.Spawners.EnemySpawner.ApplySpawnerScaler
-Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
- | Weight: 5
- | Weight: 15
-ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.2220824 | Move Duration 3.0552058
-WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to EnemySpawner in location Top...
-Enemies.Spawners.EnemySpawner.ApplySpawnerScaler
-Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
- | Weight: 5
- | Weight: 15
-ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.2220824 | Move Duration 3.0552058
-WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to @Node2D@114 in location Left...
-Enemies.Spawners.EnemySpawner.ApplySpawnerScaler
-Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
- | Weight: 5
- | Weight: 15
-ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.2220824 | Move Duration 3.0552058
-WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to @Node2D@115 in location Right...
-Enemies.Spawners.EnemySpawner.ApplySpawnerScaler
-Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
- | Weight: 5
- | Weight: 15
-ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.2220824 | Move Duration 3.0552058
-All spawners ready and added to _activeSpawners variable! Spawners:
-Location Bottom has 1 spawners!
-Is @Node2D@19 in the tree? True
 Location Top has 1 spawners!
-Is EnemySpawner in the tree? True
+Is @Node2D@147 in the tree? True
 Location Left has 1 spawners!
-Is @Node2D@114 in the tree? True
+Is @Node2D@212 in the tree? True
 Location Right has 1 spawners!
-Is @Node2D@115 in the tree? True
+Is @Node2D@213 in the tree? True
 WaveManagement.SpawnerScaleManager.OnSpawnersReady: Emitting event bus SpawnersReady signal!
 Autoloads.EventBus+<>c: SpawnersReady signal emitted!
 WaveStartUi: Spawners ready signal received from event bus!
 Wave 5 starting!
 EnemySpawner.ToggleSpawning: Toggling spawning to True!
-@Node2D@19.ToggleSpawning: Toggling spawning to True!
-@Node2D@114.ToggleSpawning: Toggling spawning to True!
-@Node2D@115.ToggleSpawning: Toggling spawning to True!
+@Node2D@147.ToggleSpawning: Toggling spawning to True!
+@Node2D@212.ToggleSpawning: Toggling spawning to True!
+@Node2D@213.ToggleSpawning: Toggling spawning to True!
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
 Wave 5 ended!
 EnemySpawner.ToggleSpawning: Toggling spawning to False!
-@Node2D@19.ToggleSpawning: Toggling spawning to False!
-@Node2D@114.ToggleSpawning: Toggling spawning to False!
-@Node2D@115.ToggleSpawning: Toggling spawning to False!
+@Node2D@147.ToggleSpawning: Toggling spawning to False!
+@Node2D@212.ToggleSpawning: Toggling spawning to False!
+@Node2D@213.ToggleSpawning: Toggling spawning to False!
+Enemy count: 22
+Enemy count: 21
+Enemy count: 20
+Enemy count: 19
+Enemy count: 18
+Enemy count: 17
+Enemy count: 15
+Enemy count: 14
+Enemy count: 12
+Enemy count: 11
+Enemy count: 10
+Enemy count: 8
+Enemy count: 7
+Enemy count: 6
+Enemy count: 5
+Enemy count: 4
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Enemy count: 3
+Enemy count: 2
+Enemy count: 1
+Enemies cleared: True
 IncrementWave
-ScaleWave
+MoveNext
 WaveManagement.ScaleManager.SelectScaler: Selecting EnemyScaler for wave 6...
 Returning tier-3-enemy-wave-config as the selected scaler!
 WaveManagement.ScaleManager.SelectScaler: Selecting SpawnerScaler for wave 6...
@@ -268,13 +329,13 @@ currentWave = 6
 enemyScaler = tier-3-enemy-wave-config
 currentSpawnScaler = tier-3-spawner-scaler
 formation = y-pincer-spawn-formation
-WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to @Node2D@19 in location Bottom...
+WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to EnemySpawner in location Bottom...
 Enemies.Spawners.EnemySpawner.ApplySpawnerScaler
 Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
  | Weight: 5
  | Weight: 15
 ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.1302377 | Move Duration 2.8255942
-WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to EnemySpawner in location Top...
+WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to @Node2D@147 in location Top...
 Enemies.Spawners.EnemySpawner.ApplySpawnerScaler
 Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
  | Weight: 5
@@ -282,20 +343,212 @@ Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
 ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.1302377 | Move Duration 2.8255942
 All spawners ready and added to _activeSpawners variable! Spawners:
 Location Bottom has 1 spawners!
-Is @Node2D@19 in the tree? True
-Location Top has 1 spawners!
 Is EnemySpawner in the tree? True
+Location Top has 1 spawners!
+Is @Node2D@147 in the tree? True
 Location Left has 0 spawners!
 Location Right has 0 spawners!
 WaveManagement.SpawnerScaleManager.OnSpawnersReady: Emitting event bus SpawnersReady signal!
 Autoloads.EventBus+<>c: SpawnersReady signal emitted!
 WaveStartUi: Spawners ready signal received from event bus!
-ERROR: 390 RID allocations of type 'P11GodotArea2D' were leaked at exit.
+Wave 6 starting!
+EnemySpawner.ToggleSpawning: Toggling spawning to True!
+@Node2D@147.ToggleSpawning: Toggling spawning to True!
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Wave 6 ended!
+EnemySpawner.ToggleSpawning: Toggling spawning to False!
+@Node2D@147.ToggleSpawning: Toggling spawning to False!
+Enemy count: 9
+Enemy count: 7
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Enemy count: 6
+Enemy count: 5
+Enemy count: 3
+Enemy count: 2
+Enemy count: 1
+Enemies cleared: True
+IncrementWave
+MoveNext
+WaveManagement.ScaleManager.SelectScaler: Selecting EnemyScaler for wave 7...
+Returning tier-3-enemy-wave-config as the selected scaler!
+WaveManagement.ScaleManager.SelectScaler: Selecting SpawnerScaler for wave 7...
+Returning tier-3-spawner-scaler as the selected scaler!
+WaveManagement.ScaleManager.SelectScaler: Selecting SpawnerFormationScaler for wave 7...
+Returning y-pincer-spawn-formation as the selected scaler!
+Assembling formation...
+WaveManagement.SpawnerScaleManager.ScaleSpawners:
+currentWave = 7
+enemyScaler = tier-3-enemy-wave-config
+currentSpawnScaler = tier-3-spawner-scaler
+formation = y-pincer-spawn-formation
+WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to EnemySpawner in location Bottom...
+Enemies.Spawners.EnemySpawner.ApplySpawnerScaler
+Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
+ | Weight: 5
+ | Weight: 15
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.0460664 | Move Duration 2.615166
+WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to @Node2D@147 in location Top...
+Enemies.Spawners.EnemySpawner.ApplySpawnerScaler
+Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
+ | Weight: 5
+ | Weight: 15
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 1.0460664 | Move Duration 2.615166
+All spawners ready and added to _activeSpawners variable! Spawners:
+Location Bottom has 1 spawners!
+Is EnemySpawner in the tree? True
+Location Top has 1 spawners!
+Is @Node2D@147 in the tree? True
+Location Left has 0 spawners!
+Location Right has 0 spawners!
+WaveManagement.SpawnerScaleManager.OnSpawnersReady: Emitting event bus SpawnersReady signal!
+Autoloads.EventBus+<>c: SpawnersReady signal emitted!
+WaveStartUi: Spawners ready signal received from event bus!
+Wave 7 starting!
+EnemySpawner.ToggleSpawning: Toggling spawning to True!
+@Node2D@147.ToggleSpawning: Toggling spawning to True!
+Wave 7 ended!
+EnemySpawner.ToggleSpawning: Toggling spawning to False!
+@Node2D@147.ToggleSpawning: Toggling spawning to False!
+Enemy count: 11
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Enemy count: 10
+Enemy count: 9
+Enemy count: 8
+Enemy count: 6
+Enemy count: 4
+Enemy count: 2
+Enemy count: 1
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Enemies cleared: True
+IncrementWave
+MoveNext
+WaveManagement.ScaleManager.SelectScaler: Selecting EnemyScaler for wave 8...
+Returning tier-3-enemy-wave-config as the selected scaler!
+WaveManagement.ScaleManager.SelectScaler: Selecting SpawnerScaler for wave 8...
+Returning tier-3-spawner-scaler as the selected scaler!
+WaveManagement.ScaleManager.SelectScaler: Selecting SpawnerFormationScaler for wave 8...
+Returning x-pincer-spawn-formation as the selected scaler!
+Assembling formation...
+Attempting to remove 1 spawners from Bottom...
+Attempting to remove 1 spawners from Top...
+Attempting to add 1 spawners to Left...
+Enemies.Spawners.EnemySpawner._Ready finished!
+Attempting to add 1 spawners to Right...
+Enemies.Spawners.EnemySpawner._Ready finished!
+WaveManagement.SpawnerScaleManager.ScaleSpawners:
+currentWave = 8
+enemyScaler = tier-3-enemy-wave-config
+currentSpawnScaler = tier-3-spawner-scaler
+formation = x-pincer-spawn-formation
+WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to @Node2D@562 in location Left...
+Enemies.Spawners.EnemySpawner.ApplySpawnerScaler
+Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
+ | Weight: 5
+ | Weight: 15
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 0.9679512 | Move Duration 2.419878
+WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to @Node2D@563 in location Right...
+Enemies.Spawners.EnemySpawner.ApplySpawnerScaler
+Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
+ | Weight: 5
+ | Weight: 15
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 0.9679512 | Move Duration 2.419878
+All spawners ready and added to _activeSpawners variable! Spawners:
+Location Bottom has 0 spawners!
+Location Top has 0 spawners!
+Location Left has 1 spawners!
+Is @Node2D@562 in the tree? True
+Location Right has 1 spawners!
+Is @Node2D@563 in the tree? True
+WaveManagement.SpawnerScaleManager.OnSpawnersReady: Emitting event bus SpawnersReady signal!
+Autoloads.EventBus+<>c: SpawnersReady signal emitted!
+WaveStartUi: Spawners ready signal received from event bus!
+Wave 8 starting!
+@Node2D@562.ToggleSpawning: Toggling spawning to True!
+@Node2D@563.ToggleSpawning: Toggling spawning to True!
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Wave 8 ended!
+@Node2D@562.ToggleSpawning: Toggling spawning to False!
+@Node2D@563.ToggleSpawning: Toggling spawning to False!
+Enemy count: 14
+Enemy count: 13
+Enemy count: 11
+Enemy count: 10
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Enemy count: 9
+Enemy count: 8
+Enemy count: 7
+Enemy count: 6
+Enemy count: 5
+Enemy count: 4
+Enemy count: 3
+Enemy count: 2
+Enemies.EnemyNode+<Die>d__25: Projectiles disabled? True
+Enemy count: 1
+Enemies cleared: True
+IncrementWave
+MoveNext
+WaveManagement.ScaleManager.SelectScaler: Selecting EnemyScaler for wave 9...
+Returning tier-3-enemy-wave-config as the selected scaler!
+WaveManagement.ScaleManager.SelectScaler: Selecting SpawnerScaler for wave 9...
+Returning tier-3-spawner-scaler as the selected scaler!
+WaveManagement.ScaleManager.SelectScaler: Selecting SpawnerFormationScaler for wave 9...
+Returning surrounded-spawner-formation as the selected scaler!
+Assembling formation...
+Attempting to add 1 spawners to Bottom...
+Enemies.Spawners.EnemySpawner._Ready finished!
+Attempting to add 1 spawners to Top...
+Enemies.Spawners.EnemySpawner._Ready finished!
+WaveManagement.SpawnerScaleManager.ScaleSpawners:
+currentWave = 9
+enemyScaler = tier-3-enemy-wave-config
+currentSpawnScaler = tier-3-spawner-scaler
+formation = surrounded-spawner-formation
+WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to EnemySpawner in location Bottom...
+Enemies.Spawners.EnemySpawner.ApplySpawnerScaler
+Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
+ | Weight: 5
+ | Weight: 15
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 0.8947592 | Move Duration 2.236898
+WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to @Node2D@724 in location Top...
+Enemies.Spawners.EnemySpawner.ApplySpawnerScaler
+Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
+ | Weight: 5
+ | Weight: 15
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 0.8947592 | Move Duration 2.236898
+WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to @Node2D@562 in location Left...
+Enemies.Spawners.EnemySpawner.ApplySpawnerScaler
+Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
+ | Weight: 5
+ | Weight: 15
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 0.8947592 | Move Duration 2.236898
+WaveManagement.SpawnerScaleManager.ScaleSpawners: Applying enemy scaler and spawner scaler to @Node2D@563 in location Right...
+Enemies.Spawners.EnemySpawner.ApplySpawnerScaler
+Enemies.Spawners.EnemySpawner.ApplySpawnerScaler: Spawn pool applied!
+ | Weight: 5
+ | Weight: 15
+ApplySpawnerScaler: Spawner scaler tier-3-spawner-scaler-adjusted applied! Interval: 0.8947592 | Move Duration 2.236898
+All spawners ready and added to _activeSpawners variable! Spawners:
+Location Bottom has 1 spawners!
+Is EnemySpawner in the tree? True
+Location Top has 1 spawners!
+Is @Node2D@724 in the tree? True
+Location Left has 1 spawners!
+Is @Node2D@562 in the tree? True
+Location Right has 1 spawners!
+Is @Node2D@563 in the tree? True
+WaveManagement.SpawnerScaleManager.OnSpawnersReady: Emitting event bus SpawnersReady signal!
+Autoloads.EventBus+<>c: SpawnersReady signal emitted!
+WaveStartUi: Spawners ready signal received from event bus!
+ERROR: 605 RID allocations of type 'P11GodotArea2D' were leaked at exit.
 ERROR: 1 RID allocations of type 'P12GodotShape2D' were leaked at exit.
-WARNING: 1560 RIDs of type "CanvasItem" were leaked.
+WARNING: 2420 RIDs of type "CanvasItem" were leaked.
    at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2678)
 ERROR: 1 shaders of type CanvasShaderRD were never freed
    at: ~ShaderRD (servers/rendering/renderer_rd/shader_rd.cpp:1044)
 ERROR: 1 RID allocations of type 'N10RendererRD15MaterialStorage8MaterialE' were leaked at exit.
 ERROR: 1 RID allocations of type 'N10RendererRD15MaterialStorage6ShaderE' were leaked at exit.
 ERROR: 1 RID allocations of type 'N10RendererRD14TextureStorage7TextureE' were leaked at exit.
+WARNING: 2 RIDs of type "UniformBuffer" were leaked.
+   at: _free_rids (servers/rendering/rendering_device.cpp:6981)
+WARNING: 2 RIDs of type "Texture" were leaked.
+   at: finalize (servers/rendering/rendering_device.cpp:7191)

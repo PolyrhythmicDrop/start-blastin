@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 using Components;
 using Godot;
 using Interfaces;
@@ -98,11 +99,21 @@ namespace Weapons
         public override void _Process(double delta)
         {
             // Only emit once when transitioning from active to inactive
-            if (_activeProjectileCount <= 0 && !_allProjectilesDisabledSignalEmitted)
+            // if (_activeProjectileCount <= 0 && !_allProjectilesDisabledSignalEmitted)
+            // {
+            //     EmitSignal(SignalName.AllProjectilesDisabled);
+            //     _allProjectilesDisabledSignalEmitted = true;
+            // }
+        }
+
+        public async Task<bool> WaitForAllProjectilesDisabled()
+        {
+            // Find any active projectiles in the pool. If you find any, wait for the next frame. Else, return true.
+            while (_pool.Find(proj => proj.Active) != null)
             {
-                EmitSignal(SignalName.AllProjectilesDisabled);
-                _allProjectilesDisabledSignalEmitted = true;
+                await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
             }
+            return true;
         }
 
         public virtual void OnProjectileCollision(CollisionComponent collision)

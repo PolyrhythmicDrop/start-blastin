@@ -73,7 +73,6 @@ namespace Enemies
             // );
 
             _weapon.FireTimer.Stop();
-
             _shape.Disabled = true;
 
             // Make the base and engine sprites invisible.

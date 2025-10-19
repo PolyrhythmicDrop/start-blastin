@@ -114,7 +114,7 @@ namespace WaveManagement
             EmitSignal(SignalName.SpawnersReady);
         }
 
-        #region Spawner Management
+        #region Management
 
         private void PrintScalerProperties(WaveScaler scaler)
         {
@@ -233,8 +233,9 @@ namespace WaveManagement
                 spawner.RotationDegrees = rotationDegrees;
                 spawner.Location = location;
                 _activeSpawners[location].Add(spawner);
-                levelNode.CallDeferred(MethodName.AddChild, spawner);
+                // levelNode.CallDeferred(MethodName.AddChild, spawner);
                 // levelNode.AddChild(spawner);
+                AddChild(spawner);
             }
         }
 

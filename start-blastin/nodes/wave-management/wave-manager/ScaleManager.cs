@@ -15,7 +15,7 @@ namespace WaveManagement
             LoadResourcePools();
         }
 
-        public void Initialize(WaveManager waveManager)
+        public virtual void Initialize(WaveManager waveManager)
         {
             _waveManager = waveManager;
         }
@@ -94,7 +94,7 @@ namespace WaveManagement
             where T : WaveScaler
         {
             GD.Print(
-                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Selecting scaler for type {typeof(T).Name} for {wave}, using {defaultPath} as the default path..."
+                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Selecting {typeof(T).Name} for wave {wave}..."
             );
             try
             {
@@ -105,7 +105,7 @@ namespace WaveManagement
                 if (matchingConfigs.Count <= 0)
                 {
                     throw new InvalidOperationException(
-                        $"Could not find a {typeof(T).Name} that fits wave {wave} or is set to infinite! Loading default config at {defaultPath}..."
+                        $"Could not find a {typeof(T).Name} that fits wave {wave} or that is set to infinite! Loading default config path..."
                     );
                 }
 

@@ -43,18 +43,18 @@ namespace WaveManagement
             _waveTimer.WaitTime = _waveTime;
 
             _enemyScaleManager = GetNode<EnemyScaleManager>("%EnemyScaleManager");
-            _enemyScaleManager.Initialize(this);
+            // _enemyScaleManager.Initialize(this);
 
             _spawnerScaleManager = GetNode<SpawnerScaleManager>("%SpawnerScaleManager");
-            _spawnerScaleManager.Initialize(this);
+            // _spawnerScaleManager.Initialize(this);
+
+            ConnectSignals();
 
             SetBaseDifficultyModifier();
             // LoadConfigPools();
-            SetScalers();
-
-            ScaleSpawners();
-
-            StartWave();
+            // SetScalers();
+            // ScaleSpawners();
+            InitializeFirstWave();
         }
 
         /// <summary>
@@ -77,6 +77,11 @@ namespace WaveManagement
                     break;
             }
             GD.Print($"Base difficulty modifier set: {Difficulty} - {_difficultyModifier}");
+        }
+
+        private void ConnectSignals()
+        {
+            EventBus.Instance.StartWaveButtonPressed += StartWave;
         }
 
         #endregion
@@ -114,12 +119,18 @@ namespace WaveManagement
 
         #region Wave Play
 
+        private void InitializeFirstWave()
+        {
+            _enemyScaleManager.Initialize(this);
+            _spawnerScaleManager.Initialize(this);
+            _spawnerScaleManager.AssembleFormation();
+            ScaleSpawners();
+        }
 
         private void StartWave()
         {
             GD.Print($"Wave {_wave} starting!");
-            _waveTimer.WaitTime = _waveTime;
-            _waveTimer.Start();
+            _waveTimer.Start(_waveTime);
             EventBus.Instance.EmitSignal(EventBus.SignalName.WaveStarted, _wave);
         }
 
@@ -137,7 +148,7 @@ namespace WaveManagement
             ScaleWave();
             // Automatically start the next wave for now.
             // TODO: Don't call this here. Instead, call it at the end of the shop, once the player is ready to move on to the next wave.
-            StartWave();
+            // StartWave();
         }
 
         /// <summary>
@@ -148,6 +159,7 @@ namespace WaveManagement
             GD.Print($"{MethodBase.GetCurrentMethod().Name}");
             SetScalers();
             ApplyDifficultyScaling();
+            _spawnerScaleManager.AssembleFormation();
             ScaleSpawners();
         }
 
@@ -155,7 +167,8 @@ namespace WaveManagement
         {
             GD.Print($"{MethodBase.GetCurrentMethod().Name}");
             _wave = 1;
-            ScaleWave();
+            InitializeFirstWave();
+            // ScaleWave();
         }
 
         #endregion

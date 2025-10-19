@@ -1,5 +1,3 @@
-using System;
-using System.Reflection;
 using Godot;
 
 public partial class EntityPath : Path2D
@@ -23,11 +21,8 @@ public partial class EntityPath : Path2D
     /// Makes any child of this EntityPath follow the path at a set speed.
     /// </summary>
     /// <param name="speed">The speed at which the child should follow the path.</param>
-    public void FollowPath(float speed)
+    public virtual void FollowPath(float speed)
     {
-        // GD.Print(
-        //     $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Following {Name} at {speed}..."
-        // );
         float pathLength = Curve.GetBakedLength();
         float duration = Mathf.Max(pathLength / speed, 0.5f);
 

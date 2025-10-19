@@ -3,7 +3,7 @@ using Godot;
 
 namespace WaveManagement
 {
-    public enum Location
+    public enum SpawnerLocation
     {
         Top,
         Left,
@@ -14,15 +14,15 @@ namespace WaveManagement
     [GlobalClass]
     public partial class SpawnerFormationScaler : WaveScaler
     {
-        private Godot.Collections.Dictionary<Location, int> _formation;
+        private Godot.Collections.Dictionary<SpawnerLocation, int> _formation;
 
         /// <summary>
         /// Layout and number of spawners at each location.
         /// </summary>
         /// <remarks>
-        /// The Key is a <see cref="Location"/>, and the Value is the number of spawners that should be at that location.
+        /// The Key is a <see cref="SpawnerLocation"/>, and the Value is the number of spawners that should be at that location.
         /// </remarks>
         [Export]
-        public Godot.Collections.Dictionary<Location, int> Formation;
+        public Godot.Collections.Dictionary<SpawnerLocation, int> Formation;
     }
 }

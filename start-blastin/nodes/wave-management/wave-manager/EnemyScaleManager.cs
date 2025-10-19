@@ -9,7 +9,6 @@ namespace WaveManagement
     [GlobalClass]
     public partial class EnemyScaleManager : ScaleManager
     {
-        // private WaveManager _waveManager;
         private string _defaultEnemyScaler;
         private EnemyScaler _currentEnemyScaler;
         private List<EnemyScaler> _enemyScalerPool = new();
@@ -22,6 +21,12 @@ namespace WaveManagement
         }
 
         public EnemyScaler CurrentEnemyScaler => _currentEnemyScaler;
+
+        public override void Initialize(WaveManager waveManager)
+        {
+            base.Initialize(waveManager);
+            _currentEnemyScaler = ResourceLoader.Load<EnemyScaler>(_defaultEnemyScaler);
+        }
 
         protected override void LoadResourcePools()
         {

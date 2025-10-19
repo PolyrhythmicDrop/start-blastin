@@ -41,9 +41,9 @@ namespace Enemies
 
         public virtual void Initialize(EnemyResource enemyResource)
         {
-            _healthComponent = enemyResource.HealthComponent;
+            _healthComponent = (HealthComponent)enemyResource.HealthComponent.Duplicate();
             _healthComponent.Initialize(this);
-            _baseMaxHealth = enemyResource.HealthComponent.MaxHealth;
+            _baseMaxHealth = _healthComponent.MaxHealth;
 
             _weapon = WeaponFactory.CreateWeapon(enemyResource.WeaponResource, true);
             _baseFireRate = enemyResource.WeaponResource.Stats.FireRate;

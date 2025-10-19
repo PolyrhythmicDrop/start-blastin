@@ -61,6 +61,7 @@ folder_colors={
 
 projectiles=""
 enemy-spawners="Enemy spawners"
+level="A level in the game."
 
 [input]
 

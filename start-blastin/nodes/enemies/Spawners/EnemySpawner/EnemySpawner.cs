@@ -13,12 +13,13 @@ namespace Enemies.Spawners
         private Path2D _path;
         private PathFollow2D _pathFollow;
         private Curve2D _curve;
-        private float _pointMoveDuration;
-        private float _spawnInterval;
+        private float _pointMoveDuration = 5.0f;
+        private float _spawnInterval = 2.0f;
+        private SpawnerLocation _location;
 
         // Base stats
-        private float _baseMoveDuration;
-        private float _baseSpawnInterval;
+        private float _baseMoveDuration = 5.0f;
+        private float _baseSpawnInterval = 2.0f;
 
         private Timer _spawnTimer;
 
@@ -72,14 +73,28 @@ namespace Enemies.Spawners
             set => _spawnPool = new SpawnPool(value);
         }
 
+        [Export]
+        public SpawnerLocation Location
+        {
+            get => _location;
+            set => _location = value;
+        }
+
+        public int CurrentWave
+        {
+            get => _currentWave;
+            set => _currentWave = value;
+        }
+
         public override void _Ready()
         {
             // Set base stats:
-            _baseMoveDuration = _pointMoveDuration;
-            _baseSpawnInterval = _spawnInterval;
+            // _baseMoveDuration = _pointMoveDuration;
+            // _baseSpawnInterval = _spawnInterval;
 
             _path = GetNode<Path2D>("%Path2D");
             _pathFollow = _path.GetNode<PathFollow2D>("%PathFollow2D");
+            _path.Curve = _curve;
 
             _spawnPoint = _pathFollow.GetNode<Node2D>("%SpawnPoint");
             _spawnParent = GetNode<Node>("%SpawnParent");
@@ -105,7 +120,12 @@ namespace Enemies.Spawners
                 Callable.From(() => ToggleSpawning(false))
             );
 
+            // ToggleSpawning(true);
             MoveSpawnPoint();
+
+            GD.Print(
+                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name} finished!"
+            );
         }
 
         public override void _Process(double delta)
@@ -167,6 +187,23 @@ namespace Enemies.Spawners
             entityPath.Curve = enemyResource.PathCurve;
             entityPath.GlobalPosition = _spawnPoint.GlobalPosition;
 
+            switch (_location)
+            {
+                default:
+                case SpawnerLocation.Top:
+                    entityPath.RotationDegrees = 0;
+                    break;
+                case SpawnerLocation.Left:
+                    entityPath.RotationDegrees = 270;
+                    break;
+                case SpawnerLocation.Right:
+                    entityPath.RotationDegrees = 90;
+                    break;
+                case SpawnerLocation.Bottom:
+                    entityPath.RotationDegrees = 180;
+                    break;
+            }
+
             enemy.SetPath(entityPath);
 
             _spawnParent.AddChild(entityPath);
@@ -185,27 +222,48 @@ namespace Enemies.Spawners
             tween.SetLoops();
         }
 
-        public void SetEnemyScaler(EnemyScaler config)
+        public void SetEnemyScaler(EnemyScaler scaler)
         {
-            _enemyScaler = config;
+            _enemyScaler = scaler;
         }
 
         public void ApplySpawnerScaler(SpawnerScaler spawnerScaler, int wave)
         {
+            GD.Print(
+                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}"
+            );
+            float waveMultiplier = Mathf.Log(1 + wave);
+            _spawnPool = new SpawnPool(spawnerScaler.SpawnPool);
+
+            GD.Print(
+                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Spawn pool applied!"
+            );
+            foreach (SpawnData spawnData in _spawnPool)
+            {
+                GD.Print($"{spawnData.EnemyResource.ResourceName} | Weight: {spawnData.Weight}");
+            }
+
             // Don't apply scaling on the first wave.
             if (wave == 1)
             {
+                _spawnInterval = _baseSpawnInterval;
+                _pointMoveDuration = _baseMoveDuration;
                 return;
             }
-            float waveMultiplier = Mathf.Log(1 + wave);
+            // Percentage application
+            float spawnPercentReduction =
+                (spawnerScaler.SpawnIntervalModifier / 100f) * waveMultiplier;
+            _spawnInterval = Mathf.Max(0.1f, _baseSpawnInterval * (1 - spawnPercentReduction));
 
-            _spawnPool = new SpawnPool(spawnerScaler.SpawnPool);
+            float movePercentReduction =
+                (spawnerScaler.MoveDurationModifier / 100f) * waveMultiplier;
+            _pointMoveDuration = Mathf.Max(0.2f, _baseMoveDuration * (1 - movePercentReduction));
 
-            float logSpawnModifier = spawnerScaler.SpawnIntervalModifier * waveMultiplier;
-            _spawnInterval = Mathf.Max(0.1f, _baseSpawnInterval * (1 - logSpawnModifier));
+            // float logSpawnModifier = spawnerScaler.SpawnIntervalModifier * waveMultiplier;
+            // _spawnInterval = Mathf.Max(0.1f, _baseSpawnInterval * (1 - logSpawnModifier));
 
-            float logMoveModifier = spawnerScaler.MoveDurationModifier * waveMultiplier;
-            _pointMoveDuration = Mathf.Max(0.2f, _baseMoveDuration * (1 - logMoveModifier));
+            // float logMoveModifier = spawnerScaler.MoveDurationModifier * waveMultiplier;
+            // _pointMoveDuration = Mathf.Max(0.2f, _baseMoveDuration * (1 - logMoveModifier));
 
             GD.Print(
                 $"{MethodBase.GetCurrentMethod().Name}: Spawner scaler {spawnerScaler.ResourceName} applied! Interval: {_spawnInterval} | Move Duration {_pointMoveDuration}"
@@ -218,7 +276,7 @@ namespace Enemies.Spawners
         /// <param name="spawn">Whether or not to spawn enemies.</param>
         public void ToggleSpawning(bool spawn)
         {
-            GD.Print($"{MethodBase.GetCurrentMethod().Name}: Toggling spawning to {spawn}!");
+            GD.Print($"{Name}.{MethodBase.GetCurrentMethod().Name}: Toggling spawning to {spawn}!");
             if (spawn)
             {
                 _spawnTimer.Start(_spawnInterval);

@@ -8,4 +8,5 @@ script = ExtResource("1_8grec")
 Formation = Dictionary[int, int]({
 0: 1
 })
+MaxWave = 1
 metadata/_custom_type_script = "uid://b40t8najievo0"

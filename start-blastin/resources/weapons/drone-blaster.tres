@@ -9,7 +9,7 @@ resource_name = "drone-blaster"
 script = ExtResource("1_yebq7")
 Damage = 0.5
 FireRate = 2.0
-ProjSpeed = 300.0
+ProjectileSpeed = 400.0
 metadata/_custom_type_script = "uid://bytfm61mpkr5u"
 
 [resource]

@@ -136,10 +136,9 @@ namespace Enemies
             // );
 
             // Queue free after all child projectiles die
-            // _weapon.AllProjectilesDisabled += QueueFree;
             bool projectilesDisabled = await _weapon.WaitForAllProjectilesDisabled();
             GD.Print(
-                $"{System.Reflection.MethodBase.GetCurrentMethod().ReflectedType}: Projectiles disabled? {projectilesDisabled}"
+                $"{MethodBase.GetCurrentMethod().ReflectedType}: Projectiles disabled? {projectilesDisabled}"
             );
             QueueFree();
         }

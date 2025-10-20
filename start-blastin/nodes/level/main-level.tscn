@@ -18,6 +18,7 @@ metadata/_custom_type_script = "uid://de8iusxhs0qem"
 [node name="MainLevel" type="Node" groups=["level"]]
 
 [node name="TextureRect" type="TextureRect" parent="."]
+z_index = -100
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -41,7 +42,3 @@ HealthComponent = SubResource("Resource_esqth")
 Difficulty = 2
 
 [node name="WaveStartUI" parent="." instance=ExtResource("7_esqth")]
-
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(960, 540)
-zoom = Vector2(0.75, 0.75)

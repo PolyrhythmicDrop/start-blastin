@@ -12,8 +12,8 @@ namespace Enemies
         private AnimatedSprite2D _engine;
         private AnimatedSprite2D _destruction;
 
-        private Vector2 _currentGlobalPosition;
-        private Vector2 _lastGlobalPosition;
+        // private Vector2 _currentGlobalPosition;
+        // private Vector2 _lastGlobalPosition;
 
         public override void _Ready()
         {
@@ -35,12 +35,12 @@ namespace Enemies
             _lastGlobalPosition = _currentGlobalPosition;
             _currentGlobalPosition = GlobalPosition;
 
-            Vector2 motion = _currentGlobalPosition - _lastGlobalPosition;
+            // Vector2 motion = _currentGlobalPosition - _lastGlobalPosition;
 
             base._Process(delta);
             SetMoveAnimation();
 
-            KinematicCollision2D collision = MoveAndCollide(motion, true);
+            KinematicCollision2D collision = MoveAndCollide(_motion, true);
 
             if (collision != null)
             {

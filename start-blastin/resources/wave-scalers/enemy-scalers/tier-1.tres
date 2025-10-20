@@ -6,10 +6,10 @@
 resource_local_to_scene = true
 resource_name = "tier-1-enemy-wave-config"
 script = ExtResource("1_hko35")
-SpeedModifier = 0.1
-CrashDamageModifier = 0.2
-MaxHealthModifier = 0.2
-FireRateModifier = 0.1
-WeaponDamageModifier = 0.3
+SpeedModifier = 10.0
+CrashDamageModifier = 10.0
+MaxHealthModifier = 10.0
+FireRateModifier = 10.0
+WeaponDamageModifier = 10.0
 MaxWave = 3
 metadata/_custom_type_script = "uid://cjers0xbt0i73"

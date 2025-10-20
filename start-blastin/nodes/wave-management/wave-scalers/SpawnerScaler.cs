@@ -39,12 +39,6 @@ namespace WaveManagement
             set => _spawnIntervalModifier = value;
         }
 
-        public override void ApplyDifficultyModifier(float difficultyMod)
-        {
-            // _moveDurationModifier += difficultyMod;
-            // _spawnIntervalModifier += difficultyMod;
-        }
-
         public SpawnerScaler GetAdjustedScaler(float difficultyMod, int wave)
         {
             if (wave == 1)

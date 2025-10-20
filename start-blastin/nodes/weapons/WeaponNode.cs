@@ -13,11 +13,12 @@ namespace Weapons
     public partial class WeaponNode : Node2D
     {
         private WeaponStats _stats;
+        private ProjectilePool _pool;
         private bool _enemyOwned;
         private bool _ownerSet;
-        private ProjectilePool _pool;
         private int _activeProjectileCount;
         private bool _allProjectilesDisabledSignalEmitted;
+        private IVelocityProvider _velocityProvider;
 
         public WeaponStats Stats => _stats;
         public bool EnemyOwned
@@ -46,12 +47,16 @@ namespace Weapons
         }
 
         public Node ProjectileParent;
-        public virtual Vector2 ProjSpawnPoint
-        {
-            get => GlobalPosition;
-        }
+        public virtual Vector2 ProjSpawnPoint => GlobalPosition;
+
         public Timer FireTimer;
         public Callable HitCallable;
+
+        public IVelocityProvider VelocityProvider
+        {
+            get => _velocityProvider;
+            set => _velocityProvider = value;
+        }
 
         public WeaponNode()
         {
@@ -96,16 +101,6 @@ namespace Weapons
             AddChild(FireTimer);
         }
 
-        public override void _Process(double delta)
-        {
-            // Only emit once when transitioning from active to inactive
-            // if (_activeProjectileCount <= 0 && !_allProjectilesDisabledSignalEmitted)
-            // {
-            //     EmitSignal(SignalName.AllProjectilesDisabled);
-            //     _allProjectilesDisabledSignalEmitted = true;
-            // }
-        }
-
         public async Task<bool> WaitForAllProjectilesDisabled()
         {
             // Find any active projectiles in the pool. If you find any, wait for the next frame. Else, return true.
@@ -138,6 +133,11 @@ namespace Weapons
         {
             Projectile projectile = _pool.RequestProjectile();
             projectile.Position = ProjSpawnPoint;
+
+            if (_velocityProvider != null)
+            {
+                projectile.AddSourceVelocity();
+            }
 
             _allProjectilesDisabledSignalEmitted = false;
         }

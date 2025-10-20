@@ -13,8 +13,10 @@ namespace Projectiles
         // protected Area2D _area;
         protected bool _active;
         protected Timer _deactivationTimer;
-        protected float _speed;
+        protected float _baseSpeed;
+        protected float _currentSpeed;
         protected WeaponNode _sourceWeapon;
+        protected Vector2 _sourceVelocity => _sourceWeapon.VelocityProvider.GetCurrentVelocity();
 
         public bool Active
         {
@@ -24,7 +26,8 @@ namespace Projectiles
 
         public Timer DeactivationTimer => _deactivationTimer;
 
-        public virtual float Speed => _speed;
+        public virtual float BaseSpeed => _baseSpeed;
+        public virtual float CurrentSpeed => _currentSpeed;
 
         internal WeaponNode SourceWeapon
         {
@@ -70,7 +73,8 @@ namespace Projectiles
         {
             // Set the projectile's speed.
             // We need to do this here rather than in the constructor in case the player's weapon gets modified to increase projectile speed.
-            _speed = _sourceWeapon.Stats.ProjSpeed;
+            _baseSpeed = _sourceWeapon.Stats.ProjSpeed;
+            _currentSpeed = _baseSpeed;
         }
 
         private void ToggleDeactivationTimer(bool on)
@@ -142,6 +146,13 @@ namespace Projectiles
             _active = active;
             ToggleDeactivationTimer(active);
             ToggleCollisionSignalConnection(active);
+        }
+
+        public virtual void AddSourceVelocity()
+        {
+            // Add speed in projectile's firing direction only
+            float projectionMagnitude = _sourceVelocity.Dot(Vector2.Right.Rotated(GlobalRotation));
+            _currentSpeed = _baseSpeed + Mathf.Max(0, projectionMagnitude);
         }
     }
 }

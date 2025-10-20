@@ -6,10 +6,10 @@
 resource_local_to_scene = true
 resource_name = "tier-3-enemy-wave-config"
 script = ExtResource("1_g2wuy")
-SpeedModifier = 0.3
-CrashDamageModifier = 0.4
-MaxHealthModifier = 0.5
-FireRateModifier = 0.3
-WeaponDamageModifier = 1.0
+SpeedModifier = 30.0
+CrashDamageModifier = 30.0
+MaxHealthModifier = 30.0
+FireRateModifier = 30.0
+WeaponDamageModifier = 30.0
 MinWave = 4
 metadata/_custom_type_script = "uid://cjers0xbt0i73"

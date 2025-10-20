@@ -10,15 +10,23 @@ using Weapons;
 namespace Enemies
 {
     [GlobalClass]
-    public abstract partial class EnemyNode : AnimatableBody2D, IDie, IHealthful
+    public abstract partial class EnemyNode : AnimatableBody2D, IDie, IHealthful, IVelocityProvider
     {
         protected HealthComponent _healthComponent;
         protected WeaponNode _weapon;
-        protected float _speed;
+
+        /// <summary>
+        /// The speed at which this enemy follows its assigned path.
+        /// </summary>
+        protected float _followSpeed;
         protected float _crashDamage;
         protected CollisionShape2D _shape;
         protected EntityPath _path;
         protected EnemyState _state;
+
+        protected Vector2 _currentGlobalPosition;
+        protected Vector2 _lastGlobalPosition;
+        protected Vector2 _motion => _currentGlobalPosition - _lastGlobalPosition;
 
         // Base stats
         protected float _baseSpeed;
@@ -44,7 +52,12 @@ namespace Enemies
             _weapon.FireTimer.Timeout += FireWeapon;
             _weapon.FireTimer.Start();
 
-            _path.FollowPath(_speed);
+            _path.FollowPath(_followSpeed);
+        }
+
+        public Vector2 GetCurrentVelocity()
+        {
+            return _motion;
         }
 
         public void TakeDamage(float damage)
@@ -61,11 +74,15 @@ namespace Enemies
             _healthComponent.Initialize(this);
             _baseMaxHealth = _healthComponent.MaxHealth;
 
-            _weapon = WeaponFactory.CreateWeapon(enemyResource.WeaponResource, true);
+            _weapon = WeaponFactory.CreateWeapon(
+                enemyResource.WeaponResource,
+                true,
+                velocityProvider: this
+            );
             _baseFireRate = enemyResource.WeaponResource.Stats.FireRate;
             _baseWeaponDamage = enemyResource.WeaponResource.Stats.Damage;
 
-            _speed = enemyResource.Speed;
+            _followSpeed = enemyResource.Speed;
             _baseSpeed = enemyResource.Speed;
 
             _crashDamage = enemyResource.CrashDamage;
@@ -89,7 +106,7 @@ namespace Enemies
             _crashDamage =
                 _baseCrashDamage * (1 + (scaler.CrashDamageModifier * waveLogMultiplier));
 
-            _speed = _baseSpeed * (1 + (scaler.SpeedModifier * waveSqrtMultiplier));
+            _followSpeed = _baseSpeed * (1 + (scaler.SpeedModifier * waveSqrtMultiplier));
             _weapon.Stats.Damage =
                 _baseWeaponDamage * (1 + (scaler.WeaponDamageModifier * waveSqrtMultiplier));
 

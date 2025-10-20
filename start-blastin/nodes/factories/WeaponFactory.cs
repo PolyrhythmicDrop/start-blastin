@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using Interfaces;
 using WaveManagement;
 using Weapons;
 
@@ -12,12 +13,13 @@ namespace Factories
         /// </summary>
         /// <param name="weaponResource">The resource to create the weapon from. Resource contains the weapon's scene path and stats.</param>
         /// <param name="enemyWeapon">True if the weapon belongs to an enemy. False if it belongs to the player. Used to apply the correct shader material to projectiles.</param>
-        /// <param name="enemyWaveConfig">Modifies the created weapon based on a wave configuration.</param>
+        /// <param name="enemyScaler">Modifies the created weapon based on a wave configuration.</param>
         /// <returns>A built <see cref="WeaponNode"/> with its stats set by the passed <see cref="WeaponResource"/> and (optionally) <see cref="EnemyScaler"/>.</returns>
         public static WeaponNode CreateWeapon(
             WeaponResource weaponResource,
             bool enemyWeapon,
-            EnemyScaler enemyWaveConfig = null
+            EnemyScaler enemyScaler = null,
+            IVelocityProvider velocityProvider = null
         )
         {
             try
@@ -41,11 +43,15 @@ namespace Factories
                         weaponResource.DuplicateDeep(Resource.DeepDuplicateMode.Internal);
                     // If weapon is for an enemy and we have a wave config, apply the wave configuration to the weapon.
                     WeaponStats weaponStats = newResource.Stats;
-                    if (enemyWeapon && enemyWaveConfig != null)
-                    {
-                        ApplyWaveConfigToWeaponStats(weaponStats, enemyWaveConfig);
-                    }
+                    // if (enemyWeapon && enemyScaler != null)
+                    // {
+                    //     ApplyWaveConfigToWeaponStats(weaponStats, enemyScaler);
+                    // }
                     weaponNode.InitializeStats(weaponStats);
+                    if (velocityProvider != null)
+                    {
+                        weaponNode.VelocityProvider = velocityProvider;
+                    }
                     return weaponNode;
                 }
                 else

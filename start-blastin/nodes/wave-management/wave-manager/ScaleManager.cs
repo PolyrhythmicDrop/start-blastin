@@ -5,6 +5,9 @@ using Godot;
 
 namespace WaveManagement
 {
+    /// <summary>
+    /// Abstract class for
+    /// </summary>
     [GlobalClass]
     public abstract partial class ScaleManager : Node
     {

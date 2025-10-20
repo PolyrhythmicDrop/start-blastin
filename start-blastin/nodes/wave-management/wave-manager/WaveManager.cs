@@ -28,6 +28,10 @@ namespace WaveManagement
         [Export]
         public Difficulty Difficulty { get; set; } = Difficulty.Easy;
 
+        /// <summary>
+        /// Wait time for the <see cref="_waveTimer"/>.
+        /// After the wave timer expires, no more enemies are spawned.
+        /// </summary>
         [Export]
         public double WaveTime
         {
@@ -37,6 +41,9 @@ namespace WaveManagement
 
         #region Initialization
 
+        /// <summary>
+        /// Connects to relevant signals, sets the base difficulty modifier for the game, and initializes the first wave.
+        /// </summary>
         public override void _Ready()
         {
             _waveTimer = GetNode<Timer>("%WaveTimer");
@@ -44,23 +51,16 @@ namespace WaveManagement
             _waveTimer.WaitTime = _waveTime;
 
             _enemyScaleManager = GetNode<EnemyScaleManager>("%EnemyScaleManager");
-            // _enemyScaleManager.Initialize(this);
-
             _spawnerScaleManager = GetNode<SpawnerScaleManager>("%SpawnerScaleManager");
-            // _spawnerScaleManager.Initialize(this);
 
             ConnectSignals();
-
             SetBaseDifficultyModifier();
-            // LoadConfigPools();
-            // SetScalers();
-            // ScaleSpawners();
             InitializeFirstWave();
         }
 
         /// <summary>
         /// Sets the base difficulty modifier based on the player's selected difficulty level.
-        /// Difficulty modifier is applied to all enemy stat scaling.
+        /// Difficulty modifier is applied to all enemy and spawner stat scaling.
         /// </summary>
         private void SetBaseDifficultyModifier()
         {
@@ -71,15 +71,20 @@ namespace WaveManagement
                     break;
                 default:
                 case Difficulty.Medium:
-                    _difficultyModifier = 0.2f;
-                    break;
-                case Difficulty.Hard:
                     _difficultyModifier = 0.3f;
                     break;
+                case Difficulty.Hard:
+                    _difficultyModifier = 0.5f;
+                    break;
             }
-            GD.Print($"Base difficulty modifier set: {Difficulty} - {_difficultyModifier}");
         }
 
+        /// <summary>
+        /// Connects WaveManager signals.
+        /// <list type="unordered">
+        /// <item><see cref="EventBus.SignalName.StartWaveButtonPressed"/> => <see cref="StartWave()"/></item>
+        /// </list>
+        /// </summary>
         private void ConnectSignals()
         {
             EventBus.Instance.StartWaveButtonPressed += StartWave;
@@ -90,21 +95,12 @@ namespace WaveManagement
         #region Scaling
 
         /// <summary>
-        /// Sets the current enemy wave configuration based on the available configurations in the pool.
+        /// Sets the current enemy scaler, the spawner scaler, and the spawner formation for the next wave.
         /// </summary>
         private void SetScalers()
         {
             _enemyScaleManager.SetCurrentScalers(_wave);
             _spawnerScaleManager.SetCurrentScalers(_wave);
-        }
-
-        /// <summary>
-        /// Applies the current difficulty modifier to all properties of the current wave configuration.
-        /// </summary>
-        private void ApplyDifficultyScaling()
-        {
-            _enemyScaleManager.CurrentEnemyScaler.ApplyDifficultyModifier(_difficultyModifier);
-            _spawnerScaleManager.CurrentSpawnerScaler.ApplyDifficultyModifier(_difficultyModifier);
         }
 
         /// <summary>
@@ -120,6 +116,10 @@ namespace WaveManagement
 
         #region Wave Play
 
+        /// <summary>
+        /// Initializes both scale managers to their default scalers and assembles the default spawner formation.
+        /// Scales all spawners according to the default scaler.
+        /// </summary>
         private async void InitializeFirstWave()
         {
             _enemyScaleManager.Initialize(this);
@@ -128,6 +128,10 @@ namespace WaveManagement
             ScaleSpawners();
         }
 
+        /// <summary>
+        /// Starts a wave.
+        /// Starts the wave timer and emits the <see cref="EventBus.SignalName.WaveStarted"/> signal.
+        /// </summary>
         private void StartWave()
         {
             GD.Print($"Wave {_wave} starting!");
@@ -135,6 +139,10 @@ namespace WaveManagement
             EventBus.Instance.EmitSignal(EventBus.SignalName.WaveStarted, _wave);
         }
 
+        /// <summary>
+        /// Ends a wave.
+        /// Emits the <see cref="EventBus.SignalName.WaveEnded"/> signal, then waits for all enemies to be freed before calling <see cref="IncrementWave()"/>.
+        /// </summary>
         private async void EndWave()
         {
             GD.Print($"Wave {_wave} ended!");
@@ -146,16 +154,21 @@ namespace WaveManagement
             IncrementWave();
         }
 
+        /// <summary>
+        /// Increments the current wave number and calls <see cref="ScaleWave()"/> to set the next wave's scalers.
+        /// </summary>
         private void IncrementWave()
         {
             GD.Print($"{MethodBase.GetCurrentMethod().Name}");
             _wave++;
             ScaleWave();
-            // Automatically start the next wave for now.
-            // TODO: Don't call this here. Instead, call it at the end of the shop, once the player is ready to move on to the next wave.
-            // StartWave();
         }
 
+        /// <summary>
+        /// Asynchronous method that advances frames until no enemies remain in the tree.
+        /// Returns true when no enemies remain.
+        /// </summary>
+        /// <returns></returns>
         private async Task<bool> WaitForEnemiesToClear()
         {
             int enemyCount = GetTree().GetNodesInGroup("enemies").Count;
@@ -173,23 +186,25 @@ namespace WaveManagement
         }
 
         /// <summary>
-        /// Apply all relevant scaling to the current wave.
+        /// Sets the scalers to use for the next wave,
+        /// assembles the spawner formation, and scales all spawners according to the selected scalers.
         /// </summary>
         private async void ScaleWave()
         {
             GD.Print($"{MethodBase.GetCurrentMethod().Name}");
             SetScalers();
-            ApplyDifficultyScaling();
             await _spawnerScaleManager.AssembleFormation();
             ScaleSpawners();
         }
 
+        /// <summary>
+        /// Resets the wave to the first wave and reinitializes all scalers and scale managers.
+        /// </summary>
         public void ResetWave()
         {
             GD.Print($"{MethodBase.GetCurrentMethod().Name}");
             _wave = 1;
             InitializeFirstWave();
-            // ScaleWave();
         }
 
         #endregion

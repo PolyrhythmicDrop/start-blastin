@@ -6,11 +6,4 @@
 resource_local_to_scene = true
 resource_name = "default-enemy-scaler"
 script = ExtResource("1_rhpv1")
-SpeedModifier = 0.1
-CrashDamageModifier = 0.1
-MaxHealthModifier = 0.1
-FireRateModifier = 0.1
-WeaponDamageModifier = 0.1
-MinWave = 0
-MaxWave = 0
 metadata/_custom_type_script = "uid://cjers0xbt0i73"

@@ -8,84 +8,85 @@ namespace WaveManagement
     [GlobalClass]
     public partial class EnemyScaler : WaveScaler
     {
-        private float _enemySpeedModifier;
-        private float _enemyCrashDamageModifier;
-        private float _enemyMaxHealthModifier;
-        private float _enemyFireRateModifier;
-        private float _enemyWeaponDamageModifier;
+        private float _enemySpeedModifier = 0;
+        private float _enemyCrashDamageModifier = 0;
+        private float _enemyMaxHealthModifier = 0;
+        private float _enemyFireRateModifier = 0;
+        private float _enemyWeaponDamageModifier = 0;
 
-        [ExportCategory("Enemy Stat Modifiers")]
-        [Export]
+        [ExportCategory("Stat Modifiers (% Increase)")]
+        [Export(PropertyHint.Range, "-100,100,1,suffix:%,or_greater")]
         public float SpeedModifier
         {
             get => _enemySpeedModifier;
             set => _enemySpeedModifier = value;
         }
 
-        [Export]
+        [Export(PropertyHint.Range, "-100,100,1,suffix:%,or_greater")]
         public float CrashDamageModifier
         {
             get => _enemyCrashDamageModifier;
             set => _enemyCrashDamageModifier = value;
         }
 
-        [Export]
+        [Export(PropertyHint.Range, "0,100,1,suffix:%,or_greater")]
         public float MaxHealthModifier
         {
             get => _enemyMaxHealthModifier;
             set => _enemyMaxHealthModifier = value;
         }
 
-        [ExportCategory("Enemy Weapon Modifiers")]
-        [Export]
+        [ExportCategory("Weapon Modifiers (% Increase)")]
+        [Export(PropertyHint.Range, "-100,100,1,suffix:%,or_greater")]
         public float FireRateModifier
         {
             get => _enemyFireRateModifier;
             set => _enemyFireRateModifier = value;
         }
 
-        [Export]
+        [Export(PropertyHint.Range, "-100,100,1,suffix:%,or_greater")]
         public float WeaponDamageModifier
         {
             get => _enemyWeaponDamageModifier;
             set => _enemyWeaponDamageModifier = value;
         }
 
-        /// <summary>
-        /// Augments the wave configuration modifiers with the current difficulty modifier.
-        /// </summary>
-        /// <param name="difficultyMod"></param>
-        public override void ApplyDifficultyModifier(float difficultyMod)
+        private void ConvertFromPercent(EnemyScaler scaler)
         {
-            // _enemySpeedModifier += difficultyMod;
-            // _enemyCrashDamageModifier += difficultyMod;
-            // _enemyMaxHealthModifier += difficultyMod;
-            // _enemyFireRateModifier += difficultyMod;
-            // _enemyWeaponDamageModifier += difficultyMod;
+            scaler.MaxHealthModifier /= 100f;
+            scaler.CrashDamageModifier /= 100f;
+            scaler.FireRateModifier /= 100f;
+            // Square root modifiers: Divide by 10 because the sqrt modifier is small.
+            scaler.SpeedModifier /= 10f;
+            scaler.WeaponDamageModifier /= 10f;
+        }
 
-            // GD.Print($"Difficulty modifier applied to {ResourceName}!");
+        private void ApplyDifficultyMultiplier(float difficultyMultiplier)
+        {
+            SpeedModifier += difficultyMultiplier;
+            CrashDamageModifier += difficultyMultiplier;
+            MaxHealthModifier += difficultyMultiplier;
+            FireRateModifier += difficultyMultiplier;
+            WeaponDamageModifier += difficultyMultiplier;
         }
 
         public EnemyScaler GetAdjustedScaler(float difficultyMod, int wave)
         {
-            float difficultyMultiplier = Mathf.Log(1 + wave) * difficultyMod;
+            EnemyScaler adjustedScaler = (EnemyScaler)Duplicate(true);
+            ConvertFromPercent(adjustedScaler);
+
             if (wave == 1)
             {
-                return this;
+                return adjustedScaler;
             }
             else
             {
-                return new EnemyScaler
-                {
-                    ResourceName = this.ResourceName + "-adjusted",
-                    SpeedModifier = this._enemySpeedModifier + difficultyMultiplier,
-                    CrashDamageModifier = this.CrashDamageModifier + difficultyMultiplier,
-                    MaxHealthModifier = this.MaxHealthModifier + difficultyMultiplier,
-                    FireRateModifier = this.FireRateModifier + difficultyMultiplier,
-                    WeaponDamageModifier = this.WeaponDamageModifier + difficultyMultiplier,
-                    MinWave = this._minWave,
-                    MaxWave = this._maxWave,
-                };
+                float difficultyMultiplier = Mathf.Log(1 + wave) * difficultyMod;
+
+                adjustedScaler.ResourceName += "-adjusted";
+                adjustedScaler.ApplyDifficultyMultiplier(difficultyMultiplier);
+
+                return adjustedScaler;
             }
         }
     }

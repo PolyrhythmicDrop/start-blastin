@@ -229,9 +229,6 @@ namespace Enemies.Spawners
 
         public void ApplySpawnerScaler(SpawnerScaler spawnerScaler, int wave)
         {
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}"
-            );
             float waveMultiplier = Mathf.Log(1 + wave);
             _spawnPool = new SpawnPool(spawnerScaler.SpawnPool);
 

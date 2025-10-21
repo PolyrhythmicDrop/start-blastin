@@ -12,6 +12,7 @@ MaxHealth = 1.0
 metadata/_custom_type_script = "uid://de8iusxhs0qem"
 
 [resource]
+resource_name = "speedy-drone"
 script = ExtResource("1_5071d")
 ScenePath = "res://nodes/enemies/Drone/drone.tscn"
 Speed = 250.0

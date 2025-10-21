@@ -19,8 +19,10 @@ namespace Environmental
 
         private void OnBodyEntered(Node2D body)
         {
+            // GD.Print($"{body} has entered out of bounds!");
             if (body is EnemyNode enemy)
             {
+                // GD.Print($"Freeing {enemy} because it has entered out of bounds!");
                 enemy.QueueFree();
             }
         }

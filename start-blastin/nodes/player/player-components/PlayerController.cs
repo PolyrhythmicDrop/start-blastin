@@ -32,14 +32,14 @@ namespace PlayerComponents
             {
                 SetMovementDirection();
                 SetFiring();
-                if (_firing)
-                {
-                    _player.Fire();
-                }
-                else
-                {
-                    _player.StopFire();
-                }
+                // if (_firing)
+                // {
+                //     _player.Fire();
+                // }
+                // else
+                // {
+                //     _player.StopFire();
+                // }
             }
         }
 
@@ -53,11 +53,11 @@ namespace PlayerComponents
         {
             if (Input.IsActionPressed("fire"))
             {
-                _firing = true;
+                _player.Fire();
             }
-            else
+            else if (Input.IsActionJustReleased("fire") || !Input.IsActionPressed("fire"))
             {
-                _firing = false;
+                _player.StopFire();
             }
         }
     }

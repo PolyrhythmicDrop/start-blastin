@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=2 format=3 uid="uid://u8qm3rcajlpd"]
+
+[ext_resource type="Script" uid="uid://b40t8najievo0" path="res://nodes/wave-management/wave-scalers/SpawnerFormationScaler.cs" id="1_7xxrk"]
+
+[resource]
+resource_name = "y-pincer-spawn-formation"
+script = ExtResource("1_7xxrk")
+Formation = Dictionary[int, int]({
+0: 1,
+3: 1
+})
+metadata/_custom_type_script = "uid://b40t8najievo0"

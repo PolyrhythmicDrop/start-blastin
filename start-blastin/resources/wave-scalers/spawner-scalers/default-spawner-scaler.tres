@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="SpawnerScaler" load_steps=5 format=3 uid="uid://chgedvgubdd22"]
+
+[ext_resource type="Script" uid="uid://b2dathygef0kk" path="res://nodes/wave-management/wave-scalers/SpawnerScaler.cs" id="1_0kbye"]
+[ext_resource type="Resource" uid="uid://vfsjsr1mvlk1" path="res://resources/enemies/drone.tres" id="1_oljwg"]
+[ext_resource type="Script" uid="uid://dyer2c2n8y1v4" path="res://nodes/enemies/Spawners/SpawnData.cs" id="2_xfcaq"]
+
+[sub_resource type="Resource" id="Resource_ow7ge"]
+script = ExtResource("2_xfcaq")
+EnemyResource = ExtResource("1_oljwg")
+Weight = 1
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[resource]
+resource_local_to_scene = true
+resource_name = "default-spawner-scaler"
+script = ExtResource("1_0kbye")
+SpawnPool = Array[Object]([SubResource("Resource_ow7ge")])
+MaxWave = 1
+metadata/_custom_type_script = "uid://b2dathygef0kk"

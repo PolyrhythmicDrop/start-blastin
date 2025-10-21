@@ -7,7 +7,7 @@ using PlayerComponents;
 namespace Entities
 {
     [GlobalClass]
-    public partial class Player : CharacterBody2D, IDie, IHealthful
+    public partial class Player : CharacterBody2D, IDie, IHealthful, IVelocityProvider
     {
         private AnimationComponent _animationComponent;
         private MovementComponent _movementComponent;
@@ -28,17 +28,22 @@ namespace Entities
 
         public bool Dying = false;
 
-        public void TakeDamage(int damage)
+        public void TakeDamage(float damage)
         {
             _animationComponent.PlayDamageAnimation();
             _healthComponent.TakeDamage(damage);
         }
 
-        public void Heal(int healAmount) => _healthComponent.Heal(healAmount);
+        public void Heal(float healAmount) => _healthComponent.Heal(healAmount);
 
         public void Fire() => _weaponComponent.FireWeapon();
 
         public void StopFire() => _weaponComponent.StopWeapon();
+
+        public Vector2 GetCurrentVelocity()
+        {
+            return Velocity;
+        }
 
         private void InitializeComponents()
         {

@@ -8,15 +8,16 @@
 [sub_resource type="Resource" id="Resource_0bm52"]
 resource_local_to_scene = true
 script = ExtResource("1_gfeuq")
-MaxHealth = 2
+MaxHealth = 2.0
 metadata/_custom_type_script = "uid://de8iusxhs0qem"
 
 [resource]
 resource_local_to_scene = true
+resource_name = "basic-drone"
 script = ExtResource("1_oggcu")
 ScenePath = "res://nodes/enemies/Drone/drone.tscn"
-Speed = 300.0
-CrashDamage = 3
+Speed = 100.0
+CrashDamage = 2
 HealthComponent = SubResource("Resource_0bm52")
 WeaponResource = ExtResource("2_gfeuq")
 PathCurve = ExtResource("2_64nox")

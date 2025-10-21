@@ -15,6 +15,10 @@ run/main_scene="uid://dgcswjykgey5y"
 config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+EventBus="*res://architecture/autoloads/EventBus.cs"
+
 [debug]
 
 file_logging/enable_file_logging=true
@@ -25,6 +29,7 @@ file_logging/max_log_files=1
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
+window/size/mode=2
 window/stretch/mode="viewport"
 window/stretch/aspect="keep_width"
 window/stretch/scale_mode="integer"
@@ -45,6 +50,7 @@ enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg", "res://addon
 [file_customization]
 
 folder_colors={
+"res://architecture/": "purple",
 "res://nodes/": "green",
 "res://nodes/enemies/Drone/sprites/": "pink",
 "res://nodes/player/components/": "purple",
@@ -55,6 +61,9 @@ folder_colors={
 [global_group]
 
 projectiles=""
+enemy-spawners="Enemy spawners"
+level="A level in the game."
+enemies=""
 
 [input]
 
@@ -98,4 +107,5 @@ system-menu={
 2d_physics/layer_1="Player"
 2d_physics/layer_2="Borders"
 2d_physics/layer_3="Enemies"
-2d_physics/layer_4="Projectiles"
+2d_physics/layer_4="Projectiles-Player"
+2d_physics/layer_5="Projectiles-Enemy"

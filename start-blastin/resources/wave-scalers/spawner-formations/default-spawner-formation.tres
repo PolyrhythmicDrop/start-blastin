@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=2 format=3 uid="uid://dlqifjude3djo"]
+
+[ext_resource type="Script" uid="uid://b40t8najievo0" path="res://nodes/wave-management/wave-scalers/SpawnerFormationScaler.cs" id="1_8grec"]
+
+[resource]
+resource_name = "default-spawner-formation"
+script = ExtResource("1_8grec")
+Formation = Dictionary[int, int]({
+0: 1
+})
+MaxWave = 1
+metadata/_custom_type_script = "uid://b40t8najievo0"

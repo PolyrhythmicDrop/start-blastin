@@ -8,14 +8,14 @@ namespace PlayerComponents
     public partial class MovementComponent : Node
     {
         private Player _player;
-        private float _speed = 300;
+        private float _speed => _player.Speed;
 
-        [Export]
-        public float Speed
-        {
-            get => _speed;
-            set { _speed = value > 1 ? value : 1; }
-        }
+        // [Export]
+        // public float Speed
+        // {
+        //     get => _speed;
+        //     set { _speed = value > 1 ? value : 1; }
+        // }
 
         public void Initialize(Player player)
         {

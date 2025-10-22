@@ -19,6 +19,8 @@ namespace PlayerComponents
             set => _initWeaponResource = value;
         }
 
+        public WeaponNode Weapon => _equippedWeapon;
+
         public void Initialize(Player player)
         {
             _player = player;

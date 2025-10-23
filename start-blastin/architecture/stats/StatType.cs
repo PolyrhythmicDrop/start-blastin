@@ -7,5 +7,6 @@ namespace Stats
         CrashDamage,
         Damage,
         FireRate,
+        ProjectileSpeed,
     }
 }

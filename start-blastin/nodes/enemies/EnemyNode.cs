@@ -53,7 +53,7 @@ namespace Enemies
 
             // Start the weapon fire timer to fire on a set interval.
             _weapon.FireTimer.Timeout += FireWeapon;
-            _weapon.FireTimer.Start();
+            _weapon.FireTimer.Start(_weapon.Stats.FireRate);
 
             _path.FollowPath(_followSpeed);
         }

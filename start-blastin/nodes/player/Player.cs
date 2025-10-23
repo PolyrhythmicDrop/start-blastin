@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using Components;
 using Effects;
 using Godot;
 using Interfaces;
 using Items;
 using PlayerComponents;
+using Projectiles;
 using Stats;
 
 namespace Entities
@@ -27,6 +27,15 @@ namespace Entities
         private float _maxHealth => _stats.GetStat(StatType.MaxHealth).CurrentValue;
         private float _currentHealth;
         private float _speed => _stats.GetStat(StatType.Speed).CurrentValue;
+
+        // ~ Weapon Variables ~ //
+
+        private ProjectileType _projType;
+        private float _damage => _stats.GetStat(StatType.Damage).CurrentValue;
+        private float _fireRate => _stats.GetStat(StatType.FireRate).CurrentValue;
+        private float _projectileSpeed => _stats.GetStat(StatType.ProjectileSpeed).CurrentValue;
+
+        //-----------------------------//
 
         [Export(PropertyHint.Range, "1,100,1,or_greater")]
         public float MaxHealth
@@ -78,12 +87,45 @@ namespace Entities
             }
         }
 
-        // [Export]
-        // public HealthComponent HealthComponent
-        // {
-        //     get => _healthComponent;
-        //     set => _healthComponent = value;
-        // }
+        public ProjectileType ProjectileType
+        {
+            get => _projType;
+            set => _projType = value;
+        }
+
+        /// <summary>
+        /// The damage done by this weapon.
+        /// </summary>
+        [Export]
+        public float Damage
+        {
+            get => _damage;
+            set => _stats.UpdateStat(StatType.Damage, value);
+        }
+
+        /// <summary>
+        /// Rate of fire for the weapon, used in the FireTimer.
+        /// Lower values mean a faster fire rate.
+        /// </summary>
+        [Export]
+        public float FireRate
+        {
+            get => _fireRate;
+            set => _stats.UpdateStat(StatType.FireRate, value);
+        }
+
+        /// <summary>
+        /// The base speed of a projectile coming out of this weapon.
+        /// </summary>
+        /// <remarks>
+        /// Projectile speed is augmented by the firing object's speed.
+        /// </remarks>
+        [Export]
+        public float ProjectileSpeed
+        {
+            get => _projectileSpeed;
+            set => _stats.UpdateStat(StatType.ProjectileSpeed, value);
+        }
 
         [Signal]
         public delegate void PlayerDiedEventHandler();
@@ -100,6 +142,8 @@ namespace Entities
         {
             return Velocity;
         }
+
+        public StatManager GetStatManager() => _stats;
 
         public override void _Ready()
         {
@@ -121,7 +165,22 @@ namespace Entities
             _movementComponent.Initialize(this);
             _controller.Initialize(this);
             _weaponComponent.Initialize(this);
-            // _healthComponent.Initialize(this);
+
+            // Print current weapon stats for debug
+            GD.Print($"Current stats after InitializeComponents: ");
+            foreach (Stat stat in _stats.Stats.Values)
+            {
+                GD.Print($"{stat.Type} -> Base: {stat.BaseValue} | Current: {stat.CurrentValue}");
+            }
+
+            // Connect signals
+            _stats.Connect(
+                StatManager.SignalName.StatUpdated,
+                Callable.From(
+                    (StatType statType, Stat stat) =>
+                        _weaponComponent.Weapon.UpdateWeaponStats(statType, stat)
+                )
+            );
         }
 
         private void InitializeStats()
@@ -129,8 +188,8 @@ namespace Entities
             // _stats = new();
             // _stats.AddStat(StatType.MaxHealth, _maxHealth);
             // _stats.AddStat(StatType.Speed, _movementComponent.Speed);
-            _stats.AddStat(StatType.Damage, _weaponComponent.Weapon.Stats.Damage);
-            _stats.AddStat(StatType.FireRate, _weaponComponent.Weapon.Stats.FireRate);
+            // _stats.AddStat(StatType.Damage, _weaponComponent.Weapon.Stats.Damage);
+            // _stats.AddStat(StatType.FireRate, _weaponComponent.Weapon.Stats.FireRate);
 
             // Sample implementation of adding modifiers.
             Modifier sampleMod = ResourceLoader.Load<Modifier>(
@@ -142,10 +201,11 @@ namespace Entities
             Modifier sampleMod3 = ResourceLoader.Load<Modifier>(
                 "res://resources/items/modifiers/sample-modifier-3.tres"
             );
-            AddModifier(sampleMod, sampleMod2, sampleMod3);
+            Modifier sampleWeaponMod = ResourceLoader.Load<Modifier>(
+                "res://resources/items/modifiers/sample-weapon-modifier.tres"
+            );
+            AddModifier(sampleMod, sampleMod2, sampleMod3, sampleWeaponMod);
         }
-
-        public StatManager GetStatManager() => _stats;
 
         public override void _Process(double delta)
         {

@@ -1,6 +1,7 @@
 using Entities;
 using Factories;
 using Godot;
+using Projectiles;
 using Weapons;
 
 namespace PlayerComponents
@@ -43,6 +44,10 @@ namespace PlayerComponents
                 GD.Print(
                     $"Weapon equipped! {_equippedWeapon}\nStats: {_equippedWeapon.Stats.FireRate} | {_equippedWeapon.Stats.Damage} | {_equippedWeapon.Stats.ProjectileType} | {_equippedWeapon.Stats.ProjectileSpeed}"
                 );
+                // Initialize stats
+                _equippedWeapon.Stats.FireRate = _player.FireRate;
+                _equippedWeapon.Stats.Damage = _player.Damage;
+                _equippedWeapon.Stats.ProjectileSpeed = _player.ProjectileSpeed;
 
                 AddChild(_equippedWeapon);
                 ConnectFireTimerSignals();
@@ -64,7 +69,7 @@ namespace PlayerComponents
             if (fireTimer.IsStopped())
             {
                 _equippedWeapon.Fire();
-                fireTimer.Start();
+                fireTimer.Start(_equippedWeapon.Stats.FireRate);
             }
         }
 

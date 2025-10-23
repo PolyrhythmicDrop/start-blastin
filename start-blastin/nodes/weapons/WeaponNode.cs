@@ -6,6 +6,7 @@ using Components;
 using Godot;
 using Interfaces;
 using Projectiles;
+using Stats;
 
 namespace Weapons
 {
@@ -219,6 +220,31 @@ namespace Weapons
             if (_velocityProvider != null)
             {
                 projectile.AddSourceVelocity();
+            }
+        }
+
+        public virtual void UpdateWeaponStats(StatType statType, Stat stat)
+        {
+            GD.Print($"{MethodBase.GetCurrentMethod().Name}:");
+            switch (statType)
+            {
+                case StatType.Damage:
+                    _stats.Damage = stat.CurrentValue;
+                    GD.Print($"Updating weapon damage to {_stats.Damage}");
+                    break;
+                case StatType.FireRate:
+                    _stats.FireRate = stat.CurrentValue;
+                    GD.Print($"Updating weapon fire rate to {_stats.FireRate}");
+                    break;
+                case StatType.ProjectileSpeed:
+                    _stats.ProjectileSpeed = stat.CurrentValue;
+                    GD.Print($"Updating weapon projectile speed to {_stats.ProjectileSpeed}");
+                    break;
+                default:
+                    GD.PrintErr(
+                        $"Could not find an appropriate weapon stat that matches {statType} to update! Returning..."
+                    );
+                    break;
             }
         }
     }

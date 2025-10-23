@@ -8,11 +8,14 @@ namespace Stats
     /// <summary>
     /// Manages current stats for an entity using a Dictionary of <see cref="Stat"/> types.
     /// </summary>
-    public class StatManager
+    public partial class StatManager : GodotObject
     {
         private Dictionary<StatType, Stat> _stats = new();
 
         public IReadOnlyDictionary<StatType, Stat> Stats => _stats;
+
+        [Signal]
+        public delegate void StatUpdatedEventHandler(StatType type, Stat stat);
 
         /// <summary>
         /// Adds a new <see cref="Stat"/> of the specified type to the StatManager.
@@ -34,9 +37,9 @@ namespace Stats
             bool success = _stats.TryAdd(stat.Type, stat);
             if (success)
             {
-                GD.Print(
-                    $"{MethodBase.GetCurrentMethod().Name}: New StatType added: {stat.Type}: base value = {stat.GetBaseValue()} | current value = {stat.GetCurrentValue()}"
-                );
+                // GD.Print(
+                //     $"{MethodBase.GetCurrentMethod().Name}: New StatType added: {stat.Type}: base value = {stat.GetBaseValue()} | current value = {stat.GetCurrentValue()}"
+                // );
             }
             else
             {
@@ -62,21 +65,8 @@ namespace Stats
             {
                 AddStat(type, newValue);
             }
-            // Stat stat = new(type, newValue);
-            // UpdateStat(stat);
+            EmitSignal(SignalName.StatUpdated, Variant.From(type), GetStat(type));
         }
-
-        // /// <summary>
-        // /// Updates the value of an existing stat in the StatManager using an existing Stat object.
-        // /// </summary>
-        // /// <param name="stat">The Stat object to use to update the StatManager.</param>
-        // public void UpdateStat(Stat stat)
-        // {
-        //     _stats[stat.Type] = stat;
-        //     GD.Print(
-        //         $"{MethodBase.GetCurrentMethod().Name}: Stat {stat.Type} updated to {stat.CurrentValue}!"
-        //     );
-        // }
 
         /// <summary>
         /// Resets a stat to its base value.
@@ -89,6 +79,7 @@ namespace Stats
             {
                 stat.CurrentValue = stat.BaseValue;
             }
+            EmitSignal(SignalName.StatUpdated, Variant.From(stat.Type), stat);
         }
 
         /// <summary>

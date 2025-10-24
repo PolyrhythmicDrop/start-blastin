@@ -5,23 +5,34 @@
 
 [node name="ShopItemContainer" type="Control"]
 layout_mode = 3
-anchors_preset = 13
 anchor_left = 0.5
-anchor_right = 0.5
-anchor_bottom = 1.0
+anchor_top = 0.5
+anchor_right = 0.633
+anchor_bottom = 0.85600007
+offset_right = -255.35999
+offset_bottom = -384.48004
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_lifgi")
+metadata/_edit_use_anchors_ = true
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
-layout_mode = 0
-offset_right = 256.0
-offset_bottom = 384.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -192.0
+offset_right = 128.0
+offset_bottom = 192.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 6
 size_flags_vertical = 6
-metadata/_edit_use_anchors_ = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
 layout_mode = 2

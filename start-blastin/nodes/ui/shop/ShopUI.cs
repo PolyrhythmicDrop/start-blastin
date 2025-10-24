@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Reflection;
+using Autoloads;
 using FileIO;
 using Godot;
 using Items;
@@ -28,7 +29,29 @@ public partial class ShopUI : Control
             GetNode<ShopItemContainer>("%ShopItemContainer3"),
         };
 
+        ConnectSignals();
+
         PopulateShopSlots();
+    }
+
+    private void ConnectSignals()
+    {
+        // Connect reroll button signal
+        Callable rerollCallable = Callable.From(RerollShop);
+        if (!_rerollButton.IsConnected(Button.SignalName.Pressed, rerollCallable))
+        {
+            _rerollButton.Connect(Button.SignalName.Pressed, rerollCallable);
+        }
+
+        // Connect next wave signal
+        Callable wavePressedCallable = Callable.From(() =>
+        {
+            EventBus.Instance.EmitSignal(EventBus.SignalName.StartWaveButtonPressed);
+        });
+        if (!_nextWaveButton.IsConnected(Button.SignalName.Pressed, wavePressedCallable))
+        {
+            _nextWaveButton.Connect(Button.SignalName.Pressed, wavePressedCallable);
+        }
     }
 
     private void PopulateShopSlots()
@@ -44,7 +67,7 @@ public partial class ShopUI : Control
                 item = GetItemFromPool();
             }
 
-            container.AddItem(item);
+            container.SetItem(item);
         }
     }
 
@@ -83,5 +106,18 @@ public partial class ShopUI : Control
         return null;
     }
 
-    private void ClearItemContainers() { }
+    private void ClearItemContainers()
+    {
+        foreach (ShopItemContainer container in _itemContainers)
+        {
+            container.ClearItem();
+        }
+    }
+
+    private void RerollShop()
+    {
+        GD.Print($"Rerolling shop...");
+        ClearItemContainers();
+        PopulateShopSlots();
+    }
 }

@@ -18,8 +18,13 @@ public partial class ShopItemContainer : Control
         _rtLabel = GetNode<RichTextLabel>("%RTLabel");
     }
 
-    public void AddItem(Item item)
+    public void SetItem(Item item)
     {
+        if (_item != null)
+        {
+            ClearItem();
+        }
+
         _item = item;
         Color fontColor = new("FLORAL_WHITE");
 

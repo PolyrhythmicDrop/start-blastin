@@ -10,7 +10,10 @@ namespace Autoloads
         public delegate void WaveStartedEventHandler(int wave);
 
         [Signal]
-        public delegate void WaveEndedEventHandler();
+        public delegate void WaveTimerEndedEventHandler();
+
+        [Signal]
+        public delegate void WaveCompleteEventHandler();
 
         [Signal]
         public delegate void StartWaveButtonPressedEventHandler();

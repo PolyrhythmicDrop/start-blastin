@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://dgcswjykgey5y"]
+[gd_scene load_steps=7 format=3 uid="uid://dgcswjykgey5y"]
 
 [ext_resource type="PackedScene" uid="uid://dxdlpe5yuamuy" path="res://nodes/wave-management/wave-manager/wave-manager.tscn" id="1_esqth"]
 [ext_resource type="Texture2D" uid="uid://cilgl08og1qhy" path="res://nodes/backgrounds/background-purple-nebulae-stars.png" id="1_rvdan"]
 [ext_resource type="PackedScene" uid="uid://dl7j0usiolxux" path="res://nodes/environmental/play-area-border.tscn" id="2_cw5wp"]
 [ext_resource type="PackedScene" uid="uid://nenl15kjphyb" path="res://nodes/player/player.tscn" id="3_pxe5x"]
 [ext_resource type="PackedScene" uid="uid://bsyev7gatn1jy" path="res://nodes/environmental/oob-area.tscn" id="4_rl1rb"]
+[ext_resource type="Script" uid="uid://bwg8ljxt35xwf" path="res://nodes/ui/shop/ShopBase.cs" id="6_ntwxm"]
 
 [node name="MainLevel" type="Node" groups=["level"]]
 
@@ -32,6 +33,5 @@ position = Vector2(933, 883)
 Difficulty = 2
 
 [node name="ShopBase" type="CanvasLayer" parent="."]
-
-[node name="UIBase" type="CanvasLayer" parent="."]
-layer = 10
+layer = 2
+script = ExtResource("6_ntwxm")

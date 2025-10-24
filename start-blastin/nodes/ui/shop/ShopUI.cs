@@ -4,6 +4,7 @@ using Autoloads;
 using FileIO;
 using Godot;
 using Items;
+using Utility;
 
 public partial class ShopUI : Control
 {
@@ -17,6 +18,7 @@ public partial class ShopUI : Control
 
     public override void _Ready()
     {
+        DebugLogger.LogMessage($"Calling _Ready...", true);
         LoadItemPool();
 
         _nextWaveButton = GetNode<Button>("%NextWaveButton");
@@ -36,11 +38,15 @@ public partial class ShopUI : Control
 
     private void ConnectSignals()
     {
+        GD.Print(
+            $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Connecting signals..."
+        );
         // Connect reroll button signal
         Callable rerollCallable = Callable.From(RerollShop);
         if (!_rerollButton.IsConnected(Button.SignalName.Pressed, rerollCallable))
         {
             _rerollButton.Connect(Button.SignalName.Pressed, rerollCallable);
+            GD.Print($"Reroll button connected!");
         }
 
         // Connect next wave signal
@@ -51,6 +57,7 @@ public partial class ShopUI : Control
         if (!_nextWaveButton.IsConnected(Button.SignalName.Pressed, wavePressedCallable))
         {
             _nextWaveButton.Connect(Button.SignalName.Pressed, wavePressedCallable);
+            GD.Print($"Next wave button connected!");
         }
     }
 

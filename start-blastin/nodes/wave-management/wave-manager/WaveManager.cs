@@ -122,10 +122,16 @@ namespace WaveManagement
         /// </summary>
         private async void InitializeFirstWave()
         {
+            GD.Print("Initializing first wave...");
             _enemyScaleManager.Initialize(this);
             _spawnerScaleManager.Initialize(this);
             await _spawnerScaleManager.AssembleFormation();
+            GD.Print(
+                $"{MethodBase.GetCurrentMethod().Name}: Formation assembled, scaling spawners..."
+            );
             ScaleSpawners();
+
+            StartWave();
         }
 
         /// <summary>
@@ -145,23 +151,16 @@ namespace WaveManagement
         /// </summary>
         private async void EndWave()
         {
-            GD.Print($"Wave {_wave} ended!");
-            EventBus.Instance.EmitSignal(EventBus.SignalName.WaveEnded);
+            // Emit the signal for the wave timer ending to stop enemy spawning
+            GD.Print($"Wave {_wave} timer ended!");
+            EventBus.Instance.EmitSignal(EventBus.SignalName.WaveTimerEnded);
 
+            // Wait for all enemies to clear before processing the next wave.
             bool enemiesCleared = await WaitForEnemiesToClear();
             GD.Print($"Enemies cleared: {enemiesCleared}");
+            EventBus.Instance.EmitSignal(EventBus.SignalName.WaveComplete);
 
             IncrementWave();
-        }
-
-        /// <summary>
-        /// Increments the current wave number and calls <see cref="ScaleWave()"/> to set the next wave's scalers.
-        /// </summary>
-        private void IncrementWave()
-        {
-            GD.Print($"{MethodBase.GetCurrentMethod().Name}");
-            _wave++;
-            ScaleWave();
         }
 
         /// <summary>
@@ -183,6 +182,16 @@ namespace WaveManagement
                 await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
             }
             return true;
+        }
+
+        /// <summary>
+        /// Increments the current wave number and calls <see cref="ScaleWave()"/> to set the next wave's scalers.
+        /// </summary>
+        private void IncrementWave()
+        {
+            GD.Print($"{MethodBase.GetCurrentMethod().Name}");
+            _wave++;
+            ScaleWave();
         }
 
         /// <summary>

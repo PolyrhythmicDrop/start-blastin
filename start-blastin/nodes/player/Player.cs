@@ -111,7 +111,17 @@ namespace Entities
         public float FireRate
         {
             get => _fireRate;
-            set => _stats.UpdateStat(StatType.FireRate, value);
+            set
+            {
+                if (value < 0.06)
+                {
+                    _stats.UpdateStat(StatType.FireRate, 0.05f);
+                }
+                else
+                {
+                    _stats.UpdateStat(StatType.FireRate, value);
+                }
+            }
         }
 
         /// <summary>
@@ -191,20 +201,20 @@ namespace Entities
             // _stats.AddStat(StatType.Damage, _weaponComponent.Weapon.Stats.Damage);
             // _stats.AddStat(StatType.FireRate, _weaponComponent.Weapon.Stats.FireRate);
 
-            // Sample implementation of adding modifiers.
-            Modifier sampleMod = ResourceLoader.Load<Modifier>(
-                "res://resources/items/modifiers/sample-modifier.tres"
-            );
-            Modifier sampleMod2 = ResourceLoader.Load<Modifier>(
-                "res://resources/items/modifiers/sample-modifier-2.tres"
-            );
-            Modifier sampleMod3 = ResourceLoader.Load<Modifier>(
-                "res://resources/items/modifiers/sample-modifier-3.tres"
-            );
-            Modifier sampleWeaponMod = ResourceLoader.Load<Modifier>(
-                "res://resources/items/modifiers/sample-weapon-modifier.tres"
-            );
-            AddModifier(sampleMod, sampleMod2, sampleMod3, sampleWeaponMod);
+            // // Sample implementation of adding modifiers.
+            // Modifier sampleMod = ResourceLoader.Load<Modifier>(
+            //     "res://resources/items/modifiers/sample-modifier.tres"
+            // );
+            // Modifier sampleMod2 = ResourceLoader.Load<Modifier>(
+            //     "res://resources/items/modifiers/sample-modifier-2.tres"
+            // );
+            // Modifier sampleMod3 = ResourceLoader.Load<Modifier>(
+            //     "res://resources/items/modifiers/sample-modifier-3.tres"
+            // );
+            // Modifier sampleWeaponMod = ResourceLoader.Load<Modifier>(
+            //     "res://resources/items/modifiers/sample-weapon-modifier.tres"
+            // );
+            // AddModifier(sampleMod, sampleMod2, sampleMod3, sampleWeaponMod);
         }
 
         public override void _Process(double delta)

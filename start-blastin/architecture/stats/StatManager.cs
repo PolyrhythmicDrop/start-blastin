@@ -86,21 +86,21 @@ namespace Stats
         /// Retrieves the current Stat object of a specific type from the dictionary.
         /// </summary>
         /// <param name="type">The type of stat to retrieve.</param>
-        /// <returns></returns>
+        /// <returns>
+        /// The <see cref="Stat"/> of the same <paramref name="type"/> if it exists in the stats dictionary.
+        /// Null if the passed StatType was not found.
+        /// </returns>
         public Stat GetStat(StatType type)
         {
             bool success = _stats.TryGetValue(type, out Stat stat);
             if (success)
             {
-                // GD.Print(
-                //     $"Stat {stat} successfully retrieved! Type: {stat.Type} | Current value: {stat.CurrentValue}"
-                // );
                 return stat;
             }
             else
             {
                 GD.PrintErr(
-                    $"Stat of type {type} does not exist in StatManager dictionary. Returning null."
+                    $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name} - Stat of type {type} does not exist in StatManager dictionary. Returning null."
                 );
                 return null;
             }

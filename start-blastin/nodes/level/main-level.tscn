@@ -1,19 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://dgcswjykgey5y"]
+[gd_scene load_steps=7 format=3 uid="uid://dgcswjykgey5y"]
 
 [ext_resource type="PackedScene" uid="uid://dxdlpe5yuamuy" path="res://nodes/wave-management/wave-manager/wave-manager.tscn" id="1_esqth"]
 [ext_resource type="Texture2D" uid="uid://cilgl08og1qhy" path="res://nodes/backgrounds/background-purple-nebulae-stars.png" id="1_rvdan"]
 [ext_resource type="PackedScene" uid="uid://dl7j0usiolxux" path="res://nodes/environmental/play-area-border.tscn" id="2_cw5wp"]
 [ext_resource type="PackedScene" uid="uid://nenl15kjphyb" path="res://nodes/player/player.tscn" id="3_pxe5x"]
 [ext_resource type="PackedScene" uid="uid://bsyev7gatn1jy" path="res://nodes/environmental/oob-area.tscn" id="4_rl1rb"]
-[ext_resource type="Script" uid="uid://de8iusxhs0qem" path="res://nodes/components/HealthComponent.cs" id="6_ltqac"]
 [ext_resource type="PackedScene" uid="uid://d2ysw8uxbejun" path="res://nodes/ui/wave-start-ui/wave-start-ui.tscn" id="7_esqth"]
-
-[sub_resource type="Resource" id="Resource_esqth"]
-resource_local_to_scene = true
-resource_name = "player-health"
-script = ExtResource("6_ltqac")
-MaxHealth = 4.0
-metadata/_custom_type_script = "uid://de8iusxhs0qem"
 
 [node name="MainLevel" type="Node" groups=["level"]]
 
@@ -34,7 +26,6 @@ stretch_mode = 5
 
 [node name="Player" parent="." instance=ExtResource("3_pxe5x")]
 position = Vector2(933, 883)
-HealthComponent = SubResource("Resource_esqth")
 
 [node name="OOB-Area" parent="." instance=ExtResource("4_rl1rb")]
 
@@ -42,3 +33,8 @@ HealthComponent = SubResource("Resource_esqth")
 Difficulty = 2
 
 [node name="WaveStartUI" parent="." instance=ExtResource("7_esqth")]
+
+[node name="ShopBase" type="CanvasLayer" parent="."]
+
+[node name="UIBase" type="CanvasLayer" parent="."]
+layer = 10

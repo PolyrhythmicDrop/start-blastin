@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using FileIO;
 using Godot;
 
 namespace WaveManagement
@@ -62,15 +63,16 @@ namespace WaveManagement
                     );
                 }
 
-                string[] resourceStrings = ResourceLoader.ListDirectory(directory);
-                foreach (string resourceName in resourceStrings)
-                {
-                    string fullPath = directory + resourceName;
-                    GD.Print(
-                        $"{MethodBase.GetCurrentMethod().Name}: Adding resource from {fullPath} to {pool}..."
-                    );
-                    pool.Add(ResourceLoader.Load<T>(fullPath));
-                }
+                // string[] resourceStrings = ResourceLoader.ListDirectory(directory);
+                // foreach (string resourceName in resourceStrings)
+                // {
+                //     string fullPath = directory + resourceName;
+                //     GD.Print(
+                //         $"{MethodBase.GetCurrentMethod().Name}: Adding resource from {fullPath} to {pool}..."
+                //     );
+                //     pool.Add(ResourceLoader.Load<T>(fullPath));
+                // }
+                PoolLoader.LoadResourcePool(pool, directory);
             }
             catch (Exception e)
             {

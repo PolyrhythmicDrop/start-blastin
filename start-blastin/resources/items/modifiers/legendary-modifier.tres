@@ -1,0 +1,44 @@
+[gd_resource type="Resource" script_class="Modifier" load_steps=9 format=3 uid="uid://dk7q7w3mby07v"]
+
+[ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="1_iilab"]
+[ext_resource type="Script" uid="uid://bauhwivw4ftik" path="res://architecture/items/modifiers/Modifier.cs" id="1_lrodx"]
+[ext_resource type="Texture2D" uid="uid://r6g8ek0ukkhw" path="res://assets/item-icons/modifiers/golden-ship.png" id="2_6obcv"]
+
+[sub_resource type="Resource" id="Resource_6obcv"]
+script = ExtResource("1_iilab")
+Value = 15.0
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[sub_resource type="Resource" id="Resource_p8oet"]
+script = ExtResource("1_iilab")
+Type = 3
+Value = 1.5
+Operation = 1
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[sub_resource type="Resource" id="Resource_ejmga"]
+script = ExtResource("1_iilab")
+Type = 1
+Value = 250.0
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[sub_resource type="Resource" id="Resource_8fmkx"]
+script = ExtResource("1_iilab")
+Type = 5
+Value = 300.0
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[sub_resource type="Resource" id="Resource_c0bl8"]
+script = ExtResource("1_iilab")
+Type = 4
+Value = -0.4
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[resource]
+script = ExtResource("1_lrodx")
+Name = &"Legendary Modifier"
+Description = &"Goddess mode <3"
+Icon = ExtResource("2_6obcv")
+Rarity = 1
+Effects = Array[Object]([SubResource("Resource_6obcv"), SubResource("Resource_p8oet"), SubResource("Resource_ejmga"), SubResource("Resource_8fmkx"), SubResource("Resource_c0bl8")])
+metadata/_custom_type_script = "uid://bauhwivw4ftik"

@@ -1,4 +1,5 @@
 using System;
+using Autoloads;
 using Entities;
 using Godot;
 
@@ -24,6 +25,22 @@ namespace PlayerComponents
         public void Initialize(Player player)
         {
             _player = player;
+            ConnectSignals();
+        }
+
+        private void ConnectSignals()
+        {
+            EventBus.Instance.ShopOpened += () =>
+            {
+                _xDir = 0;
+                _yDir = 0;
+                _enabled = false;
+            };
+
+            EventBus.Instance.ShopClosed += () =>
+            {
+                _enabled = true;
+            };
         }
 
         public override void _Process(double delta)
@@ -32,14 +49,6 @@ namespace PlayerComponents
             {
                 SetMovementDirection();
                 SetFiring();
-                // if (_firing)
-                // {
-                //     _player.Fire();
-                // }
-                // else
-                // {
-                //     _player.StopFire();
-                // }
             }
         }
 

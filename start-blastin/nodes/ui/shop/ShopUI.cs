@@ -32,15 +32,13 @@ public partial class ShopUI : Control
         };
 
         ConnectSignals();
-
         PopulateShopSlots();
+        // Grab the focus to the first shop item.
+        _itemContainers[0].CallDeferred(MethodName.GrabFocus);
     }
 
     private void ConnectSignals()
     {
-        GD.Print(
-            $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Connecting signals..."
-        );
         // Connect reroll button signal
         Callable rerollCallable = Callable.From(RerollShop);
         if (!_rerollButton.IsConnected(Button.SignalName.Pressed, rerollCallable))
@@ -63,7 +61,6 @@ public partial class ShopUI : Control
 
     private void PopulateShopSlots()
     {
-        GD.Print($"{MethodBase.GetCurrentMethod().Name}: Populating shot slots...");
         foreach (ShopItemContainer container in _itemContainers)
         {
             GD.Print("Retrieving item from pool...");

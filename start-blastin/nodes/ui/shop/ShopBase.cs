@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Autoloads;
 using Godot;
+using Utility;
 
 public partial class ShopBase : CanvasLayer
 {
@@ -12,47 +13,34 @@ public partial class ShopBase : CanvasLayer
 
     public override void _Ready()
     {
-        GD.Print(
-            $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Ready called!"
-        );
+        DebugLogger.LogMessage("Ready called!", true);
         _shopUI = _shopUiScene.Instantiate<ShopUI>();
         ConnectSignals();
     }
 
     private void ConnectSignals()
     {
-        GD.Print(
-            $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Connecting signals..."
-        );
+        DebugLogger.LogMessage("Connecting signals...", true);
         EventBus.Instance.WaveComplete += OpenShop;
-
-        GD.Print(
-            $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: waveCompleteCallable connected!"
-        );
-
         EventBus.Instance.StartWaveButtonPressed += CloseShop;
-
-        GD.Print(
-            $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: startWaveCallable connected!"
-        );
     }
 
     private async void OpenShop()
     {
         GD.Print($"Opening shop...");
         CallDeferred(MethodName.AddChild, _shopUI);
-        // await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
         _shopUI.RequestReady();
         await ToSignal(_shopUI, Node.SignalName.Ready);
-        GD.Print($"Making the shop UI visible...");
         _shopUI.Visible = true;
-        GD.Print($"Shop UI visible? {_shopUI.Visible}");
+        EventBus.Instance.EmitSignal(EventBus.SignalName.ShopOpened);
     }
 
-    private void CloseShop()
+    private async void CloseShop()
     {
         GD.Print($"Closing shop...");
         _shopUI.Visible = false;
         CallDeferred(MethodName.RemoveChild, _shopUI);
+        await ToSignal(_shopUI, Node.SignalName.TreeExited);
+        EventBus.Instance.EmitSignal(EventBus.SignalName.ShopClosed);
     }
 }

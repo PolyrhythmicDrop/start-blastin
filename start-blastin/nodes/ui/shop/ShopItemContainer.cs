@@ -1,6 +1,9 @@
 using System;
+using System.Diagnostics;
+using Autoloads;
 using Godot;
 using Items;
+using Utility;
 
 [GlobalClass]
 public partial class ShopItemContainer : Control
@@ -16,7 +19,22 @@ public partial class ShopItemContainer : Control
         GD.Print($"{Name} ready called!");
         _textureRect = GetNode<TextureRect>("%ItemIcon");
         _rtLabel = GetNode<RichTextLabel>("%RTLabel");
+        FocusEntered += OnFocused;
     }
+
+    public override void _GuiInput(InputEvent @event)
+    {
+        // DebugLogger.LogMessage($"Event {@event} detected!", true);
+
+        if (@event.IsAction("ui_accept"))
+        {
+            DebugLogger.LogMessage($"Action event 'ui_accept' detected!", true);
+            ItemSelected();
+            AcceptEvent();
+        }
+    }
+
+    public override void _Process(double delta) { }
 
     public void SetItem(Item item)
     {
@@ -48,14 +66,29 @@ public partial class ShopItemContainer : Control
         _rtLabel.Text = _item.Name;
 
         _textureRect.Texture = _item.Icon;
-
-        GD.Print(
-            $"Item settings configured! Item: {_item.Name} | Texture on TextureRect: {_textureRect.Texture} | Text Color: {_rtLabel.GetThemeColor("default_color")}"
-        );
     }
 
     public void ClearItem()
     {
+        GD.Print($"Clearing item...");
         _item = null;
+        _textureRect.Texture = null;
+        _rtLabel.Text += " Bought!";
+    }
+
+    public void ItemSelected()
+    {
+        DebugLogger.LogMessage($"Shop item {_item} bought!", true);
+        // Buy the item
+        // TODO: display the item's description and stuff before buying it. This is just to test that I *can* buy it.
+        EventBus.Instance.EmitSignal(EventBus.SignalName.ShopItemBought, _item);
+
+        // Clear the item.
+        ClearItem();
+    }
+
+    private void OnFocused()
+    {
+        // DebugLogger.LogMessage($"{Name} is now in focus!", true);
     }
 }

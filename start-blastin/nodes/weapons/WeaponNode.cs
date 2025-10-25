@@ -241,9 +241,9 @@ namespace Weapons
                     GD.Print($"Updating weapon projectile speed to {_stats.ProjectileSpeed}");
                     break;
                 default:
-                    GD.PrintErr(
-                        $"Could not find an appropriate weapon stat that matches {statType} to update! Returning..."
-                    );
+                    // GD.PrintErr(
+                    //     $"Could not find an appropriate weapon stat that matches {statType} to update! Returning..."
+                    // );
                     break;
             }
         }

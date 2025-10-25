@@ -1,4 +1,5 @@
 using Godot;
+using Items;
 
 namespace Autoloads
 {
@@ -6,6 +7,7 @@ namespace Autoloads
     {
         public static EventBus Instance { get; private set; }
 
+        #region Waves
         [Signal]
         public delegate void WaveStartedEventHandler(int wave);
 
@@ -20,16 +22,24 @@ namespace Autoloads
 
         [Signal]
         public delegate void SpawnersReadyEventHandler();
+        #endregion
+
+        #region Shop and Items
+        [Signal]
+        public delegate void ShopOpenedEventHandler();
+
+        [Signal]
+        public delegate void ShopClosedEventHandler();
+
+        [Signal]
+        public delegate void ShopItemBoughtEventHandler(Item item);
+
+        #endregion
+
 
         public override void _Ready()
         {
             Instance = this;
-            SpawnersReady += () =>
-            {
-                GD.Print(
-                    $"{System.Reflection.MethodBase.GetCurrentMethod().ReflectedType}: SpawnersReady signal emitted!"
-                );
-            };
         }
     }
 }

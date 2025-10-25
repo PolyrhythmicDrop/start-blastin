@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Autoloads;
 using Components;
 using Effects;
 using Godot;
@@ -163,10 +164,9 @@ namespace Entities
             _controller = GetNode<PlayerController>("%PlayerController");
             _weaponComponent = GetNode<WeaponComponent>("%WeaponComponent");
             _currentHealth = _maxHealth;
-            GD.Print($"Player current health: {_currentHealth}");
 
             InitializeComponents();
-            InitializeStats();
+            ConnectSignals();
         }
 
         private void InitializeComponents()
@@ -175,14 +175,10 @@ namespace Entities
             _movementComponent.Initialize(this);
             _controller.Initialize(this);
             _weaponComponent.Initialize(this);
+        }
 
-            // Print current weapon stats for debug
-            GD.Print($"Current stats after InitializeComponents: ");
-            foreach (Stat stat in _stats.Stats.Values)
-            {
-                GD.Print($"{stat.Type} -> Base: {stat.BaseValue} | Current: {stat.CurrentValue}");
-            }
-
+        private void ConnectSignals()
+        {
             // Connect signals
             _stats.Connect(
                 StatManager.SignalName.StatUpdated,
@@ -191,30 +187,16 @@ namespace Entities
                         _weaponComponent.Weapon.UpdateWeaponStats(statType, stat)
                 )
             );
-        }
 
-        private void InitializeStats()
-        {
-            // _stats = new();
-            // _stats.AddStat(StatType.MaxHealth, _maxHealth);
-            // _stats.AddStat(StatType.Speed, _movementComponent.Speed);
-            // _stats.AddStat(StatType.Damage, _weaponComponent.Weapon.Stats.Damage);
-            // _stats.AddStat(StatType.FireRate, _weaponComponent.Weapon.Stats.FireRate);
-
-            // // Sample implementation of adding modifiers.
-            // Modifier sampleMod = ResourceLoader.Load<Modifier>(
-            //     "res://resources/items/modifiers/sample-modifier.tres"
-            // );
-            // Modifier sampleMod2 = ResourceLoader.Load<Modifier>(
-            //     "res://resources/items/modifiers/sample-modifier-2.tres"
-            // );
-            // Modifier sampleMod3 = ResourceLoader.Load<Modifier>(
-            //     "res://resources/items/modifiers/sample-modifier-3.tres"
-            // );
-            // Modifier sampleWeaponMod = ResourceLoader.Load<Modifier>(
-            //     "res://resources/items/modifiers/sample-weapon-modifier.tres"
-            // );
-            // AddModifier(sampleMod, sampleMod2, sampleMod3, sampleWeaponMod);
+            EventBus.Instance.Connect(
+                EventBus.SignalName.ShopItemBought,
+                Callable.From(
+                    (Item item) =>
+                    {
+                        BuyItem(item);
+                    }
+                )
+            );
         }
 
         public override void _Process(double delta)
@@ -265,6 +247,16 @@ namespace Entities
             GD.Print("Game over, man! Game over!");
             EmitSignal(SignalName.PlayerDied);
             QueueFree();
+        }
+
+        private void BuyItem(Item item)
+        {
+            switch (item)
+            {
+                case Modifier modifier:
+                    AddModifier(modifier);
+                    break;
+            }
         }
 
         public void AddModifier(params Modifier[] modifiers)

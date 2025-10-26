@@ -8,5 +8,7 @@ namespace Stats
         Damage,
         FireRate,
         ProjectileSpeed,
+
+        PluginSlots,
     }
 }

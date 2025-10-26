@@ -10,6 +10,7 @@ using Items;
 using PlayerComponents;
 using Projectiles;
 using Stats;
+using Utility;
 
 namespace Entities
 {
@@ -23,11 +24,15 @@ namespace Entities
         private CollisionShape2D _hitBox;
         private PlayerController _controller;
         private List<Modifier> _modifiers = new();
+        private List<Plugin> _plugins = new();
 
-        // private HealthComponent _healthComponent;
+        #region Stats
+
         private float _maxHealth => _stats.GetStat(StatType.MaxHealth).CurrentValue;
         private float _currentHealth;
         private float _speed => _stats.GetStat(StatType.Speed).CurrentValue;
+
+        private int _pluginSlots => (int)_stats.GetStat(StatType.PluginSlots).CurrentValue;
 
         // ~ Weapon Variables ~ //
 
@@ -37,6 +42,8 @@ namespace Entities
         private float _projectileSpeed => _stats.GetStat(StatType.ProjectileSpeed).CurrentValue;
 
         //-----------------------------//
+
+        #endregion
 
         [Export(PropertyHint.Range, "1,100,1,or_greater")]
         public float MaxHealth
@@ -138,12 +145,24 @@ namespace Entities
             set => _stats.UpdateStat(StatType.ProjectileSpeed, value);
         }
 
+        [Export]
+        public int PluginSlots
+        {
+            get => _pluginSlots;
+            set => _stats.UpdateStat(StatType.PluginSlots, value);
+        }
+
+        [Export]
+        public Godot.Collections.Array<Plugin> Plugins
+        {
+            get => [.. _plugins];
+            set => _plugins = [.. value];
+        }
+
         [Signal]
         public delegate void PlayerDiedEventHandler();
 
         public bool Dying = false;
-
-        // public void Heal(float healAmount) => _healthComponent.Heal(healAmount);
 
         public void Fire() => _weaponComponent.FireWeapon();
 
@@ -167,6 +186,7 @@ namespace Entities
 
             InitializeComponents();
             ConnectSignals();
+            ApplyStatEffects();
         }
 
         private void InitializeComponents()
@@ -175,6 +195,13 @@ namespace Entities
             _movementComponent.Initialize(this);
             _controller.Initialize(this);
             _weaponComponent.Initialize(this);
+
+            // Initialize plugin slots
+            _plugins.EnsureCapacity((int)_stats.GetStat(StatType.PluginSlots).CurrentValue);
+            DebugLogger.LogMessage(
+                $"Plugin capacity: {_plugins.Capacity} | Plugin slot count: {_pluginSlots} | Equipped plugins: {_plugins.Count}",
+                true
+            );
         }
 
         private void ConnectSignals()
@@ -256,6 +283,9 @@ namespace Entities
                 case Modifier modifier:
                     AddModifier(modifier);
                     break;
+                case Plugin plugin:
+                    AddPlugin(plugin);
+                    break;
             }
         }
 
@@ -264,39 +294,98 @@ namespace Entities
             if (_modifiers != null)
             {
                 _modifiers.AddRange(modifiers);
-                ApplyModifiers();
+                ApplyStatEffects();
             }
         }
 
+        public void AddPlugin(params Plugin[] plugins)
+        {
+            foreach (Plugin newPlugin in plugins)
+            {
+                DebugLogger.LogMessage(
+                    $"Attempting to buy {newPlugin.Name}...\nCurrent plugin count: {_plugins.Count} | Total plugin slots: {_pluginSlots}",
+                    true
+                );
+
+                if (_plugins.Count < _pluginSlots)
+                {
+                    _plugins.Add(newPlugin);
+                    DebugLogger.LogMessage(
+                        $"Plugin {newPlugin.Name} equipped! Current plugin count: {_plugins.Count} | Total plugin slots: {_pluginSlots}",
+                        true
+                    );
+                }
+                else
+                {
+                    DebugLogger.LogMessage(
+                        $"Cannot add {newPlugin.Name} to plugin list! Equipped plugin count cannot exceed plugin slots. Slots: {_pluginSlots} | Current equipped plugins: {_plugins.Count}",
+                        true,
+                        true
+                    );
+                }
+            }
+        }
+
+        public List<Plugin> GetPlugins()
+        {
+            return _plugins;
+        }
+
+        public bool HasPlugin(Plugin plugin)
+        {
+            return _plugins.Contains(plugin);
+        }
+
         /// <summary>
-        /// Applies all equipped modifiers, starting with addition operations and ending with multiplicative operations.
+        /// Applies StatEffects from all equipped items, starting with addition operations and ending with multiplicative operations.
         /// Starts with base values of all stats and applies the changes to each stat's current values.
         /// </summary>
-        private void ApplyModifiers()
+        private void ApplyStatEffects()
         {
             // Sort the StatEffects by operation
             List<StatEffect> addStatEffects = new();
             List<StatEffect> multiplyStatEffects = new();
 
-            // Sort the stat effect modifiers into add and multiply opertions
             foreach (Modifier modifier in _modifiers)
             {
-                foreach (Effect effect in modifier.Effects)
+                SortEffects(modifier.Effects, addStatEffects, multiplyStatEffects);
+            }
+
+            foreach (Plugin plugin in _plugins)
+            {
+                SortEffects(plugin.Effects, addStatEffects, multiplyStatEffects);
+            }
+
+            UpdateStatsWithEffects(addStatEffects, multiplyStatEffects);
+        }
+
+        private void SortEffects(
+            IEnumerable<Effect> effects,
+            List<StatEffect> addEffects,
+            List<StatEffect> multiplyEffects
+        )
+        {
+            foreach (Effect effect in effects)
+            {
+                if (effect is StatEffect statEffect)
                 {
-                    if (effect is StatEffect statEffect)
+                    if (statEffect.Operation == Operation.Add)
                     {
-                        if (statEffect.Operation == Operation.Add)
-                        {
-                            addStatEffects.Add(statEffect);
-                        }
-                        else if (statEffect.Operation == Operation.Multiply)
-                        {
-                            multiplyStatEffects.Add(statEffect);
-                        }
+                        addEffects.Add(statEffect);
+                    }
+                    else if (statEffect.Operation == Operation.Multiply)
+                    {
+                        multiplyEffects.Add(statEffect);
                     }
                 }
             }
+        }
 
+        private void UpdateStatsWithEffects(
+            List<StatEffect> addEffects,
+            List<StatEffect> multiplyEffects
+        )
+        {
             // Create a new dictionary for the final values and initialize it with the base values for each stat.
             Dictionary<StatType, float> finalValues = new();
             foreach (KeyValuePair<StatType, Stat> kvp in _stats.Stats)
@@ -305,7 +394,7 @@ namespace Entities
             }
 
             // Perform add operations
-            foreach (StatEffect addEffect in addStatEffects)
+            foreach (StatEffect addEffect in addEffects)
             {
                 if (finalValues.ContainsKey(addEffect.Type))
                 {
@@ -321,7 +410,7 @@ namespace Entities
             }
 
             // Then perform multiplication operations.
-            foreach (StatEffect multiplyEffect in multiplyStatEffects)
+            foreach (StatEffect multiplyEffect in multiplyEffects)
             {
                 if (finalValues.ContainsKey(multiplyEffect.Type))
                 {

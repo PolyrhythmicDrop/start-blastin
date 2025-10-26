@@ -38,6 +38,7 @@ namespace Entities
 
         private ProjectileType _projType;
         private float _damage => _stats.GetStat(StatType.Damage).CurrentValue;
+        private float _crashDamage => _stats.GetStat(StatType.CrashDamage).CurrentValue;
         private float _fireRate => _stats.GetStat(StatType.FireRate).CurrentValue;
         private float _projectileSpeed => _stats.GetStat(StatType.ProjectileSpeed).CurrentValue;
 
@@ -102,13 +103,20 @@ namespace Entities
         }
 
         /// <summary>
-        /// The damage done by this weapon.
+        /// The damage done by the player's weapon.
         /// </summary>
         [Export]
         public float Damage
         {
             get => _damage;
             set => _stats.UpdateStat(StatType.Damage, value);
+        }
+
+        [Export]
+        public float CrashDamage
+        {
+            get => _crashDamage;
+            set => _stats.UpdateStat(StatType.CrashDamage, value);
         }
 
         /// <summary>
@@ -211,7 +219,16 @@ namespace Entities
                 StatManager.SignalName.StatUpdated,
                 Callable.From(
                     (StatType statType, Stat stat) =>
-                        _weaponComponent.Weapon.UpdateWeaponStats(statType, stat)
+                    {
+                        if (
+                            statType == StatType.FireRate
+                            || statType == StatType.Damage
+                            || statType == StatType.ProjectileSpeed
+                        )
+                        {
+                            _weaponComponent.Weapon.UpdateWeaponStats(statType, stat);
+                        }
+                    }
                 )
             );
 
@@ -258,6 +275,10 @@ namespace Entities
 
         public void Heal(float healAmount)
         {
+            DebugLogger.LogMessage(
+                $"{Name} is healing. Current health: {_currentHealth} | Heal amount: {healAmount} | Max health: {_maxHealth}",
+                true
+            );
             _currentHealth = Mathf.Min(_currentHealth + healAmount, _maxHealth);
         }
 

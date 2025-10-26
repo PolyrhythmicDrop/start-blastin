@@ -94,7 +94,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/h_separation = 100
 theme_override_constants/v_separation = 10
-columns = 2
+columns = 3
 
 [node name="RerollButton" type="Button" parent="PanelContainer/VBoxContainer/WaveButtons/MarginContainer/GridContainer"]
 unique_name_in_owner = true
@@ -104,12 +104,27 @@ size_flags_horizontal = 6
 size_flags_vertical = 6
 focus_neighbor_left = NodePath("../../../../ItemSelection/GridContainer/ShopItemContainer3")
 focus_neighbor_top = NodePath("../../../../ItemSelection/GridContainer/ShopItemContainer1")
-focus_neighbor_right = NodePath("../NextWaveButton")
+focus_neighbor_right = NodePath("../Heal50")
 focus_neighbor_bottom = NodePath("../../../../ItemSelection/GridContainer/ShopItemContainer1")
 focus_next = NodePath("../NextWaveButton")
 focus_previous = NodePath("../../../../ItemSelection/GridContainer/ShopItemContainer3")
 theme_override_font_sizes/font_size = 32
 text = "Reroll"
+
+[node name="Heal50" type="Button" parent="PanelContainer/VBoxContainer/WaveButtons/MarginContainer/GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+focus_neighbor_left = NodePath("../RerollButton")
+focus_neighbor_top = NodePath("../../../../ItemSelection/GridContainer/ShopItemContainer2")
+focus_neighbor_right = NodePath("../NextWaveButton")
+focus_neighbor_bottom = NodePath("../../../../ItemSelection/GridContainer/ShopItemContainer2")
+focus_next = NodePath("../NextWaveButton")
+focus_previous = NodePath("../RerollButton")
+theme_override_font_sizes/font_size = 32
+text = "Heal"
 
 [node name="NextWaveButton" type="Button" parent="PanelContainer/VBoxContainer/WaveButtons/MarginContainer/GridContainer"]
 unique_name_in_owner = true
@@ -117,7 +132,7 @@ custom_minimum_size = Vector2(200, 200)
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 6
-focus_neighbor_left = NodePath("../RerollButton")
+focus_neighbor_left = NodePath("../Heal50")
 focus_neighbor_top = NodePath("../../../../ItemSelection/GridContainer/ShopItemContainer1")
 focus_neighbor_right = NodePath("../RerollButton")
 focus_neighbor_bottom = NodePath("../../../../ItemSelection/GridContainer/ShopItemContainer1")

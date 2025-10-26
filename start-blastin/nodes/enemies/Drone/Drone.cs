@@ -12,14 +12,8 @@ namespace Enemies
         private AnimatedSprite2D _engine;
         private AnimatedSprite2D _destruction;
 
-        // private Vector2 _currentGlobalPosition;
-        // private Vector2 _lastGlobalPosition;
-
         public override void _Ready()
         {
-            // GD.Print(
-            //     $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name} called!"
-            // );
             base._Ready();
             _spriteContainer = GetNode<Node2D>("%SpriteContainer");
             _base = _spriteContainer.GetNode<AnimatedSprite2D>("%Base");
@@ -34,8 +28,6 @@ namespace Enemies
         {
             _lastGlobalPosition = _currentGlobalPosition;
             _currentGlobalPosition = GlobalPosition;
-
-            // Vector2 motion = _currentGlobalPosition - _lastGlobalPosition;
 
             base._Process(delta);
             SetMoveAnimation();

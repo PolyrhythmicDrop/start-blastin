@@ -17,6 +17,7 @@ namespace Shop
         private List<Item> _itemPool = new();
         private Button _nextWaveButton;
         private Button _rerollButton;
+        private Button _healButton;
 
         public void LoadItemPool() =>
             PoolLoader.LoadResourcePool(_itemPool, "res://resources/items/", true);
@@ -31,6 +32,7 @@ namespace Shop
 
             _nextWaveButton = GetNode<Button>("%NextWaveButton");
             _rerollButton = GetNode<Button>("%RerollButton");
+            _healButton = GetNode<Button>("%Heal50");
 
             _itemContainers = new()
             {
@@ -64,6 +66,17 @@ namespace Shop
             {
                 _nextWaveButton.Connect(Button.SignalName.Pressed, wavePressedCallable);
                 GD.Print($"Next wave button connected!");
+            }
+
+            // Connect heal button signal
+            Callable playerHealCallable = Callable.From(() =>
+            {
+                float healAmount = _player.MaxHealth * 0.5f;
+                _player.Heal(healAmount);
+            });
+            if (!_healButton.IsConnected(Button.SignalName.Pressed, playerHealCallable))
+            {
+                _healButton.Connect(Button.SignalName.Pressed, playerHealCallable);
             }
         }
 

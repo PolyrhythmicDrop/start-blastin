@@ -5,6 +5,7 @@ using Entities;
 using FileIO;
 using Godot;
 using Items;
+using Services;
 using Utility;
 
 namespace Shop
@@ -12,7 +13,7 @@ namespace Shop
     [GlobalClass]
     public partial class ShopUI : Control
     {
-        private Player _player;
+        private int _playerId;
         private List<ShopItemContainer> _itemContainers;
         private List<Item> _itemPool = new();
         private Button _nextWaveButton;
@@ -25,8 +26,6 @@ namespace Shop
         public override void _Ready()
         {
             DebugLogger.LogMessage($"Calling _Ready...", true);
-
-            _player = (Player)GetTree().GetFirstNodeInGroup("players");
 
             LoadItemPool();
 
@@ -45,6 +44,11 @@ namespace Shop
             PopulateShopSlots();
             // Grab the focus to the first shop item.
             _itemContainers[0].CallDeferred(MethodName.GrabFocus);
+        }
+
+        public void Initialize(int playerId)
+        {
+            _playerId = playerId;
         }
 
         private void ConnectSignals()
@@ -69,15 +73,15 @@ namespace Shop
             }
 
             // Connect heal button signal
-            Callable playerHealCallable = Callable.From(() =>
-            {
-                float healAmount = _player.MaxHealth * 0.5f;
-                _player.Heal(healAmount);
-            });
-            if (!_healButton.IsConnected(Button.SignalName.Pressed, playerHealCallable))
-            {
-                _healButton.Connect(Button.SignalName.Pressed, playerHealCallable);
-            }
+            // Callable playerHealCallable = Callable.From(() =>
+            // {
+            //     float healAmount = _player.MaxHealth * 0.5f;
+            //     _player.Heal(healAmount);
+            // });
+            // if (!_healButton.IsConnected(Button.SignalName.Pressed, playerHealCallable))
+            // {
+            //     _healButton.Connect(Button.SignalName.Pressed, playerHealCallable);
+            // }
         }
 
         /// <summary>
@@ -149,8 +153,12 @@ namespace Shop
             bool itemInContainer =
                 _itemContainers.Find(container => container.Item == item) != null;
 
+            PlayerService service = ServiceManager.Instance.GetService<PlayerService>();
+
             // Is the item a plugin, and, if so, does the player already have it?
-            bool playerHasPlugin = item is Plugin plugin ? _player.HasPlugin(plugin) : false;
+            bool playerHasPlugin = item is Plugin plugin
+                ? service.PlayerHasPlugin(_playerId, plugin)
+                : false;
 
             // Return true if both of the above are false
             return !itemInContainer && !playerHasPlugin;

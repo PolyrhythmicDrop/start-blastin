@@ -10,6 +10,7 @@ namespace Shop
     [GlobalClass]
     public partial class ShopBase : CanvasLayer
     {
+        private int _playerId;
         private ShopUI _shopUI;
         private PackedScene _shopUiScene = ResourceLoader.Load<PackedScene>(
             "res://nodes/ui/shop/shop-ui.tscn"
@@ -19,7 +20,15 @@ namespace Shop
         {
             DebugLogger.LogMessage("Ready called!", true);
             _shopUI = _shopUiScene.Instantiate<ShopUI>();
+            _shopUI.Initialize(_playerId);
             ConnectSignals();
+        }
+
+        public void Initialize(int playerId)
+        {
+            DebugLogger.LogMessage($"Initializing shop base with player ID {playerId}", true);
+            _playerId = playerId;
+            Layer = 2;
         }
 
         private void ConnectSignals()

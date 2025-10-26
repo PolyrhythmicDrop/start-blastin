@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://die13kk7ig6uu"]
+
+[ext_resource type="Script" uid="uid://b2cdnpa12pcfk" path="res://architecture/autoloads/SceneManager.cs" id="1_ue856"]
+
+[node name="SceneManager" type="Node"]
+script = ExtResource("1_ue856")
+DefaultScenePath = "uid://dgcswjykgey5y"
+OverrideScenePath = "res://nodes/level/main-level.tscn"

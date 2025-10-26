@@ -24,13 +24,14 @@ resources_spreadsheet_view/freeze_first_column=true
 [application]
 
 config/name="Start Blastin"
-run/main_scene="uid://dgcswjykgey5y"
+run/main_scene="uid://die13kk7ig6uu"
 config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 EventBus="*res://architecture/autoloads/EventBus.cs"
+ServiceManager="*res://architecture/services/ServiceManager.cs"
 
 [debug]
 

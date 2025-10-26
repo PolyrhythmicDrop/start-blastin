@@ -9,6 +9,7 @@ using Interfaces;
 using Items;
 using PlayerComponents;
 using Projectiles;
+using Services;
 using Stats;
 using Utility;
 
@@ -17,6 +18,8 @@ namespace Entities
     [GlobalClass]
     public partial class Player : CharacterBody2D, IDie, IHealthful, IVelocityProvider, IStats
     {
+        private int _playerId = 1;
+        private PlayerService _service = ServiceManager.Instance.GetService<PlayerService>();
         private StatManager _stats = new();
         private AnimationComponent _animationComponent;
         private MovementComponent _movementComponent;
@@ -46,6 +49,8 @@ namespace Entities
 
         #endregion
 
+        public int PlayerId => _playerId;
+
         [Export(PropertyHint.Range, "1,100,1,or_greater")]
         public float MaxHealth
         {
@@ -60,6 +65,10 @@ namespace Entities
                 {
                     _stats.UpdateStat(StatType.MaxHealth, 1);
                 }
+                _service.UpdateMaxHealth(
+                    _playerId,
+                    _stats.GetStat(StatType.MaxHealth).CurrentValue
+                );
             }
         }
 
@@ -76,6 +85,7 @@ namespace Entities
                 {
                     _currentHealth = value;
                 }
+                _service.UpdateCurrentHealth(_playerId, _currentHealth);
             }
         }
 
@@ -164,7 +174,11 @@ namespace Entities
         public Godot.Collections.Array<Plugin> Plugins
         {
             get => [.. _plugins];
-            set => _plugins = [.. value];
+            set
+            {
+                _plugins = [.. value];
+                _service.UpdateEquippedPlugins(_playerId, _plugins);
+            }
         }
 
         [Signal]
@@ -183,6 +197,11 @@ namespace Entities
 
         public StatManager GetStatManager() => _stats;
 
+        public void SetPlayerId(int id)
+        {
+            _playerId = id;
+        }
+
         public override void _Ready()
         {
             _animationComponent = GetNode<AnimationComponent>("%AnimationComponent");
@@ -191,6 +210,7 @@ namespace Entities
             _controller = GetNode<PlayerController>("%PlayerController");
             _weaponComponent = GetNode<WeaponComponent>("%WeaponComponent");
             _currentHealth = _maxHealth;
+            _service.UpdateCurrentHealth(_playerId, _currentHealth);
 
             InitializeComponents();
             ConnectSignals();
@@ -205,7 +225,7 @@ namespace Entities
             _weaponComponent.Initialize(this);
 
             // Initialize plugin slots
-            _plugins.EnsureCapacity((int)_stats.GetStat(StatType.PluginSlots).CurrentValue);
+            _plugins.Capacity = (int)_stats.GetStat(StatType.PluginSlots).CurrentValue;
             DebugLogger.LogMessage(
                 $"Plugin capacity: {_plugins.Capacity} | Plugin slot count: {_pluginSlots} | Equipped plugins: {_plugins.Count}",
                 true
@@ -227,6 +247,10 @@ namespace Entities
                         )
                         {
                             _weaponComponent.Weapon.UpdateWeaponStats(statType, stat);
+                        }
+                        else if (statType == StatType.MaxHealth)
+                        {
+                            UpdatePlayerServiceStats(statType, stat.CurrentValue);
                         }
                     }
                 )
@@ -265,6 +289,7 @@ namespace Entities
             _currentHealth -= damage;
 
             GD.Print($"Player has taken damage! Current health: {_currentHealth}");
+            _service.UpdateCurrentHealth(_playerId, _currentHealth);
 
             if (_currentHealth <= 0)
             {
@@ -280,6 +305,7 @@ namespace Entities
                 true
             );
             _currentHealth = Mathf.Min(_currentHealth + healAmount, _maxHealth);
+            _service.UpdateCurrentHealth(_playerId, _currentHealth);
         }
 
         public void Die()
@@ -345,6 +371,7 @@ namespace Entities
                     );
                 }
             }
+            _service.UpdateEquippedPlugins(_playerId, _plugins);
         }
 
         public List<Plugin> GetPlugins()
@@ -450,6 +477,16 @@ namespace Entities
             foreach (KeyValuePair<StatType, float> kvp in finalValues)
             {
                 _stats.UpdateStat(kvp.Key, kvp.Value);
+            }
+        }
+
+        private void UpdatePlayerServiceStats(StatType statType, float value)
+        {
+            switch (statType)
+            {
+                case StatType.MaxHealth:
+                    _service.UpdateMaxHealth(_playerId, value);
+                    break;
             }
         }
     }

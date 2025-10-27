@@ -48,7 +48,7 @@ namespace PlayerComponents
             if (_enabled)
             {
                 SetMovementDirection();
-                SetDodge();
+                SetPhase();
                 SetFiring();
             }
         }
@@ -71,11 +71,11 @@ namespace PlayerComponents
             }
         }
 
-        public void SetDodge()
+        public void SetPhase()
         {
-            if (Input.IsActionPressed("dodge"))
+            if (Input.IsActionPressed("phase"))
             {
-                _player.StartDodge();
+                _player.StartPhase();
             }
         }
     }

@@ -10,31 +10,31 @@ namespace PlayerComponents
     {
         private Player _player;
         private float _speed => _player.Speed;
-        private Timer _dodgeTimer = new();
-        private Timer _dodgeCooldownTimer = new();
+        private Timer _phaseTimer = new();
+        private Timer _phaseCooldownTimer = new();
 
-        public bool DodgeReady;
+        public bool PhaseReady;
 
         public override void _Ready()
         {
-            DodgeReady = true;
-            _dodgeTimer = GetNode<Timer>("%DodgeTimer");
-            _dodgeCooldownTimer = GetNode<Timer>("%DodgeCooldownTimer");
+            PhaseReady = true;
+            _phaseTimer = GetNode<Timer>("%PhaseTimer");
+            _phaseCooldownTimer = GetNode<Timer>("%PhaseCooldownTimer");
         }
 
         public void Initialize(Player player)
         {
             _player = player;
-            _dodgeTimer.WaitTime = _player.DodgeDuration;
-            _dodgeCooldownTimer.WaitTime = _player.DodgeCooldown;
+            _phaseTimer.WaitTime = _player.PhaseDuration;
+            _phaseCooldownTimer.WaitTime = _player.PhaseCooldown;
 
             ConnectSignals();
         }
 
         private void ConnectSignals()
         {
-            _dodgeTimer.Timeout += _player.EndDodge;
-            _dodgeCooldownTimer.Timeout += _player.OnDodgeReady;
+            _phaseTimer.Timeout += _player.EndPhase;
+            _phaseCooldownTimer.Timeout += _player.OnPhaseReady;
         }
 
         public Vector2 SetVelocity(float xInput, float yInput)
@@ -42,19 +42,19 @@ namespace PlayerComponents
             return new Vector2(xInput * _speed, yInput * _speed);
         }
 
-        public void StartDodge()
+        public void StartPhase()
         {
             DebugLogger.LogMessage(
-                $"Dodge started! Dodge duration: {_player.DodgeDuration} | Dodge speed: {_player.DodgeSpeed}"
+                $"Dodge started! Dodge duration: {_player.PhaseDuration} | Dodge speed: {_player.PhaseSpeed}"
             );
-            DodgeReady = false;
-            _dodgeTimer.Start(_player.DodgeDuration);
+            PhaseReady = false;
+            _phaseTimer.Start(_player.PhaseDuration);
         }
 
-        public void EndDodge()
+        public void EndPhase()
         {
-            DebugLogger.LogMessage($"Dodge ending! Dodge cooldown: {_player.DodgeCooldown}");
-            _dodgeCooldownTimer.Start(_player.DodgeCooldown);
+            DebugLogger.LogMessage($"Dodge ending! Dodge cooldown: {_player.PhaseCooldown}");
+            _phaseCooldownTimer.Start(_player.PhaseCooldown);
         }
     }
 }

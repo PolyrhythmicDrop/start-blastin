@@ -11,9 +11,9 @@ namespace PlayerComponents
         private AnimatedSprite2D _engineEffectSprite;
         private Sprite2D _engineSprite;
         private Sprite2D _bodySprite;
-        private AnimatedSprite2D _dodgeSprite;
+        private AnimatedSprite2D _phaseSprite;
         private AnimatedSprite2D _destructionSprite;
-        private AnimatedSprite2D _dodgeReadySprite;
+        private AnimatedSprite2D _phaseReadySprite;
         private ShaderMaterial _hitEffectShaderMat;
 
         public override void _Ready()
@@ -23,8 +23,8 @@ namespace PlayerComponents
             _engineSprite = _spriteContainer.GetNode<Sprite2D>("%Engine");
             _bodySprite = _spriteContainer.GetNode<Sprite2D>("%Body");
             _destructionSprite = _spriteContainer.GetNode<AnimatedSprite2D>("%Destruction");
-            _dodgeSprite = _spriteContainer.GetNode<AnimatedSprite2D>("%Dodge");
-            _dodgeReadySprite = _spriteContainer.GetNode<AnimatedSprite2D>("%DodgeReadyEffect");
+            _phaseSprite = _spriteContainer.GetNode<AnimatedSprite2D>("%Phase");
+            _phaseReadySprite = _spriteContainer.GetNode<AnimatedSprite2D>("%PhaseReadyEffect");
             _hitEffectShaderMat = ResourceLoader.Load<ShaderMaterial>(
                 "res://resources/materials/hit-effect.tres"
             );
@@ -39,9 +39,9 @@ namespace PlayerComponents
 
         public void ConnectSignals()
         {
-            _dodgeReadySprite.AnimationFinished += () =>
+            _phaseReadySprite.AnimationFinished += () =>
             {
-                _dodgeReadySprite.Visible = false;
+                _phaseReadySprite.Visible = false;
             };
         }
 
@@ -100,24 +100,24 @@ namespace PlayerComponents
         /// Toggles the player's dodge animation on or off.
         /// </summary>
         /// <param name="on">When true, turns on the dodge animation. When false, turns it off.</param>
-        public void ToggleDodgeAnimation(bool on)
+        public void TogglePhaseAnimation(bool on)
         {
             if (on)
             {
-                _dodgeSprite.Visible = true;
-                _dodgeSprite.Play("default");
+                _phaseSprite.Visible = true;
+                _phaseSprite.Play("default");
             }
             else
             {
-                _dodgeSprite.Visible = false;
-                _dodgeSprite.Stop();
+                _phaseSprite.Visible = false;
+                _phaseSprite.Stop();
             }
         }
 
-        public void PlayDodgeReadyEffect()
+        public void PlayPhaseReadyEffect()
         {
-            _dodgeReadySprite.Visible = true;
-            _dodgeReadySprite.Play("default");
+            _phaseReadySprite.Visible = true;
+            _phaseReadySprite.Play("default");
         }
     }
 }

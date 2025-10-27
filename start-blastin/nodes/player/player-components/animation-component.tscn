@@ -417,7 +417,7 @@ metadata/_aseprite_wizard_config_ = {
 }
 metadata/_aseprite_wizard_source_file_hash_ = "648485a507c424b246e61521102ea1b0"
 
-[node name="Dodge" type="AnimatedSprite2D" parent="SpriteContainer"]
+[node name="Phase" type="AnimatedSprite2D" parent="SpriteContainer"]
 unique_name_in_owner = true
 visible = false
 texture_filter = 1
@@ -447,7 +447,7 @@ metadata/_aseprite_wizard_config_ = {
 }
 metadata/_aseprite_wizard_source_file_hash_ = "864733cda70a910397a1e7754eaa6a53"
 
-[node name="DodgeReadyEffect" type="AnimatedSprite2D" parent="SpriteContainer"]
+[node name="PhaseReadyEffect" type="AnimatedSprite2D" parent="SpriteContainer"]
 unique_name_in_owner = true
 visible = false
 texture_filter = 1

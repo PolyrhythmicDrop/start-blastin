@@ -4,9 +4,9 @@ namespace Stats
     {
         MaxHealth,
         Speed,
-        DodgeDuration,
-        DodgeCooldown,
-        DodgeSpeed,
+        PhaseDuration,
+        PhaseCooldown,
+        PhaseSpeed,
         CrashDamage,
         Damage,
         FireRate,

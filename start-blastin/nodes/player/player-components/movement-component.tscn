@@ -5,10 +5,10 @@
 [node name="MovementComponent" type="Node"]
 script = ExtResource("1_o7ihd")
 
-[node name="DodgeTimer" type="Timer" parent="."]
+[node name="PhaseTimer" type="Timer" parent="."]
 unique_name_in_owner = true
 one_shot = true
 
-[node name="DodgeCooldownTimer" type="Timer" parent="."]
+[node name="PhaseCooldownTimer" type="Timer" parent="."]
 unique_name_in_owner = true
 one_shot = true

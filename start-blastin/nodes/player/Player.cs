@@ -35,9 +35,9 @@ namespace Entities
         private float _maxHealth => _stats.GetStat(StatType.MaxHealth).CurrentValue;
         private float _currentHealth;
         private float _speed => _stats.GetStat(StatType.Speed).CurrentValue;
-        private float _dodgeDuration => _stats.GetStat(StatType.DodgeDuration).CurrentValue;
-        private float _dodgeCooldown => _stats.GetStat(StatType.DodgeCooldown).CurrentValue;
-        private float _dodgeSpeed => _stats.GetStat(StatType.DodgeSpeed).CurrentValue;
+        private float _phaseDuration => _stats.GetStat(StatType.PhaseDuration).CurrentValue;
+        private float _phaseCooldown => _stats.GetStat(StatType.PhaseCooldown).CurrentValue;
+        private float _phaseSpeed => _stats.GetStat(StatType.PhaseSpeed).CurrentValue;
 
         private int _pluginSlots => (int)_stats.GetStat(StatType.PluginSlots).CurrentValue;
 
@@ -55,8 +55,8 @@ namespace Entities
 
         #region State
 
-        private bool _isDodging = false;
-        private bool _dodgeReady => _movementComponent.DodgeReady;
+        private bool _isPhasing = false;
+        private bool _phaseReady => _movementComponent.PhaseReady;
         private bool _isDying = false;
 
         #endregion
@@ -87,27 +87,37 @@ namespace Entities
             set => _stats.UpdateStat(StatType.Speed, Mathf.Max(0, value));
         }
 
-        [Export(PropertyHint.Range, "0.1,3,0.1,greater_than")]
-        public float DodgeDuration
+        [Export]
+        public float CrashDamage
         {
-            get => _dodgeDuration;
-            set => _stats.UpdateStat(StatType.DodgeDuration, Mathf.Max(0.1f, value));
+            get => _crashDamage;
+            set => _stats.UpdateStat(StatType.CrashDamage, value);
+        }
+
+        [ExportGroup("Phase Stats")]
+        [Export(PropertyHint.Range, "0.1,3,0.1,greater_than")]
+        public float PhaseDuration
+        {
+            get => _phaseDuration;
+            set => _stats.UpdateStat(StatType.PhaseDuration, Mathf.Max(0.1f, value));
         }
 
         [Export(PropertyHint.Range, "0.1,5,0.1,greater_than")]
-        public float DodgeCooldown
+        public float PhaseCooldown
         {
-            get => _dodgeCooldown;
-            set => _stats.UpdateStat(StatType.DodgeCooldown, Mathf.Max(0.05f, value));
+            get => _phaseCooldown;
+            set => _stats.UpdateStat(StatType.PhaseCooldown, Mathf.Max(0.05f, value));
         }
 
         [Export(PropertyHint.Range, "0,2000,10,greater_than")]
-        public float DodgeSpeed
+        public float PhaseSpeed
         {
-            get => _dodgeSpeed;
-            set => _stats.UpdateStat(StatType.DodgeSpeed, Mathf.Max(0, value));
+            get => _phaseSpeed;
+            set => _stats.UpdateStat(StatType.PhaseSpeed, Mathf.Max(0, value));
         }
 
+        [ExportGroup("Weapon Stats")]
+        [Export]
         public ProjectileType ProjectileType
         {
             get => _projType;
@@ -121,14 +131,7 @@ namespace Entities
         public float Damage
         {
             get => _damage;
-            set => _stats.UpdateStat(StatType.Damage, value);
-        }
-
-        [Export]
-        public float CrashDamage
-        {
-            get => _crashDamage;
-            set => _stats.UpdateStat(StatType.CrashDamage, value);
+            set => _stats.UpdateStat(StatType.Damage, Mathf.Max(0, value));
         }
 
         /// <summary>
@@ -139,17 +142,7 @@ namespace Entities
         public float FireRate
         {
             get => _fireRate;
-            set
-            {
-                if (value < 0.06)
-                {
-                    _stats.UpdateStat(StatType.FireRate, 0.05f);
-                }
-                else
-                {
-                    _stats.UpdateStat(StatType.FireRate, value);
-                }
-            }
+            set => _stats.UpdateStat(StatType.FireRate, Mathf.Max(0.05f, value));
         }
 
         /// <summary>
@@ -165,6 +158,7 @@ namespace Entities
             set => _stats.UpdateStat(StatType.ProjectileSpeed, value);
         }
 
+        [ExportGroup("Equipment Stats")]
         [Export]
         public int PluginSlots
         {
@@ -187,7 +181,7 @@ namespace Entities
         public delegate void PlayerDiedEventHandler();
 
         public bool Dying => _isDying;
-        public bool Dodging => _isDodging;
+        public bool Dodging => _isPhasing;
 
         public void Fire() => _weaponComponent.FireWeapon();
 
@@ -219,7 +213,7 @@ namespace Entities
             ConnectSignals();
 
             DebugLogger.LogMessage(
-                $"Dodge cooldown after InitializeComponents: {_stats.GetStat(StatType.DodgeCooldown).Type} | {_stats.GetStat(StatType.DodgeCooldown).CurrentValue} | {_stats.GetStat(StatType.DodgeCooldown).BaseValue}",
+                $"Phase cooldown after InitializeComponents: {_stats.GetStat(StatType.PhaseCooldown).Type} | {_stats.GetStat(StatType.PhaseCooldown).CurrentValue} | {_stats.GetStat(StatType.PhaseCooldown).BaseValue}",
                 true
             );
             ApplyStatEffects();
@@ -290,13 +284,13 @@ namespace Entities
             MoveAndSlide();
         }
 
-        public void StartDodge()
+        public void StartPhase()
         {
-            if (CanDodge())
+            if (CanPhase())
             {
                 DebugLogger.LogMessage($"Starting dodge!");
-                _isDodging = true;
-                Speed += DodgeSpeed;
+                _isPhasing = true;
+                Speed += PhaseSpeed;
 
                 // Set collision
                 SetCollisionMaskValue(3, false);
@@ -307,16 +301,16 @@ namespace Entities
                     enemy.SetCollisionMaskValue(1, false);
                 }
 
-                _movementComponent.StartDodge();
-                _animationComponent.ToggleDodgeAnimation(true);
+                _movementComponent.StartPhase();
+                _animationComponent.TogglePhaseAnimation(true);
             }
         }
 
-        public void EndDodge()
+        public void EndPhase()
         {
-            DebugLogger.LogMessage($"Ending dodge!");
-            _isDodging = false;
-            Speed -= DodgeSpeed;
+            DebugLogger.LogMessage($"Ending phase!");
+            _isPhasing = false;
+            Speed -= PhaseSpeed;
 
             // Set collision
             SetCollisionMaskValue(3, true);
@@ -327,19 +321,19 @@ namespace Entities
                 enemy.SetCollisionMaskValue(1, true);
             }
 
-            _movementComponent.EndDodge();
-            _animationComponent.ToggleDodgeAnimation(false);
+            _movementComponent.EndPhase();
+            _animationComponent.TogglePhaseAnimation(false);
         }
 
-        private bool CanDodge()
+        private bool CanPhase()
         {
-            return !_isDodging && !_isDying && _dodgeReady;
+            return !_isPhasing && !_isDying && _phaseReady;
         }
 
-        public void OnDodgeReady()
+        public void OnPhaseReady()
         {
-            _animationComponent.PlayDodgeReadyEffect();
-            _movementComponent.DodgeReady = true;
+            _animationComponent.PlayPhaseReadyEffect();
+            _movementComponent.PhaseReady = true;
         }
 
         public void TakeDamage(float damage)
@@ -504,10 +498,6 @@ namespace Entities
             {
                 finalValues[kvp.Key] = kvp.Value.BaseValue;
             }
-            DebugLogger.LogMessage(
-                $"Final values dict initialized! Base value for DodgeCooldown in StatManager: {_stats.GetStat(StatType.DodgeCooldown).BaseValue} | Base value in final values dict: {finalValues[StatType.DodgeCooldown]}",
-                true
-            );
 
             // Perform add operations
             foreach (StatEffect addEffect in addEffects)

@@ -60,7 +60,7 @@ namespace Autoloads
         {
             InitializeServices();
 
-            bool success = false;
+            bool success;
             if (_shouldOverrideScene)
             {
                 success = LoadScene(_overrideScenePath);
@@ -82,14 +82,17 @@ namespace Autoloads
             {
                 AddPlayers();
             }
+            else
+            {
+                DebugLogger.LogMessage("Scene loading failed!", true, true);
+            }
         }
 
         private void InitializeServices()
         {
             // Add PlayerService
-            PlayerService playerService = new();
-            ServiceManager.Instance.RegisterService(playerService);
-            GD.Print($"Player service registered!");
+            ServiceManager.Instance.RegisterService(new PlayerService());
+            DebugLogger.LogMessage($"Player service registered!", true);
         }
 
         private bool LoadScene(string scenePath)

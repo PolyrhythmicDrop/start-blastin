@@ -11,6 +11,7 @@ namespace PlayerComponents
         private AnimatedSprite2D _engineEffectSprite;
         private Sprite2D _engineSprite;
         private Sprite2D _bodySprite;
+        private AnimatedSprite2D _dodgeSprite;
         private AnimatedSprite2D _destructionSprite;
         private ShaderMaterial _hitEffectShaderMat;
 
@@ -21,6 +22,7 @@ namespace PlayerComponents
             _engineSprite = _spriteContainer.GetNode<Sprite2D>("%Engine");
             _bodySprite = _spriteContainer.GetNode<Sprite2D>("%Body");
             _destructionSprite = _spriteContainer.GetNode<AnimatedSprite2D>("%Destruction");
+            _dodgeSprite = _spriteContainer.GetNode<AnimatedSprite2D>("%Dodge");
             _hitEffectShaderMat = ResourceLoader.Load<ShaderMaterial>(
                 "res://resources/materials/hit-effect.tres"
             );
@@ -79,6 +81,24 @@ namespace PlayerComponents
                 tween.TweenCallback(
                     Callable.From(() => shaderMaterial.SetShaderParameter(mixRatioPath, 0))
                 );
+            }
+        }
+
+        /// <summary>
+        /// Toggles the player's dodge animation on or off.
+        /// </summary>
+        /// <param name="on">When true, turns on the dodge animation. When false, turns it off.</param>
+        public void ToggleDodgeAnimation(bool on)
+        {
+            if (on)
+            {
+                _dodgeSprite.Visible = true;
+                _dodgeSprite.Play("default");
+            }
+            else
+            {
+                _dodgeSprite.Visible = false;
+                _dodgeSprite.Stop();
             }
         }
     }

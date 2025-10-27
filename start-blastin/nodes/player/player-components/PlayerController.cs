@@ -48,6 +48,7 @@ namespace PlayerComponents
             if (_enabled)
             {
                 SetMovementDirection();
+                SetDodge();
                 SetFiring();
             }
         }
@@ -67,6 +68,14 @@ namespace PlayerComponents
             else if (Input.IsActionJustReleased("fire") || !Input.IsActionPressed("fire"))
             {
                 _player.StopFire();
+            }
+        }
+
+        public void SetDodge()
+        {
+            if (Input.IsActionPressed("dodge"))
+            {
+                _player.StartDodge();
             }
         }
     }

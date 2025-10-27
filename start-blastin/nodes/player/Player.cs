@@ -4,6 +4,7 @@ using System.Linq;
 using Autoloads;
 using Components;
 using Effects;
+using Enemies;
 using Godot;
 using Interfaces;
 using Items;
@@ -34,6 +35,9 @@ namespace Entities
         private float _maxHealth => _stats.GetStat(StatType.MaxHealth).CurrentValue;
         private float _currentHealth;
         private float _speed => _stats.GetStat(StatType.Speed).CurrentValue;
+        private float _dodgeDuration => _stats.GetStat(StatType.DodgeDuration).CurrentValue;
+        private float _dodgeCooldown => _stats.GetStat(StatType.DodgeCooldown).CurrentValue;
+        private float _dodgeSpeed => _stats.GetStat(StatType.DodgeSpeed).CurrentValue;
 
         private int _pluginSlots => (int)_stats.GetStat(StatType.PluginSlots).CurrentValue;
 
@@ -49,27 +53,21 @@ namespace Entities
 
         #endregion
 
+        #region State
+
+        private bool _isDodging = false;
+        private bool _dodgeReady => _movementComponent.DodgeReady;
+        private bool _isDying = false;
+
+        #endregion
+
         public int PlayerId => _playerId;
 
         [Export(PropertyHint.Range, "1,100,1,or_greater")]
         public float MaxHealth
         {
             get => _maxHealth;
-            set
-            {
-                if (value > 0)
-                {
-                    _stats.UpdateStat(StatType.MaxHealth, value);
-                }
-                else
-                {
-                    _stats.UpdateStat(StatType.MaxHealth, 1);
-                }
-                _service.UpdateMaxHealth(
-                    _playerId,
-                    _stats.GetStat(StatType.MaxHealth).CurrentValue
-                );
-            }
+            set => _stats.UpdateStat(StatType.MaxHealth, Mathf.Max(1, value));
         }
 
         public float CurrentHealth
@@ -77,14 +75,7 @@ namespace Entities
             get => _currentHealth;
             private set
             {
-                if (value > _maxHealth)
-                {
-                    _currentHealth = _maxHealth;
-                }
-                else
-                {
-                    _currentHealth = value;
-                }
+                _currentHealth = Mathf.Min(value, _maxHealth);
                 _service.UpdateCurrentHealth(_playerId, _currentHealth);
             }
         }
@@ -93,17 +84,28 @@ namespace Entities
         public float Speed
         {
             get => _speed;
-            set
-            {
-                if (value <= 0)
-                {
-                    _stats.UpdateStat(StatType.Speed, 0);
-                }
-                else
-                {
-                    _stats.UpdateStat(StatType.Speed, value);
-                }
-            }
+            set => _stats.UpdateStat(StatType.Speed, Mathf.Max(0, value));
+        }
+
+        [Export(PropertyHint.Range, "0.1,3,0.1,greater_than")]
+        public float DodgeDuration
+        {
+            get => _dodgeDuration;
+            set => _stats.UpdateStat(StatType.DodgeDuration, Mathf.Max(0.1f, value));
+        }
+
+        [Export(PropertyHint.Range, "0.1,5,0.1,greater_than")]
+        public float DodgeCooldown
+        {
+            get => _dodgeCooldown;
+            set => _stats.UpdateStat(StatType.DodgeCooldown, Mathf.Max(0.05f, value));
+        }
+
+        [Export(PropertyHint.Range, "0,2000,10,greater_than")]
+        public float DodgeSpeed
+        {
+            get => _dodgeSpeed;
+            set => _stats.UpdateStat(StatType.DodgeSpeed, Mathf.Max(0, value));
         }
 
         public ProjectileType ProjectileType
@@ -184,7 +186,8 @@ namespace Entities
         [Signal]
         public delegate void PlayerDiedEventHandler();
 
-        public bool Dying = false;
+        public bool Dying => _isDying;
+        public bool Dodging => _isDodging;
 
         public void Fire() => _weaponComponent.FireWeapon();
 
@@ -282,6 +285,52 @@ namespace Entities
             MoveAndSlide();
         }
 
+        public void StartDodge()
+        {
+            if (CanDodge())
+            {
+                DebugLogger.LogMessage($"Starting dodge!");
+                _isDodging = true;
+                Speed += DodgeSpeed;
+
+                // Set collision
+                SetCollisionMaskValue(3, false);
+                SetCollisionMaskValue(5, false);
+                Godot.Collections.Array<Node> enemies = GetTree().GetNodesInGroup("enemies");
+                foreach (EnemyNode enemy in enemies)
+                {
+                    enemy.SetCollisionMaskValue(1, false);
+                }
+
+                _movementComponent.StartDodge();
+                _animationComponent.ToggleDodgeAnimation(true);
+            }
+        }
+
+        public void EndDodge()
+        {
+            DebugLogger.LogMessage($"Ending dodge!");
+            _isDodging = false;
+            Speed -= DodgeSpeed;
+
+            // Set collision
+            SetCollisionMaskValue(3, true);
+            SetCollisionMaskValue(5, true);
+            Godot.Collections.Array<Node> enemies = GetTree().GetNodesInGroup("enemies");
+            foreach (EnemyNode enemy in enemies)
+            {
+                enemy.SetCollisionMaskValue(1, true);
+            }
+
+            _movementComponent.EndDodge();
+            _animationComponent.ToggleDodgeAnimation(false);
+        }
+
+        private bool CanDodge()
+        {
+            return !_isDodging && !_isDying && _dodgeReady;
+        }
+
         public void TakeDamage(float damage)
         {
             _animationComponent.PlayDamageAnimation();
@@ -311,7 +360,7 @@ namespace Entities
         public void Die()
         {
             _controller.Enabled = false;
-            Dying = true;
+            _isDying = true;
             _hitBox.Disabled = true;
             _animationComponent.PlayDieAnimation();
         }

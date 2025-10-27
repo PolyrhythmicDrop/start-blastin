@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" uid="uid://ceknkp5q1onls" path="res://nodes/player/Player.cs" id="1_4j62c"]
 [ext_resource type="PackedScene" uid="uid://cr3k7kv44d7a6" path="res://nodes/player/player-components/animation-component.tscn" id="2_hs1md"]
-[ext_resource type="Script" uid="uid://djgcr0lno2mdr" path="res://nodes/player/player-components/MovementComponent.cs" id="3_hs1md"]
 [ext_resource type="Script" uid="uid://dcupxkt621nuk" path="res://nodes/player/player-components/PlayerController.cs" id="4_1fmtd"]
 [ext_resource type="Shader" uid="uid://bmacriris3r2k" path="res://nodes/shaders/color-cycling-hit-effect.gdshader" id="4_5h4ma"]
+[ext_resource type="PackedScene" uid="uid://bh7mbhu54my3n" path="res://nodes/player/player-components/movement-component.tscn" id="4_xl06i"]
 [ext_resource type="Script" uid="uid://wvxahp2d8k6f" path="res://nodes/player/player-components/WeaponComponent.cs" id="5_5h4ma"]
 [ext_resource type="Resource" uid="uid://coiv5i1pkqvv8" path="res://resources/weapons/blaster.tres" id="6_1fmtd"]
 
@@ -28,6 +28,9 @@ platform_on_leave = 2
 script = ExtResource("1_4j62c")
 MaxHealth = 4.0
 Speed = 500.0
+DodgeDuration = 0.30000000000000004
+DodgeCooldown = 2.0
+DodgeSpeed = 200.0
 Damage = 1.0
 CrashDamage = 2.0
 FireRate = 0.5
@@ -38,9 +41,8 @@ PluginSlots = 3
 unique_name_in_owner = true
 material = SubResource("ShaderMaterial_xl06i")
 
-[node name="MovementComponent" type="Node" parent="."]
+[node name="MovementComponent" parent="." instance=ExtResource("4_xl06i")]
 unique_name_in_owner = true
-script = ExtResource("3_hs1md")
 
 [node name="PlayerController" type="Node" parent="."]
 unique_name_in_owner = true

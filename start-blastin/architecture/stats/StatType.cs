@@ -4,11 +4,13 @@ namespace Stats
     {
         MaxHealth,
         Speed,
+        DodgeDuration,
+        DodgeCooldown,
+        DodgeSpeed,
         CrashDamage,
         Damage,
         FireRate,
         ProjectileSpeed,
-
         PluginSlots,
     }
 }

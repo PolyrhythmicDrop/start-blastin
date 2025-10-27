@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Threading.Tasks;
 using Components;
+using Entities;
 using Godot;
 using Interfaces;
 using Projectiles;
@@ -191,7 +191,21 @@ namespace Weapons
             // IHealthful objects take damage.
             if (collision.Collider is IHealthful healthful)
             {
-                healthful.TakeDamage(_stats.Damage);
+                if (healthful is Player player)
+                {
+                    if (!player.Dodging)
+                    {
+                        player.TakeDamage(_stats.Damage);
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    healthful.TakeDamage(_stats.Damage);
+                }
             }
 
             // Projectiles deactivate.

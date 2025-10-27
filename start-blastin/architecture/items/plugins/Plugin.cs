@@ -19,7 +19,7 @@ namespace Items
             set => _upgradeable = value;
         }
 
-        [Export]
+        [Export(PropertyHint.Range, "1,3,greater_than")]
         public int Level
         {
             get => _level;

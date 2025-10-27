@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using Autoloads;
 using Entities;
@@ -130,15 +131,16 @@ namespace Shop
                 currentWeight += (int)item.Rarity;
                 if (randomValue < currentWeight)
                 {
-                    GD.Print(
-                        $"{MethodBase.GetCurrentMethod().Name}: Item {item.Name} retrieved from pool!"
+                    DebugLogger.LogMessage(
+                        $"{item.GetType().Name} {item.Name} retrieved from pool!",
+                        true
                     );
                     return item;
                 }
             }
 
             // Return null if we couldn't find a matching item in the _itemPool
-            GD.PrintErr($"Could not load an item from the item pool!");
+            DebugLogger.LogMessage($"Could not load an item from the item pool!", true, true);
             return null;
         }
 

@@ -217,6 +217,11 @@ namespace Entities
 
             InitializeComponents();
             ConnectSignals();
+
+            DebugLogger.LogMessage(
+                $"Dodge cooldown after InitializeComponents: {_stats.GetStat(StatType.DodgeCooldown).Type} | {_stats.GetStat(StatType.DodgeCooldown).CurrentValue} | {_stats.GetStat(StatType.DodgeCooldown).BaseValue}",
+                true
+            );
             ApplyStatEffects();
         }
 
@@ -383,6 +388,7 @@ namespace Entities
                     AddPlugin(plugin);
                     break;
             }
+            ApplyStatEffects();
         }
 
         public void AddModifier(params Modifier[] modifiers)
@@ -390,7 +396,6 @@ namespace Entities
             if (_modifiers != null)
             {
                 _modifiers.AddRange(modifiers);
-                ApplyStatEffects();
             }
         }
 
@@ -468,6 +473,10 @@ namespace Entities
                 {
                     if (statEffect.Operation == Operation.Add)
                     {
+                        DebugLogger.LogMessage(
+                            $"Adding {statEffect.Value} for {statEffect.Type} to addEffects List...",
+                            true
+                        );
                         addEffects.Add(statEffect);
                     }
                     else if (statEffect.Operation == Operation.Multiply)
@@ -489,6 +498,10 @@ namespace Entities
             {
                 finalValues[kvp.Key] = kvp.Value.BaseValue;
             }
+            DebugLogger.LogMessage(
+                $"Final values dict initialized! Base value for DodgeCooldown in StatManager: {_stats.GetStat(StatType.DodgeCooldown).BaseValue} | Base value in final values dict: {finalValues[StatType.DodgeCooldown]}",
+                true
+            );
 
             // Perform add operations
             foreach (StatEffect addEffect in addEffects)
@@ -496,8 +509,9 @@ namespace Entities
                 if (finalValues.ContainsKey(addEffect.Type))
                 {
                     finalValues[addEffect.Type] += addEffect.Value;
-                    GD.Print(
-                        $"Adding {addEffect.Value} to {addEffect.Type}. New final value = {finalValues[addEffect.Type]}"
+                    DebugLogger.LogMessage(
+                        $"Adding {addEffect.Value} to {addEffect.Type}. New final value = {finalValues[addEffect.Type]}",
+                        true
                     );
                 }
                 else

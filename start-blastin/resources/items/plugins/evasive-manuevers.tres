@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="Plugin" load_steps=7 format=3 uid="uid://brlipjg8g6t5k"]
+
+[ext_resource type="Script" uid="uid://b3qmdj461ykoi" path="res://architecture/items/plugins/Plugin.cs" id="1_r52ug"]
+[ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="1_w0waf"]
+[ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="2_rvks2"]
+
+[sub_resource type="Resource" id="Resource_wekqk"]
+script = ExtResource("1_w0waf")
+Type = 2
+Value = 0.2
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[sub_resource type="Resource" id="Resource_k7mjf"]
+script = ExtResource("1_w0waf")
+Type = 4
+Value = 2.0
+Operation = 1
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[sub_resource type="Resource" id="Resource_w0waf"]
+script = ExtResource("1_w0waf")
+Type = 3
+Value = -0.2
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[resource]
+script = ExtResource("1_r52ug")
+Upgradeable = true
+Name = &"Evasive Manuevers"
+Description = &"Dodge, dip, duck, dodge"
+Icon = ExtResource("2_rvks2")
+Rarity = 4
+Effects = Array[Object]([SubResource("Resource_wekqk"), SubResource("Resource_k7mjf"), SubResource("Resource_w0waf")])
+metadata/_custom_type_script = "uid://b3qmdj461ykoi"

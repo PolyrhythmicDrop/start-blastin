@@ -336,6 +336,12 @@ namespace Entities
             return !_isDodging && !_isDying && _dodgeReady;
         }
 
+        public void OnDodgeReady()
+        {
+            _animationComponent.PlayDodgeReadyEffect();
+            _movementComponent.DodgeReady = true;
+        }
+
         public void TakeDamage(float damage)
         {
             _animationComponent.PlayDamageAnimation();

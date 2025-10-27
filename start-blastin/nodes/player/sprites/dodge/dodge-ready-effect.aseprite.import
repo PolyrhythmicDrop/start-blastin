@@ -1,0 +1,14 @@
+[remap]
+
+importer="aseprite_wizard.plugin.noop"
+type="PackedDataContainer"
+uid="uid://cwiy3ujjxlg54"
+path="res://.godot/imported/dodge-ready-effect.aseprite-4b504845d7a7def20b5bbacbb5a01ed3.res"
+
+[deps]
+
+source_file="res://nodes/player/sprites/dodge/dodge-ready-effect.aseprite"
+dest_files=["res://.godot/imported/dodge-ready-effect.aseprite-4b504845d7a7def20b5bbacbb5a01ed3.res"]
+
+[params]
+

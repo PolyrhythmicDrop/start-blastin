@@ -34,11 +34,7 @@ namespace PlayerComponents
         private void ConnectSignals()
         {
             _dodgeTimer.Timeout += _player.EndDodge;
-            _dodgeCooldownTimer.Timeout += () =>
-            {
-                DodgeReady = true;
-                GD.Print("Dodge ready!");
-            };
+            _dodgeCooldownTimer.Timeout += _player.OnDodgeReady;
         }
 
         public Vector2 SetVelocity(float xInput, float yInput)

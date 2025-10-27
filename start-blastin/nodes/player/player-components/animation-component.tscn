@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://cr3k7kv44d7a6"]
+[gd_scene load_steps=47 format=3 uid="uid://cr3k7kv44d7a6"]
 
 [ext_resource type="Material" uid="uid://msyxxftq4onh" path="res://resources/materials/hit-effect.tres" id="1_bufas"]
 [ext_resource type="Script" uid="uid://dts5f07qgh2ne" path="res://nodes/player/player-components/AnimationComponent.cs" id="1_cfdjm"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://h872er43ihna" path="res://nodes/player/sprites/base/base-player-ship.png" id="4_nyy4m"]
 [ext_resource type="Texture2D" uid="uid://dh23q3ptif5kk" path="res://nodes/player/sprites/destruction/player-destruction.png" id="5_3m6sw"]
 [ext_resource type="Texture2D" uid="uid://c3anpxloxy084" path="res://nodes/player/sprites/dodge/dodge-shield.png" id="7_nyy4m"]
+[ext_resource type="Texture2D" uid="uid://b4u4hwji1qf57" path="res://nodes/player/sprites/dodge/dodge-ready-effect.png" id="8_rwwbc"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cfdjm"]
 atlas = ExtResource("2_3m6sw")
@@ -211,6 +212,84 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_mal0m"]
+atlas = ExtResource("8_rwwbc")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dkm0t"]
+atlas = ExtResource("8_rwwbc")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2dssh"]
+atlas = ExtResource("8_rwwbc")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0p30a"]
+atlas = ExtResource("8_rwwbc")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e0371"]
+atlas = ExtResource("8_rwwbc")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wn17a"]
+atlas = ExtResource("8_rwwbc")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uhvqs"]
+atlas = ExtResource("8_rwwbc")
+region = Rect2(256, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uu48b"]
+atlas = ExtResource("8_rwwbc")
+region = Rect2(384, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_unpv2"]
+atlas = ExtResource("8_rwwbc")
+region = Rect2(0, 256, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5434g"]
+atlas = ExtResource("8_rwwbc")
+region = Rect2(128, 256, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_w2f7d"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mal0m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dkm0t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2dssh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0p30a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e0371")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wn17a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uhvqs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uu48b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_unpv2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5434g")
+}],
+"loop": false,
+"name": &"default",
+"speed": 20.0
+}]
+
 [node name="AnimationComponent" type="Node2D"]
 material = ExtResource("1_bufas")
 script = ExtResource("1_cfdjm")
@@ -367,3 +446,29 @@ metadata/_aseprite_wizard_config_ = {
 "source_uid": 7511207634467933452
 }
 metadata/_aseprite_wizard_source_file_hash_ = "864733cda70a910397a1e7754eaa6a53"
+
+[node name="DodgeReadyEffect" type="AnimatedSprite2D" parent="SpriteContainer"]
+unique_name_in_owner = true
+visible = false
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_w2f7d")
+metadata/_aseprite_wizard_interface_config_ = {
+"animation_section": true,
+"layer_section": true,
+"output_section": true,
+"pending_changes": {}
+}
+metadata/_aseprite_wizard_config_ = {
+"embed_tex": false,
+"layers": [],
+"o_ex_p": "",
+"o_folder": "res://nodes/player/sprites/dodge/",
+"o_name": "dodge-ready-effect",
+"only_visible": true,
+"scale": "1.0",
+"should_round_fps": true,
+"slice": "",
+"source": "res://nodes/player/sprites/dodge/dodge-ready-effect.aseprite",
+"source_uid": 6335019224321462489
+}
+metadata/_aseprite_wizard_source_file_hash_ = "9aca1407d56df5157ce76290f587668e"

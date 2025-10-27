@@ -13,6 +13,7 @@ namespace PlayerComponents
         private Sprite2D _bodySprite;
         private AnimatedSprite2D _dodgeSprite;
         private AnimatedSprite2D _destructionSprite;
+        private AnimatedSprite2D _dodgeReadySprite;
         private ShaderMaterial _hitEffectShaderMat;
 
         public override void _Ready()
@@ -23,14 +24,25 @@ namespace PlayerComponents
             _bodySprite = _spriteContainer.GetNode<Sprite2D>("%Body");
             _destructionSprite = _spriteContainer.GetNode<AnimatedSprite2D>("%Destruction");
             _dodgeSprite = _spriteContainer.GetNode<AnimatedSprite2D>("%Dodge");
+            _dodgeReadySprite = _spriteContainer.GetNode<AnimatedSprite2D>("%DodgeReadyEffect");
             _hitEffectShaderMat = ResourceLoader.Load<ShaderMaterial>(
                 "res://resources/materials/hit-effect.tres"
             );
+
+            ConnectSignals();
         }
 
         public void Initialize(Player player)
         {
             _player = player;
+        }
+
+        public void ConnectSignals()
+        {
+            _dodgeReadySprite.AnimationFinished += () =>
+            {
+                _dodgeReadySprite.Visible = false;
+            };
         }
 
         public override void _Process(double delta)
@@ -100,6 +112,12 @@ namespace PlayerComponents
                 _dodgeSprite.Visible = false;
                 _dodgeSprite.Stop();
             }
+        }
+
+        public void PlayDodgeReadyEffect()
+        {
+            _dodgeReadySprite.Visible = true;
+            _dodgeReadySprite.Play("default");
         }
     }
 }

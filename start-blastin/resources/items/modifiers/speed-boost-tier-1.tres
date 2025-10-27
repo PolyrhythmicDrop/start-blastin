@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Modifier" load_steps=5 format=3 uid="uid://c4xobec31g68x"]
+
+[ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="1_1norv"]
+[ext_resource type="Script" uid="uid://bauhwivw4ftik" path="res://architecture/items/modifiers/Modifier.cs" id="1_ig7t7"]
+[ext_resource type="Texture2D" uid="uid://hhqpvdsq8t21" path="res://assets/item-icons/modifiers/base-engine.png" id="2_5xvc6"]
+
+[sub_resource type="Resource" id="Resource_5xvc6"]
+script = ExtResource("1_1norv")
+Type = 1
+Value = 50.0
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[resource]
+script = ExtResource("1_ig7t7")
+Name = &"Speed Boost Lvl 1"
+Description = &"Basic speed boost"
+Icon = ExtResource("2_5xvc6")
+Effects = Array[Object]([SubResource("Resource_5xvc6")])
+metadata/_custom_type_script = "uid://bauhwivw4ftik"

@@ -4,6 +4,7 @@ using Entities;
 using Factories;
 using Godot;
 using Interfaces;
+using Stats;
 using WaveManagement;
 using Weapons;
 
@@ -12,14 +13,16 @@ namespace Enemies
     [GlobalClass]
     public abstract partial class EnemyNode : AnimatableBody2D, IDie, IHealthful, IVelocityProvider
     {
+        protected StatManager _stats;
         protected HealthComponent _healthComponent;
         protected WeaponNode _weapon;
 
         /// <summary>
         /// The speed at which this enemy follows its assigned path.
         /// </summary>
-        protected float _followSpeed;
-        protected float _crashDamage;
+        protected float _followSpeed => _stats.GetStat(StatType.Speed).CurrentValue;
+
+        protected float _crashDamage => _stats.GetStat(StatType.CrashDamage).CurrentValue;
         protected CollisionShape2D _shape;
         protected EntityPath _path;
         protected EnemyState _state;
@@ -50,7 +53,7 @@ namespace Enemies
 
             // Start the weapon fire timer to fire on a set interval.
             _weapon.FireTimer.Timeout += FireWeapon;
-            _weapon.FireTimer.Start();
+            _weapon.FireTimer.Start(_weapon.Stats.FireRate);
 
             _path.FollowPath(_followSpeed);
         }
@@ -82,11 +85,20 @@ namespace Enemies
             _baseFireRate = enemyResource.WeaponResource.Stats.FireRate;
             _baseWeaponDamage = enemyResource.WeaponResource.Stats.Damage;
 
-            _followSpeed = enemyResource.Speed;
+            // _followSpeed = enemyResource.Speed;
             _baseSpeed = enemyResource.Speed;
 
-            _crashDamage = enemyResource.CrashDamage;
+            // _crashDamage = enemyResource.CrashDamage;
             _baseCrashDamage = enemyResource.CrashDamage;
+
+            InitializeStats();
+        }
+
+        public virtual void InitializeStats()
+        {
+            _stats = new();
+            _stats.AddStat(StatType.CrashDamage, _baseCrashDamage);
+            _stats.AddStat(StatType.Speed, _baseSpeed);
         }
 
         public virtual void ApplyWaveScaling(EnemyScaler scaler, int wave)
@@ -103,10 +115,17 @@ namespace Enemies
             _healthComponent.MaxHealth =
                 _baseMaxHealth * (1 + (scaler.MaxHealthModifier * waveLogMultiplier));
 
-            _crashDamage =
+            float newCrashDamage =
                 _baseCrashDamage * (1 + (scaler.CrashDamageModifier * waveLogMultiplier));
+            _stats.UpdateStat(StatType.CrashDamage, newCrashDamage);
 
-            _followSpeed = _baseSpeed * (1 + (scaler.SpeedModifier * waveSqrtMultiplier));
+            // _crashDamage =
+            //     _baseCrashDamage * (1 + (scaler.CrashDamageModifier * waveLogMultiplier));
+
+            // _followSpeed = _baseSpeed * (1 + (scaler.SpeedModifier * waveSqrtMultiplier));
+            float newFollowSpeed = _baseSpeed * (1 + (scaler.SpeedModifier * waveSqrtMultiplier));
+            _stats.UpdateStat(StatType.Speed, newFollowSpeed);
+
             _weapon.Stats.Damage =
                 _baseWeaponDamage * (1 + (scaler.WeaponDamageModifier * waveSqrtMultiplier));
 
@@ -149,8 +168,10 @@ namespace Enemies
         {
             if (collision.GetCollider() is Player player)
             {
+                // float crashDamage = _stats.GetStat(StatType.CrashDamage).Value;
                 GD.Print($"{player.Name} was crashed into! Player takes {_crashDamage} damage.");
                 player.TakeDamage(_crashDamage);
+                // player.TakeDamage(crashDamage);
                 Die();
             }
         }

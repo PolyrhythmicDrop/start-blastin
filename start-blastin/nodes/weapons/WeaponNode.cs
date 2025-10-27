@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Threading.Tasks;
 using Components;
+using Entities;
 using Godot;
 using Interfaces;
 using Projectiles;
+using Stats;
 
 namespace Weapons
 {
@@ -190,7 +191,21 @@ namespace Weapons
             // IHealthful objects take damage.
             if (collision.Collider is IHealthful healthful)
             {
-                healthful.TakeDamage(_stats.Damage);
+                if (healthful is Player player)
+                {
+                    if (!player.Dodging)
+                    {
+                        player.TakeDamage(_stats.Damage);
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    healthful.TakeDamage(_stats.Damage);
+                }
             }
 
             // Projectiles deactivate.
@@ -219,6 +234,29 @@ namespace Weapons
             if (_velocityProvider != null)
             {
                 projectile.AddSourceVelocity();
+            }
+        }
+
+        public virtual void UpdateWeaponStats(StatType statType, Stat stat)
+        {
+            switch (statType)
+            {
+                case StatType.Damage:
+                    _stats.Damage = stat.CurrentValue;
+                    GD.Print($"Updating {Name} weapon damage to {_stats.Damage}");
+                    break;
+                case StatType.FireRate:
+                    _stats.FireRate = stat.CurrentValue;
+                    GD.Print($"Updating {Name} weapon fire rate to {_stats.FireRate}");
+                    break;
+                case StatType.ProjectileSpeed:
+                    _stats.ProjectileSpeed = stat.CurrentValue;
+                    GD.Print(
+                        $"Updating {Name} weapon projectile speed to {_stats.ProjectileSpeed}"
+                    );
+                    break;
+                default:
+                    break;
             }
         }
     }

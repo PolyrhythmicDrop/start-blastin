@@ -115,7 +115,7 @@ namespace Enemies.Spawners
             );
 
             EventBus.Instance.Connect(
-                EventBus.SignalName.WaveEnded,
+                EventBus.SignalName.WaveTimerEnded,
                 Callable.From(() => ToggleSpawning(false))
             );
 

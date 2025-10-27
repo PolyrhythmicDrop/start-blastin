@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="Modifier" load_steps=5 format=3 uid="uid://btllty26de5gi"]
+
+[ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="1_qyuit"]
+[ext_resource type="Texture2D" uid="uid://cm8gxnp3nd5r2" path="res://assets/item-icons/modifiers/shield-generator.png" id="2_0ohja"]
+[ext_resource type="Script" uid="uid://bauhwivw4ftik" path="res://architecture/items/modifiers/Modifier.cs" id="2_3lw4h"]
+
+[sub_resource type="Resource" id="Resource_qhk8d"]
+script = ExtResource("1_qyuit")
+Value = 1.2
+Operation = 1
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[resource]
+script = ExtResource("2_3lw4h")
+Name = &"Max Health Multiplier"
+Description = &"Multiply your max health!"
+Icon = ExtResource("2_0ohja")
+Rarity = 4
+Effects = Array[Object]([SubResource("Resource_qhk8d")])
+metadata/_custom_type_script = "uid://bauhwivw4ftik"

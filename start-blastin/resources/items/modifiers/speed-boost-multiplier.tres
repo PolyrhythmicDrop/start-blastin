@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="Modifier" load_steps=5 format=3 uid="uid://56we0u1sy13m"]
+
+[ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="1_jylin"]
+[ext_resource type="Script" uid="uid://bauhwivw4ftik" path="res://architecture/items/modifiers/Modifier.cs" id="2_e8r1y"]
+[ext_resource type="Texture2D" uid="uid://cxxhr6fsjh5kg" path="res://assets/item-icons/modifiers/burst-engine.png" id="2_oei08"]
+
+[sub_resource type="Resource" id="Resource_5xvc6"]
+script = ExtResource("1_jylin")
+Type = 1
+Value = 1.2
+Operation = 1
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[resource]
+script = ExtResource("2_e8r1y")
+Name = &"Speed Boost Multiplier"
+Description = &"Skibbidy!"
+Icon = ExtResource("2_oei08")
+Rarity = 4
+Effects = Array[Object]([SubResource("Resource_5xvc6")])
+metadata/_custom_type_script = "uid://bauhwivw4ftik"

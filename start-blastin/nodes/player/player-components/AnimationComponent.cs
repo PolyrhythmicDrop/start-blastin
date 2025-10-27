@@ -11,7 +11,9 @@ namespace PlayerComponents
         private AnimatedSprite2D _engineEffectSprite;
         private Sprite2D _engineSprite;
         private Sprite2D _bodySprite;
+        private AnimatedSprite2D _phaseSprite;
         private AnimatedSprite2D _destructionSprite;
+        private AnimatedSprite2D _phaseReadySprite;
         private ShaderMaterial _hitEffectShaderMat;
 
         public override void _Ready()
@@ -21,14 +23,26 @@ namespace PlayerComponents
             _engineSprite = _spriteContainer.GetNode<Sprite2D>("%Engine");
             _bodySprite = _spriteContainer.GetNode<Sprite2D>("%Body");
             _destructionSprite = _spriteContainer.GetNode<AnimatedSprite2D>("%Destruction");
+            _phaseSprite = _spriteContainer.GetNode<AnimatedSprite2D>("%Phase");
+            _phaseReadySprite = _spriteContainer.GetNode<AnimatedSprite2D>("%PhaseReadyEffect");
             _hitEffectShaderMat = ResourceLoader.Load<ShaderMaterial>(
                 "res://resources/materials/hit-effect.tres"
             );
+
+            ConnectSignals();
         }
 
         public void Initialize(Player player)
         {
             _player = player;
+        }
+
+        public void ConnectSignals()
+        {
+            _phaseReadySprite.AnimationFinished += () =>
+            {
+                _phaseReadySprite.Visible = false;
+            };
         }
 
         public override void _Process(double delta)
@@ -80,6 +94,30 @@ namespace PlayerComponents
                     Callable.From(() => shaderMaterial.SetShaderParameter(mixRatioPath, 0))
                 );
             }
+        }
+
+        /// <summary>
+        /// Toggles the player's dodge animation on or off.
+        /// </summary>
+        /// <param name="on">When true, turns on the dodge animation. When false, turns it off.</param>
+        public void TogglePhaseAnimation(bool on)
+        {
+            if (on)
+            {
+                _phaseSprite.Visible = true;
+                _phaseSprite.Play("default");
+            }
+            else
+            {
+                _phaseSprite.Visible = false;
+                _phaseSprite.Stop();
+            }
+        }
+
+        public void PlayPhaseReadyEffect()
+        {
+            _phaseReadySprite.Visible = true;
+            _phaseReadySprite.Play("default");
         }
     }
 }

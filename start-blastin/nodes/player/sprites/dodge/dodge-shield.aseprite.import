@@ -1,0 +1,14 @@
+[remap]
+
+importer="aseprite_wizard.plugin.noop"
+type="PackedDataContainer"
+uid="uid://dfaqq0e4xj8my"
+path="res://.godot/imported/dodge-shield.aseprite-92a3dc32b6763d040bc05024a9b1be72.res"
+
+[deps]
+
+source_file="res://nodes/player/sprites/dodge/dodge-shield.aseprite"
+dest_files=["res://.godot/imported/dodge-shield.aseprite-92a3dc32b6763d040bc05024a9b1be72.res"]
+
+[params]
+

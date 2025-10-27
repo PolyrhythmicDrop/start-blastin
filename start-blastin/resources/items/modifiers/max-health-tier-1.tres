@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Modifier" load_steps=5 format=3 uid="uid://daysmpcj6162t"]
+
+[ext_resource type="Script" uid="uid://bauhwivw4ftik" path="res://architecture/items/modifiers/Modifier.cs" id="1_dnkmv"]
+[ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="1_syrui"]
+[ext_resource type="Texture2D" uid="uid://di3h5p1in1lve" path="res://assets/item-icons/modifiers/shield-1.png" id="2_qhk8d"]
+
+[sub_resource type="Resource" id="Resource_qhk8d"]
+script = ExtResource("1_syrui")
+Value = 2.0
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[resource]
+script = ExtResource("1_dnkmv")
+Name = &"Max Health Upgrade Lvl 1"
+Description = &"Gain more health."
+Icon = ExtResource("2_qhk8d")
+Effects = Array[Object]([SubResource("Resource_qhk8d")])
+metadata/_custom_type_script = "uid://bauhwivw4ftik"

@@ -146,10 +146,10 @@ namespace Autoloads
                         ServiceManager.Instance.GetService<PlayerService>();
                     playerService.AddPlayerToService(player);
 
-                    // Instantiate this player's shop
-                    ShopBase shopBase = new();
-                    shopBase.Initialize(player.PlayerId);
-                    _loadedSceneNode.AddChild(shopBase);
+                    // Instantiate the player's UI
+                    UiLayer ui = new();
+                    ui.Initialize(player.PlayerId);
+                    _loadedSceneNode.AddChild(ui);
                 }
             }
         }

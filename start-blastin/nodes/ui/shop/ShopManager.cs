@@ -1,14 +1,10 @@
-using System.Reflection;
-using System.Threading.Tasks;
 using Autoloads;
-using Entities;
 using Godot;
 using Utility;
 
 namespace Shop
 {
-    [GlobalClass]
-    public partial class ShopBase : CanvasLayer
+    public partial class ShopManager : Node
     {
         private int _playerId;
         private ShopUI _shopUI;
@@ -18,7 +14,7 @@ namespace Shop
 
         public override void _Ready()
         {
-            DebugLogger.LogMessage("Ready called!", true);
+            // DebugLogger.LogMessage("Ready called!", true);
             _shopUI = _shopUiScene.Instantiate<ShopUI>();
             _shopUI.Initialize(_playerId);
             ConnectSignals();
@@ -28,7 +24,6 @@ namespace Shop
         {
             DebugLogger.LogMessage($"Initializing shop base with player ID {playerId}", true);
             _playerId = playerId;
-            Layer = 2;
         }
 
         private void ConnectSignals()

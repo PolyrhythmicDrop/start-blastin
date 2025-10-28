@@ -2,15 +2,19 @@ using Autoloads;
 using Godot;
 using Utility;
 
-namespace Shop
+namespace UI.Shop
 {
+    [GlobalClass]
     public partial class ShopManager : Node
     {
+        private UiLayer _uiLayer;
         private int _playerId;
         private ShopUI _shopUI;
         private PackedScene _shopUiScene = ResourceLoader.Load<PackedScene>(
             "res://nodes/ui/shop/shop-ui.tscn"
         );
+
+        public ShopUI ShopUI => _shopUI;
 
         public override void _Ready()
         {
@@ -20,10 +24,11 @@ namespace Shop
             ConnectSignals();
         }
 
-        public void Initialize(int playerId)
+        public void Initialize(int playerId, UiLayer uiLayer)
         {
             DebugLogger.LogMessage($"Initializing shop base with player ID {playerId}", true);
             _playerId = playerId;
+            _uiLayer = uiLayer;
         }
 
         private void ConnectSignals()
@@ -36,7 +41,7 @@ namespace Shop
         private async void OpenShop()
         {
             GD.Print($"Opening shop...");
-            CallDeferred(MethodName.AddChild, _shopUI);
+            _uiLayer.ShopContainer.CallDeferred(MethodName.AddChild, _shopUI);
             _shopUI.RequestReady();
             await ToSignal(_shopUI, Node.SignalName.Ready);
             _shopUI.Visible = true;
@@ -47,7 +52,7 @@ namespace Shop
         {
             GD.Print($"Closing shop...");
             _shopUI.Visible = false;
-            CallDeferred(MethodName.RemoveChild, _shopUI);
+            _uiLayer.ShopContainer.CallDeferred(MethodName.RemoveChild, _shopUI);
             await ToSignal(_shopUI, Node.SignalName.TreeExited);
             EventBus.Instance.EmitSignal(EventBus.SignalName.ShopClosed);
         }

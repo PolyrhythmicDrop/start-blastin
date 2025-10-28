@@ -9,7 +9,7 @@ using Items;
 using Services;
 using Utility;
 
-namespace Shop
+namespace UI.Shop
 {
     [GlobalClass]
     public partial class ShopUI : Control

@@ -5,7 +5,7 @@ using Godot;
 using Items;
 using Utility;
 
-namespace Shop
+namespace UI.Shop
 {
     [GlobalClass]
     public partial class ShopItemContainer : Control

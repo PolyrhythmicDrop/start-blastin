@@ -24,7 +24,7 @@ stretch_mode = 5
 [node name="PlayAreaBorder" parent="." instance=ExtResource("2_cw5wp")]
 
 [node name="Player" parent="." instance=ExtResource("3_pxe5x")]
-position = Vector2(933, 883)
+position = Vector2(960, 770)
 Plugins = Array[Object]([])
 
 [node name="OOB-Area" parent="." instance=ExtResource("4_rl1rb")]

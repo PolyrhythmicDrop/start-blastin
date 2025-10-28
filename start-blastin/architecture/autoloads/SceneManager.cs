@@ -3,7 +3,7 @@ using Entities;
 using Godot;
 using SafeResourcePicker;
 using Services;
-using Shop;
+using UI;
 using Utility;
 
 namespace Autoloads
@@ -147,7 +147,8 @@ namespace Autoloads
                     playerService.AddPlayerToService(player);
 
                     // Instantiate the player's UI
-                    UiLayer ui = new();
+                    UiLayer ui = GD.Load<PackedScene>("res://nodes/ui/ui-layer/ui-layer.tscn")
+                        .Instantiate<UiLayer>();
                     ui.Initialize(player.PlayerId);
                     _loadedSceneNode.AddChild(ui);
                 }

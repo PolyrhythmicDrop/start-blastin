@@ -13,7 +13,7 @@ size = Vector2(50, 1080)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pxe5x"]
 resource_local_to_scene = true
 resource_name = "bottom-border"
-size = Vector2(1920, 50)
+size = Vector2(1920, 210)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rl1rb"]
 resource_local_to_scene = true
@@ -38,7 +38,8 @@ debug_color = Color(0.9197264, 0.24762714, 0.35803878, 0.41960785)
 
 [node name="BottomBorder" type="CollisionShape2D" parent="."]
 unique_name_in_owner = true
-position = Vector2(960, 1100)
+visible = false
+position = Vector2(960, 1015)
 shape = SubResource("RectangleShape2D_pxe5x")
 debug_color = Color(0.9197264, 0.24762714, 0.35803878, 0.41960785)
 

@@ -92,6 +92,14 @@ namespace WaveManagement
 
         #endregion
 
+        public override void _Process(double delta)
+        {
+            if (!_waveTimer.IsStopped())
+            {
+                EventBus.Instance.EmitSignal(EventBus.SignalName.WaveTimeLeft, _waveTimer.TimeLeft);
+            }
+        }
+
         #region Scaling
 
         /// <summary>

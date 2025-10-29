@@ -59,6 +59,12 @@ namespace Autoloads
             float cooldownTime
         );
 
+        [Signal]
+        public delegate void PlayerFluxChangeEventHandler(int playerId, int flux);
+
+        [Signal]
+        public delegate void PlayerBytesChangeEventHandler(int playerId, int bytes);
+
         #endregion
 
 

@@ -189,14 +189,22 @@ namespace Entities
         public int Bytes
         {
             get => _bytes;
-            set => _bytes = Math.Max(0, value);
+            set
+            {
+                _bytes = Math.Max(0, value);
+                _service.UpdatePlayerCurrency(_playerId, bytes: _bytes);
+            }
         }
 
         [Export(PropertyHint.Range, "0,10000,10,greater_than")]
         public int Flux
         {
             get => _flux;
-            set => _flux = value;
+            set
+            {
+                _flux = Math.Max(0, value);
+                _service.UpdatePlayerCurrency(_playerId, flux: _flux);
+            }
         }
 
         [Signal]

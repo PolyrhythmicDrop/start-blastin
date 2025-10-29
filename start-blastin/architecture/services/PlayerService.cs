@@ -36,6 +36,10 @@ namespace Services
         /// </summary>
         private readonly Dictionary<int, List<Plugin>> _equippedPlugins = new();
 
+        private readonly Dictionary<int, int> _currentFlux = new();
+
+        private readonly Dictionary<int, int> _currentBytes = new();
+
         public void AddPlayerToService(Player player)
         {
             if (!_players.Values.Contains(player))
@@ -150,6 +154,35 @@ namespace Services
         public bool PlayerHasPlugin(int id, Plugin plugin)
         {
             return _players[id].HasPlugin(plugin);
+        }
+
+        public bool GetPlayerCurrency(int id, out int flux, out int bytes)
+        {
+            bool foundFlux = _currentFlux.TryGetValue(id, out flux);
+            bool foundBytes = _currentBytes.TryGetValue(id, out bytes);
+
+            return foundFlux && foundBytes;
+        }
+
+        public void UpdatePlayerCurrency(int id, int? flux = null, int? bytes = null)
+        {
+            if (flux != null)
+            {
+                _currentFlux[id] = (int)flux;
+                EventBus.Instance.EmitSignal(
+                    EventBus.SignalName.PlayerFluxChange,
+                    [id, _currentFlux[id]]
+                );
+            }
+
+            if (bytes != null)
+            {
+                _currentBytes[id] = (int)bytes;
+                EventBus.Instance.EmitSignal(
+                    EventBus.SignalName.PlayerBytesChange,
+                    [id, _currentBytes[id]]
+                );
+            }
         }
     }
 }

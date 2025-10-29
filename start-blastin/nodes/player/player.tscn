@@ -36,6 +36,8 @@ Damage = 1.0
 FireRate = 0.5
 ProjectileSpeed = 500.0
 PluginSlots = 3
+Bytes = 200
+Flux = 500
 
 [node name="AnimationComponent" parent="." instance=ExtResource("2_hs1md")]
 unique_name_in_owner = true

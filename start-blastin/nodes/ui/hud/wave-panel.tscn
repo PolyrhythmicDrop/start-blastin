@@ -1,0 +1,78 @@
+[gd_scene load_steps=4 format=3 uid="uid://dlx5jgo75t8wb"]
+
+[ext_resource type="Texture2D" uid="uid://iolsi3slfvkl" path="res://nodes/ui/hud/assets/wave-clock/basic-wave-clock-under.png" id="1_0txtx"]
+[ext_resource type="Script" uid="uid://gyvc54ndcfla" path="res://nodes/ui/hud/WavePanel.cs" id="1_iqh8d"]
+[ext_resource type="Texture2D" uid="uid://dk3xr6cxtt8kq" path="res://nodes/ui/hud/assets/wave-clock/basic-wave-clock-progress.png" id="2_iqh8d"]
+
+[node name="WavePanel" type="PanelContainer"]
+size_flags_horizontal = 3
+script = ExtResource("1_iqh8d")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 2
+
+[node name="WaveCounter" type="Label" parent="VBoxContainer/PanelContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Wave {number}"
+horizontal_alignment = 1
+
+[node name="WaveProgressContainer" type="PanelContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 4.0
+
+[node name="WaveProgressControl" type="Control" parent="VBoxContainer/WaveProgressContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="WaveProgressBar" type="TextureProgressBar" parent="VBoxContainer/WaveProgressContainer/WaveProgressControl"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+max_value = 10.0
+step = 0.05
+fill_mode = 4
+nine_patch_stretch = true
+texture_under = ExtResource("1_0txtx")
+texture_progress = ExtResource("2_iqh8d")
+
+[node name="WaveProgressLabel" type="Label" parent="VBoxContainer/WaveProgressContainer/WaveProgressControl"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -18.5
+offset_top = -22.5
+offset_right = 18.5
+offset_bottom = 22.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.76862746)
+theme_override_font_sizes/font_size = 32
+text = "60"
+horizontal_alignment = 1
+vertical_alignment = 1

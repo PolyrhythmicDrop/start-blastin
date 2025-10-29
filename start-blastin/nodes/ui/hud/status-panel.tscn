@@ -1,0 +1,51 @@
+[gd_scene load_steps=4 format=3 uid="uid://y075h5i8lhs0"]
+
+[ext_resource type="Script" uid="uid://bg0p351pmcuul" path="res://nodes/ui/hud/StatusPanel.cs" id="1_46k8h"]
+[ext_resource type="Texture2D" uid="uid://cmty2wsc2733e" path="res://assets/item-icons/modifiers/shield-generator-2.png" id="1_bvs3w"]
+[ext_resource type="Texture2D" uid="uid://di3h5p1in1lve" path="res://assets/item-icons/modifiers/shield-1.png" id="2_46k8h"]
+
+[node name="StatusPanel" type="PanelContainer"]
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+script = ExtResource("1_46k8h")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HealthBox" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="HealthIcon" type="TextureRect" parent="VBoxContainer/HealthBox"]
+custom_minimum_size = Vector2(64, 64)
+layout_direction = 2
+layout_mode = 2
+size_flags_horizontal = 6
+texture = ExtResource("1_bvs3w")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="HealthBar" type="ProgressBar" parent="VBoxContainer/HealthBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 8.0
+
+[node name="PhaseBox" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="PhaseIcon" type="TextureRect" parent="VBoxContainer/PhaseBox"]
+custom_minimum_size = Vector2(64, 64)
+layout_direction = 2
+layout_mode = 2
+size_flags_horizontal = 6
+texture = ExtResource("2_46k8h")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="PhaseBar" type="ProgressBar" parent="VBoxContainer/PhaseBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 8.0

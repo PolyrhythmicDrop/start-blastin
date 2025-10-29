@@ -39,6 +39,19 @@ namespace Autoloads
 
         #endregion
 
+        #region Player Status
+
+        [Signal]
+        public delegate void PlayerMaxHealthChangedEventHandler(int playerId, float maxHealth);
+
+        [Signal]
+        public delegate void PlayerCurrentHealthChangedEventHandler(
+            int playerId,
+            float currentHealth
+        );
+
+        #endregion
+
 
         public override void _Ready()
         {

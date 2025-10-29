@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Autoloads;
 using Entities;
 using Godot;
 using Items;
@@ -84,12 +85,20 @@ namespace Services
                 $"Player {id} current health updated to {_currentHealth[id]}!",
                 true
             );
+            EventBus.Instance.EmitSignal(
+                EventBus.SignalName.PlayerCurrentHealthChanged,
+                [id, currentHealth]
+            );
         }
 
         public void UpdateMaxHealth(int id, float maxHealth)
         {
             _maxHealth[id] = maxHealth;
             DebugLogger.LogMessage($"Player {id} max health updated to {_maxHealth[id]}!", true);
+            EventBus.Instance.EmitSignal(
+                EventBus.SignalName.PlayerMaxHealthChanged,
+                [id, maxHealth]
+            );
         }
 
         public bool GetPlayerHealth(int id, out float currentHealth, out float maxHealth)

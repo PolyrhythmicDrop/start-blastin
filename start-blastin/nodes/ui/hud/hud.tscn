@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://cs0msq3g3i6xk"]
 
 [ext_resource type="Script" uid="uid://b5d31qrfgoid4" path="res://nodes/ui/hud/Hud.cs" id="1_qndsm"]
-[ext_resource type="Texture2D" uid="uid://iolsi3slfvkl" path="res://nodes/ui/hud/assets/wave-clock/basic-wave-clock-under.png" id="2_tajdg"]
-[ext_resource type="Texture2D" uid="uid://dk3xr6cxtt8kq" path="res://nodes/ui/hud/assets/wave-clock/basic-wave-clock-progress.png" id="3_3pdy4"]
+[ext_resource type="PackedScene" uid="uid://y075h5i8lhs0" path="res://nodes/ui/hud/status-panel.tscn" id="2_tajdg"]
+[ext_resource type="PackedScene" uid="uid://dlx5jgo75t8wb" path="res://nodes/ui/hud/wave-panel.tscn" id="3_tajdg"]
 
 [node name="hud" type="Control"]
 layout_mode = 3
@@ -34,84 +34,13 @@ layout_mode = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="StatusPanel" type="PanelContainer" parent="BaseContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 3.0
-
-[node name="WavePanel" type="PanelContainer" parent="BaseContainer/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="VBoxContainer" type="VBoxContainer" parent="BaseContainer/HBoxContainer/WavePanel"]
-layout_mode = 2
-theme_override_constants/separation = 8
-alignment = 1
-
-[node name="PanelContainer" type="PanelContainer" parent="BaseContainer/HBoxContainer/WavePanel/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 2
-
-[node name="WaveCounter" type="Label" parent="BaseContainer/HBoxContainer/WavePanel/VBoxContainer/PanelContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Wave {number}"
-horizontal_alignment = 1
-
-[node name="WaveProgressContainer" type="PanelContainer" parent="BaseContainer/HBoxContainer/WavePanel/VBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 4.0
-
-[node name="WaveProgressControl" type="Control" parent="BaseContainer/HBoxContainer/WavePanel/VBoxContainer/WaveProgressContainer"]
+[node name="StatusPanel" parent="BaseContainer/HBoxContainer" instance=ExtResource("2_tajdg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="WaveProgressBar" type="TextureProgressBar" parent="BaseContainer/HBoxContainer/WavePanel/VBoxContainer/WaveProgressContainer/WaveProgressControl"]
+[node name="WavePanel" parent="BaseContainer/HBoxContainer" instance=ExtResource("3_tajdg")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-max_value = 10.0
-step = 0.1
-fill_mode = 4
-nine_patch_stretch = true
-texture_under = ExtResource("2_tajdg")
-texture_progress = ExtResource("3_3pdy4")
-
-[node name="WaveProgressLabel" type="Label" parent="BaseContainer/HBoxContainer/WavePanel/VBoxContainer/WaveProgressContainer/WaveProgressControl"]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -18.5
-offset_top = -22.5
-offset_right = 18.5
-offset_bottom = 22.5
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 4
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.76862746)
-theme_override_font_sizes/font_size = 32
-text = "60"
-horizontal_alignment = 1
-vertical_alignment = 1
+layout_mode = 2
 
 [node name="CurrencyPanel" type="PanelContainer" parent="BaseContainer/HBoxContainer"]
 layout_mode = 2

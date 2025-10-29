@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using UI.HUD;
 using UI.Shop;
 
 namespace UI

@@ -12,7 +12,7 @@ namespace Autoloads
         public delegate void WaveStartedEventHandler(int wave);
 
         [Signal]
-        public delegate void WaveTimeLeftEventHandler(float timeLeft);
+        public delegate void WaveTimeLeftEventHandler(float timeLeft, float totalTime);
 
         [Signal]
         public delegate void WaveTimerEndedEventHandler();

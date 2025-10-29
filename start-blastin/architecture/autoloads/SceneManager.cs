@@ -58,6 +58,7 @@ namespace Autoloads
 
         public override void _Ready()
         {
+            // SetMinWindowSize();
             InitializeServices();
 
             bool success;
@@ -86,6 +87,23 @@ namespace Autoloads
             {
                 DebugLogger.LogMessage("Scene loading failed!", true, true);
             }
+        }
+
+        private void SetMinWindowSize()
+        {
+            DebugLogger.LogMessage("Setting minimum window size...", true);
+            Vector2I minSize = Vector2I.Zero;
+            minSize.X = (int)ProjectSettings.GetSetting("display/window/size/viewport_width");
+            minSize.Y = (int)ProjectSettings.GetSetting("display/window/size/viewport_height");
+            DebugLogger.LogMessage(
+                $"Current minimum size: {GetWindow().MinSize} | New minimum size: {minSize}",
+                true
+            );
+            GetWindow().MinSize = minSize;
+            DebugLogger.LogMessage(
+                $"Window minimum size set! New minimum size: {GetWindow().MinSize}",
+                true
+            );
         }
 
         private void InitializeServices()

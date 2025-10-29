@@ -31,3 +31,6 @@ Plugins = Array[Object]([])
 
 [node name="WaveManager" parent="." instance=ExtResource("1_esqth")]
 Difficulty = 2
+
+[node name="LevelCamera" type="Camera2D" parent="."]
+anchor_mode = 0

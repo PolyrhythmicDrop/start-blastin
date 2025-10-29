@@ -15,6 +15,7 @@ public partial class Hud : Control
     private Control _waveProgressControl;
     private TextureProgressBar _waveProgressBar;
     private Label _waveProgressLabel;
+    private bool _progressBarInitialized;
 
     public void Initialize(int playerId)
     {
@@ -53,11 +54,18 @@ public partial class Hud : Control
 
         // Connect the wave time left signal for the progress bar
         Callable waveTimeLeftCallable = Callable.From(
-            (float timeLeft) => SetWaveProgress(timeLeft)
+            (float timeLeft, float totalTime) => SetWaveProgress(timeLeft, totalTime)
         );
         if (!EventBus.Instance.IsConnected(EventBus.SignalName.WaveTimeLeft, waveTimeLeftCallable))
         {
             EventBus.Instance.Connect(EventBus.SignalName.WaveTimeLeft, waveTimeLeftCallable);
+        }
+
+        // Connect the wave complete signal
+        Callable waveCompleteCallable = Callable.From(OnWaveComplete);
+        if (!EventBus.Instance.IsConnected(EventBus.SignalName.WaveComplete, waveCompleteCallable))
+        {
+            EventBus.Instance.Connect(EventBus.SignalName.WaveComplete, waveCompleteCallable);
         }
     }
 
@@ -73,10 +81,25 @@ public partial class Hud : Control
         _waveCounter.Text = $"Wave {waveCount}";
     }
 
-    private void SetWaveProgress(float timeLeft)
+    private void SetWaveProgress(float timeLeft, float totalTime)
     {
+        if (!_progressBarInitialized)
+        {
+            InitializeWaveProgressBar(totalTime);
+        }
         TimeSpan time = TimeSpan.FromSeconds(timeLeft);
-        // _waveProgressLabel.Text = $"{time.Minutes}:{time.Seconds}";
         _waveProgressLabel.Text = time.ToString("mm':'ss");
+        _waveProgressBar.Value = totalTime - timeLeft;
+    }
+
+    private void InitializeWaveProgressBar(float totalTime)
+    {
+        _waveProgressBar.MaxValue = totalTime;
+        _progressBarInitialized = true;
+    }
+
+    private void OnWaveComplete()
+    {
+        _progressBarInitialized = false;
     }
 }

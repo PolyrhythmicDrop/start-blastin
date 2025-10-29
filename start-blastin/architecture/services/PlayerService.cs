@@ -27,6 +27,11 @@ namespace Services
         private readonly Dictionary<int, float> _currentHealth = new();
 
         /// <summary>
+        /// Total amount of time it takes for the player's phase ability to cool down.
+        /// </summary>
+        private readonly Dictionary<int, float> _phaseCooldown = new();
+
+        /// <summary>
         /// Player's equipped plugins.
         /// </summary>
         private readonly Dictionary<int, List<Plugin>> _equippedPlugins = new();
@@ -99,6 +104,26 @@ namespace Services
                 EventBus.SignalName.PlayerMaxHealthChanged,
                 [id, maxHealth]
             );
+        }
+
+        public void UpdatePhaseCooldown(int id, float totalCooldown)
+        {
+            _phaseCooldown[id] = totalCooldown;
+            DebugLogger.LogMessage(
+                $"Player {id} total phase cooldown updated to {_phaseCooldown[id]}!",
+                true
+            );
+
+            EventBus.Instance.EmitSignal(
+                EventBus.SignalName.PlayerPhaseTotalCooldownChanged,
+                [id, totalCooldown]
+            );
+        }
+
+        public bool GetPlayerPhaseCooldown(int id, out float totalCooldown)
+        {
+            bool foundPhase = _phaseCooldown.TryGetValue(id, out totalCooldown);
+            return foundPhase;
         }
 
         public bool GetPlayerHealth(int id, out float currentHealth, out float maxHealth)

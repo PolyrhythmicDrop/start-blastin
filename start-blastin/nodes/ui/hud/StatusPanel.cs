@@ -1,5 +1,6 @@
 using System;
 using Autoloads;
+using Entities;
 using Godot;
 using Services;
 
@@ -69,14 +70,60 @@ namespace UI.HUD
                     currentHealthChangeCallable
                 );
             }
+
+            // Connect the phase total cooldown signal
+            Callable phaseCooldownChangeCallable = Callable.From(
+                (int id, float totalCooldown) =>
+                {
+                    UpdatePhaseCooldown(id, totalCooldown);
+                }
+            );
+            if (
+                !EventBus.Instance.IsConnected(
+                    EventBus.SignalName.PlayerPhaseTotalCooldownChanged,
+                    phaseCooldownChangeCallable
+                )
+            )
+            {
+                EventBus.Instance.Connect(
+                    EventBus.SignalName.PlayerPhaseTotalCooldownChanged,
+                    phaseCooldownChangeCallable
+                );
+            }
+
+            // Connect the phase cooldown time left signal
+            Callable phaseTimeLeftCallable = Callable.From(
+                (int id, float timeLeft) =>
+                {
+                    UpdatePhaseTimeLeft(id, timeLeft);
+                }
+            );
+            if (
+                !EventBus.Instance.IsConnected(
+                    EventBus.SignalName.PlayerPhaseTimeLeft,
+                    phaseTimeLeftCallable
+                )
+            )
+            {
+                EventBus.Instance.Connect(
+                    EventBus.SignalName.PlayerPhaseTimeLeft,
+                    phaseTimeLeftCallable
+                );
+            }
         }
 
         private void InitializeStatusBars()
         {
-            _service.GetPlayerHealth(_playerId, out float currentHealth, out float maxHealth);
-
-            _healthBar.MaxValue = maxHealth;
-            _healthBar.Value = currentHealth;
+            if (_service.GetPlayerHealth(_playerId, out float currentHealth, out float maxHealth))
+            {
+                _healthBar.MaxValue = maxHealth;
+                _healthBar.Value = currentHealth;
+            }
+            if (_service.GetPlayerPhaseCooldown(_playerId, out float totalCooldown))
+            {
+                _phaseBar.MaxValue = totalCooldown;
+                _phaseBar.Value = totalCooldown;
+            }
         }
 
         private void UpdateMaxHealth(int playerId, float maxHealth)
@@ -92,6 +139,32 @@ namespace UI.HUD
             if (playerId == _playerId)
             {
                 _healthBar.Value = currentHealth;
+            }
+        }
+
+        /// <summary>
+        /// Sets the total cooldown time for the player's phase bar.
+        /// </summary>
+        /// <param name="_playerId">The ID of the player.</param>
+        /// <param name="totalCooldown">The new phase total cooldown value.</param>
+        private void UpdatePhaseCooldown(int playerId, float totalCooldown)
+        {
+            if (playerId == _playerId)
+            {
+                _phaseBar.MaxValue = totalCooldown;
+            }
+        }
+
+        /// <summary>
+        /// Updates the player's phase bar with the remaining cooldown time.
+        /// </summary>
+        /// <param name="playerId">The ID of the player.</param>
+        /// <param name="timeLeft">The time left on the cooldown timer.</param>
+        private void UpdatePhaseTimeLeft(int playerId, float timeLeft)
+        {
+            if (playerId == _playerId)
+            {
+                _phaseBar.Value = _phaseBar.MaxValue - timeLeft;
             }
         }
     }

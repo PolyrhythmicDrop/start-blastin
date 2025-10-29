@@ -250,7 +250,10 @@ namespace Entities
                         {
                             _weaponComponent.Weapon.UpdateWeaponStats(statType, stat);
                         }
-                        else if (statType == StatType.MaxHealth)
+                        else if (
+                            statType == StatType.MaxHealth
+                            || statType == StatType.PhaseCooldown
+                        )
                         {
                             UpdatePlayerServiceStats(statType, stat.CurrentValue);
                         }
@@ -539,12 +542,20 @@ namespace Entities
             }
         }
 
+        /// <summary>
+        /// Updates the <see cref="PlayerService"/> with the new values of a specific stat for the player.
+        /// </summary>
+        /// <param name="statType">The stat type that was updated.</param>
+        /// <param name="value">The new value of the stat.</param>
         private void UpdatePlayerServiceStats(StatType statType, float value)
         {
             switch (statType)
             {
                 case StatType.MaxHealth:
                     _service.UpdateMaxHealth(_playerId, value);
+                    break;
+                case StatType.PhaseCooldown:
+                    _service.UpdatePhaseCooldown(_playerId, value);
                     break;
             }
         }

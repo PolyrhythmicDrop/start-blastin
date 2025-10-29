@@ -50,6 +50,15 @@ namespace Autoloads
             float currentHealth
         );
 
+        [Signal]
+        public delegate void PlayerPhaseTimeLeftEventHandler(int playerId, float timeLeft);
+
+        [Signal]
+        public delegate void PlayerPhaseTotalCooldownChangedEventHandler(
+            int playerId,
+            float cooldownTime
+        );
+
         #endregion
 
 

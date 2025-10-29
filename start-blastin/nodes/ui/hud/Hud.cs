@@ -11,6 +11,7 @@ namespace UI.HUD
         private PanelContainer _baseContainer;
         private WavePanel _wavePanel;
         private StatusPanel _statusPanel;
+        private CurrencyPanel _currencyPanel;
 
         public void Initialize(int playerId)
         {
@@ -24,8 +25,10 @@ namespace UI.HUD
             _baseContainer = GetNode<PanelContainer>("%BaseContainer");
             _wavePanel = GetNode<WavePanel>("%WavePanel");
             _statusPanel = GetNode<StatusPanel>("%StatusPanel");
+            _currencyPanel = GetNode<CurrencyPanel>("%CurrencyPanel");
 
             _statusPanel.Initialize(_playerId);
+            _currencyPanel.Initialize(_playerId);
 
             ConnectSignals();
         }

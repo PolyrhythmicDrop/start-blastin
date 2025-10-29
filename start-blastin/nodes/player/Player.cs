@@ -20,6 +20,8 @@ namespace Entities
     public partial class Player : CharacterBody2D, IDie, IHealthful, IVelocityProvider, IStats
     {
         private int _playerId = 1;
+
+        #region Components
         private PlayerService _service = ServiceManager.Instance.GetService<PlayerService>();
         private StatManager _stats = new();
         private AnimationComponent _animationComponent;
@@ -29,6 +31,7 @@ namespace Entities
         private PlayerController _controller;
         private List<Modifier> _modifiers = new();
         private List<Plugin> _plugins = new();
+        #endregion
 
         #region Stats
 
@@ -50,6 +53,10 @@ namespace Entities
         private float _projectileSpeed => _stats.GetStat(StatType.ProjectileSpeed).CurrentValue;
 
         //-----------------------------//
+
+        // ~ Currency ~ //
+        private int _bytes = 0;
+        private int _flux = 0;
 
         #endregion
 
@@ -175,6 +182,21 @@ namespace Entities
                 _plugins = [.. value];
                 _service.UpdateEquippedPlugins(_playerId, _plugins);
             }
+        }
+
+        [ExportGroup("Currency")]
+        [Export(PropertyHint.Range, "0,10000,10,greater_than")]
+        public int Bytes
+        {
+            get => _bytes;
+            set => _bytes = Math.Max(0, value);
+        }
+
+        [Export(PropertyHint.Range, "0,10000,10,greater_than")]
+        public int Flux
+        {
+            get => _flux;
+            set => _flux = value;
         }
 
         [Signal]

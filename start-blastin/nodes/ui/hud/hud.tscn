@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://cs0msq3g3i6xk"]
+[gd_scene load_steps=5 format=3 uid="uid://cs0msq3g3i6xk"]
 
 [ext_resource type="Script" uid="uid://b5d31qrfgoid4" path="res://nodes/ui/hud/Hud.cs" id="1_qndsm"]
 [ext_resource type="PackedScene" uid="uid://y075h5i8lhs0" path="res://nodes/ui/hud/status-panel.tscn" id="2_tajdg"]
 [ext_resource type="PackedScene" uid="uid://dlx5jgo75t8wb" path="res://nodes/ui/hud/wave-panel.tscn" id="3_tajdg"]
+[ext_resource type="PackedScene" uid="uid://3ws4d3upadvm" path="res://nodes/ui/hud/currency-panel.tscn" id="4_3pdy4"]
 
 [node name="hud" type="Control"]
 layout_mode = 3
@@ -42,10 +43,9 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="CurrencyPanel" type="PanelContainer" parent="BaseContainer/HBoxContainer"]
+[node name="CurrencyPanel" parent="BaseContainer/HBoxContainer" instance=ExtResource("4_3pdy4")]
+unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 3.0
 
 [node name="HUDBody" type="StaticBody2D" parent="BaseContainer"]
 unique_name_in_owner = true

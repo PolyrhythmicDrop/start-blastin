@@ -1,5 +1,6 @@
 using System;
 using Autoloads;
+using Events;
 using Godot;
 
 namespace UI.HUD
@@ -27,11 +28,13 @@ namespace UI.HUD
         private void ConnectSignals()
         {
             // Connect the wave count signal
-            Callable waveCountCallable = Callable.From((int count) => SetWaveCount(count));
-            if (!EventBus.Instance.IsConnected(EventBus.SignalName.WaveStarted, waveCountCallable))
-            {
-                EventBus.Instance.Connect(EventBus.SignalName.WaveStarted, waveCountCallable);
-            }
+            // Callable waveCountCallable = Callable.From((int count) => SetWaveCount(count));
+            // if (!EventBus.Instance.IsConnected(EventBus.SignalName.WaveStarted, waveCountCallable))
+            // {
+            //     EventBus.Instance.Connect(EventBus.SignalName.WaveStarted, waveCountCallable);
+            // }
+
+            EventBus.Instance.WaveStarted += OnWaveStarted;
 
             // Connect the wave time left signal for the progress bar
             Callable waveTimeLeftCallable = Callable.From(
@@ -60,6 +63,11 @@ namespace UI.HUD
             }
         }
 
+        private void OnWaveStarted(object sender, WaveStartedEventArgs args)
+        {
+            SetWaveCount(args.Wave);
+        }
+
         private void SetWaveCount(int waveCount)
         {
             _waveCounter.Text = $"Wave {waveCount}";
@@ -85,6 +93,12 @@ namespace UI.HUD
         private void OnWaveComplete()
         {
             _progressBarInitialized = false;
+        }
+
+        public override void _ExitTree()
+        {
+            EventBus.Instance.WaveStarted -= OnWaveStarted;
+            base._ExitTree();
         }
     }
 }

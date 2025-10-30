@@ -10,8 +10,10 @@ namespace Autoloads
         public static EventBus Instance { get; private set; }
 
         #region Waves
-        [Signal]
-        public delegate void WaveStartedEventHandler(int wave);
+        // [Signal]
+        // public delegate void WaveStartedEventHandler(int wave);
+
+        public event EventHandler<WaveStartedEventArgs> WaveStarted;
 
         [Signal]
         public delegate void WaveTimeLeftEventHandler(float timeLeft, float totalTime);
@@ -73,11 +75,7 @@ namespace Autoloads
 
         /// <summary>
         /// Enemy was killed by player.
-        /// TODO: Figure out how to get the player ID to this signal so that we can give money to the correct player in multiplayer.
-        /// </summary>
-        // [Signal]
-        // public delegate void EnemyKilledEventHandler(int playerId, int flux, int bytes);
-
+        ///</summary>
         public event EventHandler<EnemyKilledEventArgs> EnemyKilled;
 
         #endregion
@@ -91,6 +89,12 @@ namespace Autoloads
         public void RaiseEnemyKilled(EnemyKilledEventArgs args)
         {
             EnemyKilled?.Invoke(this, args);
+        }
+
+        public void RaiseWaveStarted(int wave)
+        {
+            WaveStartedEventArgs args = new(wave);
+            WaveStarted?.Invoke(this, args);
         }
     }
 }

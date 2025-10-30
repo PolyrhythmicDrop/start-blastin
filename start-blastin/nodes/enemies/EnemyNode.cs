@@ -184,12 +184,7 @@ namespace Enemies
         {
             if (playerId != null)
             {
-                EnemyKilledEventArgs args = new()
-                {
-                    PlayerId = (int)playerId,
-                    FluxReward = _fluxReward,
-                    BytesReward = _byteReward,
-                };
+                EnemyKilledEventArgs args = new((int)playerId, _fluxReward, _byteReward);
                 EventBus.Instance.RaiseEnemyKilled(args);
             }
             // Queue free after all child projectiles die

@@ -153,7 +153,8 @@ namespace WaveManagement
         {
             GD.Print($"Wave {_wave} starting!");
             _waveTimer.Start(_waveTime);
-            EventBus.Instance.EmitSignal(EventBus.SignalName.WaveStarted, _wave);
+            // EventBus.Instance.EmitSignal(EventBus.SignalName.WaveStarted, _wave);
+            EventBus.Instance.RaiseWaveStarted(_wave);
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using Autoloads;
+using Events;
 using Factories;
 using Godot;
 using WaveManagement;
@@ -103,16 +104,19 @@ namespace Enemies.Spawners
             _spawnTimer.Timeout += SpawnEnemy;
 
             // Connect to wave signals
-            EventBus.Instance.Connect(
-                EventBus.SignalName.WaveStarted,
-                Callable.From(
-                    (int wave) =>
-                    {
-                        ToggleSpawning(true);
-                        _currentWave = wave;
-                    }
-                )
-            );
+            // EventBus.Instance.Connect(
+            //     EventBus.SignalName.WaveStarted,
+            //     Callable.From(
+            //         (int wave) =>
+            //         {
+            //             ToggleSpawning(true);
+            //             _currentWave = wave;
+            //         }
+            //     )
+            // );
+
+            // Connect to Wave Started event
+            EventBus.Instance.WaveStarted += OnWaveStarted;
 
             EventBus.Instance.Connect(
                 EventBus.SignalName.WaveTimerEnded,
@@ -292,6 +296,18 @@ namespace Enemies.Spawners
             {
                 _spawnTimer.Stop();
             }
+        }
+
+        private void OnWaveStarted(object sender, WaveStartedEventArgs args)
+        {
+            ToggleSpawning(true);
+            _currentWave = args.Wave;
+        }
+
+        public override void _ExitTree()
+        {
+            EventBus.Instance.WaveStarted -= OnWaveStarted;
+            base._ExitTree();
         }
     }
 }

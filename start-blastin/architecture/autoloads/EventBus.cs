@@ -33,8 +33,7 @@ namespace Autoloads
 
         public event Action ShopClosed;
 
-        [Signal]
-        public delegate void ShopItemBoughtEventHandler(Item item);
+        public event EventHandler<ItemBoughtEventArgs> ItemBought;
 
         #endregion
 
@@ -122,6 +121,12 @@ namespace Autoloads
         public void RaiseShopClosed()
         {
             ShopClosed?.Invoke();
+        }
+
+        public void RaiseItemBought(Item item)
+        {
+            ItemBoughtEventArgs args = new(item);
+            ItemBought?.Invoke(this, args);
         }
 
         public void RaiseEnemyKilled(EnemyKilledEventArgs args)

@@ -102,7 +102,8 @@ namespace UI.Shop
                 DebugLogger.LogMessage($"Shop item {_item.Name} bought!", true);
                 // Buy the item
                 // TODO: display the item's description and stuff before buying it. This is just to test that I *can* buy it.
-                EventBus.Instance.EmitSignal(EventBus.SignalName.ShopItemBought, _item);
+                // EventBus.Instance.EmitSignal(EventBus.SignalName.ShopItemBought, _item);
+                EventBus.Instance.RaiseItemBought(_item);
                 _rtLabel.Text += " Bought!";
 
                 // Clear the item.

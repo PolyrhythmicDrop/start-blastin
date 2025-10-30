@@ -301,19 +301,14 @@ namespace Entities
                 )
             );
 
-            // Connect the shop item bought signal
-            EventBus.Instance.Connect(
-                EventBus.SignalName.ShopItemBought,
-                Callable.From(
-                    (Item item) =>
-                    {
-                        BuyItem(item);
-                    }
-                )
-            );
-
-            // Connect the EnemyKilled event.
+            EventBus.Instance.ItemBought += OnItemBought;
             EventBus.Instance.EnemyKilled += OnEnemyKilled;
+        }
+
+        private void DisconnectSignals()
+        {
+            EventBus.Instance.ItemBought -= OnItemBought;
+            EventBus.Instance.EnemyKilled -= OnEnemyKilled;
         }
 
         public override void _Process(double delta)
@@ -619,9 +614,14 @@ namespace Entities
             }
         }
 
+        private void OnItemBought(object sender, ItemBoughtEventArgs args)
+        {
+            BuyItem(args.Item);
+        }
+
         public override void _ExitTree()
         {
-            EventBus.Instance.EnemyKilled -= OnEnemyKilled;
+            DisconnectSignals();
             base._ExitTree();
         }
     }

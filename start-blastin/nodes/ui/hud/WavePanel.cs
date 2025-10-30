@@ -33,19 +33,6 @@ namespace UI.HUD
             // Connect the wave time left signal for the progress bar
             EventBus.Instance.WaveTimeLeft += OnWaveTimeLeft;
 
-            // Callable waveTimeLeftCallable = Callable.From(
-            //     (float timeLeft, float totalTime) => SetWaveProgress(timeLeft, totalTime)
-            // );
-            // if (
-            //     !EventBus.Instance.IsConnected(
-            //         EventBus.SignalName.WaveTimeLeft,
-            //         waveTimeLeftCallable
-            //     )
-            // )
-            // {
-            //     EventBus.Instance.Connect(EventBus.SignalName.WaveTimeLeft, waveTimeLeftCallable);
-            // }
-
             // Connect the wave complete signal
             Callable waveCompleteCallable = Callable.From(OnWaveComplete);
             if (

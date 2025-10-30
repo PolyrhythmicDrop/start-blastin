@@ -160,13 +160,14 @@ namespace WaveManagement
 
         /// <summary>
         /// Ends a wave.
-        /// Emits the <see cref="EventBus.SignalName.WaveEnded"/> signal, then waits for all enemies to be freed before calling <see cref="IncrementWave()"/>.
+        /// Emits the <see cref="EventBus.WaveTimerEnded"/> event, then waits for all enemies to be freed before emitting the WaveComplete event and incrementing the next wave.
         /// </summary>
         private async void EndWave()
         {
             // Emit the signal for the wave timer ending to stop enemy spawning
             GD.Print($"Wave {_wave} timer ended!");
-            EventBus.Instance.EmitSignal(EventBus.SignalName.WaveTimerEnded);
+            // EventBus.Instance.EmitSignal(EventBus.SignalName.WaveTimerEnded);
+            EventBus.Instance.RaiseWaveTimerEnded();
 
             // Wait for all enemies to clear before processing the next wave.
             bool enemiesCleared = await WaitForEnemiesToClear();

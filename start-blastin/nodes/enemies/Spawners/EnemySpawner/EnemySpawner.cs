@@ -103,25 +103,7 @@ namespace Enemies.Spawners
             _spawnTimer.WaitTime = _spawnInterval;
             _spawnTimer.Timeout += SpawnEnemy;
 
-            // Connect to wave signals
-            // EventBus.Instance.Connect(
-            //     EventBus.SignalName.WaveStarted,
-            //     Callable.From(
-            //         (int wave) =>
-            //         {
-            //             ToggleSpawning(true);
-            //             _currentWave = wave;
-            //         }
-            //     )
-            // );
-
-            // Connect to Wave Started event
-            EventBus.Instance.WaveStarted += OnWaveStarted;
-
-            EventBus.Instance.Connect(
-                EventBus.SignalName.WaveTimerEnded,
-                Callable.From(() => ToggleSpawning(false))
-            );
+            ConnectSignals();
 
             // ToggleSpawning(true);
             MoveSpawnPoint();
@@ -129,6 +111,12 @@ namespace Enemies.Spawners
             GD.Print(
                 $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name} finished!"
             );
+        }
+
+        private void ConnectSignals()
+        {
+            EventBus.Instance.WaveStarted += OnWaveStarted;
+            EventBus.Instance.WaveTimerEnded += OnWaveTimerEnded;
         }
 
         public override void _Process(double delta)
@@ -302,6 +290,11 @@ namespace Enemies.Spawners
         {
             ToggleSpawning(true);
             _currentWave = args.Wave;
+        }
+
+        private void OnWaveTimerEnded(object sender, EventArgs args)
+        {
+            ToggleSpawning(false);
         }
 
         public override void _ExitTree()

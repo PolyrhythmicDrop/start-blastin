@@ -13,15 +13,11 @@ namespace Autoloads
 
         public event EventHandler<WaveStartedEventArgs> WaveStarted;
 
-        // [Signal]
-        // public delegate void WaveTimeLeftEventHandler(float timeLeft, float totalTime);
-
         public event EventHandler<WaveTimeLeftEventArgs> WaveTimeLeft;
 
         private readonly WaveTimeLeftEventArgs _waveTimeLeftArgs = new();
 
-        [Signal]
-        public delegate void WaveTimerEndedEventHandler();
+        public event EventHandler WaveTimerEnded;
 
         [Signal]
         public delegate void WaveCompleteEventHandler();
@@ -99,6 +95,11 @@ namespace Autoloads
             _waveTimeLeftArgs.TimeLeft = timeLeft;
             _waveTimeLeftArgs.TotalTime = totalTime;
             WaveTimeLeft?.Invoke(this, _waveTimeLeftArgs);
+        }
+
+        public void RaiseWaveTimerEnded()
+        {
+            WaveTimerEnded?.Invoke(this, new EventArgs());
         }
 
         public void RaiseEnemyKilled(EnemyKilledEventArgs args)

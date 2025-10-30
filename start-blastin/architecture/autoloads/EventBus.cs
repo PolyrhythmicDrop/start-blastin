@@ -28,11 +28,10 @@ namespace Autoloads
         #endregion
 
         #region Shop and Items
-        [Signal]
-        public delegate void ShopOpenedEventHandler();
 
-        [Signal]
-        public delegate void ShopClosedEventHandler();
+        public event Action ShopOpened;
+
+        public event Action ShopClosed;
 
         [Signal]
         public delegate void ShopItemBoughtEventHandler(Item item);
@@ -113,6 +112,16 @@ namespace Autoloads
         public void RaiseSpawnersReady()
         {
             SpawnersReady?.Invoke();
+        }
+
+        public void RaiseShopOpened()
+        {
+            ShopOpened?.Invoke();
+        }
+
+        public void RaiseShopClosed()
+        {
+            ShopClosed?.Invoke();
         }
 
         public void RaiseEnemyKilled(EnemyKilledEventArgs args)

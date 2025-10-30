@@ -50,7 +50,7 @@ namespace UI.Shop
             _shopUI.RequestReady();
             await ToSignal(_shopUI, Node.SignalName.Ready);
             _shopUI.Visible = true;
-            EventBus.Instance.EmitSignal(EventBus.SignalName.ShopOpened);
+            EventBus.Instance.RaiseShopOpened();
         }
 
         private async void CloseShop()
@@ -59,7 +59,7 @@ namespace UI.Shop
             _shopUI.Visible = false;
             _uiLayer.ShopContainer.CallDeferred(MethodName.RemoveChild, _shopUI);
             await ToSignal(_shopUI, Node.SignalName.TreeExited);
-            EventBus.Instance.EmitSignal(EventBus.SignalName.ShopClosed);
+            EventBus.Instance.RaiseShopClosed();
         }
 
         public override void _ExitTree()

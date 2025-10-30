@@ -119,6 +119,12 @@ namespace Enemies.Spawners
             EventBus.Instance.WaveTimerEnded += OnWaveTimerEnded;
         }
 
+        private void DisconnectSignals()
+        {
+            EventBus.Instance.WaveStarted -= OnWaveStarted;
+            EventBus.Instance.WaveTimerEnded -= OnWaveTimerEnded;
+        }
+
         public override void _Process(double delta)
         {
             base._Process(delta);
@@ -292,14 +298,14 @@ namespace Enemies.Spawners
             _currentWave = args.Wave;
         }
 
-        private void OnWaveTimerEnded(object sender, EventArgs args)
+        private void OnWaveTimerEnded()
         {
             ToggleSpawning(false);
         }
 
         public override void _ExitTree()
         {
-            EventBus.Instance.WaveStarted -= OnWaveStarted;
+            DisconnectSignals();
             base._ExitTree();
         }
     }

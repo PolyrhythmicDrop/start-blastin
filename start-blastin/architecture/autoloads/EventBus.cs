@@ -17,10 +17,9 @@ namespace Autoloads
 
         private readonly WaveTimeLeftEventArgs _waveTimeLeftArgs = new();
 
-        public event EventHandler WaveTimerEnded;
+        public event Action WaveTimerEnded;
 
-        [Signal]
-        public delegate void WaveCompleteEventHandler();
+        public event Action WaveComplete;
 
         [Signal]
         public delegate void StartWaveButtonPressedEventHandler();
@@ -99,7 +98,12 @@ namespace Autoloads
 
         public void RaiseWaveTimerEnded()
         {
-            WaveTimerEnded?.Invoke(this, new EventArgs());
+            WaveTimerEnded?.Invoke();
+        }
+
+        public void RaiseWaveComplete()
+        {
+            WaveComplete?.Invoke();
         }
 
         public void RaiseEnemyKilled(EnemyKilledEventArgs args)

@@ -33,17 +33,30 @@ namespace UI.HUD
             // Connect the wave time left signal for the progress bar
             EventBus.Instance.WaveTimeLeft += OnWaveTimeLeft;
 
+            EventBus.Instance.WaveComplete += OnWaveComplete;
+
             // Connect the wave complete signal
-            Callable waveCompleteCallable = Callable.From(OnWaveComplete);
-            if (
-                !EventBus.Instance.IsConnected(
-                    EventBus.SignalName.WaveComplete,
-                    waveCompleteCallable
-                )
-            )
-            {
-                EventBus.Instance.Connect(EventBus.SignalName.WaveComplete, waveCompleteCallable);
-            }
+            // Callable waveCompleteCallable = Callable.From(OnWaveComplete);
+            // if (
+            //     !EventBus.Instance.IsConnected(
+            //         EventBus.SignalName.WaveComplete,
+            //         waveCompleteCallable
+            //     )
+            // )
+            // {
+            //     EventBus.Instance.Connect(EventBus.SignalName.WaveComplete, waveCompleteCallable);
+            // }
+        }
+
+        private void DisconnectSignals()
+        {
+            // Connect the wave count signal
+            EventBus.Instance.WaveStarted -= OnWaveStarted;
+
+            // Connect the wave time left signal for the progress bar
+            EventBus.Instance.WaveTimeLeft -= OnWaveTimeLeft;
+
+            EventBus.Instance.WaveComplete -= OnWaveComplete;
         }
 
         private void OnWaveStarted(object sender, WaveStartedEventArgs args)
@@ -83,7 +96,7 @@ namespace UI.HUD
 
         public override void _ExitTree()
         {
-            EventBus.Instance.WaveStarted -= OnWaveStarted;
+            DisconnectSignals();
             base._ExitTree();
         }
     }

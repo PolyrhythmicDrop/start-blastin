@@ -33,9 +33,14 @@ namespace UI.Shop
 
         private void ConnectSignals()
         {
-            DebugLogger.LogMessage("Connecting signals...", true);
             EventBus.Instance.WaveComplete += OpenShop;
             EventBus.Instance.StartWaveButtonPressed += CloseShop;
+        }
+
+        private void DisconnectSignals()
+        {
+            EventBus.Instance.WaveComplete -= OpenShop;
+            EventBus.Instance.StartWaveButtonPressed -= CloseShop;
         }
 
         private async void OpenShop()
@@ -55,6 +60,12 @@ namespace UI.Shop
             _uiLayer.ShopContainer.CallDeferred(MethodName.RemoveChild, _shopUI);
             await ToSignal(_shopUI, Node.SignalName.TreeExited);
             EventBus.Instance.EmitSignal(EventBus.SignalName.ShopClosed);
+        }
+
+        public override void _ExitTree()
+        {
+            DisconnectSignals();
+            base._ExitTree();
         }
     }
 }

@@ -13,11 +13,18 @@ using Projectiles;
 using Services;
 using Stats;
 using Utility;
+using Weapons;
 
 namespace Entities
 {
     [GlobalClass]
-    public partial class Player : CharacterBody2D, IDie, IHealthful, IVelocityProvider, IStats
+    public partial class Player
+        : CharacterBody2D,
+            IDie,
+            IHealthful,
+            IVelocityProvider,
+            IStats,
+            IWeaponOwner
     {
         private int _playerId = 1;
 
@@ -206,6 +213,8 @@ namespace Entities
                 _service.UpdatePlayerCurrency(_playerId, flux: _flux);
             }
         }
+
+        public WeaponNode Weapon => _weaponComponent.Weapon;
 
         [Signal]
         public delegate void PlayerDiedEventHandler();

@@ -22,6 +22,7 @@ namespace Weapons
     {
         private WeaponStats _stats;
         private ProjectilePool _pool;
+        private IWeaponOwner _owner;
         private bool _enemyOwned;
         private bool _ownerSet;
         private int _activeProjectileCount;
@@ -33,7 +34,7 @@ namespace Weapons
         public WeaponStats Stats => _stats;
 
         /// <summary>
-        /// Whether or not the weapon is owned by an enemy or the player.
+        /// Whether or not the weapon is owned by an enemy or a player.
         /// </summary>
         /// <remarks>
         /// This value can be set only once, when the weapon is built by the factory. The <see cref="_ownerSet"/> variable is set to true when <see cref="EnemyOwned"/> is set the first time.
@@ -133,6 +134,12 @@ namespace Weapons
         public void InitializeStats(WeaponStats stats)
         {
             _stats = stats;
+        }
+
+        public void SetOwner(IWeaponOwner owner)
+        {
+            _owner = owner;
+            _ownerSet = true;
         }
 
         /// <summary>

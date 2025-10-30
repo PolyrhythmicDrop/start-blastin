@@ -39,7 +39,8 @@ namespace PlayerComponents
                 _equippedWeapon = WeaponFactory.CreateWeapon(
                     weaponResource,
                     false,
-                    velocityProvider: _player
+                    velocityProvider: _player,
+                    owner: _player
                 );
                 GD.Print(
                     $"Weapon equipped! {_equippedWeapon}\nStats: {_equippedWeapon.Stats.FireRate} | {_equippedWeapon.Stats.Damage} | {_equippedWeapon.Stats.ProjectileType} | {_equippedWeapon.Stats.ProjectileSpeed}"

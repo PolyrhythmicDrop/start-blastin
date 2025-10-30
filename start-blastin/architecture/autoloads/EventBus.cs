@@ -67,6 +67,17 @@ namespace Autoloads
 
         #endregion
 
+        #region Enemies
+
+        /// <summary>
+        /// Enemy was killed by player.
+        /// TODO: Figure out how to get the player ID to this signal so that we can give money to the correct player in multiplayer.
+        /// </summary>
+        [Signal]
+        public delegate void EnemyKilledEventHandler(int playerId, int flux, int bytes);
+
+        #endregion
+
 
         public override void _Ready()
         {

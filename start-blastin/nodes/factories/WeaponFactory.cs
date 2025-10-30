@@ -1,4 +1,5 @@
 using System;
+using Enemies;
 using Godot;
 using Interfaces;
 using WaveManagement;
@@ -19,7 +20,8 @@ namespace Factories
             WeaponResource weaponResource,
             bool enemyWeapon,
             EnemyScaler enemyScaler = null,
-            IVelocityProvider velocityProvider = null
+            IVelocityProvider velocityProvider = null,
+            IWeaponOwner owner = null
         )
         {
             try
@@ -38,19 +40,21 @@ namespace Factories
 
                 if (builtWeapon is WeaponNode weaponNode)
                 {
-                    weaponNode.EnemyOwned = enemyWeapon;
+                    if (owner is EnemyNode enemyNode)
+                    {
+                        weaponNode.EnemyOwned = true;
+                    }
                     WeaponResource newResource = (WeaponResource)
                         weaponResource.DuplicateDeep(Resource.DeepDuplicateMode.Internal);
-                    // If weapon is for an enemy and we have a wave config, apply the wave configuration to the weapon.
                     WeaponStats weaponStats = newResource.Stats;
-                    // if (enemyWeapon && enemyScaler != null)
-                    // {
-                    //     ApplyWaveConfigToWeaponStats(weaponStats, enemyScaler);
-                    // }
                     weaponNode.InitializeStats(weaponStats);
                     if (velocityProvider != null)
                     {
                         weaponNode.VelocityProvider = velocityProvider;
+                    }
+                    if (owner != null)
+                    {
+                        weaponNode.SetOwner(owner);
                     }
                     return weaponNode;
                 }

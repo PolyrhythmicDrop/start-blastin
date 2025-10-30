@@ -38,6 +38,7 @@ alignment = 1
 [node name="StatusPanel" parent="BaseContainer/HBoxContainer" instance=ExtResource("2_tajdg")]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 4
 
 [node name="WavePanel" parent="BaseContainer/HBoxContainer" instance=ExtResource("3_tajdg")]
 unique_name_in_owner = true
@@ -46,6 +47,7 @@ layout_mode = 2
 [node name="CurrencyPanel" parent="BaseContainer/HBoxContainer" instance=ExtResource("4_3pdy4")]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 4
 
 [node name="HUDBody" type="StaticBody2D" parent="BaseContainer"]
 unique_name_in_owner = true

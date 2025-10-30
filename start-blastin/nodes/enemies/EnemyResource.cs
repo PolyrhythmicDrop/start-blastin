@@ -13,6 +13,8 @@ namespace Enemies
         protected Curve2D _pathCurve;
         protected float _speed;
         protected int _crashDamage;
+        protected int _fluxReward;
+        protected int _byteReward;
 
         [Export]
         public string ScenePath
@@ -56,8 +58,22 @@ namespace Enemies
             set => _pathCurve = value;
         }
 
+        [Export]
+        public int FluxReward
+        {
+            get => _fluxReward;
+            set => _fluxReward = value;
+        }
+
+        [Export]
+        public int ByteReward
+        {
+            get => _byteReward;
+            set => _byteReward = value;
+        }
+
         public EnemyResource()
-            : this(0, null, null, "", 0, null) { }
+            : this(0, null, null, "", 0, null, 0, 0) { }
 
         public EnemyResource(
             int crashDamage,
@@ -65,7 +81,9 @@ namespace Enemies
             Curve2D pathCurve,
             string scenePath,
             float speed,
-            WeaponResource weaponResource
+            WeaponResource weaponResource,
+            int flux,
+            int bytes
         )
         {
             _crashDamage = crashDamage;
@@ -74,6 +92,8 @@ namespace Enemies
             _scenePath = scenePath;
             _speed = speed;
             _weaponResource = weaponResource;
+            _fluxReward = flux;
+            _byteReward = bytes;
         }
     }
 }

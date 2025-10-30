@@ -10,13 +10,15 @@ namespace Autoloads
         public static EventBus Instance { get; private set; }
 
         #region Waves
-        // [Signal]
-        // public delegate void WaveStartedEventHandler(int wave);
 
         public event EventHandler<WaveStartedEventArgs> WaveStarted;
 
-        [Signal]
-        public delegate void WaveTimeLeftEventHandler(float timeLeft, float totalTime);
+        // [Signal]
+        // public delegate void WaveTimeLeftEventHandler(float timeLeft, float totalTime);
+
+        public event EventHandler<WaveTimeLeftEventArgs> WaveTimeLeft;
+
+        private readonly WaveTimeLeftEventArgs _waveTimeLeftArgs = new();
 
         [Signal]
         public delegate void WaveTimerEndedEventHandler();
@@ -86,15 +88,22 @@ namespace Autoloads
             Instance = this;
         }
 
-        public void RaiseEnemyKilled(EnemyKilledEventArgs args)
-        {
-            EnemyKilled?.Invoke(this, args);
-        }
-
         public void RaiseWaveStarted(int wave)
         {
             WaveStartedEventArgs args = new(wave);
             WaveStarted?.Invoke(this, args);
+        }
+
+        public void RaiseWaveTimeLeft(double timeLeft, double totalTime)
+        {
+            _waveTimeLeftArgs.TimeLeft = timeLeft;
+            _waveTimeLeftArgs.TotalTime = totalTime;
+            WaveTimeLeft?.Invoke(this, _waveTimeLeftArgs);
+        }
+
+        public void RaiseEnemyKilled(EnemyKilledEventArgs args)
+        {
+            EnemyKilled?.Invoke(this, args);
         }
     }
 }

@@ -28,27 +28,23 @@ namespace UI.HUD
         private void ConnectSignals()
         {
             // Connect the wave count signal
-            // Callable waveCountCallable = Callable.From((int count) => SetWaveCount(count));
-            // if (!EventBus.Instance.IsConnected(EventBus.SignalName.WaveStarted, waveCountCallable))
-            // {
-            //     EventBus.Instance.Connect(EventBus.SignalName.WaveStarted, waveCountCallable);
-            // }
-
             EventBus.Instance.WaveStarted += OnWaveStarted;
 
             // Connect the wave time left signal for the progress bar
-            Callable waveTimeLeftCallable = Callable.From(
-                (float timeLeft, float totalTime) => SetWaveProgress(timeLeft, totalTime)
-            );
-            if (
-                !EventBus.Instance.IsConnected(
-                    EventBus.SignalName.WaveTimeLeft,
-                    waveTimeLeftCallable
-                )
-            )
-            {
-                EventBus.Instance.Connect(EventBus.SignalName.WaveTimeLeft, waveTimeLeftCallable);
-            }
+            EventBus.Instance.WaveTimeLeft += OnWaveTimeLeft;
+
+            // Callable waveTimeLeftCallable = Callable.From(
+            //     (float timeLeft, float totalTime) => SetWaveProgress(timeLeft, totalTime)
+            // );
+            // if (
+            //     !EventBus.Instance.IsConnected(
+            //         EventBus.SignalName.WaveTimeLeft,
+            //         waveTimeLeftCallable
+            //     )
+            // )
+            // {
+            //     EventBus.Instance.Connect(EventBus.SignalName.WaveTimeLeft, waveTimeLeftCallable);
+            // }
 
             // Connect the wave complete signal
             Callable waveCompleteCallable = Callable.From(OnWaveComplete);
@@ -73,7 +69,10 @@ namespace UI.HUD
             _waveCounter.Text = $"Wave {waveCount}";
         }
 
-        private void SetWaveProgress(float timeLeft, float totalTime)
+        private void OnWaveTimeLeft(object sender, WaveTimeLeftEventArgs args) =>
+            SetWaveProgress(args.TimeLeft, args.TotalTime);
+
+        private void SetWaveProgress(double timeLeft, double totalTime)
         {
             if (!_progressBarInitialized)
             {
@@ -84,7 +83,7 @@ namespace UI.HUD
             _waveProgressBar.Value = totalTime - timeLeft;
         }
 
-        private void InitializeWaveProgressBar(float totalTime)
+        private void InitializeWaveProgressBar(double totalTime)
         {
             _waveProgressBar.MaxValue = totalTime;
             _progressBarInitialized = true;

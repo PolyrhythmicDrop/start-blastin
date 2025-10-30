@@ -96,10 +96,11 @@ namespace WaveManagement
         {
             if (!_waveTimer.IsStopped())
             {
-                EventBus.Instance.EmitSignal(
-                    EventBus.SignalName.WaveTimeLeft,
-                    [_waveTimer.TimeLeft, _waveTime]
-                );
+                // EventBus.Instance.EmitSignal(
+                //     EventBus.SignalName.WaveTimeLeft,
+                //     [_waveTimer.TimeLeft, _waveTime]
+                // );
+                EventBus.Instance.RaiseWaveTimeLeft(_waveTimer.TimeLeft, _waveTime);
             }
         }
 

@@ -82,12 +82,17 @@ namespace WaveManagement
         /// <summary>
         /// Connects WaveManager signals.
         /// <list type="unordered">
-        /// <item><see cref="EventBus.SignalName.StartWaveButtonPressed"/> => <see cref="StartWave()"/></item>
+        /// <item><see cref="EventBus.StartWaveButtonPressed"/> => <see cref="StartWave()"/></item>
         /// </list>
         /// </summary>
         private void ConnectSignals()
         {
             EventBus.Instance.StartWaveButtonPressed += StartWave;
+        }
+
+        private void DisconnectSignals()
+        {
+            EventBus.Instance.StartWaveButtonPressed -= StartWave;
         }
 
         #endregion
@@ -231,5 +236,11 @@ namespace WaveManagement
         }
 
         #endregion
+
+        public override void _ExitTree()
+        {
+            DisconnectSignals();
+            base._ExitTree();
+        }
     }
 }

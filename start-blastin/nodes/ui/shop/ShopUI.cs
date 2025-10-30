@@ -54,35 +54,14 @@ namespace UI.Shop
 
         private void ConnectSignals()
         {
-            // Connect reroll button signal
-            Callable rerollCallable = Callable.From(RerollShop);
-            if (!_rerollButton.IsConnected(Button.SignalName.Pressed, rerollCallable))
-            {
-                _rerollButton.Connect(Button.SignalName.Pressed, rerollCallable);
-                GD.Print($"Reroll button connected!");
-            }
+            _rerollButton.Pressed += RerollShop;
+            _nextWaveButton.Pressed += EventBus.Instance.RaiseStartWaveButtonPressed;
+        }
 
-            // Connect next wave signal
-            Callable wavePressedCallable = Callable.From(() =>
-            {
-                EventBus.Instance.EmitSignal(EventBus.SignalName.StartWaveButtonPressed);
-            });
-            if (!_nextWaveButton.IsConnected(Button.SignalName.Pressed, wavePressedCallable))
-            {
-                _nextWaveButton.Connect(Button.SignalName.Pressed, wavePressedCallable);
-                GD.Print($"Next wave button connected!");
-            }
-
-            // Connect heal button signal
-            // Callable playerHealCallable = Callable.From(() =>
-            // {
-            //     float healAmount = _player.MaxHealth * 0.5f;
-            //     _player.Heal(healAmount);
-            // });
-            // if (!_healButton.IsConnected(Button.SignalName.Pressed, playerHealCallable))
-            // {
-            //     _healButton.Connect(Button.SignalName.Pressed, playerHealCallable);
-            // }
+        private void DisconnectSignals()
+        {
+            _rerollButton.Pressed -= RerollShop;
+            _nextWaveButton.Pressed -= EventBus.Instance.RaiseStartWaveButtonPressed;
         }
 
         /// <summary>
@@ -179,6 +158,12 @@ namespace UI.Shop
             GD.Print($"Rerolling shop...");
             ClearItemContainers();
             PopulateShopSlots();
+        }
+
+        public override void _ExitTree()
+        {
+            DisconnectSignals();
+            base._ExitTree();
         }
     }
 }

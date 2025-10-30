@@ -21,8 +21,7 @@ namespace Autoloads
 
         public event Action WaveComplete;
 
-        [Signal]
-        public delegate void StartWaveButtonPressedEventHandler();
+        public event Action StartWaveButtonPressed;
 
         [Signal]
         public delegate void SpawnersReadyEventHandler();
@@ -104,6 +103,11 @@ namespace Autoloads
         public void RaiseWaveComplete()
         {
             WaveComplete?.Invoke();
+        }
+
+        public void RaiseStartWaveButtonPressed()
+        {
+            StartWaveButtonPressed?.Invoke();
         }
 
         public void RaiseEnemyKilled(EnemyKilledEventArgs args)

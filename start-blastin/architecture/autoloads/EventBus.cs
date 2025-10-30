@@ -23,8 +23,8 @@ namespace Autoloads
 
         public event Action StartWaveButtonPressed;
 
-        [Signal]
-        public delegate void SpawnersReadyEventHandler();
+        public event Action SpawnersReady;
+
         #endregion
 
         #region Shop and Items
@@ -108,6 +108,11 @@ namespace Autoloads
         public void RaiseStartWaveButtonPressed()
         {
             StartWaveButtonPressed?.Invoke();
+        }
+
+        public void RaiseSpawnersReady()
+        {
+            SpawnersReady?.Invoke();
         }
 
         public void RaiseEnemyKilled(EnemyKilledEventArgs args)

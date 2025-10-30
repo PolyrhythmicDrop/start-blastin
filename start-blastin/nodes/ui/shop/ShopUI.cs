@@ -28,7 +28,10 @@ namespace UI.Shop
         {
             DebugLogger.LogMessage($"Calling _Ready...", true);
 
-            LoadItemPool();
+            if (_itemPool.Count <= 0)
+            {
+                LoadItemPool();
+            }
 
             _nextWaveButton = GetNode<Button>("%NextWaveButton");
             _rerollButton = GetNode<Button>("%RerollButton");

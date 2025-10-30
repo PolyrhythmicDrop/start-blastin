@@ -58,7 +58,6 @@ namespace WaveManagement
             _spawnerScene = GD.Load<PackedScene>(
                 "res://nodes/enemies/Spawners/EnemySpawner/enemy-spawner.tscn"
             );
-            SpawnersReady += OnSpawnersReady;
         }
 
         public override void Initialize(WaveManager waveManager)
@@ -85,9 +84,7 @@ namespace WaveManagement
         public void ScaleSpawners(EnemyScaler enemyScaler, float difficultyMod)
         {
             int currentWave = _waveManager.Wave;
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}:\ncurrentWave = {currentWave}\nenemyScaler = {enemyScaler.ResourceName}\ncurrentSpawnScaler = {_currentSpawnerScaler.ResourceName}\nformation = {_currentFormationScaler.ResourceName}"
-            );
+
             EnemyScaler adjustedEnemyScaler = enemyScaler.GetAdjustedScaler(
                 difficultyMod,
                 currentWave
@@ -97,22 +94,17 @@ namespace WaveManagement
                 currentWave
             );
 
-            // PrintScalerProperties(adjustedEnemyScaler);
-            // PrintScalerProperties(adjustedSpawnerScaler);
-
             // var spawners = GetTree().GetNodesInGroup("enemy-spawners");
             foreach (KeyValuePair<SpawnerLocation, List<EnemySpawner>> kvp in _activeSpawners)
             {
                 foreach (EnemySpawner spawner in kvp.Value)
                 {
-                    GD.Print(
-                        $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Applying enemy scaler and spawner scaler to {spawner.Name} in location {spawner.Location}..."
-                    );
                     spawner.SetEnemyScaler(adjustedEnemyScaler);
                     spawner.ApplySpawnerScaler(adjustedSpawnerScaler, _waveManager.Wave);
                 }
             }
-            EmitSignal(SignalName.SpawnersReady);
+
+            EventBus.Instance.RaiseSpawnersReady();
         }
 
         #region Management
@@ -265,21 +257,9 @@ namespace WaveManagement
 
         #endregion
 
-        private void OnSpawnersReady()
-        {
-            GD.Print("All spawners ready and added to _activeSpawners variable! Spawners:");
-            foreach (KeyValuePair<SpawnerLocation, List<EnemySpawner>> kvp in _activeSpawners)
-            {
-                GD.Print($"Location {kvp.Key} has {kvp.Value.Count} spawners!");
-                foreach (EnemySpawner spawner in kvp.Value)
-                {
-                    GD.Print($"Is {spawner.Name} in the tree? {spawner.IsInsideTree()}");
-                }
-            }
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Emitting event bus SpawnersReady signal!"
-            );
-            EventBus.Instance.EmitSignal(EventBus.SignalName.SpawnersReady);
-        }
+        // private void OnSpawnersReady()
+        // {
+        //     EventBus.Instance.EmitSignal(EventBus.SignalName.SpawnersReady);
+        // }
     }
 }

@@ -3,6 +3,7 @@ using Autoloads;
 using Entities;
 using Godot;
 using Services;
+using Utility;
 
 [GlobalClass]
 public partial class CurrencyPanel : PanelContainer
@@ -17,6 +18,8 @@ public partial class CurrencyPanel : PanelContainer
         _bytesLabel = GetNode<Label>("%BytesLabel");
         _fluxLabel = GetNode<Label>("%FluxLabel");
         _service = ServiceManager.Instance.GetService<PlayerService>();
+
+        ConnectSignals();
     }
 
     public void Initialize(int playerId)
@@ -55,6 +58,7 @@ public partial class CurrencyPanel : PanelContainer
     {
         if (playerId == _playerId)
         {
+            DebugLogger.LogMessage($"Updating flux in HUD! ID: {playerId} | Flux: {flux}");
             _fluxLabel.Text = flux.ToString();
         }
     }
@@ -63,6 +67,7 @@ public partial class CurrencyPanel : PanelContainer
     {
         if (playerId == _playerId)
         {
+            DebugLogger.LogMessage($"Updating bytes in HUD! ID: {playerId} | Bytes: {bytes}");
             _bytesLabel.Text = bytes.ToString();
         }
     }

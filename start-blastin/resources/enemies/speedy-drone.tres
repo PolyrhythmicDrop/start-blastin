@@ -20,4 +20,6 @@ CrashDamage = 1
 HealthComponent = SubResource("Resource_6f781")
 WeaponResource = ExtResource("3_06c5b")
 PathCurve = ExtResource("2_76l53")
+FluxReward = 20
+ByteReward = 100
 metadata/_custom_type_script = "uid://cf7pn6qd7aa15"

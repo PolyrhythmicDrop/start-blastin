@@ -5,6 +5,6 @@ namespace Interfaces
 {
     public interface IDie
     {
-        public void Die();
+        public void Die(int? playerId = null);
     }
 }

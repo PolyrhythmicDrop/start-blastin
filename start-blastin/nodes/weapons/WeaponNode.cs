@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Components;
+using Enemies;
 using Entities;
 using Godot;
 using Interfaces;
@@ -195,14 +196,19 @@ namespace Weapons
         /// <param name="collision">Information about the collision that occurred.</param>
         public virtual void OnProjectileCollision(CollisionComponent collision)
         {
+            int? playerId = null;
+            if (_owner is Player player)
+            {
+                playerId = player.PlayerId;
+            }
             // IHealthful objects take damage.
             if (collision.Collider is IHealthful healthful)
             {
-                if (healthful is Player player)
+                if (healthful is Player healthfulPlayer)
                 {
-                    if (!player.Dodging)
+                    if (!healthfulPlayer.Dodging)
                     {
-                        player.TakeDamage(_stats.Damage);
+                        healthfulPlayer.TakeDamage(_stats.Damage, playerId);
                     }
                     else
                     {
@@ -211,7 +217,7 @@ namespace Weapons
                 }
                 else
                 {
-                    healthful.TakeDamage(_stats.Damage);
+                    healthful.TakeDamage(_stats.Damage, playerId);
                 }
             }
 

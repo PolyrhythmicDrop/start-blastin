@@ -5,6 +5,7 @@ using Autoloads;
 using Components;
 using Effects;
 using Enemies;
+using Events;
 using Godot;
 using Interfaces;
 using Items;
@@ -275,7 +276,7 @@ namespace Entities
 
         private void ConnectSignals()
         {
-            // Connect signals
+            // Connect stat updated signal
             _stats.Connect(
                 StatManager.SignalName.StatUpdated,
                 Callable.From(
@@ -300,6 +301,7 @@ namespace Entities
                 )
             );
 
+            // Connect the shop item bought signal
             EventBus.Instance.Connect(
                 EventBus.SignalName.ShopItemBought,
                 Callable.From(
@@ -309,6 +311,9 @@ namespace Entities
                     }
                 )
             );
+
+            // Connect the EnemyKilled event.
+            EventBus.Instance.EnemyKilled += OnEnemyKilled;
         }
 
         public override void _Process(double delta)
@@ -378,7 +383,7 @@ namespace Entities
             _movementComponent.PhaseReady = true;
         }
 
-        public void TakeDamage(float damage)
+        public void TakeDamage(float damage, int? playerId = null)
         {
             _animationComponent.PlayDamageAnimation();
             // _healthComponent.TakeDamage(damage);
@@ -404,7 +409,7 @@ namespace Entities
             _service.UpdateCurrentHealth(_playerId, _currentHealth);
         }
 
-        public void Die()
+        public void Die(int? playerId = null)
         {
             _controller.Enabled = false;
             _isDying = true;
@@ -597,6 +602,27 @@ namespace Entities
                     _service.UpdatePhaseCooldown(_playerId, value);
                     break;
             }
+        }
+
+        private void OnEnemyKilled(object sender, EnemyKilledEventArgs args)
+        {
+            if (args.PlayerId == _playerId)
+            {
+                DebugLogger.LogMessage(
+                    $"{Name} killed an enemy! Sender: {sender.GetType()} | Flux: {args.FluxReward} | Bytes: {args.BytesReward}",
+                    true
+                );
+                _flux += args.FluxReward;
+                _bytes += args.BytesReward;
+
+                _service.UpdatePlayerCurrency(_playerId, _flux, _bytes);
+            }
+        }
+
+        public override void _ExitTree()
+        {
+            EventBus.Instance.EnemyKilled -= OnEnemyKilled;
+            base._ExitTree();
         }
     }
 }

@@ -1,3 +1,5 @@
+using System;
+using Events;
 using Godot;
 using Items;
 
@@ -73,8 +75,10 @@ namespace Autoloads
         /// Enemy was killed by player.
         /// TODO: Figure out how to get the player ID to this signal so that we can give money to the correct player in multiplayer.
         /// </summary>
-        [Signal]
-        public delegate void EnemyKilledEventHandler(int playerId, int flux, int bytes);
+        // [Signal]
+        // public delegate void EnemyKilledEventHandler(int playerId, int flux, int bytes);
+
+        public event EventHandler<EnemyKilledEventArgs> EnemyKilled;
 
         #endregion
 
@@ -82,6 +86,11 @@ namespace Autoloads
         public override void _Ready()
         {
             Instance = this;
+        }
+
+        public void RaiseEnemyKilled(EnemyKilledEventArgs args)
+        {
+            EnemyKilled?.Invoke(this, args);
         }
     }
 }

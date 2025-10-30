@@ -72,16 +72,5 @@ namespace Factories
                 return null;
             }
         }
-
-        /// <summary>
-        /// Applies a wave configuration to a weapon, typically for an enemy's weapon.
-        /// </summary>
-        /// <param name="stats">The original WeaponStats resource to modify.</param>
-        /// <param name="config">The wave configuration that modifies the <paramref name="stats"/>.</param>
-        private static void ApplyWaveConfigToWeaponStats(WeaponStats stats, EnemyScaler config)
-        {
-            stats.FireRate += config.FireRateModifier * stats.FireRate;
-            stats.Damage += config.WeaponDamageModifier * stats.Damage;
-        }
     }
 }

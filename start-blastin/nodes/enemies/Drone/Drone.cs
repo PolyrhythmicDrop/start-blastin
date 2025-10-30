@@ -58,7 +58,7 @@ namespace Enemies
             _base.Play("fire");
         }
 
-        public override void Die()
+        public override void Die(int? playerId = null)
         {
             _weapon.FireTimer.Stop();
             _shape.Disabled = true;
@@ -73,14 +73,14 @@ namespace Enemies
             if (
                 !_destruction.IsConnected(
                     AnimatedSprite2D.SignalName.AnimationFinished,
-                    Callable.From(base.Die)
+                    Callable.From(() => base.Die(playerId))
                 )
             )
             // Free the node when the animation is finished.
             {
                 _destruction.Connect(
                     AnimatedSprite2D.SignalName.AnimationFinished,
-                    Callable.From(base.Die)
+                    Callable.From(() => base.Die(playerId))
                 );
             }
         }

@@ -1,6 +1,8 @@
 using System.Reflection;
+using Autoloads;
 using Components;
 using Entities;
+using Events;
 using Factories;
 using Godot;
 using Interfaces;
@@ -85,7 +87,12 @@ namespace Enemies
             return _motion;
         }
 
-        public void TakeDamage(float damage)
+        /// <summary>
+        /// Causes this enemy node to take damage.
+        /// </summary>
+        /// <param name="damage">The amount of damage to take.</param>
+        /// <param name="playerId">If a player caused the damage, the <see cref="Player.PlayerId"/> of the damaging player.</param>
+        public void TakeDamage(float damage, int? playerId = null)
         {
             PlayDamageAnimation();
             _currentHealth -= damage;
@@ -93,9 +100,8 @@ namespace Enemies
             if (_currentHealth <= 0)
             {
                 _currentHealth = 0;
-                Die();
+                Die(playerId);
             }
-            // _healthComponent.TakeDamage(damage);
         }
 
         public void Heal(float healAmount)
@@ -105,6 +111,7 @@ namespace Enemies
 
         public virtual void Initialize(EnemyResource enemyResource)
         {
+            Name = enemyResource.ResourceName;
             // _healthComponent = (HealthComponent)enemyResource.HealthComponent.Duplicate();
             // _healthComponent.Initialize(this);
             _baseMaxHealth = enemyResource.HealthComponent.MaxHealth;
@@ -173,8 +180,18 @@ namespace Enemies
             _weapon.Fire();
         }
 
-        public virtual async void Die()
+        public virtual async void Die(int? playerId = null)
         {
+            if (playerId != null)
+            {
+                EnemyKilledEventArgs args = new()
+                {
+                    PlayerId = (int)playerId,
+                    FluxReward = _fluxReward,
+                    BytesReward = _byteReward,
+                };
+                EventBus.Instance.RaiseEnemyKilled(args);
+            }
             // Queue free after all child projectiles die
             bool projectilesDisabled = await _weapon.WaitForAllProjectilesDisabled();
             if (projectilesDisabled)

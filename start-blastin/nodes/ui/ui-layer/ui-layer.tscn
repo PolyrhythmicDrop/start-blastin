@@ -1,13 +1,20 @@
-[gd_scene load_steps=2 format=3 uid="uid://qjx1vd3cv27e"]
+[gd_scene load_steps=7 format=3 uid="uid://qjx1vd3cv27e"]
 
 [ext_resource type="Script" uid="uid://dpitrsqbep4of" path="res://nodes/ui/ui-layer/UiLayer.cs" id="1_abewa"]
+[ext_resource type="PackedScene" uid="uid://buyrlvs8oy1lu" path="res://nodes/ui/shop/shop-ui.tscn" id="2_0u1p2"]
+[ext_resource type="PackedScene" uid="uid://cs0msq3g3i6xk" path="res://nodes/ui/hud/hud.tscn" id="2_3mmuv"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_abewa"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3mmuv"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0u1p2"]
 
 [node name="UiLayer" type="CanvasLayer"]
 layer = 2
 script = ExtResource("1_abewa")
 
-[node name="Control" type="Control" parent="."]
-layout_mode = 3
+[node name="BasePanelContainer" type="PanelContainer" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -15,23 +22,27 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_abewa")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="VBoxContainer" type="VBoxContainer" parent="BasePanelContainer"]
+layout_mode = 2
 alignment = 1
 
-[node name="ShopContainer" type="Container" parent="Control/VBoxContainer"]
+[node name="ShopContainer" type="PanelContainer" parent="BasePanelContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-size_flags_stretch_ratio = 5.0
+size_flags_stretch_ratio = 8.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_3mmuv")
 
-[node name="HUDContainer" type="Container" parent="Control/VBoxContainer"]
+[node name="PanelContainer" parent="BasePanelContainer/VBoxContainer/ShopContainer" instance=ExtResource("2_0u1p2")]
+layout_mode = 2
+
+[node name="HUDContainer" type="PanelContainer" parent="BasePanelContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_0u1p2")
+
+[node name="Hud" parent="BasePanelContainer/VBoxContainer/HUDContainer" instance=ExtResource("2_3mmuv")]
+layout_mode = 2

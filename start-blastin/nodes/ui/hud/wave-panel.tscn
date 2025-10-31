@@ -5,7 +5,13 @@
 [ext_resource type="Texture2D" uid="uid://dk3xr6cxtt8kq" path="res://nodes/ui/hud/assets/wave-clock/basic-wave-clock-progress.png" id="2_iqh8d"]
 
 [node name="WavePanel" type="PanelContainer"]
-size_flags_horizontal = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
 script = ExtResource("1_iqh8d")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
@@ -39,11 +45,12 @@ layout_mode = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
+anchors_preset = -1
+anchor_left = 0.46666667
+anchor_top = 0.42540792
+anchor_right = 0.53333336
+anchor_bottom = 0.57459205
+offset_bottom = 3.0517578e-05
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4

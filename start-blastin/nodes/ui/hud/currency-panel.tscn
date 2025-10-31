@@ -1,41 +1,53 @@
-[gd_scene load_steps=4 format=3 uid="uid://3ws4d3upadvm"]
+[gd_scene load_steps=5 format=3 uid="uid://3ws4d3upadvm"]
 
 [ext_resource type="Script" uid="uid://b7jfokf43vyda" path="res://nodes/ui/hud/CurrencyPanel.cs" id="1_2627c"]
 [ext_resource type="Texture2D" uid="uid://bf8dkqnk8n642" path="res://nodes/ui/hud/assets/hud-icons/byte-icon.png" id="2_mtuhp"]
 [ext_resource type="Texture2D" uid="uid://byvvujovrlg1y" path="res://nodes/ui/hud/assets/hud-icons/flux-export.png" id="3_cro27"]
 
+[sub_resource type="LabelSettings" id="LabelSettings_cro27"]
+font_size = 32
+
 [node name="CurrencyPanel" type="PanelContainer"]
+anchors_preset = -1
+anchor_top = 0.43888888
+anchor_right = 1.0
+anchor_bottom = 0.5611111
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
-size_flags_stretch_ratio = 3.0
+size_flags_vertical = 3
 script = ExtResource("1_2627c")
+metadata/_edit_use_anchors_ = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 
 [node name="BytesBox" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="BytesLabel" type="Label" parent="VBoxContainer/BytesBox"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 1
 size_flags_stretch_ratio = 8.0
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 16
 text = "1000"
+label_settings = SubResource("LabelSettings_cro27")
 horizontal_alignment = 2
-vertical_alignment = 3
+vertical_alignment = 1
 
 [node name="BytesIcon" type="TextureRect" parent="VBoxContainer/BytesBox"]
-custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 6
-size_flags_vertical = 4
 texture = ExtResource("2_mtuhp")
-expand_mode = 5
+expand_mode = 3
 stretch_mode = 5
 
 [node name="FluxBox" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="FluxLabel" type="Label" parent="VBoxContainer/FluxBox"]
 unique_name_in_owner = true
@@ -44,14 +56,13 @@ size_flags_horizontal = 3
 size_flags_stretch_ratio = 8.0
 theme_override_font_sizes/font_size = 32
 text = "1000"
+label_settings = SubResource("LabelSettings_cro27")
 horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="FluxIcon" type="TextureRect" parent="VBoxContainer/FluxBox"]
-custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 6
-size_flags_vertical = 4
 texture = ExtResource("3_cro27")
-expand_mode = 5
+expand_mode = 3
 stretch_mode = 5

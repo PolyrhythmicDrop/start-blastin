@@ -7,7 +7,6 @@
 [sub_resource type="Theme" id="Theme_r4day"]
 
 [node name="ShopItemContainer" type="Control"]
-custom_minimum_size = Vector2(256, 275)
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5

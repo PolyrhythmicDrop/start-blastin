@@ -4,12 +4,11 @@ using Interfaces;
 namespace UI.HUD
 {
     [GlobalClass]
-    public partial class Hud : Control, IListener
+    public partial class Hud : PanelContainer, IListener
     {
         private int _playerId;
         private StaticBody2D _hudBody;
         private CollisionShape2D _hudCollision;
-        private PanelContainer _baseContainer;
         private WavePanel _wavePanel;
         private StatusPanel _statusPanel;
         private CurrencyPanel _currencyPanel;
@@ -23,7 +22,6 @@ namespace UI.HUD
         {
             _hudBody = GetNode<StaticBody2D>("%HUDBody");
             _hudCollision = GetNode<CollisionShape2D>("%HUDCollision");
-            _baseContainer = GetNode<PanelContainer>("%BaseContainer");
             _wavePanel = GetNode<WavePanel>("%WavePanel");
             _statusPanel = GetNode<StatusPanel>("%StatusPanel");
             _currencyPanel = GetNode<CurrencyPanel>("%CurrencyPanel");

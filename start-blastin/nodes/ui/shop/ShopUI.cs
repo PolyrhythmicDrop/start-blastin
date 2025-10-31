@@ -12,7 +12,7 @@ using Utility;
 namespace UI.Shop
 {
     [GlobalClass]
-    public partial class ShopUI : Control
+    public partial class ShopUI : PanelContainer
     {
         private int _playerId;
         private PlayerService _service;

@@ -2,11 +2,12 @@ using System;
 using Autoloads;
 using Events;
 using Godot;
+using Interfaces;
 
 namespace UI.HUD
 {
     [GlobalClass]
-    public partial class WavePanel : PanelContainer
+    public partial class WavePanel : PanelContainer, IListener
     {
         private Label _waveCounter;
         private PanelContainer _waveProgressContainer;
@@ -25,44 +26,22 @@ namespace UI.HUD
             ConnectSignals();
         }
 
-        private void ConnectSignals()
+        public void ConnectSignals()
         {
-            // Connect the wave count signal
             EventBus.Instance.WaveStarted += OnWaveStarted;
-
-            // Connect the wave time left signal for the progress bar
             EventBus.Instance.WaveTimeLeft += OnWaveTimeLeft;
-
             EventBus.Instance.WaveComplete += OnWaveComplete;
-
-            // Connect the wave complete signal
-            // Callable waveCompleteCallable = Callable.From(OnWaveComplete);
-            // if (
-            //     !EventBus.Instance.IsConnected(
-            //         EventBus.SignalName.WaveComplete,
-            //         waveCompleteCallable
-            //     )
-            // )
-            // {
-            //     EventBus.Instance.Connect(EventBus.SignalName.WaveComplete, waveCompleteCallable);
-            // }
         }
 
-        private void DisconnectSignals()
+        public void DisconnectSignals()
         {
-            // Connect the wave count signal
             EventBus.Instance.WaveStarted -= OnWaveStarted;
-
-            // Connect the wave time left signal for the progress bar
             EventBus.Instance.WaveTimeLeft -= OnWaveTimeLeft;
-
             EventBus.Instance.WaveComplete -= OnWaveComplete;
         }
 
-        private void OnWaveStarted(object sender, WaveStartedEventArgs args)
-        {
+        private void OnWaveStarted(object sender, WaveStartedEventArgs args) =>
             SetWaveCount(args.Wave);
-        }
 
         private void SetWaveCount(int waveCount)
         {

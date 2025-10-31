@@ -1,9 +1,10 @@
 using Godot;
+using Interfaces;
 
 namespace UI.HUD
 {
     [GlobalClass]
-    public partial class Hud : Control
+    public partial class Hud : Control, IListener
     {
         private int _playerId;
         private StaticBody2D _hudBody;
@@ -36,11 +37,12 @@ namespace UI.HUD
         public void ConnectSignals()
         {
             // Connect the shape re-sizer.
-            Callable shapeResizeCallable = Callable.From(SetCollisionShape);
-            if (!IsConnected(Control.SignalName.Resized, shapeResizeCallable))
-            {
-                Connect(Control.SignalName.Resized, shapeResizeCallable);
-            }
+            Resized += SetCollisionShape;
+        }
+
+        public void DisconnectSignals()
+        {
+            Resized -= SetCollisionShape;
         }
 
         private void SetCollisionShape()
@@ -48,6 +50,12 @@ namespace UI.HUD
             RectangleShape2D newShape = new() { Size = Size };
             _hudCollision.Shape = newShape;
             _hudCollision.Position = Size / 2;
+        }
+
+        public override void _ExitTree()
+        {
+            DisconnectSignals();
+            base._ExitTree();
         }
     }
 }

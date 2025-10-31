@@ -69,6 +69,11 @@ namespace Autoloads
                 {
                     DebugLogger.LogMessage("Failed to load override scene!", true, true);
                 }
+                else
+                {
+                    DebugLogger.LogMessage("Adding players...", true);
+                    AddPlayers();
+                }
             }
             else
             {
@@ -77,15 +82,6 @@ namespace Autoloads
                 {
                     DebugLogger.LogMessage("Failed to load default scene!", true, true);
                 }
-            }
-
-            if (success)
-            {
-                AddPlayers();
-            }
-            else
-            {
-                DebugLogger.LogMessage("Scene loading failed!", true, true);
             }
         }
 
@@ -162,7 +158,7 @@ namespace Autoloads
                     // Add the player to the PlayerService list
                     PlayerService playerService =
                         ServiceManager.Instance.GetService<PlayerService>();
-                    playerService.AddPlayerToService(player);
+                    playerService.AddPlayer(player);
 
                     // Instantiate the player's UI
                     UiLayer ui = GD.Load<PackedScene>("res://nodes/ui/ui-layer/ui-layer.tscn")

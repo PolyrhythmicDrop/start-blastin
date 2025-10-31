@@ -42,9 +42,13 @@ namespace PlayerComponents
         {
             if (!_phaseCooldownTimer.IsStopped())
             {
-                EventBus.Instance.EmitSignal(
-                    EventBus.SignalName.PlayerPhaseTimeLeft,
-                    [_player.PlayerId, _phaseCooldownTimer.TimeLeft]
+                // EventBus.Instance.EmitSignal(
+                //     EventBus.SignalName.PlayerPhaseTimeLeft,
+                //     [_player.PlayerId, _phaseCooldownTimer.TimeLeft]
+                // );
+                EventBus.Instance.RaisePlayerPhaseTimeLeft(
+                    _player.PlayerId,
+                    _phaseCooldownTimer.TimeLeft
                 );
             }
         }
@@ -56,21 +60,22 @@ namespace PlayerComponents
 
         public void StartPhase()
         {
-            DebugLogger.LogMessage(
-                $"Dodge started! Dodge duration: {_player.PhaseDuration} | Dodge speed: {_player.PhaseSpeed}"
-            );
+            // DebugLogger.LogMessage(
+            //     $"Dodge started! Dodge duration: {_player.PhaseDuration} | Dodge speed: {_player.PhaseSpeed}"
+            // );
             PhaseReady = false;
             _phaseTimer.Start(_player.PhaseDuration);
             // Set phase cooldown time left to reset the phase bar when the button is pressed instead of waiting until after the phase is done.
-            EventBus.Instance.EmitSignal(
-                EventBus.SignalName.PlayerPhaseTimeLeft,
-                [_player.PlayerId, _player.PhaseCooldown]
-            );
+            // EventBus.Instance.EmitSignal(
+            //     EventBus.SignalName.PlayerPhaseTimeLeft,
+            //     [_player.PlayerId, _player.PhaseCooldown]
+            // );
+            EventBus.Instance.RaisePlayerPhaseTimeLeft(_player.PlayerId, _player.PhaseCooldown);
         }
 
         public void EndPhase()
         {
-            DebugLogger.LogMessage($"Dodge ending! Dodge cooldown: {_player.PhaseCooldown}");
+            // DebugLogger.LogMessage($"Dodge ending! Dodge cooldown: {_player.PhaseCooldown}");
             _phaseCooldownTimer.Start(_player.PhaseCooldown);
         }
     }

@@ -91,7 +91,8 @@ namespace Entities
             private set
             {
                 _currentHealth = Mathf.Min(value, _maxHealth);
-                _service.UpdateCurrentHealth(_playerId, _currentHealth);
+                // _service.UpdateCurrentHealth(_playerId, _currentHealth);
+                EventBus.Instance.RaisePlayerCurrentHealthChanged(_playerId, _currentHealth);
             }
         }
 
@@ -188,7 +189,7 @@ namespace Entities
             set
             {
                 _plugins = [.. value];
-                _service.UpdateEquippedPlugins(_playerId, _plugins);
+                // _service.UpdateEquippedPlugins(_playerId, _plugins);
             }
         }
 
@@ -200,7 +201,7 @@ namespace Entities
             set
             {
                 _bytes = Math.Max(0, value);
-                _service.UpdatePlayerCurrency(_playerId, bytes: _bytes);
+                EventBus.Instance.RaisePlayerCurrencyChanged(_playerId, _bytes, _flux);
             }
         }
 
@@ -211,7 +212,7 @@ namespace Entities
             set
             {
                 _flux = Math.Max(0, value);
-                _service.UpdatePlayerCurrency(_playerId, flux: _flux);
+                EventBus.Instance.RaisePlayerCurrencyChanged(_playerId, _bytes, _flux);
             }
         }
 
@@ -247,7 +248,7 @@ namespace Entities
             _controller = GetNode<PlayerController>("%PlayerController");
             _weaponComponent = GetNode<WeaponComponent>("%WeaponComponent");
             _currentHealth = _maxHealth;
-            _service.UpdateCurrentHealth(_playerId, _currentHealth);
+            // _service.UpdateCurrentHealth(_playerId, _currentHealth);
 
             InitializeComponents();
             ConnectSignals();
@@ -276,33 +277,7 @@ namespace Entities
 
         private void ConnectSignals()
         {
-            // Connect stat updated signal
-            // _stats.Connect(
-            //     StatManager.SignalName.StatUpdated,
-            //     Callable.From(
-            //         (StatType statType, Stat stat) =>
-            //         {
-            //             if (
-            //                 statType == StatType.FireRate
-            //                 || statType == StatType.Damage
-            //                 || statType == StatType.ProjectileSpeed
-            //             )
-            //             {
-            //                 _weaponComponent.Weapon.UpdateWeaponStats(statType, stat);
-            //             }
-            //             else if (
-            //                 statType == StatType.MaxHealth
-            //                 || statType == StatType.PhaseCooldown
-            //             )
-            //             {
-            //                 UpdatePlayerServiceStats(statType, stat.CurrentValue);
-            //             }
-            //         }
-            //     )
-            // );
-
             _stats.StatUpdated += OnStatUpdated;
-
             EventBus.Instance.ItemBought += OnItemBought;
             EventBus.Instance.EnemyKilled += OnEnemyKilled;
         }
@@ -324,8 +299,16 @@ namespace Entities
                     _weaponComponent.Weapon.UpdateWeaponStats(args.StatType, args.Stat);
                     break;
                 case StatType.MaxHealth:
+                    EventBus.Instance.RaisePlayerMaxHealthChanged(
+                        _playerId,
+                        args.Stat.CurrentValue
+                    );
+                    break;
                 case StatType.PhaseCooldown:
-                    UpdatePlayerServiceStats(args.StatType, args.Stat.CurrentValue);
+                    EventBus.Instance.RaisePlayerPhaseCooldownChanged(
+                        _playerId,
+                        args.Stat.CurrentValue
+                    );
                     break;
             }
         }
@@ -403,8 +386,9 @@ namespace Entities
             // _healthComponent.TakeDamage(damage);
             _currentHealth -= damage;
 
-            GD.Print($"Player has taken damage! Current health: {_currentHealth}");
-            _service.UpdateCurrentHealth(_playerId, _currentHealth);
+            // GD.Print($"Player has taken damage! Current health: {_currentHealth}");
+            // _service.UpdateCurrentHealth(_playerId, _currentHealth);
+            EventBus.Instance.RaisePlayerCurrentHealthChanged(_playerId, _currentHealth);
 
             if (_currentHealth <= 0)
             {
@@ -420,7 +404,8 @@ namespace Entities
                 true
             );
             _currentHealth = Mathf.Min(_currentHealth + healAmount, _maxHealth);
-            _service.UpdateCurrentHealth(_playerId, _currentHealth);
+            // _service.UpdateCurrentHealth(_playerId, _currentHealth);
+            EventBus.Instance.RaisePlayerCurrentHealthChanged(_playerId, _currentHealth);
         }
 
         public void Die(int? playerId = null)
@@ -486,7 +471,7 @@ namespace Entities
                     );
                 }
             }
-            _service.UpdateEquippedPlugins(_playerId, _plugins);
+            // _service.UpdateEquippedPlugins(_playerId, _plugins);
         }
 
         public List<Plugin> GetPlugins()
@@ -600,36 +585,13 @@ namespace Entities
             }
         }
 
-        /// <summary>
-        /// Updates the <see cref="PlayerService"/> with the new values of a specific stat for the player.
-        /// </summary>
-        /// <param name="statType">The stat type that was updated.</param>
-        /// <param name="value">The new value of the stat.</param>
-        private void UpdatePlayerServiceStats(StatType statType, float value)
-        {
-            switch (statType)
-            {
-                case StatType.MaxHealth:
-                    _service.UpdateMaxHealth(_playerId, value);
-                    break;
-                case StatType.PhaseCooldown:
-                    _service.UpdatePhaseCooldown(_playerId, value);
-                    break;
-            }
-        }
-
         private void OnEnemyKilled(object sender, EnemyKilledEventArgs args)
         {
             if (args.PlayerId == _playerId)
             {
-                DebugLogger.LogMessage(
-                    $"{Name} killed an enemy! Sender: {sender.GetType()} | Flux: {args.FluxReward} | Bytes: {args.BytesReward}",
-                    true
-                );
-                _flux += args.FluxReward;
-                _bytes += args.BytesReward;
-
-                _service.UpdatePlayerCurrency(_playerId, _flux, _bytes);
+                Flux += args.FluxReward;
+                Bytes += args.BytesReward;
+                // EventBus.Instance.RaisePlayerCurrencyChanged(_playerId, _flux, _bytes);
             }
         }
 

@@ -15,6 +15,7 @@ namespace UI.Shop
     public partial class ShopUI : Control
     {
         private int _playerId;
+        private PlayerService _service;
         private List<ShopItemContainer> _itemContainers;
         private List<Item> _itemPool = new();
         private Button _nextWaveButton;
@@ -53,6 +54,7 @@ namespace UI.Shop
         public void Initialize(int playerId)
         {
             _playerId = playerId;
+            _service = ServiceManager.Instance.GetService<PlayerService>();
         }
 
         private void ConnectSignals()
@@ -137,15 +139,32 @@ namespace UI.Shop
             bool itemInContainer =
                 _itemContainers.Find(container => container.Item == item) != null;
 
-            PlayerService service = ServiceManager.Instance.GetService<PlayerService>();
-
-            // Is the item a plugin, and, if so, does the player already have it?
-            bool playerHasPlugin = item is Plugin plugin
-                ? service.PlayerHasPlugin(_playerId, plugin)
-                : false;
+            bool playerHasItem = PlayerHasItem(item);
 
             // Return true if both of the above are false
-            return !itemInContainer && !playerHasPlugin;
+            return !itemInContainer && !playerHasItem;
+        }
+
+        /// <summary>
+        /// Checks if the player has the passed Item in their inventory.
+        /// </summary>
+        /// <param name="item">The item to check for.</param>
+        /// <returns>True if the player has the item. False if the player does not.</returns>
+        /// <remarks>
+        /// Currently, this method only checks for Plugins, since the player can have multiples of the same modifier.
+        /// Expand this to check for consumables or other exclusive items later.
+        /// </remarks>
+        private bool PlayerHasItem(Item item)
+        {
+            Player player = _service.GetPlayer(_playerId);
+            if (item is Plugin plugin)
+            {
+                return player.HasPlugin(plugin);
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private void ClearItemContainers()

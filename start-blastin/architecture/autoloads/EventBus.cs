@@ -39,31 +39,17 @@ namespace Autoloads
 
         #region Player Status
 
-        // [Signal]
-        // public delegate void PlayerMaxHealthChangedEventHandler(int playerId, float maxHealth);
-
         public event EventHandler<PlayerMaxHealthChangedEventArgs> PlayerMaxHealthChanged;
 
-        [Signal]
-        public delegate void PlayerCurrentHealthChangedEventHandler(
-            int playerId,
-            float currentHealth
-        );
+        public event EventHandler<PlayerCurrentHealthChangedEventArgs> PlayerCurrentHealthChanged;
 
-        [Signal]
-        public delegate void PlayerPhaseTimeLeftEventHandler(int playerId, float timeLeft);
+        public event EventHandler<PlayerPhaseTimeLeftEventArgs> PlayerPhaseTimeLeft;
 
-        [Signal]
-        public delegate void PlayerPhaseTotalCooldownChangedEventHandler(
-            int playerId,
-            float cooldownTime
-        );
+        private PlayerPhaseTimeLeftEventArgs _phaseTimeLeftArgs = new();
 
-        [Signal]
-        public delegate void PlayerFluxChangeEventHandler(int playerId, int flux);
+        public event EventHandler<PlayerPhaseCooldownChangedEventArgs> PlayerPhaseCooldownChanged;
 
-        [Signal]
-        public delegate void PlayerBytesChangeEventHandler(int playerId, int bytes);
+        public event EventHandler<PlayerCurrencyChangedEventArgs> PlayerCurrencyChanged;
 
         #endregion
 
@@ -135,6 +121,31 @@ namespace Autoloads
         {
             PlayerMaxHealthChangedEventArgs args = new(playerId, maxHealth);
             PlayerMaxHealthChanged?.Invoke(this, args);
+        }
+
+        public void RaisePlayerCurrentHealthChanged(int playerId, float currentHealth)
+        {
+            PlayerCurrentHealthChangedEventArgs args = new(playerId, currentHealth);
+            PlayerCurrentHealthChanged?.Invoke(this, args);
+        }
+
+        public void RaisePlayerPhaseTimeLeft(int playerId, double timeLeft)
+        {
+            _phaseTimeLeftArgs.PlayerId = playerId;
+            _phaseTimeLeftArgs.TimeLeft = timeLeft;
+            PlayerPhaseTimeLeft?.Invoke(this, _phaseTimeLeftArgs);
+        }
+
+        public void RaisePlayerPhaseCooldownChanged(int playerId, float cooldown)
+        {
+            PlayerPhaseCooldownChangedEventArgs args = new(playerId, cooldown);
+            PlayerPhaseCooldownChanged?.Invoke(this, args);
+        }
+
+        public void RaisePlayerCurrencyChanged(int playerId, int bytes, int flux)
+        {
+            PlayerCurrencyChangedEventArgs args = new(playerId, bytes, flux);
+            PlayerCurrencyChanged?.Invoke(this, args);
         }
 
         public void RaiseEnemyKilled(EnemyKilledEventArgs args)

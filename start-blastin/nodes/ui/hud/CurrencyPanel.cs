@@ -1,12 +1,12 @@
-using System;
 using Autoloads;
 using Entities;
+using Events;
 using Godot;
+using Interfaces;
 using Services;
-using Utility;
 
 [GlobalClass]
-public partial class CurrencyPanel : PanelContainer
+public partial class CurrencyPanel : PanelContainer, IListener
 {
     private int _playerId;
     private PlayerService _service;
@@ -30,35 +30,35 @@ public partial class CurrencyPanel : PanelContainer
 
     public void InitializeLabels()
     {
-        if (_service.GetPlayerCurrency(_playerId, out int flux, out int bytes))
+        if (_service.HasPlayer(_playerId))
         {
-            _fluxLabel.Text = flux.ToString();
-            _bytesLabel.Text = bytes.ToString();
+            Player player = _service.GetPlayer(_playerId);
+            _fluxLabel.Text = player.Flux.ToString();
+            _bytesLabel.Text = player.Bytes.ToString();
         }
     }
 
-    private void ConnectSignals()
+    public void ConnectSignals()
     {
-        // Connect flux
-        Callable fluxCallable = Callable.From((int id, int flux) => UpdateFlux(id, flux));
-        if (!EventBus.Instance.IsConnected(EventBus.SignalName.PlayerFluxChange, fluxCallable))
-        {
-            EventBus.Instance.Connect(EventBus.SignalName.PlayerFluxChange, fluxCallable);
-        }
+        EventBus.Instance.PlayerCurrencyChanged += OnPlayerCurrencyChanged;
+    }
 
-        // Connect bytes
-        Callable byteCallable = Callable.From((int id, int bytes) => UpdateBytes(id, bytes));
-        if (!EventBus.Instance.IsConnected(EventBus.SignalName.PlayerBytesChange, byteCallable))
-        {
-            EventBus.Instance.Connect(EventBus.SignalName.PlayerBytesChange, byteCallable);
-        }
+    public void DisconnectSignals()
+    {
+        EventBus.Instance.PlayerCurrencyChanged -= OnPlayerCurrencyChanged;
+    }
+
+    private void OnPlayerCurrencyChanged(object source, PlayerCurrencyChangedEventArgs args)
+    {
+        UpdateFlux(args.PlayerId, args.Flux);
+        UpdateBytes(args.PlayerId, args.Bytes);
     }
 
     private void UpdateFlux(int playerId, int flux)
     {
         if (playerId == _playerId)
         {
-            DebugLogger.LogMessage($"Updating flux in HUD! ID: {playerId} | Flux: {flux}");
+            // DebugLogger.LogMessage($"Updating flux in HUD! ID: {playerId} | Flux: {flux}");
             _fluxLabel.Text = flux.ToString();
         }
     }
@@ -67,8 +67,14 @@ public partial class CurrencyPanel : PanelContainer
     {
         if (playerId == _playerId)
         {
-            DebugLogger.LogMessage($"Updating bytes in HUD! ID: {playerId} | Bytes: {bytes}");
+            // DebugLogger.LogMessage($"Updating bytes in HUD! ID: {playerId} | Bytes: {bytes}");
             _bytesLabel.Text = bytes.ToString();
         }
+    }
+
+    public override void _ExitTree()
+    {
+        DisconnectSignals();
+        base._ExitTree();
     }
 }

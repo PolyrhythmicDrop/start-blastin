@@ -1,6 +1,7 @@
 using System;
 using Autoloads;
 using Entities;
+using Events;
 using Godot;
 using Services;
 
@@ -31,25 +32,7 @@ namespace UI.HUD
 
         private void ConnectSignals()
         {
-            // Connect the max health update signal
-            Callable maxHealthChangeCallable = Callable.From(
-                (int id, float max) =>
-                {
-                    UpdateMaxHealth(id, max);
-                }
-            );
-            if (
-                !EventBus.Instance.IsConnected(
-                    EventBus.SignalName.PlayerMaxHealthChanged,
-                    maxHealthChangeCallable
-                )
-            )
-            {
-                EventBus.Instance.Connect(
-                    EventBus.SignalName.PlayerMaxHealthChanged,
-                    maxHealthChangeCallable
-                );
-            }
+            EventBus.Instance.PlayerMaxHealthChanged += OnPlayerMaxHealthChanged;
 
             // Connect the current health update signal
             Callable currentHealthChangeCallable = Callable.From(
@@ -112,6 +95,11 @@ namespace UI.HUD
             }
         }
 
+        private void DisconnectSignals()
+        {
+            EventBus.Instance.PlayerMaxHealthChanged -= OnPlayerMaxHealthChanged;
+        }
+
         private void InitializeStatusBars()
         {
             if (_service.GetPlayerHealth(_playerId, out float currentHealth, out float maxHealth))
@@ -124,6 +112,11 @@ namespace UI.HUD
                 _phaseBar.MaxValue = totalCooldown;
                 _phaseBar.Value = totalCooldown;
             }
+        }
+
+        private void OnPlayerMaxHealthChanged(object source, PlayerMaxHealthChangedEventArgs args)
+        {
+            UpdateMaxHealth(args.PlayerId, args.MaxHealth);
         }
 
         private void UpdateMaxHealth(int playerId, float maxHealth)
@@ -166,6 +159,12 @@ namespace UI.HUD
             {
                 _phaseBar.Value = _phaseBar.MaxValue - timeLeft;
             }
+        }
+
+        public override void _ExitTree()
+        {
+            DisconnectSignals();
+            base._ExitTree();
         }
     }
 }

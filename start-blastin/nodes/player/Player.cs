@@ -277,29 +277,31 @@ namespace Entities
         private void ConnectSignals()
         {
             // Connect stat updated signal
-            _stats.Connect(
-                StatManager.SignalName.StatUpdated,
-                Callable.From(
-                    (StatType statType, Stat stat) =>
-                    {
-                        if (
-                            statType == StatType.FireRate
-                            || statType == StatType.Damage
-                            || statType == StatType.ProjectileSpeed
-                        )
-                        {
-                            _weaponComponent.Weapon.UpdateWeaponStats(statType, stat);
-                        }
-                        else if (
-                            statType == StatType.MaxHealth
-                            || statType == StatType.PhaseCooldown
-                        )
-                        {
-                            UpdatePlayerServiceStats(statType, stat.CurrentValue);
-                        }
-                    }
-                )
-            );
+            // _stats.Connect(
+            //     StatManager.SignalName.StatUpdated,
+            //     Callable.From(
+            //         (StatType statType, Stat stat) =>
+            //         {
+            //             if (
+            //                 statType == StatType.FireRate
+            //                 || statType == StatType.Damage
+            //                 || statType == StatType.ProjectileSpeed
+            //             )
+            //             {
+            //                 _weaponComponent.Weapon.UpdateWeaponStats(statType, stat);
+            //             }
+            //             else if (
+            //                 statType == StatType.MaxHealth
+            //                 || statType == StatType.PhaseCooldown
+            //             )
+            //             {
+            //                 UpdatePlayerServiceStats(statType, stat.CurrentValue);
+            //             }
+            //         }
+            //     )
+            // );
+
+            _stats.StatUpdated += OnStatUpdated;
 
             EventBus.Instance.ItemBought += OnItemBought;
             EventBus.Instance.EnemyKilled += OnEnemyKilled;
@@ -307,8 +309,25 @@ namespace Entities
 
         private void DisconnectSignals()
         {
+            _stats.StatUpdated -= OnStatUpdated;
             EventBus.Instance.ItemBought -= OnItemBought;
             EventBus.Instance.EnemyKilled -= OnEnemyKilled;
+        }
+
+        private void OnStatUpdated(object source, StatUpdatedEventArgs args)
+        {
+            switch (args.StatType)
+            {
+                case StatType.FireRate:
+                case StatType.Damage:
+                case StatType.ProjectileSpeed:
+                    _weaponComponent.Weapon.UpdateWeaponStats(args.StatType, args.Stat);
+                    break;
+                case StatType.MaxHealth:
+                case StatType.PhaseCooldown:
+                    UpdatePlayerServiceStats(args.StatType, args.Stat.CurrentValue);
+                    break;
+            }
         }
 
         public override void _Process(double delta)

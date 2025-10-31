@@ -39,8 +39,10 @@ namespace Autoloads
 
         #region Player Status
 
-        [Signal]
-        public delegate void PlayerMaxHealthChangedEventHandler(int playerId, float maxHealth);
+        // [Signal]
+        // public delegate void PlayerMaxHealthChangedEventHandler(int playerId, float maxHealth);
+
+        public event EventHandler<PlayerMaxHealthChangedEventArgs> PlayerMaxHealthChanged;
 
         [Signal]
         public delegate void PlayerCurrentHealthChangedEventHandler(
@@ -127,6 +129,12 @@ namespace Autoloads
         {
             ItemBoughtEventArgs args = new(item);
             ItemBought?.Invoke(this, args);
+        }
+
+        public void RaisePlayerMaxHealthChanged(int playerId, float maxHealth)
+        {
+            PlayerMaxHealthChangedEventArgs args = new(playerId, maxHealth);
+            PlayerMaxHealthChanged?.Invoke(this, args);
         }
 
         public void RaiseEnemyKilled(EnemyKilledEventArgs args)

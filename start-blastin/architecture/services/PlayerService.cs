@@ -104,10 +104,11 @@ namespace Services
         {
             _maxHealth[id] = maxHealth;
             DebugLogger.LogMessage($"Player {id} max health updated to {_maxHealth[id]}!", true);
-            EventBus.Instance.EmitSignal(
-                EventBus.SignalName.PlayerMaxHealthChanged,
-                [id, maxHealth]
-            );
+            // EventBus.Instance.EmitSignal(
+            //     EventBus.SignalName.PlayerMaxHealthChanged,
+            //     [id, maxHealth]
+            // );
+            EventBus.Instance.RaisePlayerMaxHealthChanged(id, _maxHealth[id]);
         }
 
         public void UpdatePhaseCooldown(int id, float totalCooldown)

@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Events;
 using Godot;
 using Utility;
 
@@ -16,8 +18,12 @@ namespace Stats
 
         public IReadOnlyDictionary<StatType, Stat> Stats => _stats;
 
-        [Signal]
-        public delegate void StatUpdatedEventHandler(StatType type, Stat stat);
+        public event EventHandler<StatUpdatedEventArgs> StatUpdated;
+
+        public void RaiseStatUpdated(StatUpdatedEventArgs args)
+        {
+            StatUpdated?.Invoke(this, args);
+        }
 
         /// <summary>
         /// Adds a new <see cref="Stat"/> of the specified type to the StatManager.
@@ -73,7 +79,9 @@ namespace Stats
             {
                 AddStat(type, newValue);
             }
-            EmitSignal(SignalName.StatUpdated, Variant.From(type), GetStat(type));
+            // EmitSignal(SignalName.StatUpdated, Variant.From(type), GetStat(type));
+            StatUpdatedEventArgs args = new(type, GetStat(type));
+            RaiseStatUpdated(args);
         }
 
         /// <summary>
@@ -87,7 +95,9 @@ namespace Stats
             {
                 stat.CurrentValue = stat.BaseValue;
             }
-            EmitSignal(SignalName.StatUpdated, Variant.From(stat.Type), stat);
+            // EmitSignal(SignalName.StatUpdated, Variant.From(stat.Type), stat);
+            StatUpdatedEventArgs args = new(stat.Type, stat);
+            RaiseStatUpdated(args);
         }
 
         /// <summary>

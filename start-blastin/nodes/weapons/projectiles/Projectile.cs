@@ -1,6 +1,7 @@
 using System;
 using Components;
 using Godot;
+using Utility;
 using Weapons;
 
 namespace Projectiles
@@ -101,6 +102,10 @@ namespace Projectiles
             {
                 InitializeRay();
             }
+            DebugLogger.LogMessage(
+                $"Projectile added to scene tree! Base speed: {_baseSpeed} | Current speed: {_currentSpeed} | Source velocity: {_sourceVelocity}",
+                true
+            );
         }
 
         protected virtual void InitializeRay()
@@ -239,6 +244,10 @@ namespace Projectiles
             float extraVelocity = Mathf.Max(0, projectionMagnitude) * 0.6f;
 
             _currentSpeed = _baseSpeed + extraVelocity;
+            DebugLogger.LogMessage(
+                $"Source velocity added! New current speed: {_currentSpeed} | Source velocity: {_sourceVelocity}",
+                true
+            );
         }
 
         /// <summary>

@@ -32,12 +32,12 @@ namespace Stats
         /// <param name="baseValue">The value of the stat.</param>
         public void AddStat(StatType type, float baseValue)
         {
-            DebugLogger.LogMessage(
-                $"Attempting to add new stat of type {type} and base value {baseValue}",
-                true
-            );
+            // DebugLogger.LogMessage(
+            //     $"Attempting to add new stat of type {type} and base value {baseValue}",
+            //     true
+            // );
             Stat stat = new(type, baseValue);
-            DebugLogger.LogMessage($"Stat object created! {stat.Type} - {stat.BaseValue}", true);
+            // DebugLogger.LogMessage($"Stat object created! {stat.Type} - {stat.BaseValue}", true);
             AddStat(stat);
         }
 
@@ -50,10 +50,10 @@ namespace Stats
             bool success = _stats.TryAdd(stat.Type, stat);
             if (success)
             {
-                DebugLogger.LogMessage(
-                    $"New StatType added to StatManager! {_stats[stat.Type].Type}: base value = {_stats[stat.Type].BaseValue} | current value = {_stats[stat.Type].CurrentValue}",
-                    true
-                );
+                // DebugLogger.LogMessage(
+                //     $"New StatType added to StatManager! {_stats[stat.Type].Type}: base value = {_stats[stat.Type].BaseValue} | current value = {_stats[stat.Type].CurrentValue}",
+                //     true
+                // );
             }
             else
             {

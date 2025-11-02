@@ -38,6 +38,8 @@ namespace Enemies
         protected Vector2 _currentGlobalPosition;
         protected Vector2 _lastGlobalPosition;
         protected Vector2 _motion => _currentGlobalPosition - _lastGlobalPosition;
+        protected Vector2 _lastFramePosition;
+        protected Vector2 _currentVelocity = Vector2.Zero;
 
         #region Stats
 
@@ -83,11 +85,14 @@ namespace Enemies
             _weapon.FireTimer.Start(delay);
 
             _path.FollowPath(_followSpeed);
+
+            // Initialize position tracking
+            _lastFramePosition = GlobalPosition;
         }
 
         public Vector2 GetCurrentVelocity()
         {
-            return _motion;
+            return _currentVelocity;
         }
 
         /// <summary>
@@ -210,6 +215,17 @@ namespace Enemies
                 // player.TakeDamage(crashDamage);
                 Die();
             }
+        }
+
+        public override void _PhysicsProcess(double delta)
+        {
+            base._PhysicsProcess(delta);
+            if (delta > 0)
+            {
+                _currentVelocity = (GlobalPosition - _lastFramePosition) / (float)delta;
+            }
+
+            _lastFramePosition = GlobalPosition;
         }
     }
 }

@@ -24,7 +24,7 @@ public partial class EntityPath : Path2D
     public virtual void FollowPath(float speed)
     {
         float pathLength = Curve.GetBakedLength();
-        float duration = Mathf.Max(pathLength / speed, 0.5f);
+        float duration = Mathf.Max(pathLength / speed, 0.1f);
 
         Tween tween = CreateTween();
         tween.TweenProperty(_pathFollow, "progress_ratio", 1.0, duration);

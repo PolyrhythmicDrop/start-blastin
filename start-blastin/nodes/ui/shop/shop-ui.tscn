@@ -121,4 +121,6 @@ focus_neighbor_bottom = NodePath("../../../../ItemSelection/GridContainer/ShopIt
 focus_next = NodePath("../RerollButton")
 focus_previous = NodePath("../RerollButton")
 theme_override_font_sizes/font_size = 32
-text = "Next Wave"
+text = "Next
+Wave"
+icon_alignment = 1

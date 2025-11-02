@@ -12,21 +12,22 @@ anchor_bottom = 0.5611111
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
-size_flags_vertical = 6
+size_flags_vertical = 3
 script = ExtResource("1_46k8h")
 metadata/_edit_use_anchors_ = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
 
 [node name="HealthBox" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="HealthIcon" type="TextureRect" parent="VBoxContainer/HealthBox"]
 layout_direction = 2
 layout_mode = 2
-size_flags_horizontal = 6
+size_flags_horizontal = 3
 texture = ExtResource("1_bvs3w")
 expand_mode = 3
 stretch_mode = 5
@@ -40,6 +41,7 @@ size_flags_stretch_ratio = 8.0
 
 [node name="PhaseBox" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="PhaseIcon" type="TextureRect" parent="VBoxContainer/PhaseBox"]

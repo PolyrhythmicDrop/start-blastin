@@ -9,9 +9,9 @@ font_size = 32
 
 [node name="CurrencyPanel" type="PanelContainer"]
 anchors_preset = -1
-anchor_top = 0.43888888
+anchor_top = 0.4810185
 anchor_right = 1.0
-anchor_bottom = 0.5611111
+anchor_bottom = 0.51898146
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -19,11 +19,13 @@ size_flags_vertical = 3
 script = ExtResource("1_2627c")
 metadata/_edit_use_anchors_ = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
+alignment = 2
 
 [node name="BytesBox" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 10
 size_flags_vertical = 3
 
 [node name="BytesLabel" type="Label" parent="VBoxContainer/BytesBox"]
@@ -40,13 +42,14 @@ vertical_alignment = 1
 
 [node name="BytesIcon" type="TextureRect" parent="VBoxContainer/BytesBox"]
 layout_mode = 2
-size_flags_horizontal = 6
+size_flags_horizontal = 3
 texture = ExtResource("2_mtuhp")
 expand_mode = 3
 stretch_mode = 5
 
 [node name="FluxBox" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 8
 size_flags_vertical = 3
 
 [node name="FluxLabel" type="Label" parent="VBoxContainer/FluxBox"]
@@ -62,7 +65,7 @@ vertical_alignment = 1
 
 [node name="FluxIcon" type="TextureRect" parent="VBoxContainer/FluxBox"]
 layout_mode = 2
-size_flags_horizontal = 6
+size_flags_horizontal = 3
 texture = ExtResource("3_cro27")
 expand_mode = 3
 stretch_mode = 5

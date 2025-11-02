@@ -1,5 +1,6 @@
 using Godot;
 using Interfaces;
+using Utility;
 
 namespace UI.HUD
 {
@@ -29,6 +30,8 @@ namespace UI.HUD
             _statusPanel.Initialize(_playerId);
             _currencyPanel.Initialize(_playerId);
 
+            SetCollisionShape();
+
             ConnectSignals();
         }
 
@@ -45,9 +48,14 @@ namespace UI.HUD
 
         private void SetCollisionShape()
         {
+            DebugLogger.LogMessage("Setting collision shape...", true);
             RectangleShape2D newShape = new() { Size = Size };
+            Vector2 size = newShape.Size;
             _hudCollision.Shape = newShape;
-            _hudCollision.Position = Size / 2;
+            _hudCollision.Position = size / 2;
+            DebugLogger.LogMessage(
+                $"Collision shape and size set! New size: {size} | Collision position: {_hudCollision.Position}"
+            );
         }
 
         public override void _ExitTree()

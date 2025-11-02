@@ -80,6 +80,10 @@ level="A level in the game."
 enemies=""
 players=""
 
+[gui]
+
+theme/custom="uid://byu0wrnknwnnb"
+
 [input]
 
 ui_accept={
@@ -158,3 +162,7 @@ phase={
 2d_physics/layer_3="Enemies"
 2d_physics/layer_4="Projectiles-Player"
 2d_physics/layer_5="Projectiles-Enemy"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0

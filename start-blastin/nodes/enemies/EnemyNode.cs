@@ -77,7 +77,10 @@ namespace Enemies
 
             // Start the weapon fire timer to fire on a set interval.
             _weapon.FireTimer.Timeout += FireWeapon;
-            _weapon.FireTimer.Start(_weapon.Stats.FireRate);
+
+            // Set an initial firing delay
+            float delay = (float)GD.RandRange(0, _weapon.Stats.FireRate);
+            _weapon.FireTimer.Start(delay);
 
             _path.FollowPath(_followSpeed);
         }

@@ -248,6 +248,11 @@ namespace Weapons
             {
                 projectile.AddSourceVelocity();
             }
+
+            if (EnemyOwned && !FireTimer.IsStopped())
+            {
+                FireTimer.Start(Stats.FireRate);
+            }
         }
 
         public virtual void UpdateWeaponStats(StatType statType, Stat stat)
@@ -256,17 +261,12 @@ namespace Weapons
             {
                 case StatType.Damage:
                     _stats.Damage = stat.CurrentValue;
-                    GD.Print($"Updating {Name} weapon damage to {_stats.Damage}");
                     break;
                 case StatType.FireRate:
                     _stats.FireRate = stat.CurrentValue;
-                    GD.Print($"Updating {Name} weapon fire rate to {_stats.FireRate}");
                     break;
                 case StatType.ProjectileSpeed:
                     _stats.ProjectileSpeed = stat.CurrentValue;
-                    GD.Print(
-                        $"Updating {Name} weapon projectile speed to {_stats.ProjectileSpeed}"
-                    );
                     break;
                 default:
                     break;

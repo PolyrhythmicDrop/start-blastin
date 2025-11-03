@@ -106,6 +106,8 @@ namespace Weapons
             set => _velocityProvider = value;
         }
 
+        public IWeaponOwner WeaponOwner => _owner;
+
         /// <summary>
         /// Constructor for the WeaponNode. Sets the <see cref="HitCallable"/> callback function to <see cref="OnProjectileCollision"/>.
         /// </summary>

@@ -6,6 +6,7 @@ using Events;
 using Factories;
 using Godot;
 using Interfaces;
+using Microsoft.VisualBasic;
 using Stats;
 using WaveManagement;
 using Weapons;
@@ -25,27 +26,29 @@ namespace Enemies
         // protected HealthComponent _healthComponent;
         protected WeaponNode _weapon;
 
-        /// <summary>
-        /// The speed at which this enemy follows its assigned path.
-        /// </summary>
-        protected float _followSpeed => _stats.GetStat(StatType.Speed).CurrentValue;
-
-        protected float _crashDamage => _stats.GetStat(StatType.CrashDamage).CurrentValue;
         protected CollisionShape2D _shape;
         protected EntityPath _path;
-        protected EnemyState _state;
 
+        #region Position and Velocity
         protected Vector2 _currentGlobalPosition;
         protected Vector2 _lastGlobalPosition;
         protected Vector2 _motion => _currentGlobalPosition - _lastGlobalPosition;
         protected Vector2 _lastFramePosition;
         protected Vector2 _currentVelocity = Vector2.Zero;
+        #endregion
 
         #region Stats
 
         // current stats
         protected float _currentHealth;
         protected float _maxHealth;
+
+        /// <summary>
+        /// The speed at which this enemy follows its assigned path.
+        /// </summary>
+        protected float _followSpeed => _stats.GetStat(StatType.Speed).CurrentValue;
+
+        protected float _crashDamage => _stats.GetStat(StatType.CrashDamage).CurrentValue;
 
         // Base stats
         protected float _baseSpeed;
@@ -84,8 +87,6 @@ namespace Enemies
             float delay = (float)GD.RandRange(0, _weapon.Stats.FireRate);
             _weapon.FireTimer.Start(delay);
 
-            _path.FollowPath(_followSpeed);
-
             // Initialize position tracking
             _lastFramePosition = GlobalPosition;
         }
@@ -119,7 +120,7 @@ namespace Enemies
 
         public virtual void Initialize(EnemyResource enemyResource)
         {
-            Name = enemyResource.ResourceName;
+            Name = enemyResource.ResourceName + DateAndTime.Now.Ticks;
             // _healthComponent = (HealthComponent)enemyResource.HealthComponent.Duplicate();
             // _healthComponent.Initialize(this);
             _baseMaxHealth = enemyResource.HealthComponent.MaxHealth;
@@ -226,6 +227,20 @@ namespace Enemies
             }
 
             _lastFramePosition = GlobalPosition;
+        }
+
+        /// <summary>
+        /// Follows an EntityPath at a set speed.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="speed"></param>
+        protected virtual void FollowPath(EntityPath path, float speed)
+        {
+            float pathLength = path.Curve.GetBakedLength();
+            float duration = Mathf.Max(pathLength / speed, 0.1f);
+
+            Tween tween = CreateTween();
+            tween.TweenProperty(path.PathFollow, "progress_ratio", 1.0, duration);
         }
     }
 }

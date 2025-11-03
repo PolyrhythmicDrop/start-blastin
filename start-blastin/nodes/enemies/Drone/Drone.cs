@@ -22,6 +22,8 @@ namespace Enemies
 
             _currentGlobalPosition = GlobalPosition;
             _lastGlobalPosition = _currentGlobalPosition;
+
+            FollowPath(_path, _followSpeed);
         }
 
         public override void _Process(double delta)

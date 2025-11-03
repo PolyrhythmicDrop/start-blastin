@@ -43,7 +43,7 @@ corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
 [node name="ShopUI" type="PanelContainer"]
-anchors_preset = -1
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -63,6 +63,7 @@ script = ExtResource("1_75iy2")
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 10
+alignment = 1
 
 [node name="ItemSelection" type="PanelContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -70,48 +71,50 @@ size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
 mouse_filter = 2
 
-[node name="GridContainer" type="GridContainer" parent="VBoxContainer/ItemSelection"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/ItemSelection"]
 layout_mode = 2
-theme_override_constants/h_separation = 40
-columns = 3
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 20
 
-[node name="ShopItemContainer1" parent="VBoxContainer/ItemSelection/GridContainer" instance=ExtResource("1_6rv5w")]
-unique_name_in_owner = true
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer/ItemSelection/MarginContainer"]
 layout_direction = 2
 layout_mode = 2
-size_flags_horizontal = 6
-size_flags_vertical = 6
+theme_override_constants/h_separation = 150
+theme_override_constants/v_separation = 100
+columns = 3
+
+[node name="ShopItemContainer1" parent="VBoxContainer/ItemSelection/MarginContainer/GridContainer" instance=ExtResource("1_6rv5w")]
+unique_name_in_owner = true
+layout_mode = 2
 focus_neighbor_left = NodePath("../ShopItemContainer3")
-focus_neighbor_top = NodePath("../../../WaveButtons/MarginContainer/GridContainer/RerollButton")
+focus_neighbor_top = NodePath("../../../../WaveButtons/MarginContainer/GridContainer/RerollButton")
 focus_neighbor_right = NodePath("../ShopItemContainer2")
-focus_neighbor_bottom = NodePath("../../../WaveButtons/MarginContainer/GridContainer/RerollButton")
+focus_neighbor_bottom = NodePath("../../../../WaveButtons/MarginContainer/GridContainer/RerollButton")
 focus_next = NodePath("../ShopItemContainer2")
 focus_previous = NodePath("../ShopItemContainer3")
 mouse_behavior_recursive = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_75iy2")
 
-[node name="ShopItemContainer2" parent="VBoxContainer/ItemSelection/GridContainer" instance=ExtResource("1_6rv5w")]
+[node name="ShopItemContainer2" parent="VBoxContainer/ItemSelection/MarginContainer/GridContainer" instance=ExtResource("1_6rv5w")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 6
-size_flags_vertical = 6
 focus_neighbor_left = NodePath("../ShopItemContainer1")
-focus_neighbor_top = NodePath("../../../WaveButtons/MarginContainer/GridContainer/RerollButton")
+focus_neighbor_top = NodePath("../../../../WaveButtons/MarginContainer/GridContainer/RerollButton")
 focus_neighbor_right = NodePath("../ShopItemContainer3")
-focus_neighbor_bottom = NodePath("../../../WaveButtons/MarginContainer/GridContainer/RerollButton")
+focus_neighbor_bottom = NodePath("../../../../WaveButtons/MarginContainer/GridContainer/RerollButton")
 focus_next = NodePath("../ShopItemContainer3")
 focus_previous = NodePath("../ShopItemContainer1")
 theme_override_styles/panel = SubResource("StyleBoxFlat_wdjnt")
 
-[node name="ShopItemContainer3" parent="VBoxContainer/ItemSelection/GridContainer" instance=ExtResource("1_6rv5w")]
+[node name="ShopItemContainer3" parent="VBoxContainer/ItemSelection/MarginContainer/GridContainer" instance=ExtResource("1_6rv5w")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 6
-size_flags_vertical = 6
 focus_neighbor_left = NodePath("../ShopItemContainer2")
-focus_neighbor_top = NodePath("../../../WaveButtons/MarginContainer/GridContainer/RerollButton")
+focus_neighbor_top = NodePath("../../../../WaveButtons/MarginContainer/GridContainer/RerollButton")
 focus_neighbor_right = NodePath("../ShopItemContainer1")
-focus_neighbor_bottom = NodePath("../../../WaveButtons/MarginContainer/GridContainer/RerollButton")
+focus_neighbor_bottom = NodePath("../../../../WaveButtons/MarginContainer/GridContainer/RerollButton")
 focus_next = NodePath("../ShopItemContainer1")
 focus_previous = NodePath("../ShopItemContainer2")
 theme_override_styles/panel = SubResource("StyleBoxFlat_2fxf5")
@@ -134,12 +137,12 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 6
-focus_neighbor_left = NodePath("../../../../ItemSelection/GridContainer/ShopItemContainer3")
-focus_neighbor_top = NodePath("../../../../ItemSelection/GridContainer/ShopItemContainer1")
+focus_neighbor_left = NodePath("../../../../ItemSelection/MarginContainer/GridContainer/ShopItemContainer3")
+focus_neighbor_top = NodePath("../../../../ItemSelection/MarginContainer/GridContainer/ShopItemContainer1")
 focus_neighbor_right = NodePath("../Heal")
-focus_neighbor_bottom = NodePath("../../../../ItemSelection/GridContainer/ShopItemContainer1")
+focus_neighbor_bottom = NodePath("../../../../ItemSelection/MarginContainer/GridContainer/ShopItemContainer1")
 focus_next = NodePath("../NextWaveButton")
-focus_previous = NodePath("../../../../ItemSelection/GridContainer/ShopItemContainer3")
+focus_previous = NodePath("../../../../ItemSelection/MarginContainer/GridContainer/ShopItemContainer3")
 text = "Reroll"
 
 [node name="Heal" type="Button" parent="VBoxContainer/WaveButtons/MarginContainer/GridContainer"]
@@ -148,9 +151,9 @@ layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 6
 focus_neighbor_left = NodePath("../RerollButton")
-focus_neighbor_top = NodePath("../../../../ItemSelection/GridContainer/ShopItemContainer2")
+focus_neighbor_top = NodePath("../../../../ItemSelection/MarginContainer/GridContainer/ShopItemContainer2")
 focus_neighbor_right = NodePath("../NextWaveButton")
-focus_neighbor_bottom = NodePath("../../../../ItemSelection/GridContainer/ShopItemContainer2")
+focus_neighbor_bottom = NodePath("../../../../ItemSelection/MarginContainer/GridContainer/ShopItemContainer2")
 focus_next = NodePath("../NextWaveButton")
 focus_previous = NodePath("../RerollButton")
 text = "Heal"
@@ -161,9 +164,9 @@ layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 6
 focus_neighbor_left = NodePath("../Heal")
-focus_neighbor_top = NodePath("../../../../ItemSelection/GridContainer/ShopItemContainer1")
+focus_neighbor_top = NodePath("../../../../ItemSelection/MarginContainer/GridContainer/ShopItemContainer1")
 focus_neighbor_right = NodePath("../RerollButton")
-focus_neighbor_bottom = NodePath("../../../../ItemSelection/GridContainer/ShopItemContainer1")
+focus_neighbor_bottom = NodePath("../../../../ItemSelection/MarginContainer/GridContainer/ShopItemContainer1")
 focus_next = NodePath("../RerollButton")
 focus_previous = NodePath("../RerollButton")
 theme_override_colors/font_color = Color(1, 0.47000003, 0.5583335, 1)

@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=8 format=3 uid="uid://byu0wrnknwnnb"]
+[gd_resource type="Theme" load_steps=9 format=3 uid="uid://byu0wrnknwnnb"]
 
 [ext_resource type="FontFile" uid="uid://b8tj5tsi08onc" path="res://resources/fonts/dogica/dogicapixelbold.ttf" id="1_k2mcc"]
 [ext_resource type="FontFile" uid="uid://bdn20wteigtfk" path="res://resources/fonts/silkscreen/Silkscreen-Regular.ttf" id="2_k2mcc"]
@@ -58,6 +58,19 @@ corner_detail = 16
 [sub_resource type="FontVariation" id="FontVariation_n0ut1"]
 base_font = ExtResource("1_k2mcc")
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eliyn"]
+content_margin_left = 10.0
+content_margin_right = 10.0
+bg_color = Color(0.6, 0.6, 0.6, 0)
+draw_center = false
+border_width_left = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.43529412, 0.11372549, 0.36078432, 1)
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+corner_detail = 16
+
 [sub_resource type="FontVariation" id="FontVariation_gqs81"]
 base_font = ExtResource("2_k2mcc")
 
@@ -68,6 +81,7 @@ Button/colors/font_color = Color(0.80784315, 0.8117647, 0.9411765, 1)
 Button/constants/align_to_largest_stylebox = 1
 Button/constants/line_spacing = 0
 Button/font_sizes/font_size = 28
+Button/styles/focus = SubResource("StyleBoxFlat_n0ut1")
 Button/styles/hover = SubResource("StyleBoxFlat_n0ut1")
 Button/styles/hover_mirrored = SubResource("StyleBoxFlat_n0ut1")
 Button/styles/hover_pressed = null
@@ -76,3 +90,5 @@ Button/styles/normal_mirrored = SubResource("StyleBoxFlat_k2mcc")
 Button/styles/pressed = SubResource("StyleBoxFlat_fabdl")
 Label/constants/line_spacing = 12
 RichTextLabel/fonts/bold_font = SubResource("FontVariation_n0ut1")
+ShopPricePanelContainer/base_type = &"PanelContainer"
+ShopPricePanelContainer/styles/panel = SubResource("StyleBoxFlat_eliyn")

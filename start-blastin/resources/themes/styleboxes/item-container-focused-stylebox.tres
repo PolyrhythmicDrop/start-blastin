@@ -2,6 +2,7 @@
 
 [resource]
 resource_local_to_scene = true
+bg_color = Color(0.6, 0.6, 0.6, 0)
 draw_center = false
 border_width_left = 5
 border_width_top = 5

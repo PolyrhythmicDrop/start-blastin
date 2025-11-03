@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="Modifier" load_steps=5 format=3 uid="uid://btllty26de5gi"]
 
 [ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="1_qyuit"]
-[ext_resource type="Texture2D" uid="uid://cm8gxnp3nd5r2" path="res://assets/icons/item-icons/modifiers/shield-generator.png" id="2_0ohja"]
+[ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="2_0ohja"]
 [ext_resource type="Script" uid="uid://bauhwivw4ftik" path="res://architecture/items/modifiers/Modifier.cs" id="2_3lw4h"]
 
 [sub_resource type="Resource" id="Resource_qhk8d"]

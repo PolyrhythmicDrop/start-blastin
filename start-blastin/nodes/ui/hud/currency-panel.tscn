@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://byvvujovrlg1y" path="res://nodes/ui/hud/assets/hud-icons/flux-export.png" id="3_cro27"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_cro27"]
-font_size = 32
+font_size = 26
 
 [node name="CurrencyPanel" type="PanelContainer"]
 anchors_preset = -1
@@ -25,7 +25,7 @@ alignment = 2
 
 [node name="BytesBox" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 8
 size_flags_vertical = 3
 
 [node name="BytesLabel" type="Label" parent="VBoxContainer/BytesBox"]

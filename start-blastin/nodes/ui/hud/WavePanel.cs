@@ -11,16 +11,18 @@ namespace UI.HUD
     {
         private Label _waveCounter;
         private PanelContainer _waveProgressContainer;
-        private Control _waveProgressControl;
-        private TextureProgressBar _waveProgressBar;
+
+        // private Control _waveProgressControl;
+        // private TextureProgressBar _waveProgressBar;
         private Label _waveProgressLabel;
         private bool _progressBarInitialized;
+        private Color _progressColor;
 
         public override void _Ready()
         {
             _waveCounter = GetNode<Label>("%WaveCounter");
-            _waveProgressControl = GetNode<Control>("%WaveProgressControl");
-            _waveProgressBar = GetNode<TextureProgressBar>("%WaveProgressBar");
+            // _waveProgressControl = GetNode<Control>("%WaveProgressControl");
+            // _waveProgressBar = GetNode<TextureProgressBar>("%WaveProgressBar");
             _waveProgressLabel = GetNode<Label>("%WaveProgressLabel");
 
             ConnectSignals();
@@ -59,13 +61,26 @@ namespace UI.HUD
             }
             TimeSpan time = TimeSpan.FromSeconds(timeLeft);
             _waveProgressLabel.Text = time.ToString("mm':'ss");
-            _waveProgressBar.Value = totalTime - timeLeft;
+
+            if (timeLeft <= 6)
+            {
+                Color color = new(Colors.Coral);
+                if (_progressColor != color)
+                {
+                    _progressColor = color;
+                    _waveProgressLabel.LabelSettings.FontColor = _progressColor;
+                }
+            }
+
+            // _waveProgressBar.Value = totalTime - timeLeft;
         }
 
         private void InitializeWaveProgressBar(double totalTime)
         {
-            _waveProgressBar.MaxValue = totalTime;
+            // _waveProgressBar.MaxValue = totalTime;
             _progressBarInitialized = true;
+            _progressColor = new(Colors.MediumAquamarine);
+            _waveProgressLabel.LabelSettings.FontColor = _progressColor;
         }
 
         private void OnWaveComplete()

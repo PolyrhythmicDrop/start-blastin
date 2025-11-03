@@ -17,10 +17,11 @@ namespace UI
         private PackedScene _hudScene = ResourceLoader.Load<PackedScene>(
             "res://nodes/ui/hud/hud.tscn"
         );
-        private Container _shopContainer;
-        private Container _hudContainer;
 
-        public Container ShopContainer => _shopContainer;
+        // private Container _shopContainer;
+        // private Container _hudContainer;
+
+        // public Container ShopContainer => _shopContainer;
 
         public override void _Ready()
         {
@@ -28,11 +29,11 @@ namespace UI
             {
                 Initialize(1);
             }
-            _shopContainer = GetNode<Container>("%ShopContainer");
-            _hudContainer = GetNode<Container>("%HUDContainer");
+            // _shopContainer = GetNode<Container>("%ShopContainer");
+            // _hudContainer = GetNode<Container>("%HUDContainer");
 
             AddChild(_shopManager);
-            _hudContainer.AddChild(_hud);
+            AddChild(_hud);
 
             ConnectSignals();
         }

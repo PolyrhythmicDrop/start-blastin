@@ -8,12 +8,13 @@ using Utility;
 namespace UI.Shop
 {
     [GlobalClass]
-    public partial class ShopItemContainer : Control
+    public partial class ShopItemContainer : PanelContainer
     {
         private Item _item;
         private TextureRect _textureRect;
-        private RichTextLabel _rtLabel;
-        private PanelContainer _panelContainer;
+        private Label _label;
+
+        // private PanelContainer _panelContainer;
         private StyleBoxFlat _defocusedStyleBox;
         private StyleBoxFlat _focusedStyleBox;
         private Color _itemColor;
@@ -23,8 +24,8 @@ namespace UI.Shop
         {
             GD.Print($"{Name} ready called!");
             _textureRect = GetNode<TextureRect>("%ItemIcon");
-            _rtLabel = GetNode<RichTextLabel>("%RTLabel");
-            _panelContainer = GetNode<PanelContainer>("%PanelContainer");
+            _label = GetNode<Label>("%Label");
+            // _panelContainer = GetNode<PanelContainer>("%PanelContainer");
             _focusedStyleBox = ResourceLoader.Load<StyleBoxFlat>(
                 "res://resources/themes/styleboxes/item-container-focused-stylebox.tres"
             );
@@ -76,8 +77,8 @@ namespace UI.Shop
                     break;
             }
 
-            _rtLabel.AddThemeColorOverride("default_color", _itemColor);
-            _rtLabel.Text = _item.Name;
+            _label.AddThemeColorOverride("default_color", _itemColor);
+            _label.Text = _item.Name;
 
             _textureRect.Texture = _item.Icon;
         }
@@ -104,7 +105,7 @@ namespace UI.Shop
                 // TODO: display the item's description and stuff before buying it. This is just to test that I *can* buy it.
                 // EventBus.Instance.EmitSignal(EventBus.SignalName.ShopItemBought, _item);
                 EventBus.Instance.RaiseItemBought(_item);
-                _rtLabel.Text += " Bought!";
+                _label.Text += " Bought!";
 
                 // Clear the item.
                 ClearItem();
@@ -114,12 +115,12 @@ namespace UI.Shop
         private void OnFocusEnter()
         {
             _focusedStyleBox.BorderColor = _itemColor;
-            _panelContainer.AddThemeStyleboxOverride("panel", _focusedStyleBox);
+            AddThemeStyleboxOverride("panel", _focusedStyleBox);
         }
 
         private void OnFocusExit()
         {
-            _panelContainer.AddThemeStyleboxOverride("panel", _defocusedStyleBox);
+            AddThemeStyleboxOverride("panel", _defocusedStyleBox);
         }
     }
 }

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="1_iilab"]
 [ext_resource type="Script" uid="uid://bauhwivw4ftik" path="res://architecture/items/modifiers/Modifier.cs" id="1_lrodx"]
-[ext_resource type="Texture2D" uid="uid://r6g8ek0ukkhw" path="res://assets/item-icons/modifiers/golden-ship.png" id="2_6obcv"]
+[ext_resource type="Texture2D" uid="uid://r6g8ek0ukkhw" path="res://assets/icons/item-icons/modifiers/golden-ship.png" id="2_6obcv"]
 
 [sub_resource type="Resource" id="Resource_6obcv"]
 script = ExtResource("1_iilab")

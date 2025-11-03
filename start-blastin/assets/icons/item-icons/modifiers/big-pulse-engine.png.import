@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cxxhr6fsjh5kg"
-path="res://.godot/imported/burst-engine.png-f759bde132ca923c29be2ce4c8348167.ctex"
+uid="uid://c7ee536ovn4vo"
+path="res://.godot/imported/big-pulse-engine.png-f555ee6ccbd8ec9ed2ed5765b8c936c5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/item-icons/modifiers/burst-engine.png"
-dest_files=["res://.godot/imported/burst-engine.png-f759bde132ca923c29be2ce4c8348167.ctex"]
+source_file="res://assets/icons/item-icons/modifiers/big-pulse-engine.png"
+dest_files=["res://.godot/imported/big-pulse-engine.png-f555ee6ccbd8ec9ed2ed5765b8c936c5.ctex"]
 
 [params]
 

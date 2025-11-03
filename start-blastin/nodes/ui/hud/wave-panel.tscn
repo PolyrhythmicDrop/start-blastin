@@ -3,26 +3,22 @@
 [ext_resource type="Script" uid="uid://gyvc54ndcfla" path="res://nodes/ui/hud/WavePanel.cs" id="1_iqh8d"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_5ofpu"]
-font_size = 20
 
 [sub_resource type="LabelSettings" id="LabelSettings_0txtx"]
-font_size = 20
+font_size = 26
 
 [node name="WavePanel" type="PanelContainer"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -95.5
-offset_top = -30.0
-offset_right = 95.5
-offset_bottom = 30.0
+anchors_preset = -1
+anchor_left = 0.45026043
+anchor_top = 0.4722222
+anchor_right = 0.5497396
+anchor_bottom = 0.5277778
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 6
 script = ExtResource("1_iqh8d")
+metadata/_edit_use_anchors_ = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://r6g8ek0ukkhw"
-path="res://.godot/imported/golden-ship.png-a6c86ba8a76e13c1b75ea12aa7e900a5.ctex"
+uid="uid://cxxhr6fsjh5kg"
+path="res://.godot/imported/burst-engine.png-07f4194db216458cfe5b568670aeeebe.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/item-icons/modifiers/golden-ship.png"
-dest_files=["res://.godot/imported/golden-ship.png-a6c86ba8a76e13c1b75ea12aa7e900a5.ctex"]
+source_file="res://assets/icons/item-icons/modifiers/burst-engine.png"
+dest_files=["res://.godot/imported/burst-engine.png-07f4194db216458cfe5b568670aeeebe.ctex"]
 
 [params]
 

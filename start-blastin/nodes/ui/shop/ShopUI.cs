@@ -36,7 +36,7 @@ namespace UI.Shop
 
             _nextWaveButton = GetNode<Button>("%NextWaveButton");
             _rerollButton = GetNode<Button>("%RerollButton");
-            _healButton = GetNode<Button>("%Heal50");
+            _healButton = GetNode<Button>("%Heal");
 
             _itemContainers = new()
             {
@@ -49,6 +49,21 @@ namespace UI.Shop
             PopulateShopSlots();
             // Grab the focus to the first shop item.
             _itemContainers[0].CallDeferred(MethodName.GrabFocus);
+        }
+
+        public override void _EnterTree()
+        {
+            // DebugLogger.LogMessage($"Original position for control: {Position}", true);
+            // Vector2 rectCenter = GetRect().GetCenter();
+            // DebugLogger.LogMessage($"Beginning rect position: {GetRect().Position}", true);
+
+            // DebugLogger.LogMessage($"New rect position: {GetRect().Position}", true);
+            // PivotOffset = rectCenter;
+            // Vector2 viewportCenter = GetViewportRect().Size / 2;
+            // Position = viewportCenter;
+            // DebugLogger.LogMessage($"New position for control: {Position}", true);
+
+            base._EnterTree();
         }
 
         public void Initialize(int playerId)

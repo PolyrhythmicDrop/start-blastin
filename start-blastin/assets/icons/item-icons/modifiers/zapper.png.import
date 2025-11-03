@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cehgs6gdgmwi5"
-path="res://.godot/imported/auto-cannon-bullet.png-487a53600bed68cecede243c82a64ff9.ctex"
+uid="uid://c5c0pmwplpjt0"
+path="res://.godot/imported/zapper.png-06651bc1458f8000ae3974e94cff9d03.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/item-icons/modifiers/auto-cannon-bullet.png"
-dest_files=["res://.godot/imported/auto-cannon-bullet.png-487a53600bed68cecede243c82a64ff9.ctex"]
+source_file="res://assets/icons/item-icons/modifiers/zapper.png"
+dest_files=["res://.godot/imported/zapper.png-06651bc1458f8000ae3974e94cff9d03.ctex"]
 
 [params]
 

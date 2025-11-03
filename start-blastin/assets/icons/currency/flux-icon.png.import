@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://di3h5p1in1lve"
-path="res://.godot/imported/shield-1.png-0aeb383658549aab178203af57a314ff.ctex"
+uid="uid://de20b5acmv0cq"
+path="res://.godot/imported/flux-icon.png-ca4c57c70f54e4fa81958eb0b1dcc2c9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/item-icons/modifiers/shield-1.png"
-dest_files=["res://.godot/imported/shield-1.png-0aeb383658549aab178203af57a314ff.ctex"]
+source_file="res://assets/icons/currency/flux-icon.png"
+dest_files=["res://.godot/imported/flux-icon.png-ca4c57c70f54e4fa81958eb0b1dcc2c9.ctex"]
 
 [params]
 

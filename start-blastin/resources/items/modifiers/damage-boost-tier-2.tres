@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="1_76cwm"]
 [ext_resource type="Script" uid="uid://bauhwivw4ftik" path="res://architecture/items/modifiers/Modifier.cs" id="1_k6eos"]
-[ext_resource type="Texture2D" uid="uid://de0kclva11fav" path="res://assets/item-icons/modifiers/auto-cannon.png" id="2_tuxu7"]
+[ext_resource type="Texture2D" uid="uid://de0kclva11fav" path="res://assets/icons/item-icons/modifiers/auto-cannon.png" id="2_tuxu7"]
 
 [sub_resource type="Resource" id="Resource_tuxu7"]
 script = ExtResource("1_76cwm")

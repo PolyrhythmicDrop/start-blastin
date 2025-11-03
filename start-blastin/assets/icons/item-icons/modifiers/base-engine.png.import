@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cm8gxnp3nd5r2"
-path="res://.godot/imported/shield-generator.png-65aeadd4ea9688c474f162424d130d01.ctex"
+uid="uid://hhqpvdsq8t21"
+path="res://.godot/imported/base-engine.png-aa99f37e2fdec14c3b47a7fcefaa8f4c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/item-icons/modifiers/shield-generator.png"
-dest_files=["res://.godot/imported/shield-generator.png-65aeadd4ea9688c474f162424d130d01.ctex"]
+source_file="res://assets/icons/item-icons/modifiers/base-engine.png"
+dest_files=["res://.godot/imported/base-engine.png-aa99f37e2fdec14c3b47a7fcefaa8f4c.ctex"]
 
 [params]
 

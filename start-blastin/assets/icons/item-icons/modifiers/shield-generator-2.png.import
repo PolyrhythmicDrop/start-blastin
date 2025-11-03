@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cmty2wsc2733e"
-path="res://.godot/imported/shield-generator-2.png-555a4df3b0f843238aad7da080a6007e.ctex"
+path="res://.godot/imported/shield-generator-2.png-301add158c0d19f154001a7ab6090029.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/item-icons/modifiers/shield-generator-2.png"
-dest_files=["res://.godot/imported/shield-generator-2.png-555a4df3b0f843238aad7da080a6007e.ctex"]
+source_file="res://assets/icons/item-icons/modifiers/shield-generator-2.png"
+dest_files=["res://.godot/imported/shield-generator-2.png-301add158c0d19f154001a7ab6090029.ctex"]
 
 [params]
 

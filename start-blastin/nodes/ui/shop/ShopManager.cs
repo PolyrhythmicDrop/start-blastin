@@ -46,7 +46,8 @@ namespace UI.Shop
         private async void OpenShop()
         {
             GD.Print($"Opening shop...");
-            _uiLayer.ShopContainer.CallDeferred(MethodName.AddChild, _shopUI);
+            // _uiLayer.ShopContainer.CallDeferred(MethodName.AddChild, _shopUI);
+            _uiLayer.CallDeferred(MethodName.AddChild, _shopUI);
             _shopUI.RequestReady();
             await ToSignal(_shopUI, Node.SignalName.Ready);
             _shopUI.Visible = true;
@@ -57,7 +58,8 @@ namespace UI.Shop
         {
             GD.Print($"Closing shop...");
             _shopUI.Visible = false;
-            _uiLayer.ShopContainer.CallDeferred(MethodName.RemoveChild, _shopUI);
+            // _uiLayer.ShopContainer.CallDeferred(MethodName.RemoveChild, _shopUI);
+            _uiLayer.CallDeferred(MethodName.RemoveChild, _shopUI);
             await ToSignal(_shopUI, Node.SignalName.TreeExited);
             EventBus.Instance.RaiseShopClosed();
         }

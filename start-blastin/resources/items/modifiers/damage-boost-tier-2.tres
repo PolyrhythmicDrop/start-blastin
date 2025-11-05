@@ -16,5 +16,6 @@ Name = &"Damage Boost Lvl 2"
 Description = &"A more powerful damage boost"
 Icon = ExtResource("2_tuxu7")
 Rarity = 8
+ByteCost = 500
 Effects = Array[Object]([SubResource("Resource_tuxu7")])
 metadata/_custom_type_script = "uid://bauhwivw4ftik"

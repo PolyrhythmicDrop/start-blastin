@@ -88,6 +88,8 @@ columns = 3
 [node name="ShopItemContainer1" parent="VBoxContainer/ItemSelection/MarginContainer/GridContainer" instance=ExtResource("1_6rv5w")]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
 focus_neighbor_left = NodePath("../ShopItemContainer3")
 focus_neighbor_top = NodePath("../../../../WaveButtons/MarginContainer/GridContainer/RerollButton")
 focus_neighbor_right = NodePath("../ShopItemContainer2")
@@ -100,6 +102,8 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_75iy2")
 [node name="ShopItemContainer2" parent="VBoxContainer/ItemSelection/MarginContainer/GridContainer" instance=ExtResource("1_6rv5w")]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
 focus_neighbor_left = NodePath("../ShopItemContainer1")
 focus_neighbor_top = NodePath("../../../../WaveButtons/MarginContainer/GridContainer/RerollButton")
 focus_neighbor_right = NodePath("../ShopItemContainer3")
@@ -111,6 +115,8 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_wdjnt")
 [node name="ShopItemContainer3" parent="VBoxContainer/ItemSelection/MarginContainer/GridContainer" instance=ExtResource("1_6rv5w")]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
 focus_neighbor_left = NodePath("../ShopItemContainer2")
 focus_neighbor_top = NodePath("../../../../WaveButtons/MarginContainer/GridContainer/RerollButton")
 focus_neighbor_right = NodePath("../ShopItemContainer1")

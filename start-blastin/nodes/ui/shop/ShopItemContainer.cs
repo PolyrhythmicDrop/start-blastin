@@ -2,21 +2,27 @@ using System;
 using System.Diagnostics;
 using Autoloads;
 using Godot;
+using Interfaces;
 using Items;
 using Utility;
 
 namespace UI.Shop
 {
     [GlobalClass]
-    public partial class ShopItemContainer : PanelContainer
+    public partial class ShopItemContainer : PanelContainer, IListener
     {
         private Item _item;
         private TextureRect _textureRect;
-        private Label _label;
-
-        // private PanelContainer _panelContainer;
+        private Label _itemNameLabel;
         private StyleBoxFlat _defocusedStyleBox;
         private StyleBoxFlat _focusedStyleBox;
+
+        // ~ Nodes ~ //
+        private PanelContainer _bytePanelContainer;
+        private PanelContainer _fluxPanelContainer;
+        private Label _byteLabel;
+        private Label _fluxLabel;
+
         private Color _itemColor;
         public Item Item => _item;
 
@@ -24,16 +30,20 @@ namespace UI.Shop
         {
             GD.Print($"{Name} ready called!");
             _textureRect = GetNode<TextureRect>("%ItemIcon");
-            _label = GetNode<Label>("%Label");
-            // _panelContainer = GetNode<PanelContainer>("%PanelContainer");
+            _itemNameLabel = GetNode<Label>("%ItemNameLabel");
+            _bytePanelContainer = GetNode<PanelContainer>("%BytePanelContainer");
+            _fluxPanelContainer = GetNode<PanelContainer>("%FluxPanelContainer");
+            _byteLabel = GetNode<Label>("%ByteLabel");
+            _fluxLabel = GetNode<Label>("%FluxLabel");
+
             _focusedStyleBox = ResourceLoader.Load<StyleBoxFlat>(
                 "res://resources/themes/styleboxes/item-container-focused-stylebox.tres"
             );
             _defocusedStyleBox = ResourceLoader.Load<StyleBoxFlat>(
                 "res://resources/themes/styleboxes/item-container-defocused-stylebox.tres"
             );
-            FocusEntered += OnFocusEnter;
-            FocusExited += OnFocusExit;
+
+            ConnectSignals();
         }
 
         public override void _GuiInput(InputEvent @event)
@@ -43,6 +53,18 @@ namespace UI.Shop
                 ItemSelected();
                 AcceptEvent();
             }
+        }
+
+        public void ConnectSignals()
+        {
+            FocusEntered += OnFocusEnter;
+            FocusExited += OnFocusExit;
+        }
+
+        public void DisconnectSignals()
+        {
+            FocusEntered -= OnFocusEnter;
+            FocusExited -= OnFocusExit;
         }
 
         public override void _Process(double delta) { }
@@ -77,10 +99,39 @@ namespace UI.Shop
                     break;
             }
 
-            _label.AddThemeColorOverride("default_color", _itemColor);
-            _label.Text = _item.Name;
+            _itemNameLabel.LabelSettings.FontColor = _itemColor;
+            _itemNameLabel.Text = _item.Name;
 
             _textureRect.Texture = _item.Icon;
+
+            SetItemPriceLabels();
+        }
+
+        private void SetItemPriceLabels()
+        {
+            int flux = _item.FluxCost;
+            int bytes = _item.ByteCost;
+
+            _fluxLabel.Text = flux.ToString("N0");
+            _byteLabel.Text = bytes.ToString("N0");
+
+            if (flux <= 0)
+            {
+                _fluxPanelContainer.Visible = false;
+            }
+            else
+            {
+                _fluxPanelContainer.Visible = true;
+            }
+
+            if (bytes <= 0)
+            {
+                _bytePanelContainer.Visible = false;
+            }
+            else
+            {
+                _bytePanelContainer.Visible = true;
+            }
         }
 
         /// <summary>
@@ -105,7 +156,7 @@ namespace UI.Shop
                 // TODO: display the item's description and stuff before buying it. This is just to test that I *can* buy it.
                 // EventBus.Instance.EmitSignal(EventBus.SignalName.ShopItemBought, _item);
                 EventBus.Instance.RaiseItemBought(_item);
-                _label.Text += " Bought!";
+                _itemNameLabel.Text += " Bought!";
 
                 // Clear the item.
                 ClearItem();
@@ -114,13 +165,24 @@ namespace UI.Shop
 
         private void OnFocusEnter()
         {
+            DebugLogger.LogMessage(
+                $"{Name} focus entered! Changing border color to _itemColor: {_itemColor}",
+                true
+            );
             _focusedStyleBox.BorderColor = _itemColor;
             AddThemeStyleboxOverride("panel", _focusedStyleBox);
         }
 
         private void OnFocusExit()
         {
+            DebugLogger.LogMessage($"{Name} focus exited!", true);
             AddThemeStyleboxOverride("panel", _defocusedStyleBox);
+        }
+
+        public override void _ExitTree()
+        {
+            DisconnectSignals();
+            base._ExitTree();
         }
     }
 }

@@ -15,5 +15,6 @@ script = ExtResource("1_ig7t7")
 Name = &"Speed Boost Lvl 1"
 Description = &"Basic speed boost"
 Icon = ExtResource("2_5xvc6")
+ByteCost = 585
 Effects = Array[Object]([SubResource("Resource_5xvc6")])
 metadata/_custom_type_script = "uid://bauhwivw4ftik"

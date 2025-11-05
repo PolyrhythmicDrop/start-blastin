@@ -30,5 +30,7 @@ Name = &"Evasive Manuevers"
 Description = &"Dodge, dip, duck, dodge"
 Icon = ExtResource("2_rvks2")
 Rarity = 4
+FluxCost = 200
+ByteCost = 600
 Effects = Array[Object]([SubResource("Resource_wekqk"), SubResource("Resource_k7mjf"), SubResource("Resource_w0waf")])
 metadata/_custom_type_script = "uid://b3qmdj461ykoi"

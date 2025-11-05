@@ -16,5 +16,6 @@ Level = 1
 Name = &"Sample Plugin"
 Description = &"It\'s a sample."
 Icon = ExtResource("2_ad7uv")
+FluxCost = 50
 Effects = Array[Object]([SubResource("Resource_yle3v")])
 metadata/_custom_type_script = "uid://b3qmdj461ykoi"

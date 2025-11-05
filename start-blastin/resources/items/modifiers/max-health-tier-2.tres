@@ -15,5 +15,7 @@ Name = &"Max Health Upgrade Lvl 2"
 Description = &"Gain even more health."
 Icon = ExtResource("2_cfseg")
 Rarity = 8
+FluxCost = 50
+ByteCost = 300
 Effects = Array[Object]([SubResource("Resource_qhk8d")])
 metadata/_custom_type_script = "uid://bauhwivw4ftik"

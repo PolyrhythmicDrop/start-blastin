@@ -15,5 +15,6 @@ script = ExtResource("1_ei5wq")
 Name = &"Damage Boost Lvl 1"
 Description = &"More damage. Dassit."
 Icon = ExtResource("2_7xihd")
+ByteCost = 200
 Effects = Array[Object]([SubResource("Resource_7xihd")])
 metadata/_custom_type_script = "uid://bauhwivw4ftik"

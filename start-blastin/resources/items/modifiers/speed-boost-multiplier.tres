@@ -17,5 +17,6 @@ Name = &"Speed Boost Multiplier"
 Description = &"Skibbidy!"
 Icon = ExtResource("2_oei08")
 Rarity = 4
+ByteCost = 2500
 Effects = Array[Object]([SubResource("Resource_5xvc6")])
 metadata/_custom_type_script = "uid://bauhwivw4ftik"

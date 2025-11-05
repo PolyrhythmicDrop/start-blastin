@@ -12,6 +12,7 @@ namespace Items
         Legendary = 1,
     }
 
+    [GlobalClass]
     public abstract partial class Item : Resource
     {
         protected StringName _name;
@@ -19,6 +20,8 @@ namespace Items
         protected Rarity _rarity = Rarity.Common;
         protected List<Effect> _effects = new();
         protected Texture2D _icon;
+        protected int _fluxCost;
+        protected int _byteCost;
 
         [Export]
         public StringName Name
@@ -48,6 +51,22 @@ namespace Items
             set => _rarity = value;
         }
 
+        [ExportGroup("Pricing")]
+        [Export]
+        public int FluxCost
+        {
+            get => _fluxCost;
+            set => _fluxCost = value;
+        }
+
+        [Export]
+        public int ByteCost
+        {
+            get => _byteCost;
+            set => _byteCost = value;
+        }
+
+        [ExportGroup("Effects")]
         [Export]
         public Godot.Collections.Array<Effect> Effects
         {

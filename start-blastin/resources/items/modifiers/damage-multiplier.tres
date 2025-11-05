@@ -17,5 +17,6 @@ Name = &"Damage Multiplier"
 Description = &"Multiplies your damage!"
 Icon = ExtResource("2_cobk0")
 Rarity = 4
+ByteCost = 1500
 Effects = Array[Object]([SubResource("Resource_cobk0")])
 metadata/_custom_type_script = "uid://bauhwivw4ftik"

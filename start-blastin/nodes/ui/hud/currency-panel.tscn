@@ -27,6 +27,14 @@ alignment = 2
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="BytesIcon" type="TextureRect" parent="VBoxContainer/BytesBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("2_cro27")
+expand_mode = 3
+stretch_mode = 5
 
 [node name="BytesLabel" type="Label" parent="VBoxContainer/BytesBox"]
 unique_name_in_owner = true
@@ -40,17 +48,18 @@ label_settings = SubResource("LabelSettings_cro27")
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="BytesIcon" type="TextureRect" parent="VBoxContainer/BytesBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-texture = ExtResource("2_cro27")
-expand_mode = 3
-stretch_mode = 5
-
 [node name="FluxBox" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="FluxIcon" type="TextureRect" parent="VBoxContainer/FluxBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("3_cro27")
+expand_mode = 3
+stretch_mode = 5
 
 [node name="FluxLabel" type="Label" parent="VBoxContainer/FluxBox"]
 unique_name_in_owner = true
@@ -62,10 +71,3 @@ text = "1000"
 label_settings = SubResource("LabelSettings_cro27")
 horizontal_alignment = 2
 vertical_alignment = 1
-
-[node name="FluxIcon" type="TextureRect" parent="VBoxContainer/FluxBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-texture = ExtResource("3_cro27")
-expand_mode = 3
-stretch_mode = 5

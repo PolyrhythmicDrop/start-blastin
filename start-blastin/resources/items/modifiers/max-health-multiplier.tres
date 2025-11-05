@@ -16,5 +16,7 @@ Name = &"Max Health Multiplier"
 Description = &"Multiply your max health!"
 Icon = ExtResource("2_0ohja")
 Rarity = 4
+FluxCost = 500
+ByteCost = 800
 Effects = Array[Object]([SubResource("Resource_qhk8d")])
 metadata/_custom_type_script = "uid://bauhwivw4ftik"

@@ -40,5 +40,7 @@ Name = &"Legendary Modifier"
 Description = &"Goddess mode <3"
 Icon = ExtResource("2_6obcv")
 Rarity = 1
+FluxCost = 1000
+ByteCost = 1000
 Effects = Array[Object]([SubResource("Resource_6obcv"), SubResource("Resource_p8oet"), SubResource("Resource_ejmga"), SubResource("Resource_8fmkx"), SubResource("Resource_c0bl8")])
 metadata/_custom_type_script = "uid://bauhwivw4ftik"

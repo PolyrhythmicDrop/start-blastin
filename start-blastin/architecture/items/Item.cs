@@ -73,5 +73,10 @@ namespace Items
             get => [.. _effects];
             set => _effects = [.. value];
         }
+
+        public List<Effect> GetEffectList()
+        {
+            return _effects;
+        }
     }
 }

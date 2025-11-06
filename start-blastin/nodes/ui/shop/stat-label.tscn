@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://d03o6r0htnihe"]
+
+[ext_resource type="FontFile" uid="uid://bqjgeiw07cn4t" path="res://resources/fonts/workbench/Workbench-Regular-VariableFont_BLED,SCAN.ttf" id="1_48r2r"]
+[ext_resource type="Script" uid="uid://cqkjmlo1swqlr" path="res://nodes/ui/shop/StatLabel.cs" id="2_60rh7"]
+
+[node name="StatLabel" type="RichTextLabel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_fonts/normal_font = ExtResource("1_48r2r")
+theme_override_font_sizes/normal_font_size = 18
+bbcode_enabled = true
+autowrap_mode = 0
+shortcut_keys_enabled = false
+vertical_alignment = 1
+script = ExtResource("2_60rh7")

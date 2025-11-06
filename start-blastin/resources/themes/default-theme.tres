@@ -20,23 +20,6 @@ corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k2mcc"]
-content_margin_left = 16.0
-content_margin_top = 16.0
-content_margin_right = 16.0
-content_margin_bottom = 16.0
-bg_color = Color(0.050980393, 0, 0.101960786, 0.8666667)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0.43529412, 0.11372549, 0.36078432, 1)
-border_blend = true
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fabdl"]
 content_margin_left = 16.0
 content_margin_top = 16.0
@@ -54,6 +37,23 @@ corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 corner_detail = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k2mcc"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+bg_color = Color(0.050980393, 0, 0.101960786, 0.8666667)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.43529412, 0.11372549, 0.36078432, 1)
+border_blend = true
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [sub_resource type="FontVariation" id="FontVariation_n0ut1"]
 base_font = ExtResource("1_k2mcc")
@@ -84,7 +84,7 @@ Button/font_sizes/font_size = 28
 Button/styles/focus = SubResource("StyleBoxFlat_n0ut1")
 Button/styles/hover = SubResource("StyleBoxFlat_n0ut1")
 Button/styles/hover_mirrored = SubResource("StyleBoxFlat_n0ut1")
-Button/styles/hover_pressed = null
+Button/styles/hover_pressed = SubResource("StyleBoxFlat_fabdl")
 Button/styles/normal = SubResource("StyleBoxFlat_k2mcc")
 Button/styles/normal_mirrored = SubResource("StyleBoxFlat_k2mcc")
 Button/styles/pressed = SubResource("StyleBoxFlat_fabdl")

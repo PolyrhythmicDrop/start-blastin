@@ -165,17 +165,17 @@ namespace UI.Shop
 
         private void OnFocusEnter()
         {
-            DebugLogger.LogMessage(
-                $"{Name} focus entered! Changing border color to _itemColor: {_itemColor}",
-                true
-            );
+            // DebugLogger.LogMessage(
+            //     $"{Name} focus entered! Changing border color to _itemColor: {_itemColor}",
+            //     true
+            // );
             _focusedStyleBox.BorderColor = _itemColor;
             AddThemeStyleboxOverride("panel", _focusedStyleBox);
         }
 
         private void OnFocusExit()
         {
-            DebugLogger.LogMessage($"{Name} focus exited!", true);
+            // DebugLogger.LogMessage($"{Name} focus exited!", true);
             AddThemeStyleboxOverride("panel", _defocusedStyleBox);
         }
 

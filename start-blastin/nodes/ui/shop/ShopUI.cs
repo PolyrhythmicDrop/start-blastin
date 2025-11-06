@@ -1,12 +1,14 @@
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
+using System.Linq;
 using Autoloads;
+using Effects;
 using Entities;
 using FileIO;
 using Godot;
 using Items;
 using Services;
+using Stats;
 using Utility;
 
 namespace UI.Shop
@@ -18,9 +20,22 @@ namespace UI.Shop
         private PlayerService _service;
         private List<ShopItemContainer> _itemContainers;
         private List<Item> _itemPool = new();
+
+        // ~~ Description section ~~
+        private RichTextLabel _descriptionLabel;
+
+        // private VBoxContainer _statsVBox;
+        // private PackedScene _statLabelScene =>
+        //     GD.Load<PackedScene>("res://nodes/ui/shop/stat-label.tscn");
+
+        // ~~ Wave button deck ~~
         private Button _nextWaveButton;
         private Button _rerollButton;
         private Button _healButton;
+
+        private Dictionary<ShopItemContainer, Action> _containerFocusHandlers = new();
+
+        // ~~~
 
         public void LoadItemPool() =>
             PoolLoader.LoadResourcePool(_itemPool, "res://resources/items/", true);
@@ -38,6 +53,9 @@ namespace UI.Shop
             _rerollButton = GetNode<Button>("%RerollButton");
             _healButton = GetNode<Button>("%Heal");
 
+            _descriptionLabel = GetNode<RichTextLabel>("%DescriptionLabel");
+            // _statsVBox = GetNode<VBoxContainer>("%StatsVBox");
+
             _itemContainers = new()
             {
                 GetNode<ShopItemContainer>("%ShopItemContainer1"),
@@ -53,16 +71,6 @@ namespace UI.Shop
 
         public override void _EnterTree()
         {
-            // DebugLogger.LogMessage($"Original position for control: {Position}", true);
-            // Vector2 rectCenter = GetRect().GetCenter();
-            // DebugLogger.LogMessage($"Beginning rect position: {GetRect().Position}", true);
-
-            // DebugLogger.LogMessage($"New rect position: {GetRect().Position}", true);
-            // PivotOffset = rectCenter;
-            // Vector2 viewportCenter = GetViewportRect().Size / 2;
-            // Position = viewportCenter;
-            // DebugLogger.LogMessage($"New position for control: {Position}", true);
-
             base._EnterTree();
         }
 
@@ -76,12 +84,41 @@ namespace UI.Shop
         {
             _rerollButton.Pressed += RerollShop;
             _nextWaveButton.Pressed += EventBus.Instance.RaiseStartWaveButtonPressed;
+
+            _rerollButton.FocusEntered += RerollFocusEntered;
+            _nextWaveButton.FocusEntered += NextWaveFocusEntered;
+            _healButton.FocusEntered += HealFocusEntered;
+
+            foreach (ShopItemContainer container in _itemContainers)
+            {
+                // container.FocusEntered += () => DisplayItemDescription(container);
+                ShopItemContainer captured = container;
+                Action handler = () => DisplayItemDescription(captured);
+                _containerFocusHandlers[captured] = handler;
+                captured.FocusEntered += handler;
+            }
         }
+
+        private void RerollFocusEntered() => DisplayTickerFocusMessage(_rerollButton);
+
+        private void NextWaveFocusEntered() => DisplayTickerFocusMessage(_nextWaveButton);
+
+        private void HealFocusEntered() => DisplayTickerFocusMessage(_healButton);
 
         private void DisconnectSignals()
         {
             _rerollButton.Pressed -= RerollShop;
             _nextWaveButton.Pressed -= EventBus.Instance.RaiseStartWaveButtonPressed;
+
+            _rerollButton.FocusEntered -= RerollFocusEntered;
+            _nextWaveButton.FocusEntered -= NextWaveFocusEntered;
+            _healButton.FocusEntered -= HealFocusEntered;
+
+            foreach (var kvp in _containerFocusHandlers)
+            {
+                kvp.Key.FocusEntered -= kvp.Value;
+            }
+            _containerFocusHandlers.Clear();
         }
 
         /// <summary>
@@ -194,7 +231,60 @@ namespace UI.Shop
         {
             GD.Print($"Rerolling shop...");
             ClearItemContainers();
+            ClearItemDescription();
             PopulateShopSlots();
+        }
+
+        private void DisplayItemDescription(ShopItemContainer itemContainer)
+        {
+            ClearItemDescription();
+            Item item = itemContainer.Item;
+
+            if (item != null)
+            {
+                string descString = item.Description + "\n";
+                foreach (StatEffect statEffect in item.GetEffectList())
+                {
+                    descString += statEffect.GetEffectText() + "\n";
+                }
+
+                descString.TrimEnd('\n');
+                _descriptionLabel.Text = descString;
+            }
+        }
+
+        private void ClearItemDescription()
+        {
+            // if (_statsVBox.GetChildCount() > 0)
+            // {
+            //     var children = _statsVBox.GetChildren();
+            //     foreach (var child in children)
+            //     {
+            //         _statsVBox.RemoveChild(child);
+            //     }
+            // }
+        }
+
+        /// <summary>
+        /// Displays a message in the description bay based on the focused item.
+        /// </summary>
+        /// <param name="focusedControl"></param>
+        private void DisplayTickerFocusMessage(Control focusedControl)
+        {
+            ClearItemDescription();
+            if (focusedControl == _rerollButton)
+            {
+                _descriptionLabel.Text = "Refresh the cache to see new items.";
+            }
+            else if (focusedControl == _healButton)
+            {
+                _descriptionLabel.Text = "Spend flux to repair your frail human form.";
+            }
+            else if (focusedControl == _nextWaveButton)
+            {
+                _descriptionLabel.Text =
+                    "Move on to the next wave and pray to whatever primitive superstition keeps you going ";
+            }
         }
 
         public override void _ExitTree()

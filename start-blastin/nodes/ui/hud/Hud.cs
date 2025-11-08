@@ -13,6 +13,7 @@ namespace UI.HUD
         private WavePanel _wavePanel;
         private StatusPanel _statusPanel;
         private CurrencyPanel _currencyPanel;
+        private LoadoutPanel _loadoutPanel;
 
         public void Initialize(int playerId)
         {
@@ -26,9 +27,11 @@ namespace UI.HUD
             _wavePanel = GetNode<WavePanel>("%WavePanel");
             _statusPanel = GetNode<StatusPanel>("%StatusPanel");
             _currencyPanel = GetNode<CurrencyPanel>("%CurrencyPanel");
+            _loadoutPanel = GetNode<LoadoutPanel>("%LoadoutPanel");
 
             _statusPanel.Initialize(_playerId);
             _currencyPanel.Initialize(_playerId);
+            _loadoutPanel.Initialize(_playerId);
 
             SetCollisionShape();
 

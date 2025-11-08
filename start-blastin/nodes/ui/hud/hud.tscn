@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://cs0msq3g3i6xk"]
+[gd_scene load_steps=7 format=3 uid="uid://cs0msq3g3i6xk"]
 
 [ext_resource type="Script" uid="uid://b5d31qrfgoid4" path="res://nodes/ui/hud/Hud.cs" id="1_qndsm"]
 [ext_resource type="PackedScene" uid="uid://y075h5i8lhs0" path="res://nodes/ui/hud/status-panel.tscn" id="2_tajdg"]
 [ext_resource type="PackedScene" uid="uid://dlx5jgo75t8wb" path="res://nodes/ui/hud/wave-panel.tscn" id="3_tajdg"]
+[ext_resource type="PackedScene" uid="uid://b3t5it47lwtr1" path="res://nodes/ui/hud/loadout-panel.tscn" id="4_3kxy6"]
 [ext_resource type="PackedScene" uid="uid://3ws4d3upadvm" path="res://nodes/ui/hud/currency-panel.tscn" id="4_3pdy4"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3pdy4"]
@@ -19,7 +20,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_3pdy4")
 script = ExtResource("1_qndsm")
-metadata/_edit_use_anchors_ = true
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 2
@@ -41,12 +41,17 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="LoadoutPanel" parent="HBoxContainer" instance=ExtResource("4_3kxy6")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_stretch_ratio = 2.0
 
 [node name="CurrencyPanel" parent="HBoxContainer" instance=ExtResource("4_3pdy4")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 1
-size_flags_stretch_ratio = 3.0
 
 [node name="HUDBody" type="StaticBody2D" parent="."]
 unique_name_in_owner = true

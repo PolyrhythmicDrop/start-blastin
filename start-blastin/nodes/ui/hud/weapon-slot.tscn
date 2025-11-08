@@ -1,0 +1,67 @@
+[gd_scene load_steps=6 format=3 uid="uid://ccw803f7gjifl"]
+
+[ext_resource type="Texture2D" uid="uid://djbojubn7plf" path="res://nodes/ui/hud/assets/slot-borders/weapon-slot-border.png" id="1_mjugh"]
+[ext_resource type="Script" uid="uid://u2wpa457gaq2" path="res://nodes/ui/hud/WeaponSlot.cs" id="1_r8kae"]
+[ext_resource type="Texture2D" uid="uid://bbk7wfmggd6wr" path="res://nodes/ui/hud/assets/slot-borders/weapon-slot-border-mask.png" id="3_ycjvb"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_t7q1m"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l2jms"]
+
+[node name="WeaponSlot" type="PanelContainer"]
+clip_contents = true
+custom_minimum_size = Vector2(32, 32)
+anchors_preset = -1
+anchor_left = 0.49166667
+anchor_top = 0.48518518
+anchor_right = 0.5083333
+anchor_bottom = 0.5148148
+offset_left = 16.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_t7q1m")
+script = ExtResource("1_r8kae")
+metadata/_custom_type_script = "uid://u2wpa457gaq2"
+
+[node name="BorderRect" type="TextureRect" parent="."]
+clip_contents = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("1_mjugh")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_l2jms")
+
+[node name="MaskRect" type="TextureRect" parent="PanelContainer"]
+clip_children = 1
+layout_mode = 2
+texture = ExtResource("3_ycjvb")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MaskRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="IconRect" type="TextureRect" parent="PanelContainer/MaskRect/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+expand_mode = 5
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true

@@ -78,5 +78,12 @@ namespace PlayerComponents
         {
             _equippedWeapon.FireTimer.Stop();
         }
+
+        public void SetWeaponProjectile(ProjectileType type)
+        {
+            _equippedWeapon.Stats.ProjectileType = type;
+            // Clear the projectile pool and reset it with the new projectile type.
+            _equippedWeapon.Pool.Clear();
+        }
     }
 }

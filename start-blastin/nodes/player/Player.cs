@@ -39,6 +39,10 @@ namespace Entities
         private PlayerController _controller;
         private List<Modifier> _modifiers = new();
         private List<Plugin> _plugins = new();
+        private WeaponPlugin _weaponPlugin;
+
+        private WeaponPlugin _defaultWeaponPlugin =>
+            ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
         #endregion
 
         #region Stats
@@ -54,7 +58,7 @@ namespace Entities
 
         // ~ Weapon Variables ~ //
 
-        private ProjectileType _projType;
+        // private ProjectileType _projType = ProjectileType.Bullet;
         private float _damage => _stats.GetStat(StatType.Damage).CurrentValue;
         private float _crashDamage => _stats.GetStat(StatType.CrashDamage).CurrentValue;
         private float _fireRate => _stats.GetStat(StatType.FireRate).CurrentValue;
@@ -133,11 +137,18 @@ namespace Entities
         }
 
         [ExportGroup("Weapon Stats")]
+        // [Export]
+        // public ProjectileType ProjectileType
+        // {
+        //     get => _projType;
+        //     set => _projType = value;
+        // }
+
         [Export]
-        public ProjectileType ProjectileType
+        public WeaponPlugin WeaponPlugin
         {
-            get => _projType;
-            set => _projType = value;
+            get => _weaponPlugin;
+            set => _weaponPlugin = value;
         }
 
         /// <summary>
@@ -174,6 +185,9 @@ namespace Entities
             set => _stats.UpdateStat(StatType.ProjectileSpeed, value);
         }
 
+        /// <summary>
+        /// The total number of plugin slots the player has.
+        /// </summary>
         [ExportGroup("Equipment Stats")]
         [Export]
         public int PluginSlots
@@ -182,15 +196,14 @@ namespace Entities
             set => _stats.UpdateStat(StatType.PluginSlots, value);
         }
 
+        /// <summary>
+        /// The player's equipped plugins.
+        /// </summary>
         [Export]
         public Godot.Collections.Array<Plugin> Plugins
         {
             get => [.. _plugins];
-            set
-            {
-                _plugins = [.. value];
-                // _service.UpdateEquippedPlugins(_playerId, _plugins);
-            }
+            set { _plugins = [.. value]; }
         }
 
         [ExportGroup("Currency")]
@@ -248,7 +261,6 @@ namespace Entities
             _controller = GetNode<PlayerController>("%PlayerController");
             _weaponComponent = GetNode<WeaponComponent>("%WeaponComponent");
             _currentHealth = _maxHealth;
-            // _service.UpdateCurrentHealth(_playerId, _currentHealth);
 
             InitializeComponents();
             ConnectSignals();
@@ -267,12 +279,17 @@ namespace Entities
             _controller.Initialize(this);
             _weaponComponent.Initialize(this);
 
+            if (_weaponPlugin != _defaultWeaponPlugin)
+            {
+                _weaponComponent.SetWeaponProjectile(_weaponPlugin.ProjectileType);
+            }
+
             // Initialize plugin slots
             _plugins.Capacity = (int)_stats.GetStat(StatType.PluginSlots).CurrentValue;
-            DebugLogger.LogMessage(
-                $"Plugin capacity: {_plugins.Capacity} | Plugin slot count: {_pluginSlots} | Equipped plugins: {_plugins.Count}",
-                true
-            );
+            // DebugLogger.LogMessage(
+            //     $"Plugin capacity: {_plugins.Capacity} | Plugin slot count: {_pluginSlots} | Equipped plugins: {_plugins.Count}",
+            //     true
+            // );
         }
 
         private void ConnectSignals()
@@ -598,6 +615,15 @@ namespace Entities
         private void OnItemBought(object sender, ItemBoughtEventArgs args)
         {
             BuyItem(args.Item);
+        }
+
+        /// <summary>
+        /// Resets the player's projectile type to the base projectile.
+        /// </summary>
+        private void ResetWeaponPlugin()
+        {
+            WeaponPlugin = ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
+            _weaponComponent.SetWeaponProjectile(WeaponPlugin.ProjectileType);
         }
 
         public override void _ExitTree()

@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://nenl15kjphyb"]
+[gd_scene load_steps=12 format=3 uid="uid://nenl15kjphyb"]
 
 [ext_resource type="Script" uid="uid://ceknkp5q1onls" path="res://nodes/player/Player.cs" id="1_4j62c"]
 [ext_resource type="Resource" uid="uid://dmulsmpa1tm6h" path="res://resources/projectiles/bullet-plugin.tres" id="2_5h4ma"]
 [ext_resource type="PackedScene" uid="uid://cr3k7kv44d7a6" path="res://nodes/player/player-components/animation-component.tscn" id="2_hs1md"]
+[ext_resource type="Resource" uid="uid://brlipjg8g6t5k" path="res://resources/items/plugins/evasive-manuevers.tres" id="3_xl06i"]
 [ext_resource type="Script" uid="uid://dcupxkt621nuk" path="res://nodes/player/player-components/PlayerController.cs" id="4_1fmtd"]
 [ext_resource type="Shader" uid="uid://bmacriris3r2k" path="res://nodes/shaders/color-cycling-hit-effect.gdshader" id="4_5h4ma"]
 [ext_resource type="PackedScene" uid="uid://bh7mbhu54my3n" path="res://nodes/player/player-components/movement-component.tscn" id="4_xl06i"]
@@ -38,6 +39,7 @@ Damage = 1.0
 FireRate = 0.5
 ProjectileSpeed = 500.0
 PluginSlots = 3
+InitialPlugins = Array[Object]([ExtResource("3_xl06i")])
 Bytes = 200
 Flux = 500
 

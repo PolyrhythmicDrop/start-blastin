@@ -4,6 +4,7 @@ using Entities;
 using Godot;
 using Items;
 using Services;
+using Utility;
 
 namespace UI.HUD
 {
@@ -15,7 +16,7 @@ namespace UI.HUD
 
         private PackedScene _pluginSlotScene => GD.Load<PackedScene>("uid://c122xo53cyce1");
         private WeaponSlot _weaponSlot;
-        private List<PluginSlot> _pluginSlots;
+        private List<PluginSlot> _pluginSlots = new();
         private HBoxContainer _hBox;
 
         public void Initialize(int playerId)
@@ -38,11 +39,30 @@ namespace UI.HUD
             for (int i = 0; i < slotCount; i++)
             {
                 PluginSlot pluginSlot = _pluginSlotScene.Instantiate<PluginSlot>();
+                _pluginSlots.Add(pluginSlot);
                 _hBox.AddChild(pluginSlot);
+            }
+
+            if (player.GetPlugins().Count > 0)
+            {
+                DebugLogger.LogMessage(
+                    "Player plugins list was greater than 0! Adding plugins to UI...",
+                    true
+                );
+                for (int i = 0; i < player.InitialPlugins.Count; i++)
+                {
+                    FillSlot(_pluginSlots[i], player.InitialPlugins[i]);
+                }
             }
 
             // Set the weapon plugin slot
             _weaponSlot.SetPlugin(player.WeaponPlugin);
+        }
+
+        private void FillSlot(PluginSlot slot, Plugin plugin)
+        {
+            DebugLogger.LogMessage($"Filling slot {slot} with plugin {plugin.ResourceName}");
+            slot.SetPlugin(plugin);
         }
     }
 }

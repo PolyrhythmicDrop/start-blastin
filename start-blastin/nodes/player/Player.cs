@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Autoloads;
 using Components;
@@ -137,13 +138,6 @@ namespace Entities
         }
 
         [ExportGroup("Weapon Stats")]
-        // [Export]
-        // public ProjectileType ProjectileType
-        // {
-        //     get => _projType;
-        //     set => _projType = value;
-        // }
-
         [Export]
         public WeaponPlugin WeaponPlugin
         {
@@ -197,13 +191,17 @@ namespace Entities
         }
 
         /// <summary>
-        /// The player's equipped plugins.
+        /// The player's initial set of equipped plugins. Uesd for debugging.
         /// </summary>
         [Export]
-        public Godot.Collections.Array<Plugin> Plugins
+        public Godot.Collections.Array<Plugin> InitialPlugins
         {
             get => [.. _plugins];
-            set { _plugins = [.. value]; }
+            set
+            {
+                _plugins = [.. value];
+                DebugLogger.LogMessage("Plugins list set from initial values!");
+            }
         }
 
         [ExportGroup("Currency")]
@@ -448,7 +446,7 @@ namespace Entities
                     AddModifier(modifier);
                     break;
                 case Plugin plugin:
-                    AddPlugin(plugin);
+                    EquipPlugin(plugin);
                     break;
             }
             ApplyStatEffects();
@@ -462,22 +460,17 @@ namespace Entities
             }
         }
 
-        public void AddPlugin(params Plugin[] plugins)
+        public void EquipPlugin(params Plugin[] plugins)
         {
             foreach (Plugin newPlugin in plugins)
             {
-                DebugLogger.LogMessage(
-                    $"Attempting to buy {newPlugin.Name}...\nCurrent plugin count: {_plugins.Count} | Total plugin slots: {_pluginSlots}",
-                    true
-                );
-
-                if (_plugins.Count < _pluginSlots)
+                if (_plugins.Count < _pluginSlots && newPlugin is not Items.WeaponPlugin)
                 {
                     _plugins.Add(newPlugin);
-                    DebugLogger.LogMessage(
-                        $"Plugin {newPlugin.Name} equipped! Current plugin count: {_plugins.Count} | Total plugin slots: {_pluginSlots}",
-                        true
-                    );
+                    // DebugLogger.LogMessage(
+                    //     $"Plugin {newPlugin.Name} equipped! Current plugin count: {_plugins.Count} | Total plugin slots: {_pluginSlots}",
+                    //     true
+                    // );
                 }
                 else
                 {
@@ -489,6 +482,12 @@ namespace Entities
                 }
             }
             // _service.UpdateEquippedPlugins(_playerId, _plugins);
+        }
+
+        public void SwapWeaponPlugin(WeaponPlugin weaponPlugin)
+        {
+            _weaponPlugin = weaponPlugin;
+            _weaponComponent.SetWeaponProjectile(weaponPlugin.ProjectileType);
         }
 
         public List<Plugin> GetPlugins()
@@ -622,8 +621,8 @@ namespace Entities
         /// </summary>
         private void ResetWeaponPlugin()
         {
-            WeaponPlugin = ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
-            _weaponComponent.SetWeaponProjectile(WeaponPlugin.ProjectileType);
+            _weaponPlugin = ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
+            _weaponComponent.SetWeaponProjectile(_weaponPlugin.ProjectileType);
         }
 
         public override void _ExitTree()

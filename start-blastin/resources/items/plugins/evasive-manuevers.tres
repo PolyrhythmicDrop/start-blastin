@@ -24,6 +24,7 @@ Value = -0.2
 metadata/_custom_type_script = "uid://bmeda5w63vsw7"
 
 [resource]
+resource_name = "evasive-manuevers"
 script = ExtResource("1_r52ug")
 Upgradeable = true
 Name = &"Evasive Manuevers"

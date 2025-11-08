@@ -8,15 +8,9 @@ namespace UI.HUD
     [GlobalClass]
     public partial class WeaponSlot : PluginSlot
     {
-        private TextureRect _textureRect;
         public new WeaponPlugin Plugin => _plugin as WeaponPlugin;
 
         public WeaponPlugin Weapon => Plugin;
-
-        public override void _Ready()
-        {
-            _textureRect = GetNode<TextureRect>("%IconRect");
-        }
 
         public override void SetPlugin(Plugin plugin)
         {

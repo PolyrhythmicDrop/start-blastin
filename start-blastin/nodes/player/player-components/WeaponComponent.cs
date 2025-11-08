@@ -83,7 +83,7 @@ namespace PlayerComponents
         {
             _equippedWeapon.Stats.ProjectileType = type;
             // Clear the projectile pool and reset it with the new projectile type.
-            _equippedWeapon.Pool.Clear();
+            _equippedWeapon.InitializeProjectilePool();
         }
     }
 }

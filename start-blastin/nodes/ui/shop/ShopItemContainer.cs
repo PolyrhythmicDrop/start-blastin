@@ -31,6 +31,8 @@ namespace UI.Shop
         private Label _fluxLabel;
 
         private Color _itemColor;
+        private Color _defaultPriceColor = new Color("#ffffff");
+        private Color _unbuyablePriceColor = new Color("#ff5470");
         public Item Item => _item;
 
         public event EventHandler<ShopItemSelectedEventArgs> ShopItemSelected;
@@ -115,6 +117,9 @@ namespace UI.Shop
             SetItemPriceLabels();
         }
 
+        /// <summary>
+        /// Sets the price label text and visibility based on the ShopItemContainer's loaded item.
+        /// </summary>
         private void SetItemPriceLabels()
         {
             int flux = _item.FluxCost;
@@ -174,6 +179,35 @@ namespace UI.Shop
             DebugLogger.LogMessage($"Item bought called!", true);
             _itemNameLabel.Text += " Bought!";
             ClearItem();
+        }
+
+        /// <summary>
+        /// Sets the color of the price labels according to whether or not the player has enough currency to purchase it.
+        /// </summary>
+        /// <param name="fluxBuyable">True if the player has enough flux to buy the item.</param>
+        /// <param name="byteBuyable">True if the player has enough bytes to buy the item.</param>
+        /// <remarks>
+        /// Called from the ShopUI object that manages this ShopItemContainer.
+        /// </remarks>
+        public void SetBuyable(bool fluxBuyable, bool byteBuyable)
+        {
+            if (fluxBuyable)
+            {
+                _fluxLabel.LabelSettings.FontColor = _defaultPriceColor;
+            }
+            else
+            {
+                _fluxLabel.LabelSettings.FontColor = _unbuyablePriceColor;
+            }
+
+            if (byteBuyable)
+            {
+                _byteLabel.LabelSettings.FontColor = _defaultPriceColor;
+            }
+            else
+            {
+                _byteLabel.LabelSettings.FontColor = _unbuyablePriceColor;
+            }
         }
 
         private void OnFocusEnter()

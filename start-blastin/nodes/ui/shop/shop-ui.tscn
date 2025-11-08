@@ -219,8 +219,8 @@ focus_neighbor_right = NodePath("../VBoxContainer/RerollButton")
 focus_neighbor_bottom = NodePath("../../../../ItemSelection/MarginContainer/GridContainer/ShopItemContainer1")
 focus_next = NodePath("../VBoxContainer/RerollButton")
 focus_previous = NodePath("../VBoxContainer/RerollButton")
-theme_override_colors/font_color = Color(1, 0.47000003, 0.5583335, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.32941177, 0.4392157, 1)
+theme_override_colors/font_color = Color(0.9529412, 0.654902, 0.5294118, 1)
+theme_override_colors/font_pressed_color = Color(0.83, 0.58017, 0.47309998, 1)
 theme_override_font_sizes/font_size = 36
 text = "Next
 Wave"

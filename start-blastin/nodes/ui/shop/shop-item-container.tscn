@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bfvxyo46webpd"]
+[gd_scene load_steps=13 format=3 uid="uid://bfvxyo46webpd"]
 
 [ext_resource type="Script" uid="uid://cl536iq61ye8j" path="res://nodes/ui/shop/ShopItemContainer.cs" id="1_lifgi"]
 [ext_resource type="StyleBox" uid="uid://chnsppbtk2va0" path="res://resources/themes/styleboxes/item-container-focused-stylebox.tres" id="2_stoc2"]
@@ -36,7 +36,9 @@ border_color = Color(0.43529412, 0.11372549, 0.36078432, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ca63a"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_ca63a"]
+[sub_resource type="LabelSettings" id="LabelSettings_2w48v"]
+resource_local_to_scene = true
+resource_name = "byte-price-label-settings"
 font_size = 26
 shadow_size = 3
 shadow_color = Color(0, 0, 0, 0.69411767)
@@ -45,6 +47,14 @@ shadow_offset = Vector2(2, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ca63a"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
 draw_center = false
+
+[sub_resource type="LabelSettings" id="LabelSettings_ca63a"]
+resource_local_to_scene = true
+resource_name = "flux-price-label-settings"
+font_size = 26
+shadow_size = 3
+shadow_color = Color(0, 0, 0, 0.69411767)
+shadow_offset = Vector2(2, 1)
 
 [node name="ShopItemContainer" type="PanelContainer"]
 custom_minimum_size = Vector2(128, 256)
@@ -147,7 +157,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
 text = "000"
-label_settings = SubResource("LabelSettings_ca63a")
+label_settings = SubResource("LabelSettings_2w48v")
 horizontal_alignment = 1
 vertical_alignment = 1
 

@@ -183,6 +183,11 @@ namespace UI.Shop
                 }
 
                 container.SetItem(item);
+
+                // Set the price label for the item to be the right color.
+                Player player = _service.GetPlayer(_playerId);
+                player.CanAffordItem(item, out bool flux, out bool bytes);
+                container.SetBuyable(flux, bytes);
             }
         }
 

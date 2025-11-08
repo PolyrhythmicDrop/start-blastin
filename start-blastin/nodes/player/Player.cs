@@ -504,16 +504,31 @@ namespace Entities
             return item.FluxCost <= _flux && item.ByteCost <= _bytes;
         }
 
+        /// <summary>
+        /// Buys and equips an item from the store.
+        /// </summary>
+        /// <param name="item">The item that was bought.</param>
         private void BuyItem(Item item)
         {
             DebugLogger.LogMessage($"Buying item! {item.ResourceName}", true);
+
+            // Subtract appropriate currency (currency changed event should fire automatically)
+            Flux -= item.FluxCost;
+            Bytes -= item.ByteCost;
+
             switch (item)
             {
                 case Modifier modifier:
                     AddModifier(modifier);
                     break;
+                case WeaponPlugin weaponPlugin:
+                    SwapWeaponPlugin(weaponPlugin);
+                    break;
                 case Plugin plugin:
-                    EquipPlugin(plugin);
+                    if (plugin is not Items.WeaponPlugin)
+                    {
+                        EquipPlugin(plugin);
+                    }
                     break;
             }
             ApplyStatEffects();
@@ -670,7 +685,6 @@ namespace Entities
             {
                 Flux += args.FluxReward;
                 Bytes += args.BytesReward;
-                // EventBus.Instance.RaisePlayerCurrencyChanged(_playerId, _flux, _bytes);
             }
         }
 

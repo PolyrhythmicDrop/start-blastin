@@ -46,7 +46,6 @@ namespace UI.Shop
         private async void OpenShop()
         {
             GD.Print($"Opening shop...");
-            // _uiLayer.ShopContainer.CallDeferred(MethodName.AddChild, _shopUI);
             _uiLayer.CallDeferred(MethodName.AddChild, _shopUI);
             _shopUI.RequestReady();
             await ToSignal(_shopUI, Node.SignalName.Ready);

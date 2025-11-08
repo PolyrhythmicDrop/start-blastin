@@ -22,5 +22,11 @@ namespace UI.HUD
             _plugin = plugin;
             _textureRect.Texture = _plugin.Icon;
         }
+
+        public virtual void ClearPlugin()
+        {
+            _plugin = null;
+            _textureRect.Texture = null;
+        }
     }
 }

@@ -191,7 +191,7 @@ namespace Entities
         }
 
         /// <summary>
-        /// The player's initial set of equipped plugins. Uesd for debugging.
+        /// The player's initial set of equipped plugins. Used for debugging.
         /// </summary>
         [Export]
         public Godot.Collections.Array<Plugin> InitialPlugins
@@ -199,8 +199,11 @@ namespace Entities
             get => [.. _plugins];
             set
             {
-                _plugins = [.. value];
-                DebugLogger.LogMessage("Plugins list set from initial values!");
+                foreach (Plugin plugin in value)
+                {
+                    EquipPlugin(plugin);
+                }
+                DebugLogger.LogMessage("Plugins list set from initial values!", true);
             }
         }
 
@@ -262,12 +265,13 @@ namespace Entities
 
             InitializeComponents();
             ConnectSignals();
-
-            DebugLogger.LogMessage(
-                $"Phase cooldown after InitializeComponents: {_stats.GetStat(StatType.PhaseCooldown).Type} | {_stats.GetStat(StatType.PhaseCooldown).CurrentValue} | {_stats.GetStat(StatType.PhaseCooldown).BaseValue}",
-                true
-            );
             ApplyStatEffects();
+
+            DebugLogger.LogMessage($"Player ready! Plugins:", true);
+            foreach (Plugin plugin in _plugins)
+            {
+                DebugLogger.LogMessage($"{plugin} - {plugin.ResourceName}", true);
+            }
         }
 
         private void InitializeComponents()
@@ -438,8 +442,71 @@ namespace Entities
             QueueFree();
         }
 
+        /// <summary>
+        /// Checks to see if the player can purchase the passed item based on its flux and byte cost.
+        /// </summary>
+        /// <param name="item">The item to check for.</param>
+        /// <returns>True if the player is able to buy and equip the item, false if not.</returns>
+        public bool CanBuyItem(Item item)
+        {
+            DebugLogger.LogMessage(
+                $"Item cost: F = {item.FluxCost} | B = {item.ByteCost} / Player values: F = {_flux} | B = {_bytes}",
+                true
+            );
+            bool canAfford = CanAffordItem(item);
+            bool noDupePlugins = _plugins.Contains(item) ? false : true;
+            // Dupe plugins error checking
+            if (!noDupePlugins)
+            {
+                DebugLogger.LogMessage(
+                    $"Plugin (supposedly) already exists in Player's list of plugins! Attemping to buy {item} - {item.ResourceName}. Player plugins:",
+                    true,
+                    true
+                );
+                foreach (Plugin plugin in _plugins)
+                {
+                    DebugLogger.LogMessage($"{plugin} - {plugin.ResourceName}", true);
+                }
+            }
+
+            bool noDupeWeapon = _weaponPlugin != item;
+            bool freeSlot = (_plugins.Count + 1) <= _pluginSlots;
+
+            DebugLogger.LogMessage(
+                $"Results of {Name}'s CanBuyItem method for {item.ResourceName}...\ncanAfford = {canAfford} | noDupePlugins = {noDupePlugins} | noDupeWeapon = {noDupeWeapon} | freeSlot = {freeSlot}",
+                true
+            );
+
+            return canAfford && noDupePlugins && noDupeWeapon && freeSlot;
+        }
+
+        /// <summary>
+        /// Checks to see if the player can purchase the passed item based on its flux and byte cost.
+        /// </summary>
+        /// <param name="item">The item to check for.</param>
+        /// <param name="flux">Output that indicates whether or not the player has enough flux.</param>
+        /// <param name="bytes">Output that indicates whether or not the player has enough bytes.</param>
+        /// <returns>True if the player is able to buy and equip the item, false if not.</returns>
+        public bool CanAffordItem(Item item, out bool flux, out bool bytes)
+        {
+            flux = item.FluxCost <= _flux;
+            bytes = item.ByteCost <= _bytes;
+            return flux && bytes;
+        }
+
+        /// <summary>
+        /// Checks if the player can afford an item based on its flux and byte cost.
+        /// </summary>
+        /// <param name="item">The item to check.</param>
+        /// <returns>True if the player can afford the item, false if not.</returns>
+        public bool CanAffordItem(Item item)
+        {
+            return item.FluxCost <= _flux && item.ByteCost <= _bytes;
+        }
+
         private void BuyItem(Item item)
         {
+            DebugLogger.LogMessage($"Buying item! {item.ResourceName}", true);
             switch (item)
             {
                 case Modifier modifier:
@@ -467,10 +534,7 @@ namespace Entities
                 if (_plugins.Count < _pluginSlots && newPlugin is not Items.WeaponPlugin)
                 {
                     _plugins.Add(newPlugin);
-                    // DebugLogger.LogMessage(
-                    //     $"Plugin {newPlugin.Name} equipped! Current plugin count: {_plugins.Count} | Total plugin slots: {_pluginSlots}",
-                    //     true
-                    // );
+                    EventBus.Instance.RaisePlayerPluginsChanged(_playerId, _plugins);
                 }
                 else
                 {
@@ -481,7 +545,6 @@ namespace Entities
                     );
                 }
             }
-            // _service.UpdateEquippedPlugins(_playerId, _plugins);
         }
 
         public void SwapWeaponPlugin(WeaponPlugin weaponPlugin)
@@ -490,9 +553,9 @@ namespace Entities
             _weaponComponent.SetWeaponProjectile(weaponPlugin.ProjectileType);
         }
 
-        public List<Plugin> GetPlugins()
+        public IReadOnlyList<Plugin> GetPlugins()
         {
-            return _plugins;
+            return _plugins.AsReadOnly();
         }
 
         public bool HasPlugin(Plugin plugin)

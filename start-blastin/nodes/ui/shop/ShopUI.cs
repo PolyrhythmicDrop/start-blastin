@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Autoloads;
 using Effects;
 using Entities;
+using Events;
 using FileIO;
 using Godot;
 using Items;
@@ -34,6 +36,7 @@ namespace UI.Shop
         private Button _healButton;
 
         private Dictionary<ShopItemContainer, Action> _containerFocusHandlers = new();
+        public event EventHandler<ItemBoughtEventArgs> ItemBought;
 
         // ~~~
 
@@ -63,15 +66,21 @@ namespace UI.Shop
                 GetNode<ShopItemContainer>("%ShopItemContainer3"),
             };
 
+            ReadyShopItemContainers();
+
             ConnectSignals();
             PopulateShopSlots();
             // Grab the focus to the first shop item.
             _itemContainers[0].CallDeferred(MethodName.GrabFocus);
         }
 
-        public override void _EnterTree()
+        private async void ReadyShopItemContainers()
         {
-            base._EnterTree();
+            foreach (ShopItemContainer container in _itemContainers)
+            {
+                container.RequestReady();
+                await ToSignal(container, Node.SignalName.Ready);
+            }
         }
 
         public void Initialize(int playerId)
@@ -96,14 +105,11 @@ namespace UI.Shop
                 Action handler = () => DisplayItemDescription(captured);
                 _containerFocusHandlers[captured] = handler;
                 captured.FocusEntered += handler;
+
+                // Connect to the shop item selected signal
+                container.ShopItemSelected += OnShopItemSelected;
             }
         }
-
-        private void RerollFocusEntered() => DisplayTickerFocusMessage(_rerollButton);
-
-        private void NextWaveFocusEntered() => DisplayTickerFocusMessage(_nextWaveButton);
-
-        private void HealFocusEntered() => DisplayTickerFocusMessage(_healButton);
 
         private void DisconnectSignals()
         {
@@ -119,6 +125,46 @@ namespace UI.Shop
                 kvp.Key.FocusEntered -= kvp.Value;
             }
             _containerFocusHandlers.Clear();
+
+            foreach (ShopItemContainer container in _itemContainers)
+            {
+                container.ShopItemSelected -= OnShopItemSelected;
+            }
+        }
+
+        private void RerollFocusEntered() => DisplayTickerFocusMessage(_rerollButton);
+
+        private void NextWaveFocusEntered() => DisplayTickerFocusMessage(_nextWaveButton);
+
+        private void HealFocusEntered() => DisplayTickerFocusMessage(_healButton);
+
+        private void OnShopItemSelected(object source, ShopItemSelectedEventArgs args)
+        {
+            Player player = _service.GetPlayer(_playerId);
+            DebugLogger.LogMessage(
+                $"Shop item {args.Item} selected! Checking if player can buy item...",
+                true
+            );
+            if (player.CanBuyItem(args.Item))
+            {
+                DebugLogger.LogMessage(
+                    $"CanBuyItem returned true! Raising item bought signal...",
+                    true
+                );
+                EventBus.Instance.RaiseItemBought(args.Item);
+                if (source is ShopItemContainer container)
+                {
+                    container.ItemBought();
+                }
+            }
+            else
+            {
+                DebugLogger.LogMessage(
+                    $"Player cannot buy item {args.Item.Name}! Returning...",
+                    true,
+                    true
+                );
+            }
         }
 
         /// <summary>

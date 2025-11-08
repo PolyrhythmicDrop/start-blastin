@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using Autoloads;
+using Events;
 using Godot;
 using Interfaces;
 using Items;
@@ -14,8 +15,14 @@ namespace UI.Shop
         private Item _item;
         private TextureRect _textureRect;
         private Label _itemNameLabel;
-        private StyleBoxFlat _defocusedStyleBox;
-        private StyleBoxFlat _focusedStyleBox;
+        private StyleBoxFlat _defocusedStyleBox =>
+            ResourceLoader.Load<StyleBoxFlat>(
+                "res://resources/themes/styleboxes/item-container-defocused-stylebox.tres"
+            );
+        private StyleBoxFlat _focusedStyleBox =>
+            ResourceLoader.Load<StyleBoxFlat>(
+                "res://resources/themes/styleboxes/item-container-focused-stylebox.tres"
+            );
 
         // ~ Nodes ~ //
         private PanelContainer _bytePanelContainer;
@@ -25,6 +32,8 @@ namespace UI.Shop
 
         private Color _itemColor;
         public Item Item => _item;
+
+        public event EventHandler<ShopItemSelectedEventArgs> ShopItemSelected;
 
         public override void _Ready()
         {
@@ -36,20 +45,19 @@ namespace UI.Shop
             _byteLabel = GetNode<Label>("%ByteLabel");
             _fluxLabel = GetNode<Label>("%FluxLabel");
 
-            _focusedStyleBox = ResourceLoader.Load<StyleBoxFlat>(
-                "res://resources/themes/styleboxes/item-container-focused-stylebox.tres"
-            );
-            _defocusedStyleBox = ResourceLoader.Load<StyleBoxFlat>(
-                "res://resources/themes/styleboxes/item-container-defocused-stylebox.tres"
-            );
-
             ConnectSignals();
+        }
+
+        public override void _EnterTree()
+        {
+            base._EnterTree();
         }
 
         public override void _GuiInput(InputEvent @event)
         {
-            if (@event.IsAction("ui_accept"))
+            if (Input.IsActionJustPressedByEvent("ui_accept", @event))
             {
+                DebugLogger.LogMessage($"ui_accept Action just pressed!", true);
                 ItemSelected();
                 AcceptEvent();
             }
@@ -139,9 +147,15 @@ namespace UI.Shop
         /// </summary>
         public void ClearItem()
         {
-            GD.Print($"Clearing item...");
+            DebugLogger.LogMessage($"Clearing item...", true);
             _item = null;
             _textureRect.Texture = null;
+        }
+
+        private void ClearPriceLabels()
+        {
+            _fluxPanelContainer.Visible = false;
+            _bytePanelContainer.Visible = false;
         }
 
         /// <summary>
@@ -151,16 +165,15 @@ namespace UI.Shop
         {
             if (_item != null)
             {
-                DebugLogger.LogMessage($"Shop item {_item.Name} bought!", true);
-                // Buy the item
-                // TODO: display the item's description and stuff before buying it. This is just to test that I *can* buy it.
-                // EventBus.Instance.EmitSignal(EventBus.SignalName.ShopItemBought, _item);
-                EventBus.Instance.RaiseItemBought(_item);
-                _itemNameLabel.Text += " Bought!";
-
-                // Clear the item.
-                ClearItem();
+                ShopItemSelected?.Invoke(this, new ShopItemSelectedEventArgs(_item));
             }
+        }
+
+        public void ItemBought()
+        {
+            DebugLogger.LogMessage($"Item bought called!", true);
+            _itemNameLabel.Text += " Bought!";
+            ClearItem();
         }
 
         private void OnFocusEnter()

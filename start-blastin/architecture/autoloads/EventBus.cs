@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using Events;
 using Godot;
 using Items;
+using UI.HUD;
 
 namespace Autoloads
 {
@@ -50,6 +52,8 @@ namespace Autoloads
         public event EventHandler<PlayerPhaseCooldownChangedEventArgs> PlayerPhaseCooldownChanged;
 
         public event EventHandler<PlayerCurrencyChangedEventArgs> PlayerCurrencyChanged;
+
+        public event EventHandler<PlayerPluginsChangedEventArgs> PlayerPluginsChanged;
 
         #endregion
 
@@ -146,6 +150,12 @@ namespace Autoloads
         {
             PlayerCurrencyChangedEventArgs args = new(playerId, bytes, flux);
             PlayerCurrencyChanged?.Invoke(this, args);
+        }
+
+        public void RaisePlayerPluginsChanged(int playerId, List<Plugin> plugins)
+        {
+            PlayerPluginsChangedEventArgs args = new(playerId, plugins);
+            PlayerPluginsChanged?.Invoke(this, args);
         }
 
         public void RaiseEnemyKilled(EnemyKilledEventArgs args)

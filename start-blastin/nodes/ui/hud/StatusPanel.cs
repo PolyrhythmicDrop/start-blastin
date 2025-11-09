@@ -82,7 +82,7 @@ namespace UI.HUD
                 Player player = _service.GetPlayer(_playerId);
                 _healthBar.MaxValue = player.MaxHealth;
                 _healthBar.Value = player.CurrentHealth;
-                SetHealthLabelText();
+                SetHealthLabelText(_healthBar.Value, _healthBar.MaxValue);
                 _phaseBar.MaxValue = player.PhaseCooldown;
                 _phaseBar.Value = player.PhaseCooldown;
             }
@@ -116,22 +116,51 @@ namespace UI.HUD
             if (playerId == _playerId)
             {
                 _healthBar.MaxValue = maxHealth;
-                SetHealthLabelText();
+                SetHealthLabelText(_healthBar.Value, _healthBar.MaxValue);
             }
         }
 
-        private void SetHealthLabelText()
+        private void TweenCurrentHealth(double oldHealth, double newHealth)
         {
-            // Set the values
-            double maxHealth = _healthBar.MaxValue;
-            double currentHealth = _healthBar.Value;
+            Tween barTween = _healthBar.CreateTween();
+            barTween.SetParallel(true);
+            barTween
+                .TweenProperty(_healthBar, "value", newHealth, 0.8)
+                .SetEase(Tween.EaseType.Out)
+                .SetTrans(Tween.TransitionType.Sine);
+            barTween
+                .TweenMethod(
+                    Callable.From(
+                        (double currentHealth) =>
+                        {
+                            SetHealthLabelText(currentHealth, _healthBar.MaxValue);
+                        }
+                    ),
+                    oldHealth,
+                    newHealth,
+                    0.8
+                )
+                .SetEase(Tween.EaseType.Out)
+                .SetTrans(Tween.TransitionType.Expo);
+            ;
+        }
 
+        private void SetHealthLabelText(double currentHealth, double maxHealth)
+        {
+            // // Set the values
+            // double maxHealth = _healthBar.MaxValue;
+            // double currentHealth = _healthBar.Value;
+
+            _healthLabel.Text = $"{currentHealth:N0} / {maxHealth}";
+            SetHealthLabelColor(currentHealth, maxHealth);
+        }
+
+        private void SetHealthLabelColor(double currentHealth, double maxHealth)
+        {
             // Set the text
-            _healthLabel.Text = $"{currentHealth} / {maxHealth}";
 
             // Set the color according to the percentage.
             float percent = (float)(currentHealth / maxHealth);
-            DebugLogger.LogMessage($"Health percent: {percent}");
             Color color = percent switch
             {
                 >= 0.8f => _fullHealthColor,
@@ -139,7 +168,6 @@ namespace UI.HUD
                 > 0f => _lowHealthColor,
                 _ => _lowHealthColor, // fallback for 0 or negative
             };
-            DebugLogger.LogMessage($"Color selected: {color}");
             _healthLabel.RemoveThemeColorOverride("default_color");
             _healthLabel.AddThemeColorOverride("default_color", color);
         }
@@ -153,8 +181,10 @@ namespace UI.HUD
         {
             if (playerId == _playerId)
             {
-                _healthBar.Value = currentHealth;
-                SetHealthLabelText();
+                double oldHealth = _healthBar.Value;
+                // _healthBar.Value = currentHealth;
+                TweenCurrentHealth(oldHealth, currentHealth);
+                // SetHealthLabelText();
             }
         }
 

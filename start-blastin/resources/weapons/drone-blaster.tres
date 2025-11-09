@@ -7,8 +7,7 @@
 resource_local_to_scene = true
 resource_name = "drone-blaster"
 script = ExtResource("1_yebq7")
-Damage = 0.5
-FireRate = 1.8
+FireRate = 1.7
 ProjectileSpeed = 400.0
 metadata/_custom_type_script = "uid://bytfm61mpkr5u"
 

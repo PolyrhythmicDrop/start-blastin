@@ -1,0 +1,72 @@
+[gd_scene load_steps=6 format=3 uid="uid://bpq76cljnsf6"]
+
+[ext_resource type="Script" uid="uid://c8mdnndkuqscj" path="res://nodes/ui/hud/HealthBar.cs" id="1_qsigx"]
+[ext_resource type="FontFile" uid="uid://bdn20wteigtfk" path="res://resources/fonts/silkscreen/Silkscreen-Regular.ttf" id="1_r5w8b"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_46k8h"]
+bg_color = Color(0.22439998, 0.27449334, 0.34, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.43137255, 0.31764707, 0.5058824, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y7kfb"]
+bg_color = Color(0.42352942, 0.7254902, 0.7882353, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.43529412, 0.11372549, 0.36078432, 1)
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_detail = 16
+
+[sub_resource type="FontVariation" id="FontVariation_hqn1h"]
+base_font = ExtResource("1_r5w8b")
+variation_embolden = 0.3
+
+[node name="HealthBarContainer" type="PanelContainer"]
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 8.0
+script = ExtResource("1_qsigx")
+FullHealthColor = Color(0.47058824, 0.84705883, 0.7176471, 1)
+MidHealthColor = Color(1, 0.64705884, 0.50980395, 1)
+LowHealthColor = Color(1, 0.32941177, 0.4392157, 1)
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_styles/background = SubResource("StyleBoxFlat_46k8h")
+theme_override_styles/fill = SubResource("StyleBoxFlat_y7kfb")
+value = 50.0
+show_percentage = false
+
+[node name="HealthLabel" type="RichTextLabel" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.47843137)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/outline_size = 1
+theme_override_fonts/normal_font = SubResource("FontVariation_hqn1h")
+theme_override_font_sizes/normal_font_size = 28
+bbcode_enabled = true
+text = "100 / 100"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+shortcut_keys_enabled = false
+horizontal_alignment = 1
+vertical_alignment = 1

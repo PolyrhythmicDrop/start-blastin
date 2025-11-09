@@ -14,34 +14,15 @@ namespace UI.HUD
     {
         private int _playerId;
         private PlayerService _service;
-        private ProgressBar _healthBar;
-        private RichTextLabel _healthLabel;
-        private Color _fullHealthColor;
-        private Color _midHealthColor;
-        private Color _lowHealthColor;
+
+        // private ProgressBar _healthBar;
+        private HealthBar _healthBar;
+
+        // private RichTextLabel _healthLabel;
+        // private Color _fullHealthColor;
+        // private Color _midHealthColor;
+        // private Color _lowHealthColor;
         private ProgressBar _phaseBar;
-
-        [ExportCategory("Health Label Colors")]
-        [Export]
-        public Color FullHealthColor
-        {
-            get => _fullHealthColor;
-            set => _fullHealthColor = value;
-        }
-
-        [Export]
-        public Color MidHealthColor
-        {
-            get => _midHealthColor;
-            set => _midHealthColor = value;
-        }
-
-        [Export]
-        public Color LowHealthColor
-        {
-            get => _lowHealthColor;
-            set => _lowHealthColor = value;
-        }
 
         public void Initialize(int playerId)
         {
@@ -52,8 +33,8 @@ namespace UI.HUD
         public override void _Ready()
         {
             _service = ServiceManager.Instance.GetService<PlayerService>();
-            _healthBar = GetNode<ProgressBar>("%HealthBar");
-            _healthLabel = GetNode<RichTextLabel>("%HealthLabel");
+            _healthBar = GetNode<HealthBar>("%HealthBar");
+            // _healthLabel = GetNode<RichTextLabel>("%HealthLabel");
             _phaseBar = GetNode<ProgressBar>("%PhaseBar");
 
             ConnectSignals();
@@ -80,9 +61,10 @@ namespace UI.HUD
             if (_service.HasPlayer(_playerId))
             {
                 Player player = _service.GetPlayer(_playerId);
-                _healthBar.MaxValue = player.MaxHealth;
-                _healthBar.Value = player.CurrentHealth;
-                SetHealthLabelText(_healthBar.Value, _healthBar.MaxValue);
+                // _healthBar.MaxValue = player.MaxHealth;
+                // _healthBar.Value = player.CurrentHealth;
+                _healthBar.InitializeHealthBar(player.MaxHealth, player.CurrentHealth);
+                // SetHealthLabelText(_healthBar.Value, _healthBar.MaxValue);
                 _phaseBar.MaxValue = player.PhaseCooldown;
                 _phaseBar.Value = player.PhaseCooldown;
             }
@@ -115,78 +97,79 @@ namespace UI.HUD
         {
             if (playerId == _playerId)
             {
-                _healthBar.MaxValue = maxHealth;
-                SetHealthLabelText(_healthBar.Value, _healthBar.MaxValue);
+                // _healthBar.MaxValue = maxHealth;
+                _healthBar.SetMaxHealth(maxHealth);
+                // SetHealthLabelText(_healthBar.Value, _healthBar.MaxValue);
             }
         }
 
-        private void TweenCurrentHealth(double oldHealth, double newHealth)
-        {
-            Tween barTween = _healthBar.CreateTween();
-            barTween.SetParallel(true);
-            barTween
-                .TweenProperty(_healthBar, "value", newHealth, 0.8)
-                .SetEase(Tween.EaseType.Out)
-                .SetTrans(Tween.TransitionType.Sine);
-            barTween
-                .TweenMethod(
-                    Callable.From(
-                        (double currentHealth) =>
-                        {
-                            SetHealthLabelText(currentHealth, _healthBar.MaxValue);
-                        }
-                    ),
-                    oldHealth,
-                    newHealth,
-                    0.8
-                )
-                .SetEase(Tween.EaseType.Out)
-                .SetTrans(Tween.TransitionType.Expo);
-            ;
-        }
+        // private void TweenCurrentHealth(double oldHealth, double newHealth)
+        // {
+        //     Tween barTween = _healthBar.CreateTween();
+        //     barTween.SetParallel(true);
+        //     barTween
+        //         .TweenProperty(_healthBar, "value", newHealth, 0.8)
+        //         .SetEase(Tween.EaseType.Out)
+        //         .SetTrans(Tween.TransitionType.Sine);
+        //     barTween
+        //         .TweenMethod(
+        //             Callable.From(
+        //                 (double currentHealth) =>
+        //                 {
+        //                     SetHealthLabelText(currentHealth, _healthBar.MaxValue);
+        //                 }
+        //             ),
+        //             oldHealth,
+        //             newHealth,
+        //             0.8
+        //         )
+        //         .SetEase(Tween.EaseType.Out)
+        //         .SetTrans(Tween.TransitionType.Expo);
+        //     ;
+        // }
 
-        private void SetHealthLabelText(double currentHealth, double maxHealth)
-        {
-            _healthLabel.Text = $"{currentHealth:N0} / {maxHealth}";
-            SetHealthLabelColor(currentHealth, maxHealth);
-        }
+        // private void SetHealthLabelText(double currentHealth, double maxHealth)
+        // {
+        //     _healthLabel.Text = $"{currentHealth:N0} / {maxHealth}";
+        //     SetHealthLabelColor(currentHealth, maxHealth);
+        // }
 
-        private void SetHealthLabelColor(double currentHealth, double maxHealth)
-        {
-            // Set the color according to the percentage.
-            float percent = (float)(currentHealth / maxHealth);
-            Color newColor = percent switch
-            {
-                >= 0.8f => _fullHealthColor,
-                > 0.4f => _midHealthColor,
-                > 0f => _lowHealthColor,
-                _ => _lowHealthColor, // fallback for 0 or negative
-            };
+        // private void SetHealthLabelColor(double currentHealth, double maxHealth)
+        // {
+        //     // Set the color according to the percentage.
+        //     float percent = (float)(currentHealth / maxHealth);
+        //     Color newColor = percent switch
+        //     {
+        //         >= 0.8f => _fullHealthColor,
+        //         > 0.4f => _midHealthColor,
+        //         > 0f => _lowHealthColor,
+        //         _ => _lowHealthColor, // fallback for 0 or negative
+        //     };
 
-            Color currentColor = _healthLabel.GetThemeColor("default_color", "RichTextLabel");
-            if (currentColor != newColor)
-            {
-                // _healthLabel.AddThemeColorOverride("default_color", color);
+        //     Color currentColor = _healthLabel.GetThemeColor("default_color", "RichTextLabel");
+        //     if (currentColor != newColor)
+        //     {
+        //         // _healthLabel.AddThemeColorOverride("default_color", color);
 
-                // Tween the color values
-                Tween colorTween = _healthLabel.CreateTween();
-                colorTween
-                    .TweenMethod(
-                        Callable.From(
-                            (Color color) =>
-                            {
-                                _healthLabel.AddThemeColorOverride("default_color", color);
-                            }
-                        ),
-                        currentColor,
-                        newColor,
-                        0.5
-                    )
-                    .SetEase(Tween.EaseType.Out)
-                    .SetTrans(Tween.TransitionType.Expo);
-                ;
-            }
-        }
+        //         // Tween the color values
+        //         Tween colorTween = _healthLabel.CreateTween();
+        //         colorTween
+        //             .TweenMethod(
+        //                 Callable.From(
+        //                     (Color color) =>
+        //                     {
+        //                         _healthLabel.AddThemeColorOverride("default_color", color);
+        //                     }
+        //                 ),
+        //                 currentColor,
+        //                 newColor,
+        //                 0.5
+        //             )
+        //             .SetEase(Tween.EaseType.Out)
+        //             .SetTrans(Tween.TransitionType.Expo);
+        //         ;
+        //     }
+        // }
 
         /// <summary>
         /// Updates the player's current health on the status bar.
@@ -197,10 +180,10 @@ namespace UI.HUD
         {
             if (playerId == _playerId)
             {
-                double oldHealth = _healthBar.Value;
+                _healthBar.SetCurrentHealth(currentHealth);
+                // double oldHealth = _healthBar.Value;
                 // _healthBar.Value = currentHealth;
-                TweenCurrentHealth(oldHealth, currentHealth);
-                // SetHealthLabelText();
+                // TweenCurrentHealth(oldHealth, currentHealth);
             }
         }
 

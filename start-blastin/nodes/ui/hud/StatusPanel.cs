@@ -147,29 +147,45 @@ namespace UI.HUD
 
         private void SetHealthLabelText(double currentHealth, double maxHealth)
         {
-            // // Set the values
-            // double maxHealth = _healthBar.MaxValue;
-            // double currentHealth = _healthBar.Value;
-
             _healthLabel.Text = $"{currentHealth:N0} / {maxHealth}";
             SetHealthLabelColor(currentHealth, maxHealth);
         }
 
         private void SetHealthLabelColor(double currentHealth, double maxHealth)
         {
-            // Set the text
-
             // Set the color according to the percentage.
             float percent = (float)(currentHealth / maxHealth);
-            Color color = percent switch
+            Color newColor = percent switch
             {
                 >= 0.8f => _fullHealthColor,
                 > 0.4f => _midHealthColor,
                 > 0f => _lowHealthColor,
                 _ => _lowHealthColor, // fallback for 0 or negative
             };
-            _healthLabel.RemoveThemeColorOverride("default_color");
-            _healthLabel.AddThemeColorOverride("default_color", color);
+
+            Color currentColor = _healthLabel.GetThemeColor("default_color", "RichTextLabel");
+            if (currentColor != newColor)
+            {
+                // _healthLabel.AddThemeColorOverride("default_color", color);
+
+                // Tween the color values
+                Tween colorTween = _healthLabel.CreateTween();
+                colorTween
+                    .TweenMethod(
+                        Callable.From(
+                            (Color color) =>
+                            {
+                                _healthLabel.AddThemeColorOverride("default_color", color);
+                            }
+                        ),
+                        currentColor,
+                        newColor,
+                        0.5
+                    )
+                    .SetEase(Tween.EaseType.Out)
+                    .SetTrans(Tween.TransitionType.Expo);
+                ;
+            }
         }
 
         /// <summary>

@@ -5,6 +5,7 @@ using Events;
 using Godot;
 using Interfaces;
 using Services;
+using Utility;
 
 namespace UI.HUD
 {
@@ -14,7 +15,33 @@ namespace UI.HUD
         private int _playerId;
         private PlayerService _service;
         private ProgressBar _healthBar;
+        private RichTextLabel _healthLabel;
+        private Color _fullHealthColor;
+        private Color _midHealthColor;
+        private Color _lowHealthColor;
         private ProgressBar _phaseBar;
+
+        [ExportCategory("Health Label Colors")]
+        [Export]
+        public Color FullHealthColor
+        {
+            get => _fullHealthColor;
+            set => _fullHealthColor = value;
+        }
+
+        [Export]
+        public Color MidHealthColor
+        {
+            get => _midHealthColor;
+            set => _midHealthColor = value;
+        }
+
+        [Export]
+        public Color LowHealthColor
+        {
+            get => _lowHealthColor;
+            set => _lowHealthColor = value;
+        }
 
         public void Initialize(int playerId)
         {
@@ -24,9 +51,10 @@ namespace UI.HUD
 
         public override void _Ready()
         {
-            _healthBar = GetNode<ProgressBar>("%HealthBar");
-            _phaseBar = GetNode<ProgressBar>("%PhaseBar");
             _service = ServiceManager.Instance.GetService<PlayerService>();
+            _healthBar = GetNode<ProgressBar>("%HealthBar");
+            _healthLabel = GetNode<RichTextLabel>("%HealthLabel");
+            _phaseBar = GetNode<ProgressBar>("%PhaseBar");
 
             ConnectSignals();
         }
@@ -54,6 +82,7 @@ namespace UI.HUD
                 Player player = _service.GetPlayer(_playerId);
                 _healthBar.MaxValue = player.MaxHealth;
                 _healthBar.Value = player.CurrentHealth;
+                SetHealthLabelText();
                 _phaseBar.MaxValue = player.PhaseCooldown;
                 _phaseBar.Value = player.PhaseCooldown;
             }
@@ -87,19 +116,45 @@ namespace UI.HUD
             if (playerId == _playerId)
             {
                 _healthBar.MaxValue = maxHealth;
+                SetHealthLabelText();
             }
+        }
+
+        private void SetHealthLabelText()
+        {
+            // Set the values
+            double maxHealth = _healthBar.MaxValue;
+            double currentHealth = _healthBar.Value;
+
+            // Set the text
+            _healthLabel.Text = $"{currentHealth} / {maxHealth}";
+
+            // Set the color according to the percentage.
+            float percent = (float)(currentHealth / maxHealth);
+            DebugLogger.LogMessage($"Health percent: {percent}");
+            Color color = percent switch
+            {
+                >= 0.8f => _fullHealthColor,
+                > 0.4f => _midHealthColor,
+                > 0f => _lowHealthColor,
+                _ => _lowHealthColor, // fallback for 0 or negative
+            };
+            DebugLogger.LogMessage($"Color selected: {color}");
+            _healthLabel.RemoveThemeColorOverride("default_color");
+            _healthLabel.AddThemeColorOverride("default_color", color);
         }
 
         /// <summary>
         /// Updates the player's current health on the status bar.
         /// </summary>
         /// <param name="playerId">The ID of the player, matched against this panel's PlayerID.</param>
-        /// <param name="maxHealth">The new current health value for the player.</param>
+        /// <param name="currentHealth">The new current health value for the player.</param>
         private void UpdateCurrentHealth(int playerId, float currentHealth)
         {
             if (playerId == _playerId)
             {
                 _healthBar.Value = currentHealth;
+                SetHealthLabelText();
             }
         }
 

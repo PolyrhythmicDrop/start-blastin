@@ -1,5 +1,6 @@
 using System;
 using System.Numerics;
+using System.Runtime.Serialization;
 using Godot;
 
 namespace UI.HUD
@@ -9,30 +10,58 @@ namespace UI.HUD
     {
         private ProgressBar _bar;
         private RichTextLabel _label;
-        private Color _fullHealthColor;
-        private Color _midHealthColor;
-        private Color _lowHealthColor;
+        private Color _fullHealthTextColor;
+        private Color _midHealthTextColor;
+        private Color _lowHealthTextColor;
 
-        [ExportCategory("Colors")]
+        private Color _fullHealthBarColor;
+        private Color _midHealthBarColor;
+        private Color _lowHealthBarColor;
+
+        private Tween _tween;
+
+        [ExportCategory("Text Colors")]
         [Export]
-        public Color FullHealthColor
+        public Color FullHealthTextColor
         {
-            get => _fullHealthColor;
-            set => _fullHealthColor = value;
+            get => _fullHealthTextColor;
+            set => _fullHealthTextColor = value;
         }
 
         [Export]
-        public Color MidHealthColor
+        public Color MidHealthTextColor
         {
-            get => _midHealthColor;
-            set => _midHealthColor = value;
+            get => _midHealthTextColor;
+            set => _midHealthTextColor = value;
         }
 
         [Export]
-        public Color LowHealthColor
+        public Color LowHealthTextColor
         {
-            get => _lowHealthColor;
-            set => _lowHealthColor = value;
+            get => _lowHealthTextColor;
+            set => _lowHealthTextColor = value;
+        }
+
+        [ExportCategory("Bar Colors")]
+        [Export]
+        public Color FullHealthBarColor
+        {
+            get => _fullHealthBarColor;
+            set => _fullHealthBarColor = value;
+        }
+
+        [Export]
+        public Color MidHealthBarColor
+        {
+            get => _midHealthBarColor;
+            set => _midHealthBarColor = value;
+        }
+
+        [Export]
+        public Color LowHealthBarColor
+        {
+            get => _lowHealthBarColor;
+            set => _lowHealthBarColor = value;
         }
 
         public override void _Ready()
@@ -46,6 +75,8 @@ namespace UI.HUD
             _bar.MaxValue = maxValue;
             _bar.Value = value;
             SetHealthLabelText();
+            // Set the initial color
+            _label.AddThemeColorOverride("default_color", SetHealthLabelColor(value, maxValue));
         }
 
         public void SetMaxHealth(double maxHealth)
@@ -56,9 +87,8 @@ namespace UI.HUD
 
         public void SetCurrentHealth(double currentHealth)
         {
-            double oldHealth = _bar.Value;
-            // _bar.Value = currentHealth;
-            TweenCurrentHealth(oldHealth, currentHealth);
+            currentHealth = Math.Max(0, currentHealth);
+            TweenCurrentHealth(currentHealth);
         }
 
         private void SetHealthLabelText() => SetHealthLabelText(_bar.Value, _bar.MaxValue);
@@ -66,55 +96,47 @@ namespace UI.HUD
         private void SetHealthLabelText(double currentHealth, double maxHealth)
         {
             _label.Text = $"{currentHealth:N0} / {maxHealth}";
-            SetHealthLabelColor(currentHealth, maxHealth);
         }
 
-        private void SetHealthLabelColor(double currentHealth, double maxHealth)
+        private Color SetHealthLabelColor(double currentHealth, double maxHealth)
         {
             // Set the color according to the percentage.
             float percent = (float)(currentHealth / maxHealth);
             Color newColor = percent switch
             {
-                >= 0.8f => _fullHealthColor,
-                > 0.4f => _midHealthColor,
-                > 0f => _lowHealthColor,
-                _ => _lowHealthColor, // fallback for 0 or negative
+                >= 0.8f => _fullHealthTextColor,
+                > 0.4f => _midHealthTextColor,
+                > 0f => _lowHealthTextColor,
+                _ => _lowHealthTextColor, // fallback for 0 or negative
             };
 
-            Color currentColor = _label.GetThemeColor("default_color", "RichTextLabel");
-            if (currentColor != newColor)
-            {
-                // _healthLabel.AddThemeColorOverride("default_color", color);
-
-                // Tween the color values
-                Tween colorTween = _label.CreateTween();
-                colorTween
-                    .TweenMethod(
-                        Callable.From(
-                            (Color color) =>
-                            {
-                                _label.AddThemeColorOverride("default_color", color);
-                            }
-                        ),
-                        currentColor,
-                        newColor,
-                        0.5
-                    )
-                    .SetEase(Tween.EaseType.Out)
-                    .SetTrans(Tween.TransitionType.Expo);
-                ;
-            }
+            return newColor;
         }
 
-        private void TweenCurrentHealth(double oldHealth, double newHealth)
+        private void TweenCurrentHealth(double newHealth)
         {
-            Tween barTween = _bar.CreateTween();
-            barTween.SetParallel(true);
-            barTween
+            double currentValue = _bar.Value;
+
+            // Kill any existing tween
+            if (_tween != null)
+            {
+                _tween.Kill();
+            }
+
+            // Get the appropriate label color
+            Color newColor = SetHealthLabelColor(newHealth, _bar.MaxValue);
+            Color currentColor = _label.GetThemeColor("default_color", "RichTextLabel");
+
+            // Create a new tween
+            _tween = CreateTween();
+            _tween.SetParallel(true);
+            // Tween the progress bar
+            _tween
                 .TweenProperty(_bar, "value", newHealth, 0.8)
                 .SetEase(Tween.EaseType.Out)
                 .SetTrans(Tween.TransitionType.Sine);
-            barTween
+            // Tween the text
+            _tween
                 .TweenMethod(
                     Callable.From(
                         (double currentHealth) =>
@@ -122,13 +144,28 @@ namespace UI.HUD
                             SetHealthLabelText(currentHealth, _bar.MaxValue);
                         }
                     ),
-                    oldHealth,
+                    currentValue,
                     newHealth,
-                    0.8
+                    0.4
                 )
                 .SetEase(Tween.EaseType.Out)
                 .SetTrans(Tween.TransitionType.Expo);
             ;
+            // Tween the text color if it new color is different.
+            if (newColor != currentColor)
+            {
+                _tween.TweenMethod(
+                    Callable.From(
+                        (Color color) =>
+                        {
+                            _label.AddThemeColorOverride("default_color", color);
+                        }
+                    ),
+                    currentColor,
+                    newColor,
+                    0.4
+                );
+            }
         }
     }
 }

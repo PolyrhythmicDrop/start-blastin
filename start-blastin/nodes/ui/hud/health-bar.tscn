@@ -34,9 +34,9 @@ variation_embolden = 0.3
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 8.0
 script = ExtResource("1_qsigx")
-FullHealthColor = Color(0.47058824, 0.84705883, 0.7176471, 1)
-MidHealthColor = Color(1, 0.64705884, 0.50980395, 1)
-LowHealthColor = Color(1, 0.32941177, 0.4392157, 1)
+FullHealthTextColor = Color(0.12156863, 0.8784314, 0.5019608, 1)
+MidHealthTextColor = Color(1, 0.64705884, 0.50980395, 1)
+LowHealthTextColor = Color(1, 0.32941177, 0.4392157, 1)
 
 [node name="HealthBar" type="ProgressBar" parent="."]
 unique_name_in_owner = true

@@ -97,79 +97,9 @@ namespace UI.HUD
         {
             if (playerId == _playerId)
             {
-                // _healthBar.MaxValue = maxHealth;
                 _healthBar.SetMaxHealth(maxHealth);
-                // SetHealthLabelText(_healthBar.Value, _healthBar.MaxValue);
             }
         }
-
-        // private void TweenCurrentHealth(double oldHealth, double newHealth)
-        // {
-        //     Tween barTween = _healthBar.CreateTween();
-        //     barTween.SetParallel(true);
-        //     barTween
-        //         .TweenProperty(_healthBar, "value", newHealth, 0.8)
-        //         .SetEase(Tween.EaseType.Out)
-        //         .SetTrans(Tween.TransitionType.Sine);
-        //     barTween
-        //         .TweenMethod(
-        //             Callable.From(
-        //                 (double currentHealth) =>
-        //                 {
-        //                     SetHealthLabelText(currentHealth, _healthBar.MaxValue);
-        //                 }
-        //             ),
-        //             oldHealth,
-        //             newHealth,
-        //             0.8
-        //         )
-        //         .SetEase(Tween.EaseType.Out)
-        //         .SetTrans(Tween.TransitionType.Expo);
-        //     ;
-        // }
-
-        // private void SetHealthLabelText(double currentHealth, double maxHealth)
-        // {
-        //     _healthLabel.Text = $"{currentHealth:N0} / {maxHealth}";
-        //     SetHealthLabelColor(currentHealth, maxHealth);
-        // }
-
-        // private void SetHealthLabelColor(double currentHealth, double maxHealth)
-        // {
-        //     // Set the color according to the percentage.
-        //     float percent = (float)(currentHealth / maxHealth);
-        //     Color newColor = percent switch
-        //     {
-        //         >= 0.8f => _fullHealthColor,
-        //         > 0.4f => _midHealthColor,
-        //         > 0f => _lowHealthColor,
-        //         _ => _lowHealthColor, // fallback for 0 or negative
-        //     };
-
-        //     Color currentColor = _healthLabel.GetThemeColor("default_color", "RichTextLabel");
-        //     if (currentColor != newColor)
-        //     {
-        //         // _healthLabel.AddThemeColorOverride("default_color", color);
-
-        //         // Tween the color values
-        //         Tween colorTween = _healthLabel.CreateTween();
-        //         colorTween
-        //             .TweenMethod(
-        //                 Callable.From(
-        //                     (Color color) =>
-        //                     {
-        //                         _healthLabel.AddThemeColorOverride("default_color", color);
-        //                     }
-        //                 ),
-        //                 currentColor,
-        //                 newColor,
-        //                 0.5
-        //             )
-        //             .SetEase(Tween.EaseType.Out)
-        //             .SetTrans(Tween.TransitionType.Expo);
-        //         ;
-        //     }
-        // }
 
         /// <summary>
         /// Updates the player's current health on the status bar.
@@ -181,9 +111,6 @@ namespace UI.HUD
             if (playerId == _playerId)
             {
                 _healthBar.SetCurrentHealth(currentHealth);
-                // double oldHealth = _healthBar.Value;
-                // _healthBar.Value = currentHealth;
-                // TweenCurrentHealth(oldHealth, currentHealth);
             }
         }
 

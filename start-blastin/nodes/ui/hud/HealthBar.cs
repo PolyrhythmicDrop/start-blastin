@@ -1,7 +1,6 @@
 using System;
-using System.Numerics;
-using System.Runtime.Serialization;
 using Godot;
+using Utility;
 
 namespace UI.HUD
 {
@@ -92,8 +91,9 @@ namespace UI.HUD
         /// <param name="maxHealth"></param>
         public void SetMaxHealth(double maxHealth)
         {
-            _bar.MaxValue = maxHealth;
-            SetHealthLabelText();
+            // _bar.MaxValue = maxHealth;
+            // SetHealthLabelText();
+            TweenCurrentHealth(_bar.Value, maxHealth);
         }
 
         /// <summary>
@@ -103,14 +103,20 @@ namespace UI.HUD
         public void SetCurrentHealth(double currentHealth)
         {
             currentHealth = Math.Max(0, currentHealth);
-            TweenCurrentHealth(currentHealth);
+            TweenCurrentHealth(currentHealth, _bar.MaxValue);
         }
 
         private void SetHealthLabelText() => SetHealthLabelText(_bar.Value, _bar.MaxValue);
 
+        /// <summary>
+        /// Sets the health label text using a Vector2 for tweening.
+        /// </summary>
+        /// <param name="health">The health vector. X is the current health (or Value), Y is the max health (or MaxValue).</param>
+        private void SetHealthLabelText(Vector2 health) => SetHealthLabelText(health.X, health.Y);
+
         private void SetHealthLabelText(double currentHealth, double maxHealth)
         {
-            _label.Text = $"{currentHealth:N0} / {maxHealth}";
+            _label.Text = $"{currentHealth:N0} / {maxHealth:N0}";
         }
 
         private Color SetHealthLabelColor(double currentHealth, double maxHealth)
@@ -143,10 +149,17 @@ namespace UI.HUD
             return newColor;
         }
 
-        private void TweenCurrentHealth(double newHealth)
+        private void TweenCurrentHealth(double newHealth, double newMaxHealth)
         {
             double currentValue = _bar.Value;
             double currentMaxValue = _bar.MaxValue;
+
+            Vector2 currentHealthVector = new Vector2((float)currentValue, (float)currentMaxValue);
+            Vector2 newHealthVector = new Vector2((float)newHealth, (float)newMaxHealth);
+
+            DebugLogger.LogMessage(
+                $"Tweening new health values! Current Health Vector: {currentHealthVector} | New Health Vector: {newHealthVector}"
+            );
 
             // Kill any existing tween
             if (_tween != null)
@@ -155,32 +168,43 @@ namespace UI.HUD
             }
 
             // Get the appropriate colors
-            Color newLabelColor = SetHealthLabelColor(newHealth, _bar.MaxValue);
+            Color newLabelColor = SetHealthLabelColor(newHealth, newMaxHealth);
             Color currentLabelColor = _label.GetThemeColor("default_color", "RichTextLabel");
 
-            Color newBarColor = SetBarColor(newHealth, _bar.MaxValue);
+            Color newBarColor = SetBarColor(newHealth, newMaxHealth);
             StyleBoxFlat barStyleBox = _bar.GetThemeStylebox("fill") as StyleBoxFlat;
             Color currentBarColor = barStyleBox.BgColor;
 
             // Create a new tween
             _tween = CreateTween();
             _tween.SetParallel(true);
-            // Tween the progress bar
-            _tween
-                .TweenProperty(_bar, "value", newHealth, 0.8)
-                .SetEase(Tween.EaseType.Out)
-                .SetTrans(Tween.TransitionType.Sine);
+            // Tween the progress bar for current health
+            if (newHealth != currentValue)
+            {
+                _tween
+                    .TweenProperty(_bar, "value", newHealth, 0.6)
+                    .SetEase(Tween.EaseType.Out)
+                    .SetTrans(Tween.TransitionType.Sine);
+            }
+            // Tween the progress bar for max health
+            if (newMaxHealth != currentMaxValue)
+            {
+                _tween
+                    .TweenProperty(_bar, "max_value", newMaxHealth, 0.6)
+                    .SetEase(Tween.EaseType.Out)
+                    .SetTrans(Tween.TransitionType.Sine);
+            }
             // Tween the text
             _tween
                 .TweenMethod(
                     Callable.From(
-                        (double currentHealth) =>
+                        (Vector2 currentHealth) =>
                         {
-                            SetHealthLabelText(currentHealth, _bar.MaxValue);
+                            SetHealthLabelText(currentHealth);
                         }
                     ),
-                    currentValue,
-                    newHealth,
+                    currentHealthVector,
+                    newHealthVector,
                     0.4
                 )
                 .SetEase(Tween.EaseType.Out)

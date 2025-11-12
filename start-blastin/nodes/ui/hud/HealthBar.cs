@@ -70,21 +70,36 @@ namespace UI.HUD
             _label = GetNode<RichTextLabel>("%HealthLabel");
         }
 
+        /// <summary>
+        /// Initializes the health bar values and colors.
+        /// </summary>
+        /// <param name="maxValue">The player's max health, the maximum value of the health bar.</param>
+        /// <param name="value">The player's current health, the current value of the health bar.</param>
         public void InitializeHealthBar(double maxValue, double value)
         {
             _bar.MaxValue = maxValue;
             _bar.Value = value;
             SetHealthLabelText();
-            // Set the initial color
+            // Set the initial colors
             _label.AddThemeColorOverride("default_color", SetHealthLabelColor(value, maxValue));
+            StyleBoxFlat stylebox = _bar.GetThemeStylebox("fill") as StyleBoxFlat;
+            stylebox.BgColor = SetBarColor(value, maxValue);
         }
 
+        /// <summary>
+        /// Sets the max value of the health bar.
+        /// </summary>
+        /// <param name="maxHealth"></param>
         public void SetMaxHealth(double maxHealth)
         {
             _bar.MaxValue = maxHealth;
             SetHealthLabelText();
         }
 
+        /// <summary>
+        /// Sets the current value of the health bar.
+        /// </summary>
+        /// <param name="currentHealth"></param>
         public void SetCurrentHealth(double currentHealth)
         {
             currentHealth = Math.Max(0, currentHealth);
@@ -113,9 +128,25 @@ namespace UI.HUD
             return newColor;
         }
 
+        private Color SetBarColor(double currentHealth, double maxHealth)
+        {
+            // Set the color according to the percentage.
+            float percent = (float)(currentHealth / maxHealth);
+            Color newColor = percent switch
+            {
+                >= 0.8f => _fullHealthBarColor,
+                > 0.4f => _midHealthBarColor,
+                > 0f => _lowHealthBarColor,
+                _ => _lowHealthBarColor, // fallback for 0 or negative
+            };
+
+            return newColor;
+        }
+
         private void TweenCurrentHealth(double newHealth)
         {
             double currentValue = _bar.Value;
+            double currentMaxValue = _bar.MaxValue;
 
             // Kill any existing tween
             if (_tween != null)
@@ -123,9 +154,13 @@ namespace UI.HUD
                 _tween.Kill();
             }
 
-            // Get the appropriate label color
-            Color newColor = SetHealthLabelColor(newHealth, _bar.MaxValue);
-            Color currentColor = _label.GetThemeColor("default_color", "RichTextLabel");
+            // Get the appropriate colors
+            Color newLabelColor = SetHealthLabelColor(newHealth, _bar.MaxValue);
+            Color currentLabelColor = _label.GetThemeColor("default_color", "RichTextLabel");
+
+            Color newBarColor = SetBarColor(newHealth, _bar.MaxValue);
+            StyleBoxFlat barStyleBox = _bar.GetThemeStylebox("fill") as StyleBoxFlat;
+            Color currentBarColor = barStyleBox.BgColor;
 
             // Create a new tween
             _tween = CreateTween();
@@ -151,8 +186,8 @@ namespace UI.HUD
                 .SetEase(Tween.EaseType.Out)
                 .SetTrans(Tween.TransitionType.Expo);
             ;
-            // Tween the text color if it new color is different.
-            if (newColor != currentColor)
+            // Tween the text color if the new color is different.
+            if (newLabelColor != currentLabelColor)
             {
                 _tween.TweenMethod(
                     Callable.From(
@@ -161,10 +196,15 @@ namespace UI.HUD
                             _label.AddThemeColorOverride("default_color", color);
                         }
                     ),
-                    currentColor,
-                    newColor,
+                    currentLabelColor,
+                    newLabelColor,
                     0.4
                 );
+            }
+            // Tween the bar color if the new color is different.
+            if (newBarColor != currentBarColor)
+            {
+                _tween.TweenProperty(barStyleBox, "bg_color", newBarColor, 0.4);
             }
         }
     }

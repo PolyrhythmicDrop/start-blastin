@@ -2,18 +2,13 @@
 
 [ext_resource type="Script" uid="uid://c8mdnndkuqscj" path="res://nodes/ui/hud/HealthBar.cs" id="1_qsigx"]
 [ext_resource type="FontFile" uid="uid://bdn20wteigtfk" path="res://resources/fonts/silkscreen/Silkscreen-Regular.ttf" id="1_r5w8b"]
+[ext_resource type="Resource" uid="uid://dfmi20atcp4he" path="res://resources/colors/color-ranges/indicator-colors.tres" id="2_38unn"]
 [ext_resource type="Script" uid="uid://dts1aofdsvfvr" path="res://architecture/data-structures/ColorRange.cs" id="2_afmjw"]
 [ext_resource type="StyleBox" uid="uid://dnv0261dwkbr7" path="res://resources/themes/styleboxes/hud-status-bar-bg-stylebox.tres" id="3_uq66p"]
 [ext_resource type="StyleBox" uid="uid://chbxqfjcugb10" path="res://resources/themes/styleboxes/hud-status-bar-fill-stylebox.tres" id="4_38unn"]
 
-[sub_resource type="Resource" id="Resource_nbutp"]
-script = ExtResource("2_afmjw")
-Full = Color(0.60784316, 0.8784314, 0.12156863, 1)
-Mid = Color(1, 0.64705884, 0.50980395, 1)
-Low = Color(1, 0.32941177, 0.4392157, 1)
-metadata/_custom_type_script = "uid://dts1aofdsvfvr"
-
 [sub_resource type="Resource" id="Resource_afmjw"]
+resource_local_to_scene = true
 script = ExtResource("2_afmjw")
 Full = Color(0.42352942, 0.7254902, 0.7882353, 1)
 Mid = Color(0.46324003, 0.2516, 0.74, 1)
@@ -35,7 +30,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 8.0
 script = ExtResource("1_qsigx")
-TextColors = SubResource("Resource_nbutp")
+TextColors = ExtResource("2_38unn")
 BarColors = SubResource("Resource_afmjw")
 
 [node name="HealthBar" type="ProgressBar" parent="."]

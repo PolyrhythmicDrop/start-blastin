@@ -13,6 +13,8 @@ public partial class CurrencyPanel : PanelContainer, IListener
     private Label _bytesLabel;
     private Label _fluxLabel;
 
+    private PackedScene _indicatorScene => GD.Load<PackedScene>("uid://fj4gemo0sbhx");
+
     public override void _Ready()
     {
         _bytesLabel = GetNode<Label>("%BytesLabel");
@@ -70,6 +72,13 @@ public partial class CurrencyPanel : PanelContainer, IListener
             // DebugLogger.LogMessage($"Updating bytes in HUD! ID: {playerId} | Bytes: {bytes}");
             _bytesLabel.Text = bytes.ToString();
         }
+    }
+
+    private TextIndicator CreateIndicator(float value)
+    {
+        TextIndicator indicator = _indicatorScene.Instantiate<TextIndicator>();
+        indicator.Value = value;
+        return indicator;
     }
 
     public override void _ExitTree()

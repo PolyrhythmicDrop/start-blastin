@@ -146,9 +146,21 @@ namespace Autoloads
             PlayerPhaseCooldownChanged?.Invoke(this, args);
         }
 
-        public void RaisePlayerCurrencyChanged(int playerId, int bytes, int flux)
+        public void RaisePlayerCurrencyChanged(
+            int playerId,
+            int totalBytes,
+            int totalFlux,
+            int bytesChange = 0,
+            int fluxChange = 0
+        )
         {
-            PlayerCurrencyChangedEventArgs args = new(playerId, bytes, flux);
+            PlayerCurrencyChangedEventArgs args = new(
+                playerId,
+                totalBytes,
+                totalFlux,
+                bytesChange,
+                fluxChange
+            );
             PlayerCurrencyChanged?.Invoke(this, args);
         }
 

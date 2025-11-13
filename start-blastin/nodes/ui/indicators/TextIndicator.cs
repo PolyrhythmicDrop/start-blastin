@@ -8,6 +8,7 @@ public partial class TextIndicator : Node2D
     private RichTextLabel _label;
     private float _value;
     private ColorRange _colors;
+    private Tween _tween;
 
     [Export]
     public ColorRange Colors
@@ -27,6 +28,7 @@ public partial class TextIndicator : Node2D
     {
         _label = GetNode<RichTextLabel>("%RichTextLabel");
         SetLabel();
+        Animate();
     }
 
     public void SetLabelColor(Color color)
@@ -47,6 +49,19 @@ public partial class TextIndicator : Node2D
             sign = '-';
             SetLabelColor(_colors.Low);
         }
-        _label.Text = $"{sign} {_value}";
+        _label.Text = $"{sign}{_value}";
+    }
+
+    private void Animate()
+    {
+        float finalYPos = GlobalPosition.Y - 20;
+        _tween = CreateTween();
+        _tween
+            .Parallel()
+            .TweenProperty(this, "global_position:y", finalYPos, 0.5)
+            .SetTrans(Tween.TransitionType.Sine)
+            .SetEase(Tween.EaseType.Out);
+        _tween.TweenProperty(this, "modulate:a", 0, 0.5);
+        _tween.TweenCallback(Callable.From(QueueFree));
     }
 }

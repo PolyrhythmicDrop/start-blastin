@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using Entities;
 using Godot;
 using UI.HUD;
 using UI.Shop;
@@ -11,6 +13,7 @@ namespace UI
     [GlobalClass]
     public partial class UiLayer : CanvasLayer
     {
+        private static readonly Dictionary<int, UiLayer> _instances = new();
         private int _playerId;
         private ShopManager _shopManager;
         private Hud _hud;
@@ -18,10 +21,12 @@ namespace UI
             "res://nodes/ui/hud/hud.tscn"
         );
 
-        // private Container _shopContainer;
-        // private Container _hudContainer;
+        public int PlayerId => _playerId;
 
-        // public Container ShopContainer => _shopContainer;
+        public static UiLayer GetUiLayer(int playerId)
+        {
+            return _instances.TryGetValue(playerId, out UiLayer ui) ? ui : null;
+        }
 
         public override void _Ready()
         {
@@ -29,19 +34,18 @@ namespace UI
             {
                 Initialize(1);
             }
-            // _shopContainer = GetNode<Container>("%ShopContainer");
-            // _hudContainer = GetNode<Container>("%HUDContainer");
 
             AddChild(_shopManager);
             AddChild(_hud);
-
-            ConnectSignals();
         }
 
         public void Initialize(int playerId)
         {
             _playerId = playerId;
             Layer = 2;
+
+            // Register the instance in the static dictionary for easy finding
+            _instances[_playerId] = this;
 
             // Initialize the child shop manager.
             _shopManager = new();
@@ -53,6 +57,10 @@ namespace UI
             _hud.Initialize(_playerId);
         }
 
-        private void ConnectSignals() { }
+        public override void _ExitTree()
+        {
+            _instances.Remove(_playerId);
+            base._ExitTree();
+        }
     }
 }

@@ -8,7 +8,7 @@ namespace Factories
     /// <summary>
     /// Factory for creating new projectiles.
     /// </summary>
-    public class ProjectileFactory
+    public static class ProjectileFactory
     {
         /// <summary>
         /// Creates a new projectile appropriate for the passed weapon.

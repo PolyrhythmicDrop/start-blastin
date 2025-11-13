@@ -1,9 +1,12 @@
 using Autoloads;
 using Entities;
 using Events;
+using Factories;
 using Godot;
 using Interfaces;
 using Services;
+using UI;
+using Utility;
 
 [GlobalClass]
 public partial class CurrencyPanel : PanelContainer, IListener
@@ -12,13 +15,13 @@ public partial class CurrencyPanel : PanelContainer, IListener
     private PlayerService _service;
     private Label _bytesLabel;
     private Label _fluxLabel;
-
-    private PackedScene _indicatorScene => GD.Load<PackedScene>("uid://fj4gemo0sbhx");
+    private TextureRect _fluxIcon;
 
     public override void _Ready()
     {
         _bytesLabel = GetNode<Label>("%BytesLabel");
         _fluxLabel = GetNode<Label>("%FluxLabel");
+        _fluxIcon = GetNode<TextureRect>("%FluxIcon");
         _service = ServiceManager.Instance.GetService<PlayerService>();
 
         ConnectSignals();
@@ -52,33 +55,36 @@ public partial class CurrencyPanel : PanelContainer, IListener
 
     private void OnPlayerCurrencyChanged(object source, PlayerCurrencyChangedEventArgs args)
     {
-        UpdateFlux(args.PlayerId, args.Flux);
-        UpdateBytes(args.PlayerId, args.Bytes);
+        UpdateFlux(args.PlayerId, args.TotalFlux, args.FluxChange);
+        UpdateBytes(args.PlayerId, args.TotalBytes, args.BytesChange);
     }
 
-    private void UpdateFlux(int playerId, int flux)
+    private void UpdateFlux(int playerId, int totalFlux, int fluxChange)
     {
-        if (playerId == _playerId)
+        if (playerId == _playerId && fluxChange != 0)
         {
-            // DebugLogger.LogMessage($"Updating flux in HUD! ID: {playerId} | Flux: {flux}");
-            _fluxLabel.Text = flux.ToString();
+            DebugLogger.LogMessage($"Flux updated!", true);
+            // Spawn an indicator
+            TextIndicator indicator = IndicatorFactory.CreateTextIndicator(
+                fluxChange,
+                _fluxLabel.GlobalPosition
+            );
+            UiLayer ui = UiLayer.GetUiLayer(_playerId);
+            ui.AddChild(indicator);
+            // Set the label text
+            _fluxLabel.Text = totalFlux.ToString();
         }
     }
 
-    private void UpdateBytes(int playerId, int bytes)
+    private void UpdateBytes(int playerId, int totalBytes, int bytesChange)
     {
         if (playerId == _playerId)
         {
-            // DebugLogger.LogMessage($"Updating bytes in HUD! ID: {playerId} | Bytes: {bytes}");
-            _bytesLabel.Text = bytes.ToString();
+            // DebugLogger.LogMessage(
+            //     $"Updating bytes in HUD! ID: {playerId} | Bytes: {totalBytes} | Bytes change: {bytesChange}"
+            // );
+            _bytesLabel.Text = totalBytes.ToString();
         }
-    }
-
-    private TextIndicator CreateIndicator(float value)
-    {
-        TextIndicator indicator = _indicatorScene.Instantiate<TextIndicator>();
-        indicator.Value = value;
-        return indicator;
     }
 
     public override void _ExitTree()

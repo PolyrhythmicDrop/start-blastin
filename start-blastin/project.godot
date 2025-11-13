@@ -79,6 +79,7 @@ enemy-spawners="Enemy spawners"
 level="A level in the game."
 enemies=""
 players=""
+player-ui="Player UIs"
 
 [gui]
 

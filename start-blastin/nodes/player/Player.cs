@@ -214,8 +214,14 @@ namespace Entities
             get => _bytes;
             set
             {
+                int oldBytes = _bytes;
                 _bytes = Math.Max(0, value);
-                EventBus.Instance.RaisePlayerCurrencyChanged(_playerId, _bytes, _flux);
+                EventBus.Instance.RaisePlayerCurrencyChanged(
+                    _playerId,
+                    _bytes,
+                    _flux,
+                    bytesChange: _bytes - oldBytes
+                );
             }
         }
 
@@ -225,8 +231,14 @@ namespace Entities
             get => _flux;
             set
             {
+                int oldFlux = _flux;
                 _flux = Math.Max(0, value);
-                EventBus.Instance.RaisePlayerCurrencyChanged(_playerId, _bytes, _flux);
+                EventBus.Instance.RaisePlayerCurrencyChanged(
+                    _playerId,
+                    _bytes,
+                    _flux,
+                    fluxChange: _flux - oldFlux
+                );
             }
         }
 

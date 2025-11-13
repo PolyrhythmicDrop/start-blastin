@@ -14,15 +14,8 @@ namespace UI.HUD
     {
         private int _playerId;
         private PlayerService _service;
-
-        // private ProgressBar _healthBar;
         private HealthBar _healthBar;
-
-        // private RichTextLabel _healthLabel;
-        // private Color _fullHealthColor;
-        // private Color _midHealthColor;
-        // private Color _lowHealthColor;
-        private ProgressBar _phaseBar;
+        private PhaseBar _phaseBar;
 
         public void Initialize(int playerId)
         {
@@ -34,8 +27,7 @@ namespace UI.HUD
         {
             _service = ServiceManager.Instance.GetService<PlayerService>();
             _healthBar = GetNode<HealthBar>("%HealthBar");
-            // _healthLabel = GetNode<RichTextLabel>("%HealthLabel");
-            _phaseBar = GetNode<ProgressBar>("%PhaseBar");
+            _phaseBar = GetNode<PhaseBar>("%PhaseBar");
 
             ConnectSignals();
         }
@@ -61,12 +53,8 @@ namespace UI.HUD
             if (_service.HasPlayer(_playerId))
             {
                 Player player = _service.GetPlayer(_playerId);
-                // _healthBar.MaxValue = player.MaxHealth;
-                // _healthBar.Value = player.CurrentHealth;
-                _healthBar.InitializeHealthBar(player.MaxHealth, player.CurrentHealth);
-                // SetHealthLabelText(_healthBar.Value, _healthBar.MaxValue);
-                _phaseBar.MaxValue = player.PhaseCooldown;
-                _phaseBar.Value = player.PhaseCooldown;
+                _healthBar.InitializeHealthBar(player.CurrentHealth, player.MaxHealth);
+                _phaseBar.InitializePhaseBar(player.PhaseCooldown, player.PhaseCooldown);
             }
         }
 
@@ -123,7 +111,7 @@ namespace UI.HUD
         {
             if (playerId == _playerId)
             {
-                _phaseBar.MaxValue = totalCooldown;
+                _phaseBar.SetTotalCooldown(totalCooldown);
             }
         }
 
@@ -136,7 +124,7 @@ namespace UI.HUD
         {
             if (playerId == _playerId)
             {
-                _phaseBar.Value = _phaseBar.MaxValue - timeLeft;
+                _phaseBar.SetPhaseTimeLeft(timeLeft);
             }
         }
 

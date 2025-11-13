@@ -1,4 +1,5 @@
 using System;
+using DataStructures;
 using Godot;
 using Utility;
 
@@ -9,58 +10,23 @@ namespace UI.HUD
     {
         private ProgressBar _bar;
         private RichTextLabel _label;
-        private Color _fullHealthTextColor;
-        private Color _midHealthTextColor;
-        private Color _lowHealthTextColor;
-
-        private Color _fullHealthBarColor;
-        private Color _midHealthBarColor;
-        private Color _lowHealthBarColor;
-
         private Tween _tween;
 
-        [ExportCategory("Text Colors")]
+        private ColorRange _textColorRange;
+        private ColorRange _barColorRange;
+
         [Export]
-        public Color FullHealthTextColor
+        public ColorRange TextColors
         {
-            get => _fullHealthTextColor;
-            set => _fullHealthTextColor = value;
+            get => _textColorRange;
+            set => _textColorRange = value;
         }
 
         [Export]
-        public Color MidHealthTextColor
+        public ColorRange BarColors
         {
-            get => _midHealthTextColor;
-            set => _midHealthTextColor = value;
-        }
-
-        [Export]
-        public Color LowHealthTextColor
-        {
-            get => _lowHealthTextColor;
-            set => _lowHealthTextColor = value;
-        }
-
-        [ExportCategory("Bar Colors")]
-        [Export]
-        public Color FullHealthBarColor
-        {
-            get => _fullHealthBarColor;
-            set => _fullHealthBarColor = value;
-        }
-
-        [Export]
-        public Color MidHealthBarColor
-        {
-            get => _midHealthBarColor;
-            set => _midHealthBarColor = value;
-        }
-
-        [Export]
-        public Color LowHealthBarColor
-        {
-            get => _lowHealthBarColor;
-            set => _lowHealthBarColor = value;
+            get => _barColorRange;
+            set => _barColorRange = value;
         }
 
         public override void _Ready()
@@ -74,7 +40,7 @@ namespace UI.HUD
         /// </summary>
         /// <param name="maxValue">The player's max health, the maximum value of the health bar.</param>
         /// <param name="value">The player's current health, the current value of the health bar.</param>
-        public void InitializeHealthBar(double maxValue, double value)
+        public void InitializeHealthBar(double value, double maxValue)
         {
             _bar.MaxValue = maxValue;
             _bar.Value = value;
@@ -91,8 +57,6 @@ namespace UI.HUD
         /// <param name="maxHealth"></param>
         public void SetMaxHealth(double maxHealth)
         {
-            // _bar.MaxValue = maxHealth;
-            // SetHealthLabelText();
             TweenCurrentHealth(_bar.Value, maxHealth);
         }
 
@@ -119,31 +83,43 @@ namespace UI.HUD
             _label.Text = $"{currentHealth:N0} / {maxHealth:N0}";
         }
 
+        /// <summary>
+        /// Sets the color of the health label text according to the percent of the player's remaining health.
+        /// </summary>
+        /// <param name="currentHealth">The displayed value of the player's current health.</param>
+        /// <param name="maxHealth">The displayed value of the player max health.</param>
+        /// <returns>The <see cref="Color"/> the health label should be.</returns>
         private Color SetHealthLabelColor(double currentHealth, double maxHealth)
         {
             // Set the color according to the percentage.
             float percent = (float)(currentHealth / maxHealth);
             Color newColor = percent switch
             {
-                >= 0.8f => _fullHealthTextColor,
-                > 0.4f => _midHealthTextColor,
-                > 0f => _lowHealthTextColor,
-                _ => _lowHealthTextColor, // fallback for 0 or negative
+                >= 0.8f => _textColorRange.Full,
+                > 0.4f => _textColorRange.Mid,
+                > 0f => _textColorRange.Low,
+                _ => _textColorRange.Low, // fallback for 0 or negative
             };
 
             return newColor;
         }
 
+        /// <summary>
+        /// Sets the fill color of the health progress bar according to the percent of the player's remaining health.
+        /// </summary>
+        /// <param name="currentHealth">The displayed value of the player's current health.</param>
+        /// <param name="maxHealth">The displayed value of the player max health.</param>
+        /// <returns>The <see cref="Color"/> the health progress bar should be.</returns>
         private Color SetBarColor(double currentHealth, double maxHealth)
         {
             // Set the color according to the percentage.
             float percent = (float)(currentHealth / maxHealth);
             Color newColor = percent switch
             {
-                >= 0.8f => _fullHealthBarColor,
-                > 0.4f => _midHealthBarColor,
-                > 0f => _lowHealthBarColor,
-                _ => _lowHealthBarColor, // fallback for 0 or negative
+                >= 0.8f => _barColorRange.Full,
+                > 0.4f => _barColorRange.Mid,
+                > 0f => _barColorRange.Low,
+                _ => _barColorRange.Low, // fallback for 0 or negative
             };
 
             return newColor;
@@ -157,9 +133,9 @@ namespace UI.HUD
             Vector2 currentHealthVector = new Vector2((float)currentValue, (float)currentMaxValue);
             Vector2 newHealthVector = new Vector2((float)newHealth, (float)newMaxHealth);
 
-            DebugLogger.LogMessage(
-                $"Tweening new health values! Current Health Vector: {currentHealthVector} | New Health Vector: {newHealthVector}"
-            );
+            // DebugLogger.LogMessage(
+            //     $"Tweening new health values! Current Health Vector: {currentHealthVector} | New Health Vector: {newHealthVector}"
+            // );
 
             // Kill any existing tween
             if (_tween != null)

@@ -1,45 +1,42 @@
-[gd_scene load_steps=6 format=3 uid="uid://bpq76cljnsf6"]
+[gd_scene load_steps=9 format=3 uid="uid://bpq76cljnsf6"]
 
 [ext_resource type="Script" uid="uid://c8mdnndkuqscj" path="res://nodes/ui/hud/HealthBar.cs" id="1_qsigx"]
 [ext_resource type="FontFile" uid="uid://bdn20wteigtfk" path="res://resources/fonts/silkscreen/Silkscreen-Regular.ttf" id="1_r5w8b"]
+[ext_resource type="Script" uid="uid://dts1aofdsvfvr" path="res://architecture/data-structures/ColorRange.cs" id="2_afmjw"]
+[ext_resource type="StyleBox" uid="uid://dnv0261dwkbr7" path="res://resources/themes/styleboxes/hud-status-bar-bg-stylebox.tres" id="3_uq66p"]
+[ext_resource type="StyleBox" uid="uid://chbxqfjcugb10" path="res://resources/themes/styleboxes/hud-status-bar-fill-stylebox.tres" id="4_38unn"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_46k8h"]
-bg_color = Color(0.22439998, 0.27449334, 0.34, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.43137255, 0.31764707, 0.5058824, 1)
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
+[sub_resource type="Resource" id="Resource_nbutp"]
+script = ExtResource("2_afmjw")
+Full = Color(0.60784316, 0.8784314, 0.12156863, 1)
+Mid = Color(1, 0.64705884, 0.50980395, 1)
+Low = Color(1, 0.32941177, 0.4392157, 1)
+metadata/_custom_type_script = "uid://dts1aofdsvfvr"
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y7kfb"]
-bg_color = Color(0.42352942, 0.7254902, 0.7882353, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.43529412, 0.11372549, 0.36078432, 1)
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_detail = 16
+[sub_resource type="Resource" id="Resource_afmjw"]
+script = ExtResource("2_afmjw")
+Full = Color(0.42352942, 0.7254902, 0.7882353, 1)
+Mid = Color(0.46324003, 0.2516, 0.74, 1)
+Low = Color(0.5019608, 0.23529412, 0.2784314, 1)
+metadata/_custom_type_script = "uid://dts1aofdsvfvr"
 
 [sub_resource type="FontVariation" id="FontVariation_hqn1h"]
 base_font = ExtResource("1_r5w8b")
 variation_embolden = 0.3
 
 [node name="HealthBarContainer" type="PanelContainer"]
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -18.0
+offset_right = 166.0
+offset_bottom = 18.0
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 8.0
 script = ExtResource("1_qsigx")
-FullHealthTextColor = Color(0.60784316, 0.8784314, 0.12156863, 1)
-MidHealthTextColor = Color(1, 0.64705884, 0.50980395, 1)
-LowHealthTextColor = Color(1, 0.32941177, 0.4392157, 1)
-FullHealthBarColor = Color(0.42352942, 0.7254902, 0.7882353, 1)
-MidHealthBarColor = Color(0.45490196, 0.12156863, 0.8784314, 1)
-LowHealthBarColor = Color(0.5, 0.23500001, 0.27916676, 1)
+TextColors = SubResource("Resource_nbutp")
+BarColors = SubResource("Resource_afmjw")
 
 [node name="HealthBar" type="ProgressBar" parent="."]
 unique_name_in_owner = true
@@ -48,8 +45,8 @@ size_flags_horizontal = 3
 size_flags_vertical = 1
 theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_styles/background = SubResource("StyleBoxFlat_46k8h")
-theme_override_styles/fill = SubResource("StyleBoxFlat_y7kfb")
+theme_override_styles/background = ExtResource("3_uq66p")
+theme_override_styles/fill = ExtResource("4_38unn")
 value = 50.0
 show_percentage = false
 

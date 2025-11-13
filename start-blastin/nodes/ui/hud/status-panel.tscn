@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://y075h5i8lhs0"]
+[gd_scene load_steps=6 format=3 uid="uid://y075h5i8lhs0"]
 
 [ext_resource type="Script" uid="uid://bg0p351pmcuul" path="res://nodes/ui/hud/StatusPanel.cs" id="1_46k8h"]
 [ext_resource type="Texture2D" uid="uid://cmty2wsc2733e" path="res://assets/icons/item-icons/modifiers/shield-generator-2.png" id="1_bvs3w"]
 [ext_resource type="Texture2D" uid="uid://di3h5p1in1lve" path="res://assets/icons/item-icons/modifiers/shield-1.png" id="2_46k8h"]
 [ext_resource type="PackedScene" uid="uid://bpq76cljnsf6" path="res://nodes/ui/hud/health-bar.tscn" id="3_y7kfb"]
+[ext_resource type="PackedScene" uid="uid://bhb0vriestttr" path="res://nodes/ui/hud/phase-bar.tscn" id="5_hqn1h"]
 
 [node name="StatusPanel" type="PanelContainer"]
 anchors_preset = 4
@@ -50,9 +51,7 @@ texture = ExtResource("2_46k8h")
 expand_mode = 3
 stretch_mode = 5
 
-[node name="PhaseBar" type="ProgressBar" parent="VBoxContainer/PhaseBox"]
+[node name="PhaseBar" parent="VBoxContainer/PhaseBox" instance=ExtResource("5_hqn1h")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 1
 size_flags_stretch_ratio = 8.0

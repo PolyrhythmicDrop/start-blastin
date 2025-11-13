@@ -1,0 +1,14 @@
+[gd_resource type="StyleBoxFlat" format=3 uid="uid://chbxqfjcugb10"]
+
+[resource]
+resource_local_to_scene = true
+resource_name = "hud-status-bar-fill-stylebox"
+bg_color = Color(0.42352942, 0.7254902, 0.7882353, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.43529412, 0.11372549, 0.36078432, 1)
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_detail = 16

@@ -73,7 +73,8 @@ public partial class CurrencyPanel : PanelContainer, IListener
             UiLayer ui = UiLayer.GetUiLayer(_playerId);
             ui.AddChild(indicator);
             // Set the label text
-            TweenLabelText(_fluxLabel, _fluxTween, totalFlux);
+            int ogValue = totalFlux - fluxChange;
+            TweenLabelText(_fluxLabel, _fluxTween, ogValue, totalFlux);
         }
     }
 
@@ -82,13 +83,13 @@ public partial class CurrencyPanel : PanelContainer, IListener
         label.Text = $"{value:N0}";
     }
 
-    private void TweenLabelText(Label label, Tween tween, int finalValue)
+    private void TweenLabelText(Label label, Tween tween, int ogValue, int finalValue)
     {
         if (tween != null)
         {
             tween.Kill();
         }
-        int ogValue = label.Text.ToInt();
+        // int ogValue = label.Text.ToInt();
         tween = CreateTween();
         tween.TweenMethod(
             Callable.From((int value) => SetLabelText(label, value)),
@@ -108,7 +109,8 @@ public partial class CurrencyPanel : PanelContainer, IListener
             UiLayer ui = UiLayer.GetUiLayer(_playerId);
             ui.AddChild(indicator);
             // Set the label text
-            TweenLabelText(_bytesLabel, _bytesTween, totalBytes);
+            int ogValue = totalBytes - bytesChange;
+            TweenLabelText(_bytesLabel, _bytesTween, ogValue, totalBytes);
         }
     }
 

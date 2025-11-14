@@ -26,10 +26,6 @@ namespace UI.Shop
         // ~~ Description section ~~
         private RichTextLabel _descriptionLabel;
 
-        // private VBoxContainer _statsVBox;
-        // private PackedScene _statLabelScene =>
-        //     GD.Load<PackedScene>("res://nodes/ui/shop/stat-label.tscn");
-
         // ~~ Wave button deck ~~
         private Button _nextWaveButton;
         private Button _rerollButton;

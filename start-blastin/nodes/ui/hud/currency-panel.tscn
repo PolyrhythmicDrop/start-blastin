@@ -19,28 +19,31 @@ size_flags_vertical = 3
 script = ExtResource("1_2627c")
 metadata/_edit_use_anchors_ = true
 
-[node name="VBoxContainer" type="HBoxContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_right = 10
+
+[node name="VBoxContainer" type="HBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 alignment = 2
 
-[node name="BytesBox" type="HBoxContainer" parent="VBoxContainer"]
+[node name="BytesBox" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 3
 theme_override_constants/separation = 8
 
-[node name="BytesIcon" type="TextureRect" parent="VBoxContainer/BytesBox"]
+[node name="BytesIcon" type="TextureRect" parent="MarginContainer/VBoxContainer/BytesBox"]
 layout_mode = 2
 size_flags_horizontal = 3
 texture = ExtResource("2_cro27")
 expand_mode = 3
 stretch_mode = 5
 
-[node name="BytesLabel" type="Label" parent="VBoxContainer/BytesBox"]
+[node name="BytesLabel" type="Label" parent="MarginContainer/VBoxContainer/BytesBox"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 1
 size_flags_stretch_ratio = 8.0
 theme_override_font_sizes/font_size = 16
 text = "1000"
@@ -48,13 +51,13 @@ label_settings = SubResource("LabelSettings_cro27")
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="FluxBox" type="HBoxContainer" parent="VBoxContainer"]
+[node name="FluxBox" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 3
 theme_override_constants/separation = 8
 
-[node name="FluxIcon" type="TextureRect" parent="VBoxContainer/FluxBox"]
+[node name="FluxIcon" type="TextureRect" parent="MarginContainer/VBoxContainer/FluxBox"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -62,7 +65,7 @@ texture = ExtResource("3_cro27")
 expand_mode = 3
 stretch_mode = 5
 
-[node name="FluxLabel" type="Label" parent="VBoxContainer/FluxBox"]
+[node name="FluxLabel" type="Label" parent="MarginContainer/VBoxContainer/FluxBox"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

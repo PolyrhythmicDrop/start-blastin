@@ -6,7 +6,6 @@ using Godot;
 using Interfaces;
 using Services;
 using UI;
-using Utility;
 
 [GlobalClass]
 public partial class CurrencyPanel : PanelContainer, IListener
@@ -14,7 +13,9 @@ public partial class CurrencyPanel : PanelContainer, IListener
     private int _playerId;
     private PlayerService _service;
     private Label _bytesLabel;
+    private Tween _bytesTween;
     private Label _fluxLabel;
+    private Tween _fluxTween;
     private TextureRect _fluxIcon;
 
     public override void _Ready()
@@ -63,28 +64,73 @@ public partial class CurrencyPanel : PanelContainer, IListener
     {
         if (playerId == _playerId && fluxChange != 0)
         {
-            DebugLogger.LogMessage($"Flux updated!", true);
             // Spawn an indicator
+            Vector2 centerPos = _fluxLabel.GlobalPosition + (_fluxLabel.Size / 2);
             TextIndicator indicator = IndicatorFactory.CreateTextIndicator(
                 fluxChange,
-                _fluxLabel.GlobalPosition
+                globalPosition: centerPos
             );
             UiLayer ui = UiLayer.GetUiLayer(_playerId);
             ui.AddChild(indicator);
             // Set the label text
-            _fluxLabel.Text = totalFlux.ToString();
+            TweenFluxLabelText(totalFlux);
         }
+    }
+
+    private void SetFluxLabel(int value)
+    {
+        _fluxLabel.Text = $"{value:N0}";
+    }
+
+    private void TweenFluxLabelText(int finalValue)
+    {
+        if (_fluxTween != null)
+        {
+            _fluxTween.Kill();
+        }
+        int ogValue = _fluxLabel.Text.ToInt();
+        _fluxTween = CreateTween();
+        _fluxTween.TweenMethod(
+            Callable.From((int value) => SetFluxLabel(value)),
+            ogValue,
+            finalValue,
+            0.5
+        );
     }
 
     private void UpdateBytes(int playerId, int totalBytes, int bytesChange)
     {
-        if (playerId == _playerId)
+        if (playerId == _playerId && bytesChange != 0)
         {
-            // DebugLogger.LogMessage(
-            //     $"Updating bytes in HUD! ID: {playerId} | Bytes: {totalBytes} | Bytes change: {bytesChange}"
-            // );
-            _bytesLabel.Text = totalBytes.ToString();
+            // Spawn an indicator
+            Vector2 centerPos = _bytesLabel.GlobalPosition + (_bytesLabel.Size / 2);
+            TextIndicator indicator = IndicatorFactory.CreateTextIndicator(bytesChange, centerPos);
+            UiLayer ui = UiLayer.GetUiLayer(_playerId);
+            ui.AddChild(indicator);
+            // Set the label text
+            TweenByteLabelText(totalBytes);
         }
+    }
+
+    private void SetBytesLabel(int value)
+    {
+        _bytesLabel.Text = $"{value:N0}";
+    }
+
+    private void TweenByteLabelText(int finalValue)
+    {
+        if (_bytesTween != null)
+        {
+            _bytesTween.Kill();
+        }
+        int ogValue = _bytesLabel.Text.ToInt();
+        _bytesTween = CreateTween();
+        _bytesTween.TweenMethod(
+            Callable.From((int value) => SetBytesLabel(value)),
+            ogValue,
+            finalValue,
+            0.5
+        );
     }
 
     public override void _ExitTree()

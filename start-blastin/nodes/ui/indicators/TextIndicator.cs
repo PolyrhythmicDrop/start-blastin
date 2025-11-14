@@ -9,6 +9,7 @@ public partial class TextIndicator : Node2D
     private float _value;
     private ColorRange _colors;
     private Tween _tween;
+    private int _fontSize;
 
     [Export]
     public ColorRange Colors
@@ -24,9 +25,17 @@ public partial class TextIndicator : Node2D
         set => _value = value;
     }
 
+    [Export]
+    public int FontSize
+    {
+        get => _fontSize;
+        set => _fontSize = Math.Max(1, value);
+    }
+
     public override void _Ready()
     {
         _label = GetNode<RichTextLabel>("%RichTextLabel");
+        SetLabelFontSize();
         SetLabel();
         Animate();
     }
@@ -34,6 +43,11 @@ public partial class TextIndicator : Node2D
     public void SetLabelColor(Color color)
     {
         _label.AddThemeColorOverride("default_color", color);
+    }
+
+    private void SetLabelFontSize()
+    {
+        _label.AddThemeFontSizeOverride("normal_font_size", FontSize);
     }
 
     private void SetLabel()
@@ -49,19 +63,19 @@ public partial class TextIndicator : Node2D
             sign = '-';
             SetLabelColor(_colors.Low);
         }
-        _label.Text = $"{sign}{_value}";
+        _label.Text = $"{sign}{Math.Abs(_value)}";
     }
 
     private void Animate()
     {
-        float finalYPos = GlobalPosition.Y - 20;
+        float finalYPos = GlobalPosition.Y - GD.RandRange(20, 40);
         _tween = CreateTween();
         _tween
-            .Parallel()
             .TweenProperty(this, "global_position:y", finalYPos, 0.5)
-            .SetTrans(Tween.TransitionType.Sine)
+            .SetTrans(Tween.TransitionType.Spring)
             .SetEase(Tween.EaseType.Out);
-        _tween.TweenProperty(this, "modulate:a", 0, 0.5);
+        _tween.Parallel().TweenProperty(this, "scale", new Vector2(0.5f, 0.5f), 1);
+        _tween.Parallel().TweenProperty(this, "modulate:a", 0, 0.5);
         _tween.TweenCallback(Callable.From(QueueFree));
     }
 }

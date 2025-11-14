@@ -73,25 +73,25 @@ public partial class CurrencyPanel : PanelContainer, IListener
             UiLayer ui = UiLayer.GetUiLayer(_playerId);
             ui.AddChild(indicator);
             // Set the label text
-            TweenFluxLabelText(totalFlux);
+            TweenLabelText(_fluxLabel, _fluxTween, totalFlux);
         }
     }
 
-    private void SetFluxLabel(int value)
+    private void SetLabelText(Label label, int value)
     {
-        _fluxLabel.Text = $"{value:N0}";
+        label.Text = $"{value:N0}";
     }
 
-    private void TweenFluxLabelText(int finalValue)
+    private void TweenLabelText(Label label, Tween tween, int finalValue)
     {
-        if (_fluxTween != null)
+        if (tween != null)
         {
-            _fluxTween.Kill();
+            tween.Kill();
         }
-        int ogValue = _fluxLabel.Text.ToInt();
-        _fluxTween = CreateTween();
-        _fluxTween.TweenMethod(
-            Callable.From((int value) => SetFluxLabel(value)),
+        int ogValue = label.Text.ToInt();
+        tween = CreateTween();
+        tween.TweenMethod(
+            Callable.From((int value) => SetLabelText(label, value)),
             ogValue,
             finalValue,
             0.5
@@ -108,29 +108,8 @@ public partial class CurrencyPanel : PanelContainer, IListener
             UiLayer ui = UiLayer.GetUiLayer(_playerId);
             ui.AddChild(indicator);
             // Set the label text
-            TweenByteLabelText(totalBytes);
+            TweenLabelText(_bytesLabel, _bytesTween, totalBytes);
         }
-    }
-
-    private void SetBytesLabel(int value)
-    {
-        _bytesLabel.Text = $"{value:N0}";
-    }
-
-    private void TweenByteLabelText(int finalValue)
-    {
-        if (_bytesTween != null)
-        {
-            _bytesTween.Kill();
-        }
-        int ogValue = _bytesLabel.Text.ToInt();
-        _bytesTween = CreateTween();
-        _bytesTween.TweenMethod(
-            Callable.From((int value) => SetBytesLabel(value)),
-            ogValue,
-            finalValue,
-            0.5
-        );
     }
 
     public override void _ExitTree()

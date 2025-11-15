@@ -10,6 +10,7 @@ public partial class PluginScreen : PanelContainer
     private int _playerId;
     private PlayerService _service => ServiceManager.Instance.GetService<PlayerService>();
     private LoadoutPanel _loadoutPanel;
+    private MarginContainer _marginContainer;
     private WeaponSlot _weaponSlot => _loadoutPanel.WeapSlot;
     private IReadOnlyList<PluginSlot> _pluginSlots => _loadoutPanel.PluginSlots;
 
@@ -27,11 +28,15 @@ public partial class PluginScreen : PanelContainer
 
     public override void _Ready()
     {
-        _loadoutPanel = GetNode<LoadoutPanel>("%LoadoutPanel");
+        _loadoutPanel = GD.Load<PackedScene>("uid://b3t5it47lwtr1").Instantiate<LoadoutPanel>();
+        _marginContainer = GetNode<MarginContainer>("%MarginContainer");
+        _marginContainer.AddChild(_loadoutPanel);
+
         if (!_loadoutPanel.Initialized)
         {
             _loadoutPanel.Initialize(_playerId);
             _loadoutPanel.HBox.ThemeTypeVariation = "PluginScreenLoadoutHBox";
+            BuildPluginScreen();
         }
         Active = true;
     }
@@ -53,8 +58,6 @@ public partial class PluginScreen : PanelContainer
         {
             VBoxContainer vBox = new VBoxContainer();
             _loadoutPanel.HBox.AddChild(vBox);
-            // int index = hBoxChildren.IndexOf(vBox);
-            // _loadoutPanel.HBox.MoveChild(slot, index);
             slot.Reparent(vBox);
         }
     }
@@ -74,7 +77,6 @@ public partial class PluginScreen : PanelContainer
             }
             else
             {
-                // namePanel.Visible = false;
                 namePanel.Label.Text = "Empty";
             }
         }
@@ -83,6 +85,7 @@ public partial class PluginScreen : PanelContainer
     public override void _ExitTree()
     {
         Active = false;
+        _loadoutPanel.QueueFree();
         base._ExitTree();
     }
 }

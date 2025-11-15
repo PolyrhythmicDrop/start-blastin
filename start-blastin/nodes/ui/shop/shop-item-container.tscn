@@ -1,27 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://bfvxyo46webpd"]
+[gd_scene load_steps=12 format=3 uid="uid://bfvxyo46webpd"]
 
 [ext_resource type="Script" uid="uid://cl536iq61ye8j" path="res://nodes/ui/shop/ShopItemContainer.cs" id="1_lifgi"]
 [ext_resource type="StyleBox" uid="uid://chnsppbtk2va0" path="res://resources/themes/styleboxes/item-container-focused-stylebox.tres" id="2_stoc2"]
+[ext_resource type="PackedScene" uid="uid://cwxfvdq5l7brl" path="res://nodes/ui/elements/item-name-panel-container.tscn" id="3_2w48v"]
 [ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="3_ca63a"]
 [ext_resource type="Texture2D" uid="uid://de20b5acmv0cq" path="res://assets/icons/currency/flux-icon.png" id="4_pynep"]
 [ext_resource type="Texture2D" uid="uid://b1pls3wd1xmt8" path="res://assets/icons/currency/byte-icon-64.png" id="5_ca63a"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2w48v"]
-draw_center = false
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_color = Color(0.43529412, 0.11372549, 0.36078432, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_detail = 16
-
-[sub_resource type="LabelSettings" id="LabelSettings_stoc2"]
-resource_local_to_scene = true
-font_size = 24
-shadow_size = 6
-shadow_color = Color(0, 0, 0, 0.7607843)
-shadow_offset = Vector2(2, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7wm45"]
 content_margin_left = 4.0
@@ -78,22 +62,10 @@ script = ExtResource("1_lifgi")
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="ItemNameLabelPanelContainer" type="PanelContainer" parent="VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_2w48v")
-
-[node name="ItemNameLabel" type="Label" parent="VBoxContainer/ItemNameLabelPanelContainer"]
+[node name="ItemNamePanelContainer" parent="VBoxContainer" instance=ExtResource("3_2w48v")]
 unique_name_in_owner = true
-z_index = 10
-custom_minimum_size = Vector2(256, 0)
 layout_mode = 2
-size_flags_horizontal = 4
-text = "Sample Item"
-label_settings = SubResource("LabelSettings_stoc2")
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 2
+NameLabelSettings = 1
 
 [node name="IconPanelContainer" type="PanelContainer" parent="VBoxContainer"]
 custom_minimum_size = Vector2(128, 128)

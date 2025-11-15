@@ -9,15 +9,13 @@ public partial class ItemContainer : PanelContainer, IListener
 {
     protected Item _item;
     protected TextureRect _textureRect;
-    protected Label _itemNameLabel;
+
+    // protected Label _itemNameLabel;
+    protected ItemNamePanelContainer _itemNamePanel;
     protected StyleBoxFlat _defocusedStyleBox =>
-        ResourceLoader.Load<StyleBoxFlat>(
-            "res://resources/themes/styleboxes/item-container-defocused-stylebox.tres"
-        );
+        ResourceLoader.Load<StyleBoxFlat>("uid://bluwbrc16b4ns");
     protected StyleBoxFlat _focusedStyleBox =>
-        ResourceLoader.Load<StyleBoxFlat>(
-            "res://resources/themes/styleboxes/item-container-focused-stylebox.tres"
-        );
+        ResourceLoader.Load<StyleBoxFlat>("uid://chnsppbtk2va0");
 
     protected Color _itemColor;
 
@@ -26,7 +24,8 @@ public partial class ItemContainer : PanelContainer, IListener
     public override void _Ready()
     {
         _textureRect = GetNode<TextureRect>("%ItemIcon");
-        _itemNameLabel = GetNode<Label>("%ItemNameLabel");
+        // _itemNameLabel = GetNode<Label>("%ItemNameLabel");
+        _itemNamePanel = GetNode<ItemNamePanelContainer>("%ItemNamePanelContainer");
         ConnectSignals();
     }
 
@@ -68,8 +67,10 @@ public partial class ItemContainer : PanelContainer, IListener
                 break;
         }
 
-        _itemNameLabel.LabelSettings.FontColor = _itemColor;
-        _itemNameLabel.Text = _item.Name;
+        // _itemNameLabel.LabelSettings.FontColor = _itemColor;
+        // _itemNameLabel.Text = _item.Name;
+        _itemNamePanel.Label.LabelSettings.FontColor = _itemColor;
+        _itemNamePanel.Label.Text = _item.Name;
 
         _textureRect.Texture = _item.Icon;
     }

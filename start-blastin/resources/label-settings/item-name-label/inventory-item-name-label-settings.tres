@@ -1,0 +1,7 @@
+[gd_resource type="LabelSettings" format=3 uid="uid://cwxulm5ukxovo"]
+
+[resource]
+resource_local_to_scene = true
+shadow_size = 6
+shadow_color = Color(0, 0, 0, 0.7607843)
+shadow_offset = Vector2(2, 1)

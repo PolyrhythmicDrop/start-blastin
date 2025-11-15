@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Autoloads;
 using Entities;
 using Events;
@@ -22,6 +23,11 @@ namespace UI.HUD
         private List<PluginSlot> _pluginSlots = new();
         private HBoxContainer _hBox;
         private bool _initialized;
+
+        public WeaponSlot WeapSlot => _weaponSlot;
+        public IReadOnlyList<PluginSlot> PluginSlots => _pluginSlots.AsReadOnly();
+        public HBoxContainer HBox => _hBox;
+        public bool Initialized => _initialized;
 
         public void Initialize(int playerId)
         {

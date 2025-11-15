@@ -98,7 +98,7 @@ namespace UI.Shop
 
         public void ItemBought()
         {
-            _itemNameLabel.Text += " Bought!";
+            _itemNamePanel.Label.Text += " Bought!";
             ClearItem();
         }
 

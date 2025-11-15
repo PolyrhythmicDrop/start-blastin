@@ -24,7 +24,8 @@ namespace UI.Shop
         private List<Item> _itemPool = new();
 
         // ~~ Description section ~~
-        private RichTextLabel _descriptionLabel;
+        private DescriptionPanel _descPanel;
+        private RichTextLabel _descriptionLabel => _descPanel.DescriptionLabel;
 
         // ~~ Wave button deck ~~
         private Button _nextWaveButton;
@@ -52,8 +53,7 @@ namespace UI.Shop
             _rerollButton = GetNode<Button>("%RerollButton");
             _healButton = GetNode<Button>("%Heal");
 
-            _descriptionLabel = GetNode<RichTextLabel>("%DescriptionLabel");
-            // _statsVBox = GetNode<VBoxContainer>("%StatsVBox");
+            _descPanel = GetNode<DescriptionPanel>("%DescriptionPanelContainer");
 
             _itemContainers = new()
             {
@@ -98,7 +98,7 @@ namespace UI.Shop
             {
                 // container.FocusEntered += () => DisplayItemDescription(container);
                 ShopItemContainer captured = container;
-                Action handler = () => DisplayItemDescription(captured);
+                Action handler = () => _descPanel.DisplayItemDescription(captured.Item);
                 _containerFocusHandlers[captured] = handler;
                 captured.FocusEntered += handler;
 
@@ -321,16 +321,17 @@ namespace UI.Shop
             ClearItemDescription();
             if (focusedControl == _rerollButton)
             {
-                _descriptionLabel.Text = "Refresh the cache to see new items.";
+                _descPanel.DisplayString("Refresh the cache to see new items.");
             }
             else if (focusedControl == _healButton)
             {
-                _descriptionLabel.Text = "Spend flux to repair your frail human form.";
+                _descPanel.DisplayString("Spend flux to repair your frail human form.");
             }
             else if (focusedControl == _nextWaveButton)
             {
-                _descriptionLabel.Text =
-                    "Move on to the next wave and pray to whatever primitive superstition keeps you going ";
+                _descPanel.DisplayString(
+                    "Move on to the next wave and pray to whatever primitive superstition keeps you going."
+                );
             }
         }
 

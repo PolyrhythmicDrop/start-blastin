@@ -85,6 +85,7 @@ namespace UI
             CallDeferred(MethodName.AddChild, _pluginScreen);
             _pluginScreen.RequestReady();
             await ToSignal(_pluginScreen, Node.SignalName.Ready);
+            _pluginScreen.BuildPluginScreen();
             _pluginScreen.Visible = true;
         }
 

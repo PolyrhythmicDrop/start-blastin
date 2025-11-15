@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Entities;
 using Godot;
 using Services;
@@ -11,6 +12,8 @@ public partial class PluginScreen : PanelContainer
     private LoadoutPanel _loadoutPanel;
     private WeaponSlot _weaponSlot => _loadoutPanel.WeapSlot;
     private IReadOnlyList<PluginSlot> _pluginSlots => _loadoutPanel.PluginSlots;
+
+    private PackedScene _itemNameScene = GD.Load<PackedScene>("uid://cwxfvdq5l7brl");
 
     public int PlayerId => _playerId;
 
@@ -33,9 +36,49 @@ public partial class PluginScreen : PanelContainer
         Active = true;
     }
 
-    public void BuildPluginScreen() { }
+    public void BuildPluginScreen()
+    {
+        AddVBoxes();
+        foreach (PluginSlot slot in _pluginSlots)
+        {
+            AddLabelToSlot(slot);
+        }
+        AddLabelToSlot(_weaponSlot);
+    }
 
-    private void AddLabelToSlot(PluginSlot slot) { }
+    private void AddVBoxes()
+    {
+        var hBoxChildren = _loadoutPanel.HBox.GetChildren();
+        foreach (PluginSlot slot in hBoxChildren)
+        {
+            VBoxContainer vBox = new VBoxContainer();
+            _loadoutPanel.HBox.AddChild(vBox);
+            // int index = hBoxChildren.IndexOf(vBox);
+            // _loadoutPanel.HBox.MoveChild(slot, index);
+            slot.Reparent(vBox);
+        }
+    }
+
+    private void AddLabelToSlot(PluginSlot slot)
+    {
+        if (slot.GetParent() is VBoxContainer vbox)
+        {
+            ItemNamePanelContainer namePanel = _itemNameScene.Instantiate<ItemNamePanelContainer>();
+            namePanel.NameLabelSettings = ItemNameLabelSettings.Inventory;
+            vbox.AddChild(namePanel);
+            vbox.MoveChild(namePanel, 0);
+            namePanel.SetLabelSettings();
+            if (slot.Plugin != null)
+            {
+                namePanel.Label.Text = slot.Plugin.Name;
+            }
+            else
+            {
+                // namePanel.Visible = false;
+                namePanel.Label.Text = "Empty";
+            }
+        }
+    }
 
     public override void _ExitTree()
     {

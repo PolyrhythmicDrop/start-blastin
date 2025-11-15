@@ -15,6 +15,8 @@ public partial class ItemNamePanelContainer : PanelContainer
     private LabelSettings _defaultLabelSettings => GD.Load<LabelSettings>("uid://dhmvqno5lqhj");
     private LabelSettings _shopLabelSettings => GD.Load<LabelSettings>("uid://bxecrmsi8u1b5");
     private LabelSettings _inventoryLabelSettings => GD.Load<LabelSettings>("uid://cwxulm5ukxovo");
+    private StyleBoxFlat _shopStyleBox = GD.Load<StyleBoxFlat>("uid://bfhwy5ee28np2");
+    private StyleBoxFlat _inventoryStyleBox = GD.Load<StyleBoxFlat>("uid://cetbqp86dtgei");
     private ItemNameLabelSettings _labelSettings = ItemNameLabelSettings.Default;
 
     public Label Label => _label;
@@ -34,12 +36,23 @@ public partial class ItemNamePanelContainer : PanelContainer
 
     public void SetLabelSettings()
     {
-        _label.LabelSettings = _labelSettings switch
+        StyleBoxFlat box;
+        switch (_labelSettings)
         {
-            ItemNameLabelSettings.Shop => _shopLabelSettings,
-            ItemNameLabelSettings.Inventory => _inventoryLabelSettings,
-            ItemNameLabelSettings.Default => _defaultLabelSettings,
-            _ => _defaultLabelSettings,
-        };
+            default:
+            case ItemNameLabelSettings.Default:
+                _label.LabelSettings = _defaultLabelSettings;
+                box = _shopStyleBox;
+                break;
+            case ItemNameLabelSettings.Shop:
+                _label.LabelSettings = _shopLabelSettings;
+                box = _shopStyleBox;
+                break;
+            case ItemNameLabelSettings.Inventory:
+                _label.LabelSettings = _inventoryLabelSettings;
+                box = _inventoryStyleBox;
+                break;
+        }
+        AddThemeStyleboxOverride("panel", box);
     }
 }

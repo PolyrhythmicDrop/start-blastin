@@ -21,12 +21,16 @@ namespace UI.HUD
         private WeaponSlot _weaponSlot;
         private List<PluginSlot> _pluginSlots = new();
         private HBoxContainer _hBox;
+        private bool _initialized;
 
         public void Initialize(int playerId)
         {
-            _playerId = playerId;
-            _service = ServiceManager.Instance.GetService<PlayerService>();
-            InitializeLoadoutPanel();
+            if (!_initialized)
+            {
+                _playerId = playerId;
+                _service = ServiceManager.Instance.GetService<PlayerService>();
+                InitializeLoadoutPanel();
+            }
         }
 
         public override void _Ready()
@@ -40,15 +44,19 @@ namespace UI.HUD
         public void ConnectSignals()
         {
             EventBus.Instance.PlayerPluginsChanged += OnPlayerPluginsChanged;
+            EventBus.Instance.PlayerWeaponChanged += OnPlayerWeaponChanged;
         }
 
         public void DisconnectSignals()
         {
             EventBus.Instance.PlayerPluginsChanged -= OnPlayerPluginsChanged;
+            EventBus.Instance.PlayerWeaponChanged -= OnPlayerWeaponChanged;
         }
 
         private void InitializeLoadoutPanel()
         {
+            ClearPluginSlotItems();
+
             Player player = _service.GetPlayer(_playerId);
             int slotCount = player.PluginSlots;
             for (int i = 0; i < slotCount; i++)
@@ -71,6 +79,8 @@ namespace UI.HUD
 
             // Set the weapon plugin slot
             FillSlot(_weaponSlot, player.WeaponPlugin);
+
+            _initialized = true;
         }
 
         private void FillSlot(PluginSlot slot, Plugin plugin)
@@ -91,18 +101,30 @@ namespace UI.HUD
 
         private void OnPlayerPluginsChanged(object source, PlayerPluginsChangedEventArgs args)
         {
-            ClearPluginSlotItems();
+            RefreshPlugins(args.Plugins);
+        }
 
-            Player player = _service.GetPlayer(_playerId);
-            IReadOnlyList<Plugin> playerPlugins = player.GetPlugins();
-            if (playerPlugins.Count > 0)
+        private void RefreshPlugins(List<Plugin> plugins)
+        {
+            ClearPluginSlotItems();
+            if (plugins.Count > 0)
             {
                 DebugLogger.LogMessage("Adding plugins to UI...", true);
-                for (int i = 0; i < playerPlugins.Count; i++)
+                for (int i = 0; i < plugins.Count; i++)
                 {
-                    FillSlot(_pluginSlots[i], playerPlugins[i]);
+                    FillSlot(_pluginSlots[i], plugins[i]);
                 }
             }
+        }
+
+        private void OnPlayerWeaponChanged(object source, PlayerWeaponChangedEventArgs args)
+        {
+            RefreshWeapon(args.WeaponPlugin);
+        }
+
+        private void RefreshWeapon(WeaponPlugin weaponPlugin)
+        {
+            FillSlot(_weaponSlot, weaponPlugin);
         }
 
         private void ClearPluginSlotItems()

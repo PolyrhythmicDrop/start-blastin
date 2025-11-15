@@ -52,7 +52,7 @@ namespace FileIO
                     {
                         string fullPath = rootDirectory + resourceName;
                         GD.Print(
-                            $"{System.Reflection.MethodBase.GetCurrentMethod().Name}: Adding resource from {fullPath} to {pool}..."
+                            $"{System.Reflection.MethodBase.GetCurrentMethod().Name}: Adding resource from {fullPath} to {nameof(pool)}..."
                         );
                         pool.Add(ResourceLoader.Load<T>(fullPath));
                     }

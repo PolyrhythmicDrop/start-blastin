@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=3 uid="uid://dog71b3n5wml5"]
+
+[ext_resource type="Script" uid="uid://cc53ow4m1vtrm" path="res://nodes/ui/menus/plugin-screen/PluginScreen.cs" id="1_k1tid"]
+[ext_resource type="PackedScene" uid="uid://b3t5it47lwtr1" path="res://nodes/ui/hud/loadout-panel.tscn" id="2_jd4gq"]
+
+[node name="PluginScreen" type="PanelContainer"]
+process_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -752.0
+offset_top = -188.0
+offset_right = 752.0
+offset_bottom = 188.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+script = ExtResource("1_k1tid")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 40
+
+[node name="LoadoutPanel" parent="MarginContainer" instance=ExtResource("2_jd4gq")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 6

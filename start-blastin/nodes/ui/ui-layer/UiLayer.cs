@@ -17,8 +17,11 @@ namespace UI
         private int _playerId;
         private ShopManager _shopManager;
         private Hud _hud;
-        private PackedScene _hudScene = ResourceLoader.Load<PackedScene>(
-            "res://nodes/ui/hud/hud.tscn"
+        private PackedScene _hudScene = ResourceLoader.Load<PackedScene>("uid://cs0msq3g3i6xk");
+
+        private PluginScreen _pluginScreen;
+        private PackedScene _pluginScreenScene = ResourceLoader.Load<PackedScene>(
+            "uid://dog71b3n5wml5"
         );
 
         public int PlayerId => _playerId;
@@ -55,6 +58,42 @@ namespace UI
             // Initialize the HUD
             _hud = _hudScene.Instantiate<Hud>();
             _hud.Initialize(_playerId);
+
+            // Initialize the plugin screen
+            _pluginScreen = _pluginScreenScene.Instantiate<PluginScreen>();
+            _pluginScreen.Initialize(_playerId);
+        }
+
+        public override void _Input(InputEvent @event)
+        {
+            if (Input.IsActionJustPressedByEvent("plugin-menu", @event))
+            {
+                if (_pluginScreen.Active)
+                {
+                    ClosePluginScreen();
+                }
+                else
+                {
+                    OpenPluginScreen();
+                }
+            }
+        }
+
+        private async void OpenPluginScreen()
+        {
+            GetTree().Paused = true;
+            CallDeferred(MethodName.AddChild, _pluginScreen);
+            _pluginScreen.RequestReady();
+            await ToSignal(_pluginScreen, Node.SignalName.Ready);
+            _pluginScreen.Visible = true;
+        }
+
+        private async void ClosePluginScreen()
+        {
+            _pluginScreen.Visible = false;
+            CallDeferred(MethodName.RemoveChild, _pluginScreen);
+            await ToSignal(_pluginScreen, Node.SignalName.TreeExited);
+            GetTree().Paused = false;
         }
 
         public override void _ExitTree()

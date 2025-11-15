@@ -3,5 +3,6 @@
 [ext_resource type="Script" uid="uid://dpitrsqbep4of" path="res://nodes/ui/ui-layer/UiLayer.cs" id="1_abewa"]
 
 [node name="UiLayer" type="CanvasLayer" groups=["player-ui"]]
+process_mode = 3
 layer = 2
 script = ExtResource("1_abewa")

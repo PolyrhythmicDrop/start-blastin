@@ -55,6 +55,8 @@ namespace Autoloads
 
         public event EventHandler<PlayerPluginsChangedEventArgs> PlayerPluginsChanged;
 
+        public event EventHandler<PlayerWeaponChangedEventArgs> PlayerWeaponChanged;
+
         #endregion
 
         #region Enemies
@@ -168,6 +170,12 @@ namespace Autoloads
         {
             PlayerPluginsChangedEventArgs args = new(playerId, plugins);
             PlayerPluginsChanged?.Invoke(this, args);
+        }
+
+        public void RaisePlayerWeaponChanged(int playerId, WeaponPlugin plugin)
+        {
+            PlayerWeaponChangedEventArgs args = new(playerId, plugin);
+            PlayerWeaponChanged?.Invoke(this, args);
         }
 
         public void RaiseEnemyKilled(EnemyKilledEventArgs args)

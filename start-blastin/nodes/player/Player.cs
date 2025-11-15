@@ -578,6 +578,7 @@ namespace Entities
         {
             _weaponPlugin = weaponPlugin;
             _weaponComponent.SetWeaponProjectile(weaponPlugin.ProjectileType);
+            EventBus.Instance.RaisePlayerWeaponChanged(_playerId, _weaponPlugin);
         }
 
         public IReadOnlyList<Plugin> GetPlugins()

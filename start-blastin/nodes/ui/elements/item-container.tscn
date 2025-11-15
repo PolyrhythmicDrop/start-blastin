@@ -1,0 +1,85 @@
+[gd_scene load_steps=6 format=3 uid="uid://c5hhjp7sw3rcl"]
+
+[ext_resource type="Script" uid="uid://bof036fgcxusx" path="res://nodes/ui/elements/ItemContainer.cs" id="1_ccsvg"]
+[ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="2_s5ecv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2b2ow"]
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_color = Color(0.43529412, 0.11372549, 0.36078432, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_detail = 16
+
+[sub_resource type="LabelSettings" id="LabelSettings_7ls5g"]
+resource_local_to_scene = true
+font_size = 24
+shadow_size = 6
+shadow_color = Color(0, 0, 0, 0.7607843)
+shadow_offset = Vector2(2, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7td0j"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+draw_center = false
+border_width_left = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.43529412, 0.11372549, 0.36078432, 1)
+
+[node name="ItemContainer" type="PanelContainer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -164.0
+offset_top = -181.5
+offset_right = 164.0
+offset_bottom = 181.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ccsvg")
+metadata/_custom_type_script = "uid://bof036fgcxusx"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="ItemNameLabelPanelContainer" type="PanelContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_2b2ow")
+
+[node name="ItemNameLabel" type="Label" parent="VBoxContainer/ItemNameLabelPanelContainer"]
+unique_name_in_owner = true
+z_index = 10
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Sample Item"
+label_settings = SubResource("LabelSettings_7ls5g")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="IconPanelContainer" type="PanelContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_7td0j")
+
+[node name="ItemIcon" type="TextureRect" parent="VBoxContainer/IconPanelContainer"]
+unique_name_in_owner = true
+z_index = 10
+custom_minimum_size = Vector2(320, 320)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("2_s5ecv")
+expand_mode = 3
+stretch_mode = 5

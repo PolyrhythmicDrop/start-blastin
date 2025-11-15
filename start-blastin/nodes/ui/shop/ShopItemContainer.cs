@@ -15,11 +15,8 @@ namespace UI.Shop
         private Label _byteLabel;
         private Label _fluxLabel;
 
-        // private Color _itemColor;
         private Color _defaultPriceColor = new Color("#ffffff");
         private Color _unbuyablePriceColor = new Color("#ff5470");
-
-        // public Item Item => _item;
 
         public event EventHandler<ShopItemSelectedEventArgs> ShopItemSelected;
 
@@ -36,7 +33,6 @@ namespace UI.Shop
         {
             if (Input.IsActionJustPressedByEvent("ui_accept", @event))
             {
-                DebugLogger.LogMessage($"ui_accept Action just pressed!", true);
                 ItemSelected();
                 AcceptEvent();
             }
@@ -102,7 +98,6 @@ namespace UI.Shop
 
         public void ItemBought()
         {
-            DebugLogger.LogMessage($"Item bought called!", true);
             _itemNameLabel.Text += " Bought!";
             ClearItem();
         }

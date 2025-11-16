@@ -31,10 +31,10 @@ public partial class ItemNamePanelContainer : PanelContainer
     public override void _Ready()
     {
         _label = GetNode<Label>("%ItemNameLabel");
-        SetLabelSettings();
+        SetStyle();
     }
 
-    public void SetLabelSettings()
+    public void SetStyle()
     {
         StyleBoxFlat box;
         switch (_labelSettings)

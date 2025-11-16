@@ -59,9 +59,11 @@ public partial class PluginScreen : PanelContainer, IListener
         AddVBoxes();
         foreach (PluginSlot slot in _pluginSlots)
         {
-            AddLabelToSlot(slot);
+            AddNamePanelToSlot(slot);
+            slot.PivotOffset = slot.Size / 2;
+            slot.Scale = new Vector2(0.8f, 0.8f);
         }
-        AddLabelToSlot(_weaponSlot);
+        AddNamePanelToSlot(_weaponSlot);
     }
 
     private void AddVBoxes()
@@ -155,7 +157,7 @@ public partial class PluginScreen : PanelContainer, IListener
         }
     }
 
-    private void AddLabelToSlot(PluginSlot slot)
+    private void AddNamePanelToSlot(PluginSlot slot)
     {
         if (slot.GetParent() is VBoxContainer vbox)
         {
@@ -163,7 +165,6 @@ public partial class PluginScreen : PanelContainer, IListener
             namePanel.NameLabelSettings = ItemNameLabelSettings.Inventory;
             vbox.AddChild(namePanel);
             vbox.MoveChild(namePanel, 0);
-            namePanel.SetLabelSettings();
             if (slot.Plugin != null)
             {
                 namePanel.Label.Text = slot.Plugin.Name;
@@ -172,21 +173,76 @@ public partial class PluginScreen : PanelContainer, IListener
             {
                 namePanel.Label.Text = "Empty";
             }
+            InitializeNamePanel(namePanel);
         }
+    }
+
+    private void InitializeNamePanel(ItemNamePanelContainer namePanel)
+    {
+        // Set the stylebox and label settings
+        namePanel.SetStyle();
+        // Set the name panel as invisible until it gains focus.
+        Color modColor = new(namePanel.Modulate);
+        modColor.A = 0;
+        namePanel.Modulate = modColor;
+        // Set the name panel's pivot offset to center
+        namePanel.PivotOffset = namePanel.Size / 2;
+        // Set the initial scane to 2
+        namePanel.Scale = new Vector2(2, 2);
     }
 
     private void OnWeaponSlotFocusEntered() => OnSlotFocusEntered(_weaponSlot);
 
     private void OnSlotFocusEntered(PluginSlot slot)
     {
-        DebugLogger.LogMessage($"{slot.Name} focus entered!", true);
+        // DebugLogger.LogMessage($"{slot.Name} focus entered!", true);
+        // VBoxContainer vbox = slot.GetParent<VBoxContainer>();
+        // ItemNamePanelContainer namePanel = vbox.GetChildOrNull<ItemNamePanelContainer>(0);
+        GetSlotElements(slot, out VBoxContainer vBox, out ItemNamePanelContainer namePanel);
+        if (namePanel != null)
+        {
+            Tween tween = CreateTween();
+            tween.SetParallel(true);
+            tween.TweenProperty(namePanel, "modulate:a", 1.0, 0.3);
+            tween.TweenProperty(namePanel, "scale", Vector2.One, 0.3);
+            tween.TweenProperty(slot, "scale", Vector2.One, 0.3);
+        }
+
+        // Set the description to the item description.
+        if (slot.Plugin != null)
+        {
+            _descriptionPanel.DisplayItemDescription(slot.Plugin);
+        }
+        else
+        {
+            _descriptionPanel.DisplayString("An empty plugin slot. How sad...");
+        }
     }
 
     private void OnWeaponSlotFocusExited() => OnSlotFocusExited(_weaponSlot);
 
     private void OnSlotFocusExited(PluginSlot slot)
     {
-        DebugLogger.LogMessage($"{slot.Name} focus exited!", true);
+        // DebugLogger.LogMessage($"{slot.Name} focus exited!", true);
+        GetSlotElements(slot, out VBoxContainer vBox, out ItemNamePanelContainer namePanel);
+        if (namePanel != null)
+        {
+            Tween tween = namePanel.CreateTween();
+            tween.SetParallel(true);
+            tween.TweenProperty(namePanel, "modulate:a", 0, 0.3);
+            tween.TweenProperty(namePanel, "scale", new Vector2(2, 2), 0.3);
+            tween.TweenProperty(slot, "scale", new Vector2(0.8f, 0.8f), 0.3);
+        }
+    }
+
+    private void GetSlotElements(
+        PluginSlot slot,
+        out VBoxContainer vBox,
+        out ItemNamePanelContainer namePanel
+    )
+    {
+        vBox = slot.GetParentOrNull<VBoxContainer>();
+        namePanel = vBox.GetChildOrNull<ItemNamePanelContainer>(0);
     }
 
     public override void _ExitTree()

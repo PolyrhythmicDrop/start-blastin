@@ -10,10 +10,12 @@ namespace UI.Shop
     public partial class ShopItemContainer : ItemContainer
     {
         // ~ Nodes ~ //
-        private PanelContainer _bytePanelContainer;
-        private PanelContainer _fluxPanelContainer;
-        private Label _byteLabel;
-        private Label _fluxLabel;
+        // private PanelContainer _bytePanelContainer;
+        // private PanelContainer _fluxPanelContainer;
+        // private Label _byteLabel;
+        // private Label _fluxLabel;
+
+        private PricePanelContainer _pricePanel;
 
         private Color _defaultPriceColor = new Color("#ffffff");
         private Color _unbuyablePriceColor = new Color("#ff5470");
@@ -23,10 +25,11 @@ namespace UI.Shop
         public override void _Ready()
         {
             base._Ready();
-            _bytePanelContainer = GetNode<PanelContainer>("%BytePanelContainer");
-            _fluxPanelContainer = GetNode<PanelContainer>("%FluxPanelContainer");
-            _byteLabel = GetNode<Label>("%ByteLabel");
-            _fluxLabel = GetNode<Label>("%FluxLabel");
+            _pricePanel = GetNode<PricePanelContainer>("%PricePanelContainer");
+            // _bytePanelContainer = GetNode<PanelContainer>("%BytePanelContainer");
+            // _fluxPanelContainer = GetNode<PanelContainer>("%FluxPanelContainer");
+            // _byteLabel = GetNode<Label>("%ByteLabel");
+            // _fluxLabel = GetNode<Label>("%FluxLabel");
         }
 
         public override void _GuiInput(InputEvent @event)
@@ -57,32 +60,21 @@ namespace UI.Shop
             int flux = _item.FluxCost;
             int bytes = _item.ByteCost;
 
-            _fluxLabel.Text = flux.ToString("N0");
-            _byteLabel.Text = bytes.ToString("N0");
+            // _fluxLabel.Text = flux.ToString("N0");
+            // _byteLabel.Text = bytes.ToString("N0");
 
-            if (flux <= 0)
-            {
-                _fluxPanelContainer.Visible = false;
-            }
-            else
-            {
-                _fluxPanelContainer.Visible = true;
-            }
+            _pricePanel.SetLabelText(PricePanelContainer.PriceLabel.Bytes, bytes.ToString("N0"));
+            _pricePanel.SetLabelText(PricePanelContainer.PriceLabel.Flux, flux.ToString("N0"));
 
-            if (bytes <= 0)
-            {
-                _bytePanelContainer.Visible = false;
-            }
-            else
-            {
-                _bytePanelContainer.Visible = true;
-            }
+            bool costsBytes = bytes > 0;
+            bool costsFlux = flux > 0;
+            _pricePanel.TogglePanelVisibility(PricePanelContainer.PriceLabel.Bytes, costsBytes);
+            _pricePanel.TogglePanelVisibility(PricePanelContainer.PriceLabel.Flux, costsFlux);
         }
 
         private void ClearPriceLabels()
         {
-            _fluxPanelContainer.Visible = false;
-            _bytePanelContainer.Visible = false;
+            _pricePanel.TogglePanelVisibility(PricePanelContainer.PriceLabel.Both, false);
         }
 
         /// <summary>
@@ -112,23 +104,11 @@ namespace UI.Shop
         /// </remarks>
         public void SetBuyable(bool fluxBuyable, bool byteBuyable)
         {
-            if (fluxBuyable)
-            {
-                _fluxLabel.LabelSettings.FontColor = _defaultPriceColor;
-            }
-            else
-            {
-                _fluxLabel.LabelSettings.FontColor = _unbuyablePriceColor;
-            }
+            Color fluxColor = fluxBuyable ? _defaultPriceColor : _unbuyablePriceColor;
+            Color byteColor = byteBuyable ? _defaultPriceColor : _unbuyablePriceColor;
 
-            if (byteBuyable)
-            {
-                _byteLabel.LabelSettings.FontColor = _defaultPriceColor;
-            }
-            else
-            {
-                _byteLabel.LabelSettings.FontColor = _unbuyablePriceColor;
-            }
+            _pricePanel.SetFontColor(PricePanelContainer.PriceLabel.Flux, fluxColor);
+            _pricePanel.SetFontColor(PricePanelContainer.PriceLabel.Bytes, byteColor);
         }
 
         public override void _ExitTree()

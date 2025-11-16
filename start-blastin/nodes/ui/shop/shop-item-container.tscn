@@ -1,11 +1,10 @@
-[gd_scene load_steps=12 format=3 uid="uid://bfvxyo46webpd"]
+[gd_scene load_steps=7 format=3 uid="uid://bfvxyo46webpd"]
 
 [ext_resource type="Script" uid="uid://cl536iq61ye8j" path="res://nodes/ui/shop/ShopItemContainer.cs" id="1_lifgi"]
 [ext_resource type="StyleBox" uid="uid://chnsppbtk2va0" path="res://resources/themes/styleboxes/item-container-focused-stylebox.tres" id="2_stoc2"]
 [ext_resource type="PackedScene" uid="uid://cwxfvdq5l7brl" path="res://nodes/ui/elements/item-name-panel-container.tscn" id="3_2w48v"]
 [ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="3_ca63a"]
-[ext_resource type="Texture2D" uid="uid://de20b5acmv0cq" path="res://assets/icons/currency/flux-icon.png" id="4_pynep"]
-[ext_resource type="Texture2D" uid="uid://b1pls3wd1xmt8" path="res://assets/icons/currency/byte-icon-64.png" id="5_ca63a"]
+[ext_resource type="PackedScene" uid="uid://b2fpxs1cgq4hk" path="res://nodes/ui/elements/price-panel-container.tscn" id="5_ca63a"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7wm45"]
 content_margin_left = 4.0
@@ -17,28 +16,6 @@ border_width_left = 4
 border_width_right = 4
 border_width_bottom = 4
 border_color = Color(0.43529412, 0.11372549, 0.36078432, 1)
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ca63a"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_2w48v"]
-resource_local_to_scene = true
-resource_name = "byte-price-label-settings"
-font_size = 26
-shadow_size = 3
-shadow_color = Color(0, 0, 0, 0.69411767)
-shadow_offset = Vector2(2, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ca63a"]
-bg_color = Color(0.6, 0.6, 0.6, 0)
-draw_center = false
-
-[sub_resource type="LabelSettings" id="LabelSettings_ca63a"]
-resource_local_to_scene = true
-resource_name = "flux-price-label-settings"
-font_size = 26
-shadow_size = 3
-shadow_color = Color(0, 0, 0, 0.69411767)
-shadow_offset = Vector2(2, 1)
 
 [node name="ShopItemContainer" type="PanelContainer"]
 custom_minimum_size = Vector2(128, 256)
@@ -84,91 +61,6 @@ texture = ExtResource("3_ca63a")
 expand_mode = 3
 stretch_mode = 5
 
-[node name="PricePanelContainer" type="PanelContainer" parent="VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_ca63a")
-
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PricePanelContainer"]
-layout_mode = 2
-theme_override_constants/separation = 0
-alignment = 1
-
-[node name="BytePanelContainer" type="PanelContainer" parent="VBoxContainer/PricePanelContainer/HBoxContainer"]
+[node name="PricePanelContainer" parent="VBoxContainer" instance=ExtResource("5_ca63a")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-theme_type_variation = &"ShopPricePanelContainer"
-
-[node name="ByteMarginContainer" type="MarginContainer" parent="VBoxContainer/PricePanelContainer/HBoxContainer/BytePanelContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_bottom = 4
-
-[node name="ByteHBox" type="HBoxContainer" parent="VBoxContainer/PricePanelContainer/HBoxContainer/BytePanelContainer/ByteMarginContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 0
-theme_override_constants/separation = 8
-alignment = 1
-
-[node name="ByteIcon" type="TextureRect" parent="VBoxContainer/PricePanelContainer/HBoxContainer/BytePanelContainer/ByteMarginContainer/ByteHBox"]
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-size_flags_horizontal = 6
-size_flags_vertical = 4
-texture = ExtResource("5_ca63a")
-expand_mode = 5
-stretch_mode = 5
-
-[node name="ByteLabel" type="Label" parent="VBoxContainer/PricePanelContainer/HBoxContainer/BytePanelContainer/ByteMarginContainer/ByteHBox"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 2.0
-text = "000"
-label_settings = SubResource("LabelSettings_2w48v")
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="FluxPanelContainer" type="PanelContainer" parent="VBoxContainer/PricePanelContainer/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-theme_type_variation = &"ShopPricePanelContainer"
-
-[node name="FluxMarginContainer" type="MarginContainer" parent="VBoxContainer/PricePanelContainer/HBoxContainer/FluxPanelContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_bottom = 4
-
-[node name="FluxHBox" type="HBoxContainer" parent="VBoxContainer/PricePanelContainer/HBoxContainer/FluxPanelContainer/FluxMarginContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 0
-theme_override_constants/separation = 8
-alignment = 1
-
-[node name="FluxIcon" type="TextureRect" parent="VBoxContainer/PricePanelContainer/HBoxContainer/FluxPanelContainer/FluxMarginContainer/FluxHBox"]
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-size_flags_horizontal = 6
-size_flags_vertical = 4
-texture = ExtResource("4_pynep")
-expand_mode = 5
-stretch_mode = 5
-
-[node name="FluxLabel" type="Label" parent="VBoxContainer/PricePanelContainer/HBoxContainer/FluxPanelContainer/FluxMarginContainer/FluxHBox"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 2.0
-theme_override_styles/normal = SubResource("StyleBoxFlat_ca63a")
-text = "000"
-label_settings = SubResource("LabelSettings_ca63a")
-horizontal_alignment = 1
-vertical_alignment = 1

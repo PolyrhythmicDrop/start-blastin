@@ -146,12 +146,8 @@ namespace Enemies.Spawners
                 totalWeight += data.Weight;
             }
 
-            // GD.Print($"Total weight: {totalWeight}");
-
             // Generate random number within total weight
             int randomValue = GD.RandRange(0, totalWeight - 1);
-
-            // GD.Print($"Random value: {randomValue}");
 
             // Find the enemy that corresponds to this weight
             int currentWeight = 0;

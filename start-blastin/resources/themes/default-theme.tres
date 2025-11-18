@@ -2,6 +2,7 @@
 
 [ext_resource type="FontFile" uid="uid://b8tj5tsi08onc" path="res://resources/fonts/dogica/dogicapixelbold.ttf" id="1_k2mcc"]
 [ext_resource type="FontFile" uid="uid://bdn20wteigtfk" path="res://resources/fonts/silkscreen/Silkscreen-Regular.ttf" id="2_k2mcc"]
+[ext_resource type="StyleBox" uid="uid://dr7nqwevwop52" path="res://resources/themes/styleboxes/shop-price-panel.tres" id="2_n0ut1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n0ut1"]
 content_margin_left = 16.0
@@ -68,19 +69,6 @@ corner_detail = 16
 [sub_resource type="FontVariation" id="FontVariation_n0ut1"]
 base_font = ExtResource("1_k2mcc")
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eliyn"]
-content_margin_left = 10.0
-content_margin_right = 10.0
-bg_color = Color(0.6, 0.6, 0.6, 0)
-draw_center = false
-border_width_left = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0.43529412, 0.11372549, 0.36078432, 1)
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-corner_detail = 16
-
 [sub_resource type="FontVariation" id="FontVariation_gqs81"]
 base_font = ExtResource("2_k2mcc")
 
@@ -105,7 +93,7 @@ PluginScreenLoadoutHBox/base_type = &"HBoxContainer"
 PluginScreenLoadoutHBox/constants/separation = 30
 RichTextLabel/fonts/bold_font = SubResource("FontVariation_n0ut1")
 ShopPricePanelContainer/base_type = &"PanelContainer"
-ShopPricePanelContainer/styles/panel = SubResource("StyleBoxFlat_eliyn")
+ShopPricePanelContainer/styles/panel = ExtResource("2_n0ut1")
 StatusBarLabel/base_type = &"RichTextLabel"
 StatusBarLabel/colors/font_outline_color = Color(0, 0, 0, 1)
 StatusBarLabel/colors/font_shadow_color = Color(0, 0, 0, 0.47843137)

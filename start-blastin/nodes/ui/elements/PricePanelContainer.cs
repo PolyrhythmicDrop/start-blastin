@@ -11,11 +11,26 @@ public partial class PricePanelContainer : PanelContainer
         Both,
     }
 
+    public enum Mode
+    {
+        Default,
+        Shop,
+        Inventory,
+    }
+
     // ~ Nodes ~ //
     private PanelContainer _bytePanelContainer;
     private PanelContainer _fluxPanelContainer;
     private Label _byteLabel;
     private Label _fluxLabel;
+    private Mode _mode = Mode.Default;
+
+    // ~~ Resources //
+
+    private LabelSettings _shopLabelSettings => GD.Load<LabelSettings>("uid://cnnymev36ytvv");
+    private LabelSettings _inventoryLabelSettings => GD.Load<LabelSettings>("uid://26hv5cp7uaef");
+    private StyleBoxFlat _shopStyleBox => GD.Load<StyleBoxFlat>("uid://dr7nqwevwop52");
+    private StyleBoxFlat _inventoryStyleBox => GD.Load<StyleBoxFlat>("uid://d4be6vg4xxy5w");
 
     public override void _Ready()
     {
@@ -25,7 +40,7 @@ public partial class PricePanelContainer : PanelContainer
         _fluxLabel = GetNode<Label>("%FluxLabel");
     }
 
-    public void SetLabelText(PriceLabel label, string text)
+    public void SetLabelText(string text, PriceLabel label = PriceLabel.Both)
     {
         switch (label)
         {
@@ -42,7 +57,7 @@ public partial class PricePanelContainer : PanelContainer
         }
     }
 
-    public void TogglePanelVisibility(PriceLabel label, bool visible)
+    public void TogglePanelVisibility(bool visible, PriceLabel label = PriceLabel.Both)
     {
         switch (label)
         {
@@ -59,7 +74,7 @@ public partial class PricePanelContainer : PanelContainer
         }
     }
 
-    public void SetFontColor(PriceLabel label, Color color)
+    public void SetFontColor(Color color, PriceLabel label = PriceLabel.Both)
     {
         switch (label)
         {
@@ -74,5 +89,34 @@ public partial class PricePanelContainer : PanelContainer
                 _fluxLabel.LabelSettings.FontColor = color;
                 break;
         }
+    }
+
+    private void SetStyle()
+    {
+        RemoveThemeStyleboxOverride("panel");
+
+        switch (_mode)
+        {
+            default:
+            case Mode.Default:
+                break;
+            case Mode.Inventory:
+                _byteLabel.LabelSettings = _inventoryLabelSettings;
+                _fluxLabel.LabelSettings = _inventoryLabelSettings;
+                AddThemeStyleboxOverride("panel", _inventoryStyleBox);
+                _bytePanelContainer.AddThemeStyleboxOverride("panel", _inventoryStyleBox);
+                break;
+            case Mode.Shop:
+                _byteLabel.LabelSettings = _shopLabelSettings;
+                _fluxLabel.LabelSettings = _shopLabelSettings;
+                AddThemeStyleboxOverride("panel", _shopStyleBox);
+                break;
+        }
+    }
+
+    public void SetMode(Mode mode)
+    {
+        _mode = mode;
+        SetStyle();
     }
 }

@@ -63,18 +63,18 @@ namespace UI.Shop
             // _fluxLabel.Text = flux.ToString("N0");
             // _byteLabel.Text = bytes.ToString("N0");
 
-            _pricePanel.SetLabelText(PricePanelContainer.PriceLabel.Bytes, bytes.ToString("N0"));
-            _pricePanel.SetLabelText(PricePanelContainer.PriceLabel.Flux, flux.ToString("N0"));
+            _pricePanel.SetLabelText(bytes.ToString("N0"), PricePanelContainer.PriceLabel.Bytes);
+            _pricePanel.SetLabelText(flux.ToString("N0"), PricePanelContainer.PriceLabel.Flux);
 
             bool costsBytes = bytes > 0;
             bool costsFlux = flux > 0;
-            _pricePanel.TogglePanelVisibility(PricePanelContainer.PriceLabel.Bytes, costsBytes);
-            _pricePanel.TogglePanelVisibility(PricePanelContainer.PriceLabel.Flux, costsFlux);
+            _pricePanel.TogglePanelVisibility(costsBytes, PricePanelContainer.PriceLabel.Bytes);
+            _pricePanel.TogglePanelVisibility(costsFlux, PricePanelContainer.PriceLabel.Flux);
         }
 
         private void ClearPriceLabels()
         {
-            _pricePanel.TogglePanelVisibility(PricePanelContainer.PriceLabel.Both, false);
+            _pricePanel.TogglePanelVisibility(false);
         }
 
         /// <summary>
@@ -107,8 +107,8 @@ namespace UI.Shop
             Color fluxColor = fluxBuyable ? _defaultPriceColor : _unbuyablePriceColor;
             Color byteColor = byteBuyable ? _defaultPriceColor : _unbuyablePriceColor;
 
-            _pricePanel.SetFontColor(PricePanelContainer.PriceLabel.Flux, fluxColor);
-            _pricePanel.SetFontColor(PricePanelContainer.PriceLabel.Bytes, byteColor);
+            _pricePanel.SetFontColor(fluxColor, PricePanelContainer.PriceLabel.Flux);
+            _pricePanel.SetFontColor(byteColor, PricePanelContainer.PriceLabel.Bytes);
         }
 
         public override void _ExitTree()

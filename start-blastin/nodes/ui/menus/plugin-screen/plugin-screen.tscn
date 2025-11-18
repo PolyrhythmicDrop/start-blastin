@@ -7,7 +7,7 @@
 
 [node name="PluginScreen" type="PanelContainer"]
 process_mode = 3
-anchors_preset = -1
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -22,6 +22,7 @@ size_flags_horizontal = 6
 size_flags_vertical = 6
 theme_override_styles/panel = SubResource("StyleBoxEmpty_04cqw")
 script = ExtResource("1_k1tid")
+SellPriceColor = Color(0.47058824, 0.84705883, 0.7176471, 1)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -30,17 +31,13 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 5.0
-theme_override_constants/margin_left = 40
-theme_override_constants/margin_top = 40
-theme_override_constants/margin_right = 40
-theme_override_constants/margin_bottom = 40
 
 [node name="PluginPanel" type="PanelContainer" parent="VBoxContainer/MarginContainer"]
 unique_name_in_owner = true
 process_mode = 3
 layout_mode = 2
-size_flags_horizontal = 4
 size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
 metadata/_edit_use_anchors_ = true
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/PluginPanel"]
@@ -49,7 +46,7 @@ layout_mode = 2
 theme_override_constants/margin_left = 40
 theme_override_constants/margin_top = 60
 theme_override_constants/margin_right = 40
-theme_override_constants/margin_bottom = 60
+theme_override_constants/margin_bottom = 0
 
 [node name="DescriptionPanelContainer" parent="VBoxContainer" instance=ExtResource("2_jd4gq")]
 unique_name_in_owner = true

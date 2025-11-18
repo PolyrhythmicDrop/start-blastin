@@ -3,16 +3,9 @@
 [ext_resource type="Texture2D" uid="uid://b1pls3wd1xmt8" path="res://assets/icons/currency/byte-icon-64.png" id="1_ql660"]
 [ext_resource type="Script" uid="uid://dtv01p3l3bvmu" path="res://nodes/ui/elements/PricePanelContainer.cs" id="1_wg3tc"]
 [ext_resource type="Texture2D" uid="uid://de20b5acmv0cq" path="res://assets/icons/currency/flux-icon.png" id="2_wg3tc"]
+[ext_resource type="LabelSettings" uid="uid://cnnymev36ytvv" path="res://resources/label-settings/price-label/shop-byte-price-label-settings.tres" id="3_ftx5u"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ca63a"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_2w48v"]
-resource_local_to_scene = true
-resource_name = "byte-price-label-settings"
-font_size = 26
-shadow_size = 3
-shadow_color = Color(0, 0, 0, 0.69411767)
-shadow_offset = Vector2(2, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ca63a"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -71,7 +64,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
 text = "000"
-label_settings = SubResource("LabelSettings_2w48v")
+label_settings = ExtResource("3_ftx5u")
 horizontal_alignment = 1
 vertical_alignment = 1
 

@@ -23,6 +23,8 @@ namespace Items
         protected int _fluxCost;
         protected int _byteCost;
 
+        public int ScrapValue => CalculateScrapValue();
+
         [Export]
         public StringName Name
         {
@@ -77,6 +79,19 @@ namespace Items
         public List<Effect> GetEffectList()
         {
             return _effects;
+        }
+
+        private int CalculateScrapValue()
+        {
+            int combined = _fluxCost + _byteCost;
+            if (combined > 0)
+            {
+                return combined / 2;
+            }
+            else
+            {
+                return 0;
+            }
         }
     }
 }

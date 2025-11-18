@@ -101,7 +101,9 @@ namespace UI.HUD
         private void AddSlot()
         {
             PluginSlot pluginSlot = _pluginSlotScene.Instantiate<PluginSlot>();
+            // Create a unique name for the slot so that it can easily be accessed by name
             _pluginSlots.Add(pluginSlot);
+            pluginSlot.Name = $"PluginSlot{_pluginSlots.Count}";
             _hBox.AddChild(pluginSlot);
         }
 

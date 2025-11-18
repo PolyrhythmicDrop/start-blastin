@@ -4,6 +4,7 @@ using System.Linq;
 using Entities;
 using Godot;
 using Interfaces;
+using Items;
 using Services;
 using UI.HUD;
 using Utility;
@@ -22,8 +23,18 @@ public partial class PluginScreen : PanelContainer, IListener
     private Dictionary<PluginSlot, Action> _slotFocusExitedActions = new();
 
     private PackedScene _itemNameScene = GD.Load<PackedScene>("uid://cwxfvdq5l7brl");
+    private PackedScene _pricePanelScene = GD.Load<PackedScene>("uid://b2fpxs1cgq4hk");
+
+    private Color _sellPriceColor;
 
     public int PlayerId => _playerId;
+
+    [Export]
+    public Color SellPriceColor
+    {
+        get => _sellPriceColor;
+        set => _sellPriceColor = value;
+    }
 
     public bool Active;
 
@@ -59,11 +70,13 @@ public partial class PluginScreen : PanelContainer, IListener
         AddVBoxes();
         foreach (PluginSlot slot in _pluginSlots)
         {
-            AddNamePanelToSlot(slot);
             slot.PivotOffset = slot.Size / 2;
             slot.Scale = new Vector2(0.8f, 0.8f);
+            AddNamePanelToSlot(slot);
+            AddScrapPricePanelToSlot(slot);
         }
         AddNamePanelToSlot(_weaponSlot);
+        AddScrapPricePanelToSlot(_weaponSlot);
     }
 
     private void AddVBoxes()
@@ -74,6 +87,7 @@ public partial class PluginScreen : PanelContainer, IListener
             VBoxContainer vBox = new VBoxContainer();
             _loadoutPanel.HBox.AddChild(vBox);
             slot.Reparent(vBox);
+            vBox.Name = $"{slot.Name}VBox";
         }
     }
 
@@ -157,14 +171,63 @@ public partial class PluginScreen : PanelContainer, IListener
         }
     }
 
+    private void AddScrapPricePanelToSlot(PluginSlot slot)
+    {
+        // VBoxContainer vBox = GetSlotVBox(slot);
+        VBoxContainer vBox = GetSlotElement<VBoxContainer>(slot);
+        if (vBox != null)
+        {
+            PricePanelContainer pricePanel = _pricePanelScene.Instantiate<PricePanelContainer>();
+            pricePanel.Name = GetPanelName<PricePanelContainer>(slot, true);
+            vBox.AddChild(pricePanel);
+            pricePanel.SetMode(PricePanelContainer.Mode.Inventory);
+            pricePanel.Owner = this;
+            pricePanel.UniqueNameInOwner = true;
+            pricePanel.TogglePanelVisibility(false, PricePanelContainer.PriceLabel.Flux);
+            if (slot.Plugin != null)
+            {
+                pricePanel.SetLabelText(
+                    slot.Plugin.ScrapValue.ToString(),
+                    PricePanelContainer.PriceLabel.Bytes
+                );
+                pricePanel.SetFontColor(_sellPriceColor);
+            }
+            else
+            {
+                pricePanel.TogglePanelVisibility(false);
+            }
+            InitializePricePanel(pricePanel);
+        }
+    }
+
+    private void InitializePricePanel(PricePanelContainer panel)
+    {
+        // Set the name panel as invisible until it gains focus.
+        Color modColor = new(panel.Modulate);
+        modColor.A = 0;
+        panel.Modulate = modColor;
+        // Set the name panel's pivot offset to center
+        panel.PivotOffset = panel.Size / 2;
+        // Set the initial scane to 2
+        panel.Scale = new Vector2(2, 2);
+    }
+
     private void AddNamePanelToSlot(PluginSlot slot)
     {
-        if (slot.GetParent() is VBoxContainer vbox)
+        // VBoxContainer vBox = GetSlotVBox(slot);
+        VBoxContainer vBox = GetSlotElement<VBoxContainer>(slot);
+        if (vBox != null)
         {
             ItemNamePanelContainer namePanel = _itemNameScene.Instantiate<ItemNamePanelContainer>();
             namePanel.NameLabelSettings = ItemNameLabelSettings.Inventory;
-            vbox.AddChild(namePanel);
-            vbox.MoveChild(namePanel, 0);
+            namePanel.Name = GetPanelName<ItemNamePanelContainer>(slot, true);
+            vBox.AddChild(namePanel);
+            vBox.MoveChild(namePanel, 0);
+            namePanel.Owner = this;
+            namePanel.UniqueNameInOwner = true;
+            DebugLogger.LogMessage(
+                $"{namePanel} UniqueNameInOwner set to {namePanel.UniqueNameInOwner}. Owner: {namePanel.Owner}"
+            );
             if (slot.Plugin != null)
             {
                 namePanel.Label.Text = slot.Plugin.Name;
@@ -175,6 +238,54 @@ public partial class PluginScreen : PanelContainer, IListener
             }
             InitializeNamePanel(namePanel);
         }
+    }
+
+    /// <summary>
+    /// Returns the node name of the NamePanel for the passed slot.
+    /// </summary>
+    /// <param name="slot">The slot to retrieve the NamePanel for.</param>
+    /// <param name="set">Whether or not this method is used to set or get the NamePanel's name. If true, no percent sign will be prefixed to the name.</param>
+    /// <returns></returns>
+    // private string GetNamePanelName(PluginSlot slot, bool set)
+    // {
+    //     string name = $"{slot.Name}NamePanel";
+    //     name = set ? name : "%" + name;
+    //     return name;
+    // }
+
+    // private string GetPricePanelName(PluginSlot slot, bool set)
+    // {
+    //     string name = $"{slot.Name}PricePanel";
+    //     name = set ? name : "%" + name;
+    //     return name;
+    // }
+
+    private string GetPanelName<T>(PluginSlot slot, bool set)
+        where T : PanelContainer
+    {
+        string panelType = "";
+        if (typeof(T) == typeof(ItemNamePanelContainer))
+        {
+            panelType = "NamePanel";
+        }
+        else if (typeof(T) == typeof(PricePanelContainer))
+        {
+            panelType = "PricePanel";
+        }
+
+        if (string.IsNullOrEmpty(panelType))
+        {
+            DebugLogger.LogMessage(
+                $"Could not get panel name. Pass a PricePanelContainer or a ItemNamePanelContainer as this method's type parameter.",
+                true,
+                true
+            );
+            return null;
+        }
+
+        string name = $"{slot.Name}{panelType}";
+        name = set ? name : "%" + name;
+        return name;
     }
 
     private void InitializeNamePanel(ItemNamePanelContainer namePanel)
@@ -195,10 +306,12 @@ public partial class PluginScreen : PanelContainer, IListener
 
     private void OnSlotFocusEntered(PluginSlot slot)
     {
-        // DebugLogger.LogMessage($"{slot.Name} focus entered!", true);
-        // VBoxContainer vbox = slot.GetParent<VBoxContainer>();
-        // ItemNamePanelContainer namePanel = vbox.GetChildOrNull<ItemNamePanelContainer>(0);
-        GetSlotElements(slot, out VBoxContainer vBox, out ItemNamePanelContainer namePanel);
+        GetSlotElements(
+            slot,
+            out VBoxContainer vbox,
+            out ItemNamePanelContainer namePanel,
+            out PricePanelContainer pricePanel
+        );
         if (namePanel != null)
         {
             Tween tween = CreateTween();
@@ -206,6 +319,7 @@ public partial class PluginScreen : PanelContainer, IListener
             tween.TweenProperty(namePanel, "modulate:a", 1.0, 0.3);
             tween.TweenProperty(namePanel, "scale", Vector2.One, 0.3);
             tween.TweenProperty(slot, "scale", Vector2.One, 0.3);
+            tween.TweenProperty(pricePanel, "modulate:a", 1.0, 0.3);
         }
 
         // Set the description to the item description.
@@ -223,8 +337,12 @@ public partial class PluginScreen : PanelContainer, IListener
 
     private void OnSlotFocusExited(PluginSlot slot)
     {
-        // DebugLogger.LogMessage($"{slot.Name} focus exited!", true);
-        GetSlotElements(slot, out VBoxContainer vBox, out ItemNamePanelContainer namePanel);
+        GetSlotElements(
+            slot,
+            out VBoxContainer vbox,
+            out ItemNamePanelContainer namePanel,
+            out PricePanelContainer pricePanel
+        );
         if (namePanel != null)
         {
             Tween tween = namePanel.CreateTween();
@@ -232,17 +350,50 @@ public partial class PluginScreen : PanelContainer, IListener
             tween.TweenProperty(namePanel, "modulate:a", 0, 0.3);
             tween.TweenProperty(namePanel, "scale", new Vector2(2, 2), 0.3);
             tween.TweenProperty(slot, "scale", new Vector2(0.8f, 0.8f), 0.3);
+            tween.TweenProperty(pricePanel, "modulate:a", 0, 0.3);
         }
     }
 
     private void GetSlotElements(
         PluginSlot slot,
         out VBoxContainer vBox,
-        out ItemNamePanelContainer namePanel
+        out ItemNamePanelContainer namePanel,
+        out PricePanelContainer pricePanel
     )
     {
-        vBox = slot.GetParentOrNull<VBoxContainer>();
-        namePanel = vBox.GetChildOrNull<ItemNamePanelContainer>(0);
+        vBox = GetSlotElement<VBoxContainer>(slot);
+        namePanel = GetSlotElement<ItemNamePanelContainer>(slot);
+        pricePanel = GetSlotElement<PricePanelContainer>(slot);
+    }
+
+    private T GetSlotElement<T>(PluginSlot slot)
+        where T : Container
+    {
+        if (typeof(T) == typeof(VBoxContainer))
+        {
+            return slot.GetParentOrNull<VBoxContainer>() as T;
+        }
+        else if (typeof(T) == typeof(ItemNamePanelContainer))
+        {
+            return GetNodeOrNull<ItemNamePanelContainer>(
+                    GetPanelName<ItemNamePanelContainer>(slot, false)
+                ) as T;
+        }
+        else if (typeof(T) == typeof(PricePanelContainer))
+        {
+            return GetNodeOrNull<PricePanelContainer>(
+                    GetPanelName<PricePanelContainer>(slot, false)
+                ) as T;
+        }
+        else
+        {
+            DebugLogger.LogMessage(
+                $"Could not find an appropriate element type to get! Passed type: {typeof(T)}",
+                true,
+                true
+            );
+            return null;
+        }
     }
 
     public override void _ExitTree()

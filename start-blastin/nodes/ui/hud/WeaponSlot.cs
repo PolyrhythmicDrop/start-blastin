@@ -12,28 +12,32 @@ namespace UI.HUD
 
         public WeaponPlugin Weapon => Plugin;
 
-        public override void SetPlugin(Plugin plugin)
+        public void SetWeapon(WeaponPlugin weapon)
+        {
+            SetItem(weapon);
+        }
+
+        public override void SetItem(Item item)
         {
             try
             {
-                if (plugin != _plugin)
+                if (item != _plugin)
                 {
-                    if (plugin is WeaponPlugin weaponPlugin)
+                    if (item is not WeaponPlugin)
                     {
-                        _plugin = weaponPlugin;
-                        _textureRect.Texture = Weapon.Icon;
+                        throw new ArgumentException(
+                            $"WeaponSlot can only accept WeaponPlugin types! Recieved a {item?.GetType().Name} instead."
+                        );
                     }
                     else
                     {
-                        throw new ArgumentException(
-                            $"WeaponSlot can only accept WeaponPlugin types! Recieved a {plugin?.GetType().Name} instead."
-                        );
+                        base.SetItem(item);
                     }
                 }
                 else
                 {
                     throw new ArgumentException(
-                        $"Projectile type already equipped! Attempted to equip {plugin?.GetType().Name}"
+                        $"Projectile type already equipped! Attempted to equip {item?.GetType().Name}"
                     );
                 }
             }

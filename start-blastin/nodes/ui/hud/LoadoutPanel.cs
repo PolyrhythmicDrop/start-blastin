@@ -141,7 +141,7 @@ namespace UI.HUD
             {
                 if (slot is not WeaponSlot)
                 {
-                    slot.ClearPlugin();
+                    slot.ClearItem();
                 }
             }
         }

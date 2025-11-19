@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Entities;
 using Godot;
 using UI.HUD;
+using UI.Loadout;
 using UI.Shop;
 
 namespace UI

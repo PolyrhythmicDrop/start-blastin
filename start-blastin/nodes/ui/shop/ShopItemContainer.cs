@@ -9,12 +9,6 @@ namespace UI.Shop
     [GlobalClass]
     public partial class ShopItemContainer : ItemContainer
     {
-        // ~ Nodes ~ //
-        // private PanelContainer _bytePanelContainer;
-        // private PanelContainer _fluxPanelContainer;
-        // private Label _byteLabel;
-        // private Label _fluxLabel;
-
         private PricePanelContainer _pricePanel;
 
         private Color _defaultPriceColor = new Color("#ffffff");
@@ -26,10 +20,6 @@ namespace UI.Shop
         {
             base._Ready();
             _pricePanel = GetNode<PricePanelContainer>("%PricePanelContainer");
-            // _bytePanelContainer = GetNode<PanelContainer>("%BytePanelContainer");
-            // _fluxPanelContainer = GetNode<PanelContainer>("%FluxPanelContainer");
-            // _byteLabel = GetNode<Label>("%ByteLabel");
-            // _fluxLabel = GetNode<Label>("%FluxLabel");
         }
 
         public override void _GuiInput(InputEvent @event)
@@ -59,9 +49,6 @@ namespace UI.Shop
         {
             int flux = _item.FluxCost;
             int bytes = _item.ByteCost;
-
-            // _fluxLabel.Text = flux.ToString("N0");
-            // _byteLabel.Text = bytes.ToString("N0");
 
             _pricePanel.SetLabelText(bytes.ToString("N0"), PricePanelContainer.PriceLabel.Bytes);
             _pricePanel.SetLabelText(flux.ToString("N0"), PricePanelContainer.PriceLabel.Flux);

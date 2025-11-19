@@ -1,32 +1,42 @@
 using System;
+using System.Diagnostics;
 using Godot;
 using Items;
+using Utility;
 
 namespace UI.HUD
 {
     [GlobalClass]
-    public partial class PluginSlot : PanelContainer
+    public partial class PluginSlot : ItemSlot
     {
-        protected TextureRect _textureRect;
-        protected Plugin _plugin;
+        protected Plugin _plugin => _item as Plugin;
 
         public Plugin Plugin => _plugin;
 
         public override void _Ready()
         {
-            _textureRect = GetNode<TextureRect>("%IconRect");
+            _icon = GetNode<TextureRect>("%IconRect");
         }
 
         public virtual void SetPlugin(Plugin plugin)
         {
-            _plugin = plugin;
-            _textureRect.Texture = _plugin.Icon;
+            SetItem(plugin);
         }
 
-        public virtual void ClearPlugin()
+        public override void SetItem(Item item)
         {
-            _plugin = null;
-            _textureRect.Texture = null;
+            if (item is not Plugin plugin)
+            {
+                DebugLogger.LogMessage(
+                    $"Cannot set {Name}'s item to {item} because the item is not a plugin! {item} is {item.GetType()}",
+                    true,
+                    true
+                );
+            }
+            else
+            {
+                base.SetItem(plugin);
+            }
         }
     }
 }

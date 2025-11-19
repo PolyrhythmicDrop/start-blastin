@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Entities;
 using Godot;
 using Interfaces;
-using Items;
 using Services;
 using UI.HUD;
 using Utility;
@@ -61,8 +58,23 @@ public partial class PluginScreen : PanelContainer, IListener
         SetFocusModes();
         AssignNeighbors();
         ConnectSignals();
-        _weaponSlot.GrabFocus();
-        Active = true;
+        // _weaponSlot.GrabFocus();
+        // Active = true;
+    }
+
+    public void Activate(bool activate)
+    {
+        if (activate)
+        {
+            Active = true;
+            Visible = true;
+            _weaponSlot.GrabFocus();
+        }
+        else
+        {
+            Visible = false;
+            Active = false;
+        }
     }
 
     public void BuildPluginScreen()
@@ -239,26 +251,6 @@ public partial class PluginScreen : PanelContainer, IListener
             InitializeNamePanel(namePanel);
         }
     }
-
-    /// <summary>
-    /// Returns the node name of the NamePanel for the passed slot.
-    /// </summary>
-    /// <param name="slot">The slot to retrieve the NamePanel for.</param>
-    /// <param name="set">Whether or not this method is used to set or get the NamePanel's name. If true, no percent sign will be prefixed to the name.</param>
-    /// <returns></returns>
-    // private string GetNamePanelName(PluginSlot slot, bool set)
-    // {
-    //     string name = $"{slot.Name}NamePanel";
-    //     name = set ? name : "%" + name;
-    //     return name;
-    // }
-
-    // private string GetPricePanelName(PluginSlot slot, bool set)
-    // {
-    //     string name = $"{slot.Name}PricePanel";
-    //     name = set ? name : "%" + name;
-    //     return name;
-    // }
 
     private string GetPanelName<T>(PluginSlot slot, bool set)
         where T : PanelContainer

@@ -40,6 +40,7 @@ namespace UI
 
             AddChild(_shopManager);
             AddChild(_hud);
+            AddChild(_pluginScreen);
         }
 
         public void Initialize(int playerId)
@@ -82,17 +83,17 @@ namespace UI
         private async void OpenPluginScreen()
         {
             GetTree().Paused = true;
-            CallDeferred(MethodName.AddChild, _pluginScreen);
-            _pluginScreen.RequestReady();
-            await ToSignal(_pluginScreen, Node.SignalName.Ready);
-            _pluginScreen.Visible = true;
+            // CallDeferred(MethodName.AddChild, _pluginScreen);
+            // _pluginScreen.RequestReady();
+            // await ToSignal(_pluginScreen, Node.SignalName.Ready);
+            _pluginScreen.Activate(true);
         }
 
         private async void ClosePluginScreen()
         {
-            _pluginScreen.Visible = false;
-            CallDeferred(MethodName.RemoveChild, _pluginScreen);
-            await ToSignal(_pluginScreen, Node.SignalName.TreeExited);
+            _pluginScreen.Activate(false);
+            // CallDeferred(MethodName.RemoveChild, _pluginScreen);
+            // await ToSignal(_pluginScreen, Node.SignalName.TreeExited);
             GetTree().Paused = false;
         }
 

@@ -16,34 +16,26 @@ namespace UI.Loadout
     /// Manager for displaying a player's loadout on the HUD and in various status screens.
     /// Does not actually control the loadout, only the display of the loadout.
     /// </summary>
-    public partial class LoadoutManager : Node, IListener
+    public class LoadoutManager : IListener
     {
         private int _playerId;
         private PlayerService _service;
-        private IReadOnlyList<Plugin> _plugins;
-        private int _slotCount;
 
-        public IReadOnlyList<Plugin> Plugins => _plugins;
-
-        public Action LoadoutChanged;
+        public event EventHandler<PlayerPluginEquippedEventArgs> PluginEquipped;
+        public event EventHandler<PlayerWeaponChangedEventArgs> WeaponChanged;
+        public event Action<int> SlotCountUpdated;
 
         public void Initialize(int playerId)
         {
             _playerId = playerId;
             _service = ServiceManager.Instance.GetService<PlayerService>();
-        }
-
-        public override void _Ready()
-        {
-            Player player = _service.GetPlayer(_playerId);
-            _plugins = player.GetPlugins();
 
             ConnectSignals();
         }
 
         public void ConnectSignals()
         {
-            EventBus.Instance.PlayerPluginsChanged += OnPlayerPluginsChanged;
+            EventBus.Instance.PlayerPluginEquipped += OnPlayerPluginEquipped;
 
             Player player = _service.GetPlayer(_playerId);
             player.GetStatManager().StatUpdated += OnPlayerStatUpdated;
@@ -51,30 +43,39 @@ namespace UI.Loadout
 
         public void DisconnectSignals()
         {
-            EventBus.Instance.PlayerPluginsChanged -= OnPlayerPluginsChanged;
+            EventBus.Instance.PlayerPluginEquipped -= OnPlayerPluginEquipped;
 
             Player player = _service.GetPlayer(_playerId);
             player.GetStatManager().StatUpdated -= OnPlayerStatUpdated;
         }
 
-        public void OnPlayerPluginsChanged(object source, PlayerPluginsChangedEventArgs args)
+        public void OnPlayerPluginEquipped(object source, PlayerPluginEquippedEventArgs args)
         {
-            _plugins = args.Plugins;
-            LoadoutChanged?.Invoke();
+            if (args.PlayerId == _playerId)
+            {
+                PluginEquipped?.Invoke(this, args);
+            }
         }
 
         public void OnPlayerStatUpdated(object source, StatUpdatedEventArgs args)
         {
             if (args.StatType == Stats.StatType.PluginSlots)
             {
-                _slotCount = (int)args.Stat.CurrentValue;
-                LoadoutChanged?.Invoke();
+                SlotCountUpdated?.Invoke((int)args.Stat.CurrentValue);
+            }
+        }
+
+        public void OnPlayerWeaponChanged(object source, PlayerWeaponChangedEventArgs args)
+        {
+            if (args.PlayerId == _playerId)
+            {
+                WeaponChanged?.Invoke(this, args);
             }
         }
 
         public int GetSlotCount()
         {
-            return _slotCount;
+            return _service.GetPlayer(_playerId).PluginSlots;
         }
 
         public WeaponPlugin GetWeaponPlugin()
@@ -82,10 +83,9 @@ namespace UI.Loadout
             return _service.GetPlayer(_playerId).WeaponPlugin;
         }
 
-        public override void _ExitTree()
+        public IReadOnlyList<Plugin> GetPlugins()
         {
-            DisconnectSignals();
-            base._ExitTree();
+            return _service.GetPlayer(_playerId).GetPlugins();
         }
     }
 }

@@ -13,11 +13,6 @@ namespace UI.HUD
 
         public Plugin Plugin => _plugin;
 
-        public override void _Ready()
-        {
-            _icon = GetNode<TextureRect>("%IconRect");
-        }
-
         public virtual void SetPlugin(Plugin plugin)
         {
             SetItem(plugin);

@@ -1,7 +1,33 @@
-[gd_scene load_steps=2 format=3 uid="uid://cx50s2c1i7ysb"]
+[gd_scene load_steps=5 format=3 uid="uid://cx50s2c1i7ysb"]
 
 [ext_resource type="Script" uid="uid://ccb5txlroa4u3" path="res://nodes/ui/menus/plugin-screen/InventoryItemContainer.cs" id="1_xmjwr"]
+[ext_resource type="PackedScene" uid="uid://cwxfvdq5l7brl" path="res://nodes/ui/elements/item-name-panel-container.tscn" id="2_7hqfq"]
+[ext_resource type="PackedScene" uid="uid://b2fpxs1cgq4hk" path="res://nodes/ui/elements/price-panel-container.tscn" id="3_5tp8i"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7hqfq"]
 
 [node name="InventoryItemContainer" type="PanelContainer"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -131.0
+offset_right = 131.0
+offset_bottom = 83.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_7hqfq")
 script = ExtResource("1_xmjwr")
 metadata/_custom_type_script = "uid://ccb5txlroa4u3"
+
+[node name="VBox" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 1
+
+[node name="ItemNamePanel" parent="VBox" instance=ExtResource("2_7hqfq")]
+unique_name_in_owner = true
+layout_mode = 2
+NameLabelSettings = 2
+
+[node name="PricePanelContainer" parent="VBox" instance=ExtResource("3_5tp8i")]
+unique_name_in_owner = true
+layout_mode = 2

@@ -19,9 +19,10 @@ namespace UI.HUD
 
         public override void SetItem(Item item)
         {
+            DebugLogger.LogMessage($"Setting item in WeaponSlot...{item}", true);
             try
             {
-                if (item != _plugin)
+                if (_plugin == null || item != _plugin)
                 {
                     if (item is not WeaponPlugin)
                     {

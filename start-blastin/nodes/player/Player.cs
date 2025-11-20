@@ -561,7 +561,8 @@ namespace Entities
                 if (_plugins.Count < _pluginSlots && newPlugin is not Items.WeaponPlugin)
                 {
                     _plugins.Add(newPlugin);
-                    EventBus.Instance.RaisePlayerPluginsChanged(_playerId, _plugins);
+                    // EventBus.Instance.RaisePlayerPluginsChanged(_playerId, _plugins);
+                    EventBus.Instance.RaisePlayerPluginEquipped(_playerId, newPlugin);
                 }
                 else
                 {

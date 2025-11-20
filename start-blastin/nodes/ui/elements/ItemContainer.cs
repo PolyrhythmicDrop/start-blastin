@@ -38,13 +38,13 @@ namespace UI
             ConnectSignals();
         }
 
-        public void ConnectSignals()
+        public virtual void ConnectSignals()
         {
             FocusEntered += OnFocusEnter;
             FocusExited += OnFocusExit;
         }
 
-        public void DisconnectSignals()
+        public virtual void DisconnectSignals()
         {
             FocusEntered -= OnFocusEnter;
             FocusExited -= OnFocusExit;

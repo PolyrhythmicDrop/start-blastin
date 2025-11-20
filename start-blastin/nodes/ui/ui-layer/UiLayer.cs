@@ -5,6 +5,7 @@ using Godot;
 using UI.HUD;
 using UI.Loadout;
 using UI.Shop;
+using Utility;
 
 namespace UI
 {
@@ -16,6 +17,7 @@ namespace UI
     {
         private static readonly Dictionary<int, UiLayer> _instances = new();
         private int _playerId;
+        private LoadoutManager _loadoutManager;
         private ShopManager _shopManager;
         private Hud _hud;
         private PackedScene _hudScene = ResourceLoader.Load<PackedScene>("uid://cs0msq3g3i6xk");
@@ -26,6 +28,7 @@ namespace UI
         );
 
         public int PlayerId => _playerId;
+        public LoadoutManager LoadoutManager => _loadoutManager;
 
         public static UiLayer GetUiLayer(int playerId)
         {
@@ -57,11 +60,14 @@ namespace UI
             _shopManager.Name = $"ShopManager {_playerId}";
             _shopManager.Initialize(_playerId, this);
 
+            // Initialize the loadout display for the player.
+            _loadoutManager = new LoadoutManager();
+            _loadoutManager.Initialize(_playerId);
+
             // Initialize the HUD
             _hud = _hudScene.Instantiate<Hud>();
             _hud.Initialize(_playerId);
 
-            // Initialize the plugin screen
             _pluginScreen = _pluginScreenScene.Instantiate<PluginScreen>();
             _pluginScreen.Initialize(_playerId);
         }
@@ -87,12 +93,12 @@ namespace UI
             // CallDeferred(MethodName.AddChild, _pluginScreen);
             // _pluginScreen.RequestReady();
             // await ToSignal(_pluginScreen, Node.SignalName.Ready);
-            _pluginScreen.Activate(true);
+            _pluginScreen.ToggleActivate(true);
         }
 
         private async void ClosePluginScreen()
         {
-            _pluginScreen.Activate(false);
+            _pluginScreen.ToggleActivate(false);
             // CallDeferred(MethodName.RemoveChild, _pluginScreen);
             // await ToSignal(_pluginScreen, Node.SignalName.TreeExited);
             GetTree().Paused = false;

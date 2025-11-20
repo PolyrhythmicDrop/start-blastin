@@ -25,4 +25,3 @@ alignment = 1
 [node name="WeaponSlot" parent="LoadoutHBox" instance=ExtResource("2_57mqe")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 6

@@ -3,7 +3,8 @@
 [resource]
 resource_local_to_scene = true
 resource_name = "byte-price-label-settings"
-font_size = 30
+font_size = 28
+font_color = Color(0.47058824, 0.84705883, 0.7176471, 1)
 shadow_size = 3
 shadow_color = Color(0, 0, 0, 0.69411767)
 shadow_offset = Vector2(2, 1)

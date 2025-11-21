@@ -103,7 +103,7 @@ namespace UI.Shop
                 captured.FocusEntered += handler;
 
                 // Connect to the shop item selected signal
-                container.ShopItemSelected += OnShopItemSelected;
+                container.ItemContainerSelected += OnShopItemSelected;
             }
         }
 
@@ -124,7 +124,7 @@ namespace UI.Shop
 
             foreach (ShopItemContainer container in _itemContainers)
             {
-                container.ShopItemSelected -= OnShopItemSelected;
+                container.ItemContainerSelected -= OnShopItemSelected;
             }
         }
 
@@ -134,7 +134,7 @@ namespace UI.Shop
 
         private void HealFocusEntered() => DisplayTickerFocusMessage(_healButton);
 
-        private void OnShopItemSelected(object source, ShopItemSelectedEventArgs args)
+        private void OnShopItemSelected(object source, ItemSelectedEventArgs args)
         {
             Player player = _service.GetPlayer(_playerId);
             DebugLogger.LogMessage(

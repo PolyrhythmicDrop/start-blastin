@@ -1,4 +1,5 @@
 using System;
+using Events;
 using Godot;
 using Interfaces;
 using Items;
@@ -30,12 +31,23 @@ namespace UI
 
         public Item Item => _item;
 
+        public event EventHandler<ItemSelectedEventArgs> ItemContainerSelected;
+
         public override void _Ready()
         {
             _textureRect = GetNode<TextureRect>("%ItemIcon");
             // _itemNameLabel = GetNode<Label>("%ItemNameLabel");
             _itemNamePanel = GetNode<ItemNamePanelContainer>("%ItemNamePanelContainer");
             ConnectSignals();
+        }
+
+        public override void _GuiInput(InputEvent @event)
+        {
+            if (Input.IsActionJustPressedByEvent("ui_accept", @event))
+            {
+                InvokeItemContainerSelected();
+                AcceptEvent();
+            }
         }
 
         public virtual void ConnectSignals()
@@ -76,8 +88,6 @@ namespace UI
                     break;
             }
 
-            // _itemNameLabel.LabelSettings.FontColor = _itemColor;
-            // _itemNameLabel.Text = _item.Name;
             _itemNamePanel.Label.LabelSettings.FontColor = _itemColor;
             _itemNamePanel.Label.Text = _item.Name;
 
@@ -103,6 +113,14 @@ namespace UI
         protected virtual void OnFocusExit()
         {
             AddThemeStyleboxOverride("panel", _defocusedStyleBox);
+        }
+
+        public virtual void InvokeItemContainerSelected()
+        {
+            if (_item != null)
+            {
+                ItemContainerSelected?.Invoke(this, new ItemSelectedEventArgs(_item));
+            }
         }
 
         public override void _ExitTree()

@@ -3,11 +3,11 @@ using Items;
 
 namespace Events
 {
-    public class ShopItemSelectedEventArgs : EventArgs
+    public class ItemSelectedEventArgs : EventArgs
     {
         public Item Item { get; }
 
-        public ShopItemSelectedEventArgs(Item item)
+        public ItemSelectedEventArgs(Item item)
         {
             Item = item;
         }

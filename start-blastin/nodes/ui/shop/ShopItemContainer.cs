@@ -14,22 +14,20 @@ namespace UI.Shop
         private Color _defaultPriceColor = new Color("#ffffff");
         private Color _unbuyablePriceColor = new Color("#ff5470");
 
-        public event EventHandler<ShopItemSelectedEventArgs> ShopItemSelected;
-
         public override void _Ready()
         {
             base._Ready();
             _pricePanel = GetNode<PricePanelContainer>("%PricePanelContainer");
         }
 
-        public override void _GuiInput(InputEvent @event)
-        {
-            if (Input.IsActionJustPressedByEvent("ui_accept", @event))
-            {
-                ItemSelected();
-                AcceptEvent();
-            }
-        }
+        // public override void _GuiInput(InputEvent @event)
+        // {
+        //     if (Input.IsActionJustPressedByEvent("ui_accept", @event))
+        //     {
+        //         InvokeItemContainerSelected();
+        //         AcceptEvent();
+        //     }
+        // }
 
         /// <summary>
         /// Sets the item that belongs in the container.
@@ -62,17 +60,6 @@ namespace UI.Shop
         private void ClearPriceLabels()
         {
             _pricePanel.TogglePanelVisibility(false);
-        }
-
-        /// <summary>
-        /// Called when the player presses the "ui_select" action while this ShopItemContainer is in focus.
-        /// </summary>
-        public void ItemSelected()
-        {
-            if (_item != null)
-            {
-                ShopItemSelected?.Invoke(this, new ShopItemSelectedEventArgs(_item));
-            }
         }
 
         public void ItemBought()

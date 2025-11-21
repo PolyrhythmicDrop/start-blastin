@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using Godot;
 using Interfaces;
-using Items;
-using Services;
 using UI.HUD;
 using Utility;
 
@@ -21,21 +18,14 @@ namespace UI.Loadout
         private List<InventoryItemContainer> _pluginContainers = new();
         private Dictionary<InventoryItemContainer, Action> _containerFocusEnteredCallbacks = new();
         private Dictionary<InventoryItemContainer, Action> _containerFocusExitedCallbacks = new();
+
+        // private Dictionary<InventoryItemContainer,
         private InventoryItemContainer _weaponContainer;
         private DescriptionPanel _descriptionPanel;
 
         private PackedScene _inventoryItemContainerScene = GD.Load<PackedScene>(
             "uid://cx50s2c1i7ysb"
         );
-
-        private Color _sellPriceColor;
-
-        [Export]
-        public Color SellPriceColor
-        {
-            get => _sellPriceColor;
-            set => _sellPriceColor = value;
-        }
 
         public bool Active;
 
@@ -53,7 +43,6 @@ namespace UI.Loadout
             _pluginMargins = GetNode<MarginContainer>("%PluginMargins");
             _pluginHBox = GetNode<HBoxContainer>("%PluginHBox");
 
-            // _pluginMargins.AddChild(_loadoutPanel);
             _descriptionPanel = GetNode<DescriptionPanel>("%DescriptionPanelContainer");
 
             BuildPluginScreen();
@@ -120,14 +109,8 @@ namespace UI.Loadout
 
         public void BuildPluginScreen()
         {
-            // New implementation
-            DebugLogger.LogMessage($"Building plugin screen...", true);
-
             // Create the container for the weapon slot
             WrapWeaponSlot();
-
-            DebugLogger.LogMessage($"Wrapping the loadout's plugin slots...", true);
-
             // Create containers for the rest of the equipped plugins
             foreach (PluginSlot slot in _loadoutDisplay.PluginSlots)
             {
@@ -137,11 +120,11 @@ namespace UI.Loadout
 
         private void WrapWeaponSlot()
         {
-            DebugLogger.LogMessage($"Wrapping the loadout's weapon slot...", true);
+            // DebugLogger.LogMessage($"Wrapping the loadout's weapon slot...", true);
             InventoryItemContainer weapContainer =
                 _inventoryItemContainerScene.Instantiate<InventoryItemContainer>();
             _weaponContainer = weapContainer;
-            DebugLogger.LogMessage($"Adding the new container as a child to the HBox...", true);
+            // DebugLogger.LogMessage($"Adding the new container as a child to the HBox...", true);
             _pluginHBox.AddChild(_weaponContainer);
             _weaponContainer.SetItemSlot(_loadoutDisplay.WeapSlot);
             _weaponContainer.Slot.PivotOffset = _loadoutDisplay.WeapSlot.Size / 2;
@@ -150,7 +133,7 @@ namespace UI.Loadout
 
         private void WrapPluginSlot(PluginSlot slot)
         {
-            DebugLogger.LogMessage($"Wrapping the plugin slot {slot.Name}", true);
+            // DebugLogger.LogMessage($"Wrapping the plugin slot {slot.Name}", true);
             InventoryItemContainer itemContainer =
                 _inventoryItemContainerScene.Instantiate<InventoryItemContainer>();
             _pluginHBox.AddChild(itemContainer);

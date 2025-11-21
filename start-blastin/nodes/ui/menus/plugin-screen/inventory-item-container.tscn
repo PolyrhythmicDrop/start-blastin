@@ -7,13 +7,19 @@
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7hqfq"]
 
 [node name="InventoryItemContainer" type="PanelContainer"]
-anchors_preset = 5
+anchors_preset = 8
 anchor_left = 0.5
+anchor_top = 0.5
 anchor_right = 0.5
-offset_left = -131.0
-offset_right = 131.0
-offset_bottom = 83.0
+anchor_bottom = 0.5
+offset_left = -132.0
+offset_top = -50.0
+offset_right = 132.0
+offset_bottom = 50.0
 grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_7hqfq")
 script = ExtResource("1_xmjwr")
 metadata/_custom_type_script = "uid://ccb5txlroa4u3"

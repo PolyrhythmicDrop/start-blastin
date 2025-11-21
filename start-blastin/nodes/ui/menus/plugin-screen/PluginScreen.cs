@@ -10,7 +10,7 @@ using Utility;
 
 namespace UI.Loadout
 {
-    public partial class PluginScreen : PanelContainer
+    public partial class PluginScreen : PanelContainer, IListener
     {
         private int _playerId;
 
@@ -19,6 +19,8 @@ namespace UI.Loadout
         private HBoxContainer _pluginHBox;
 
         private List<InventoryItemContainer> _pluginContainers = new();
+        private Dictionary<InventoryItemContainer, Action> _containerFocusEnteredCallbacks = new();
+        private Dictionary<InventoryItemContainer, Action> _containerFocusExitedCallbacks = new();
         private InventoryItemContainer _weaponContainer;
         private DescriptionPanel _descriptionPanel;
 
@@ -57,6 +59,48 @@ namespace UI.Loadout
             BuildPluginScreen();
             SetFocusModes();
             AssignNeighbors();
+            ConnectSignals();
+        }
+
+        public void ConnectSignals()
+        {
+            _weaponContainer.FocusEntered += OnWeaponContainerFocusEntered;
+
+            foreach (InventoryItemContainer container in _pluginContainers)
+            {
+                InventoryItemContainer capturedCont = container;
+                Action enteredHandler = () =>
+                {
+                    OnContainerFocusEntered(capturedCont);
+                };
+                Action exitedHandler = () =>
+                {
+                    OnContainerFocusExited(capturedCont);
+                };
+                _containerFocusEnteredCallbacks[capturedCont] = enteredHandler;
+                _containerFocusExitedCallbacks[capturedCont] = exitedHandler;
+                capturedCont.FocusEntered += enteredHandler;
+                capturedCont.FocusExited += exitedHandler;
+            }
+        }
+
+        public void DisconnectSignals()
+        {
+            _weaponContainer.FocusEntered -= OnWeaponContainerFocusEntered;
+
+            foreach (
+                KeyValuePair<InventoryItemContainer, Action> kvp in _containerFocusEnteredCallbacks
+            )
+            {
+                kvp.Key.FocusEntered -= kvp.Value;
+            }
+
+            foreach (
+                KeyValuePair<InventoryItemContainer, Action> kvp in _containerFocusExitedCallbacks
+            )
+            {
+                kvp.Key.FocusExited -= kvp.Value;
+            }
         }
 
         public void ToggleActivate(bool activate)
@@ -160,9 +204,27 @@ namespace UI.Loadout
             }
         }
 
+        private void OnWeaponContainerFocusEntered() => OnContainerFocusEntered(_weaponContainer);
+
+        private void OnContainerFocusEntered(InventoryItemContainer container)
+        {
+            DebugLogger.LogMessage($"{container} focus entered!");
+            if (container.Slot.Item != null)
+            {
+                _descriptionPanel.DisplayItemDescription(container.Slot.Item);
+            }
+            else
+            {
+                _descriptionPanel.DisplayString("There's nothing here. How sad...");
+            }
+        }
+
+        private void OnContainerFocusExited(InventoryItemContainer container) { }
+
         public override void _ExitTree()
         {
             Active = false;
+            DisconnectSignals();
             base._ExitTree();
         }
     }

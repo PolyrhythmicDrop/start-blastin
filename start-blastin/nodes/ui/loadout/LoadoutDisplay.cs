@@ -169,8 +169,8 @@ namespace UI.Loadout
         {
             if (args.Item is not WeaponPlugin && args.Item is Plugin plugin)
             {
-                // Find the slot this item belongs to and clear its item
-                _pluginDisplays.Find(slot => slot.Item == plugin).ClearItem();
+                // Find the slot this plugin belongs to and set it to a blank plugin
+                _pluginDisplays.Find(slot => slot.Item == plugin).SetItem(_blankPlugin);
             }
         }
 

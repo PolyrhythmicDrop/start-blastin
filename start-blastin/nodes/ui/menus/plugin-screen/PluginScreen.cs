@@ -219,6 +219,7 @@ namespace UI.Loadout
 
         private void OnItemContainerSelected(object source, ItemSelectedEventArgs args)
         {
+            DebugLogger.LogMessage($"Item container {source} selected!");
             if (
                 ServiceManager
                     .Instance.GetService<PlayerService>()

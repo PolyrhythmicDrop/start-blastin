@@ -552,6 +552,7 @@ namespace Entities
             else if (item is Plugin plugin && _plugins.Contains(plugin))
             {
                 _plugins.Remove(plugin);
+                EventBus.Instance.RaisePlayerItemRemoved(_playerId, plugin);
             }
         }
 

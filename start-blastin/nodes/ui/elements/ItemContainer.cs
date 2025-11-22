@@ -45,6 +45,7 @@ namespace UI
         {
             if (Input.IsActionJustPressedByEvent("ui_accept", @event))
             {
+                DebugLogger.LogMessage($"Gui input ui_accept detected by {Name}!");
                 InvokeItemContainerSelected();
                 AcceptEvent();
             }
@@ -117,8 +118,13 @@ namespace UI
 
         public virtual void InvokeItemContainerSelected()
         {
+            DebugLogger.LogMessage(
+                $"Attempting to invoke ItemContainerSelected. Is {nameof(_item)} null? {_item == null}",
+                true
+            );
             if (_item != null)
             {
+                DebugLogger.LogMessage($"Invoking ItemContainerSelected...", true);
                 ItemContainerSelected?.Invoke(this, new ItemSelectedEventArgs(_item));
             }
         }

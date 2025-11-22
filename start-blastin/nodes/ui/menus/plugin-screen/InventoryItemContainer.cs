@@ -117,14 +117,19 @@ namespace UI.Loadout
             SetPanelInfo();
         }
 
+        public override void SetItem(Item item)
+        {
+            if (_itemDisplay != null)
+            {
+                _item = _itemDisplay.Item;
+            }
+        }
+
         private void SetPanelInfo()
         {
-            DebugLogger.LogMessage($"Setting panel info for {Name}...", true);
             if (!_itemDisplay.Empty)
             {
-                DebugLogger.LogMessage(
-                    $"Item display is not empty! Setting text and scrap price to the item in the display, which is {_itemDisplay.Item.ResourceName}"
-                );
+                SetItem(_itemDisplay.Item);
                 _itemNamePanel.Label.Text = _itemDisplay.Item.Name;
                 _pricePanel.SetLabelText(
                     _itemDisplay.Item.ScrapValue.ToString(),
@@ -142,6 +147,7 @@ namespace UI.Loadout
                     _itemNamePanel.Label.Text = _itemDisplay.Item.Name;
                 }
                 _pricePanel.TogglePanelVisibility(false);
+                SetItem(null);
             }
         }
 

@@ -12,6 +12,15 @@ namespace UI.Loadout
         private ItemDisplay _itemDisplay;
         private VBoxContainer _vBox;
         private PricePanelContainer _pricePanel;
+
+        private new StyleBoxFlat _focusedStyleBox =>
+            ResourceLoader.Load<StyleBoxFlat>("uid://dx4qv4oioa55");
+
+        private new StyleBoxEmpty _defocusedStyleBox =>
+            ResourceLoader.Load<StyleBoxEmpty>("uid://cofe4xg4ah36y");
+
+        private Tween _tween;
+
         public bool Empty = true;
         public ItemDisplay ItemDisplay => _itemDisplay;
 
@@ -138,28 +147,35 @@ namespace UI.Loadout
 
         protected override void OnFocusEnter()
         {
-            DebugLogger.LogMessage($"{Name} focus entered!");
+            _itemDisplay.AddThemeStyleboxOverride("panel", _focusedStyleBox);
             if (_itemNamePanel != null)
             {
-                Tween tween = CreateTween();
-                tween.SetParallel(true);
-                tween.TweenProperty(_itemNamePanel, "modulate:a", 1.0, 0.3);
-                tween.TweenProperty(_itemNamePanel, "scale", Vector2.One, 0.3);
-                tween.TweenProperty(_itemDisplay, "scale", Vector2.One, 0.3);
-                tween.TweenProperty(_pricePanel, "modulate:a", 1.0, 0.3);
+                if (_tween != null)
+                {
+                    _tween.Kill();
+                }
+                _tween = CreateTween();
+                _tween.SetParallel(true);
+                _tween.TweenProperty(_itemNamePanel, "modulate:a", 1.0, 0.3);
+                _tween.TweenProperty(_itemNamePanel, "scale", Vector2.One, 0.3);
+                _tween.TweenProperty(_pricePanel, "modulate:a", 1.0, 0.3);
             }
         }
 
         protected override void OnFocusExit()
         {
+            _itemDisplay.AddThemeStyleboxOverride("panel", _defocusedStyleBox);
             if (_itemNamePanel != null)
             {
-                Tween tween = _itemNamePanel.CreateTween();
-                tween.SetParallel(true);
-                tween.TweenProperty(_itemNamePanel, "modulate:a", 0, 0.3);
-                tween.TweenProperty(_itemNamePanel, "scale", new Vector2(2, 2), 0.3);
-                tween.TweenProperty(_itemDisplay, "scale", new Vector2(0.8f, 0.8f), 0.3);
-                tween.TweenProperty(_pricePanel, "modulate:a", 0, 0.3);
+                if (_tween != null)
+                {
+                    _tween.Kill();
+                }
+                _tween = CreateTween();
+                _tween.SetParallel(true);
+                _tween.TweenProperty(_itemNamePanel, "modulate:a", 0, 0.1);
+                _tween.TweenProperty(_itemNamePanel, "scale", new Vector2(2, 2), 0.1);
+                _tween.TweenProperty(_pricePanel, "modulate:a", 0, 0.1);
             }
         }
 

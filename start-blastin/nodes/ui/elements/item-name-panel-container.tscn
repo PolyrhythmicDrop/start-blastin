@@ -1,8 +1,9 @@
 [gd_scene load_steps=4 format=3 uid="uid://cwxfvdq5l7brl"]
 
 [ext_resource type="LabelSettings" uid="uid://dhmvqno5lqhj" path="res://resources/label-settings/item-name-label/item-name-label-settings.tres" id="1_aqbyl"]
-[ext_resource type="StyleBox" uid="uid://cetbqp86dtgei" path="res://resources/themes/styleboxes/plugin-screen-item-name-panel.tres" id="1_ej5bi"]
 [ext_resource type="Script" uid="uid://bo3yflg5ry23w" path="res://nodes/ui/elements/ItemNamePanelContainer.cs" id="1_vahb0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vahb0"]
 
 [node name="ItemNamePanelContainer" type="PanelContainer"]
 anchors_preset = 5
@@ -13,7 +14,7 @@ offset_right = 132.0
 offset_bottom = 25.0
 grow_horizontal = 2
 theme_type_variation = &"ItemNamePanelContainer"
-theme_override_styles/panel = ExtResource("1_ej5bi")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_vahb0")
 script = ExtResource("1_vahb0")
 
 [node name="ItemNameLabel" type="Label" parent="."]

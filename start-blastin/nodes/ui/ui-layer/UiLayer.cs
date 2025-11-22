@@ -90,17 +90,12 @@ namespace UI
         private void OpenPluginScreen()
         {
             GetTree().Paused = true;
-            // CallDeferred(MethodName.AddChild, _pluginScreen);
-            // _pluginScreen.RequestReady();
-            // await ToSignal(_pluginScreen, Node.SignalName.Ready);
             _pluginScreen.ToggleActivate(true);
         }
 
         private void ClosePluginScreen()
         {
             _pluginScreen.ToggleActivate(false);
-            // CallDeferred(MethodName.RemoveChild, _pluginScreen);
-            // await ToSignal(_pluginScreen, Node.SignalName.TreeExited);
             GetTree().Paused = false;
         }
 

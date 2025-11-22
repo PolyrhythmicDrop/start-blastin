@@ -2,7 +2,7 @@
 
 [ext_resource type="FontFile" uid="uid://b8tj5tsi08onc" path="res://resources/fonts/dogica/dogicapixelbold.ttf" id="1_k2mcc"]
 [ext_resource type="FontFile" uid="uid://bdn20wteigtfk" path="res://resources/fonts/silkscreen/Silkscreen-Regular.ttf" id="2_k2mcc"]
-[ext_resource type="StyleBox" uid="uid://dr7nqwevwop52" path="res://resources/themes/styleboxes/shop-price-panel.tres" id="2_n0ut1"]
+[ext_resource type="StyleBox" uid="uid://dr7nqwevwop52" path="res://resources/styleboxes/shop-price-panel.tres" id="2_n0ut1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n0ut1"]
 content_margin_left = 16.0

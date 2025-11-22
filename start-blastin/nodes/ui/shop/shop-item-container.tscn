@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://bfvxyo46webpd"]
 
 [ext_resource type="Script" uid="uid://cl536iq61ye8j" path="res://nodes/ui/shop/ShopItemContainer.cs" id="1_lifgi"]
-[ext_resource type="StyleBox" uid="uid://chnsppbtk2va0" path="res://resources/themes/styleboxes/item-container-focused-stylebox.tres" id="2_stoc2"]
+[ext_resource type="StyleBox" uid="uid://chnsppbtk2va0" path="res://resources/styleboxes/item-container-focused-stylebox.tres" id="2_stoc2"]
 [ext_resource type="PackedScene" uid="uid://cwxfvdq5l7brl" path="res://nodes/ui/elements/item-name-panel-container.tscn" id="3_2w48v"]
 [ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="3_ca63a"]
 [ext_resource type="PackedScene" uid="uid://b2fpxs1cgq4hk" path="res://nodes/ui/elements/price-panel-container.tscn" id="5_ca63a"]

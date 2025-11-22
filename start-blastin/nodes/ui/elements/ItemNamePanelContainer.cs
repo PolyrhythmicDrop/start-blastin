@@ -16,7 +16,7 @@ public partial class ItemNamePanelContainer : PanelContainer
     private LabelSettings _shopLabelSettings => GD.Load<LabelSettings>("uid://bxecrmsi8u1b5");
     private LabelSettings _inventoryLabelSettings => GD.Load<LabelSettings>("uid://cwxulm5ukxovo");
     private StyleBoxFlat _shopStyleBox = GD.Load<StyleBoxFlat>("uid://bfhwy5ee28np2");
-    private StyleBoxFlat _inventoryStyleBox = GD.Load<StyleBoxFlat>("uid://cetbqp86dtgei");
+    private StyleBoxEmpty _inventoryStyleBox = GD.Load<StyleBoxEmpty>("uid://cofe4xg4ah36y");
     private ItemNameLabelSettings _labelSettings = ItemNameLabelSettings.Default;
 
     public Label Label => _label;
@@ -36,7 +36,7 @@ public partial class ItemNamePanelContainer : PanelContainer
 
     public void SetStyle()
     {
-        StyleBoxFlat box;
+        StyleBox box;
         switch (_labelSettings)
         {
             default:

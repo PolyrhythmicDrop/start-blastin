@@ -1,14 +1,14 @@
-[gd_scene load_steps=6 format=3 uid="uid://c122xo53cyce1"]
+[gd_scene load_steps=6 format=3 uid="uid://b38bjsfdg17o2"]
 
-[ext_resource type="Script" uid="uid://drg851uofndoc" path="res://nodes/ui/hud/PluginSlot.cs" id="1_nl1q1"]
-[ext_resource type="Texture2D" uid="uid://d2b3ue4ow24pb" path="res://nodes/ui/hud/assets/slot-borders/plugin-slot-border.png" id="2_bmeww"]
-[ext_resource type="Texture2D" uid="uid://drp3a6v1mvedl" path="res://nodes/ui/hud/assets/slot-borders/plugin-slot-mask.png" id="3_cwtpc"]
+[ext_resource type="Script" uid="uid://msvjncuj7wwp" path="res://nodes/ui/elements/ItemDisplay.cs" id="1_r1jc7"]
+[ext_resource type="Texture2D" uid="uid://d2b3ue4ow24pb" path="res://assets/item-borders/plugin-slot-border.png" id="2_kee2x"]
+[ext_resource type="Texture2D" uid="uid://drp3a6v1mvedl" path="res://assets/item-borders/plugin-slot-mask.png" id="3_vf75t"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bmeww"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cwtpc"]
 
-[node name="PluginSlot" type="PanelContainer"]
+[node name="ItemDisplay" type="PanelContainer"]
 custom_minimum_size = Vector2(32, 32)
 anchors_preset = -1
 anchor_left = 0.49166667
@@ -20,12 +20,13 @@ grow_vertical = 2
 size_flags_horizontal = 6
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_bmeww")
-script = ExtResource("1_nl1q1")
+script = ExtResource("1_r1jc7")
 
 [node name="BorderRect" type="TextureRect" parent="."]
+unique_name_in_owner = true
 clip_contents = true
 layout_mode = 2
-texture = ExtResource("2_bmeww")
+texture = ExtResource("2_kee2x")
 expand_mode = 3
 stretch_mode = 5
 
@@ -34,9 +35,10 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_cwtpc")
 
 [node name="MaskRect" type="TextureRect" parent="PanelContainer"]
+unique_name_in_owner = true
 clip_children = 1
 layout_mode = 2
-texture = ExtResource("3_cwtpc")
+texture = ExtResource("3_vf75t")
 expand_mode = 3
 stretch_mode = 5
 

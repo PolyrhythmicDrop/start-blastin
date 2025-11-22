@@ -9,7 +9,6 @@ namespace UI.HUD
     public partial class Hud : PanelContainer, IListener
     {
         private int _playerId;
-        private LoadoutManager _loadoutDisplay;
         private StaticBody2D _hudBody;
         private CollisionShape2D _hudCollision;
         private WavePanel _wavePanel;

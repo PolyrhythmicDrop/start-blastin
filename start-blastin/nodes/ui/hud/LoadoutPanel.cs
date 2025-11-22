@@ -39,9 +39,9 @@ namespace UI.HUD
                 if (_hBox != null)
                 {
                     _hBox.AddChild(_loadoutDisplay.WeapSlot);
-                    foreach (PluginSlot slot in _loadoutDisplay.PluginSlots)
+                    foreach (ItemDisplay display in _loadoutDisplay.PluginDisplays)
                     {
-                        _hBox.AddChild(slot);
+                        _hBox.AddChild(display);
                     }
                 }
                 _initialized = true;

@@ -12,10 +12,6 @@ using UI.HUD;
 
 namespace UI.Loadout
 {
-    /// <summary>
-    /// Manager for displaying a player's loadout on the HUD and in various status screens.
-    /// Does not actually control the loadout, only the display of the loadout.
-    /// </summary>
     public class LoadoutManager : IListener
     {
         private int _playerId;
@@ -23,6 +19,7 @@ namespace UI.Loadout
 
         public event EventHandler<PlayerPluginEquippedEventArgs> PluginEquipped;
         public event EventHandler<PlayerWeaponChangedEventArgs> WeaponChanged;
+        public event EventHandler<PlayerItemRemovedEventArgs> ItemRemoved;
         public event Action<int> SlotCountUpdated;
 
         public void Initialize(int playerId)
@@ -36,6 +33,8 @@ namespace UI.Loadout
         public void ConnectSignals()
         {
             EventBus.Instance.PlayerPluginEquipped += OnPlayerPluginEquipped;
+            EventBus.Instance.PlayerWeaponChanged += OnPlayerWeaponChanged;
+            EventBus.Instance.PlayerItemRemoved += OnPlayerItemRemoved;
 
             Player player = _service.GetPlayer(_playerId);
             player.GetStatManager().StatUpdated += OnPlayerStatUpdated;
@@ -44,6 +43,8 @@ namespace UI.Loadout
         public void DisconnectSignals()
         {
             EventBus.Instance.PlayerPluginEquipped -= OnPlayerPluginEquipped;
+            EventBus.Instance.PlayerWeaponChanged -= OnPlayerWeaponChanged;
+            EventBus.Instance.PlayerItemRemoved -= OnPlayerItemRemoved;
 
             Player player = _service.GetPlayer(_playerId);
             player.GetStatManager().StatUpdated -= OnPlayerStatUpdated;
@@ -70,6 +71,14 @@ namespace UI.Loadout
             if (args.PlayerId == _playerId)
             {
                 WeaponChanged?.Invoke(this, args);
+            }
+        }
+
+        public void OnPlayerItemRemoved(object source, PlayerItemRemovedEventArgs args)
+        {
+            if (args.PlayerId == _playerId)
+            {
+                ItemRemoved?.Invoke(this, args);
             }
         }
 

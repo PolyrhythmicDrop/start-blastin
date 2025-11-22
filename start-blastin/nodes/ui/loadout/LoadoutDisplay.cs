@@ -16,12 +16,12 @@ namespace UI.Loadout
     public class LoadoutDisplay : IListener
     {
         private LoadoutManager _loadoutManager;
-        private WeaponSlot _weaponSlot;
-        private List<PluginSlot> _pluginSlots = new();
+        private ItemDisplay _weaponSlot;
+        private List<ItemDisplay> _pluginDisplays = new();
 
-        public WeaponSlot WeapSlot => _weaponSlot;
+        public ItemDisplay WeapSlot => _weaponSlot;
 
-        public IReadOnlyList<PluginSlot> PluginSlots => _pluginSlots.AsReadOnly();
+        public IReadOnlyList<ItemDisplay> PluginDisplays => _pluginDisplays.AsReadOnly();
 
         public void Initialize(LoadoutManager loadoutManager)
         {
@@ -29,7 +29,7 @@ namespace UI.Loadout
                 $"Initializing loadout display for {this} from {loadoutManager}"
             );
             _loadoutManager = loadoutManager;
-            _weaponSlot = ItemSlotFactory.CreateWeaponSlot();
+            _weaponSlot = ItemDisplayFactory.CreateEmptyItemDisplay();
             SetWeaponSlot();
 
             InitializePluginSlots();
@@ -41,21 +41,18 @@ namespace UI.Loadout
 
         public void ConnectSignals()
         {
-            // EventBus.Instance.PlayerPluginsChanged += OnPlayerPluginsChanged;
-            // EventBus.Instance.PlayerWeaponChanged += OnPlayerWeaponChanged;
-
             _loadoutManager.PluginEquipped += OnPluginEquipped;
             _loadoutManager.WeaponChanged += OnPlayerWeaponChanged;
             _loadoutManager.SlotCountUpdated += OnSlotCountUpdated;
+            _loadoutManager.ItemRemoved += OnItemRemoved;
         }
 
         public void DisconnectSignals()
         {
-            // EventBus.Instance.PlayerPluginsChanged -= OnPlayerPluginsChanged;
-            // EventBus.Instance.PlayerWeaponChanged -= OnPlayerWeaponChanged;
-
             _loadoutManager.PluginEquipped -= OnPluginEquipped;
             _loadoutManager.WeaponChanged -= OnPlayerWeaponChanged;
+            _loadoutManager.SlotCountUpdated -= OnSlotCountUpdated;
+            _loadoutManager.ItemRemoved -= OnItemRemoved;
         }
 
         private void SetWeaponSlot()
@@ -81,18 +78,18 @@ namespace UI.Loadout
                 );
                 for (int i = 0; i < pluginCount; i++)
                 {
-                    FillSlot(_pluginSlots[i], _loadoutManager.GetPlugins()[i]);
+                    FillSlot(_pluginDisplays[i], _loadoutManager.GetPlugins()[i]);
                 }
             }
         }
 
         private void AddSlot()
         {
-            PluginSlot pluginSlot = ItemSlotFactory.CreatePluginSlot();
+            ItemDisplay itemDisplay = ItemDisplayFactory.CreateEmptyItemDisplay();
 
             // Create a unique name for the slot so that it can easily be accessed by name
-            _pluginSlots.Add(pluginSlot);
-            pluginSlot.Name = $"PluginSlot{_pluginSlots.Count}";
+            _pluginDisplays.Add(itemDisplay);
+            itemDisplay.Name = $"PluginSlot{_pluginDisplays.Count}";
         }
 
         private void RemoveSlot()
@@ -100,11 +97,14 @@ namespace UI.Loadout
             // Find an empty slot to remove
             try
             {
-                int empty = _pluginSlots.FindIndex(slot => slot.Empty);
+                int empty = _pluginDisplays.FindIndex(slot => slot.Empty);
                 if (empty != -1)
                 {
-                    PluginSlot slot = _pluginSlots[empty];
-                    _pluginSlots.RemoveAt(empty);
+                    ItemDisplay display = _pluginDisplays[empty];
+                    _pluginDisplays.RemoveAt(empty);
+                    // This only removes the display from the list of displays.
+                    // You still need to have whatever is watching the LoadoutDisplay remove the display from its scene tree.
+                    // Consider emitting an event here.
                 }
                 else
                 {
@@ -119,13 +119,13 @@ namespace UI.Loadout
             }
         }
 
-        private void FillSlot(PluginSlot slot, Plugin plugin)
+        private void FillSlot(ItemDisplay display, Plugin plugin)
         {
             DebugLogger.LogMessage(
-                $"Filling slot {slot.Name} with plugin {plugin.ResourceName}",
+                $"Filling slot {display.Name} of type {display.GetType()} with plugin {plugin.ResourceName}",
                 true
             );
-            slot.SetItem(plugin);
+            display.SetItem(plugin);
         }
 
         private void OnPluginEquipped(object source, PlayerPluginEquippedEventArgs args)
@@ -133,7 +133,7 @@ namespace UI.Loadout
             // Find the first empty slot (checking should have already happened before the player was allowed to equip something)
             try
             {
-                PluginSlot emptySlot = _pluginSlots.Find(slot => slot.Empty);
+                ItemDisplay emptySlot = _pluginDisplays.Find(slot => slot.Empty);
                 if (emptySlot == null)
                 {
                     throw new ArgumentNullException(
@@ -156,9 +156,18 @@ namespace UI.Loadout
             SetWeaponSlot();
         }
 
+        private void OnItemRemoved(object source, PlayerItemRemovedEventArgs args)
+        {
+            if (args.Item is not WeaponPlugin && args.Item is Plugin plugin)
+            {
+                // Find the slot this item belongs to and clear its item
+                _pluginDisplays.Find(slot => slot.Item == plugin).ClearItem();
+            }
+        }
+
         private void OnSlotCountUpdated(int newCount)
         {
-            int diff = newCount - _pluginSlots.Count;
+            int diff = newCount - _pluginDisplays.Count;
             if (diff > 0)
             {
                 for (int i = 0; i < diff; i++)

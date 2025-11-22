@@ -1,10 +1,63 @@
 [gd_scene load_steps=6 format=3 uid="uid://ccw803f7gjifl"]
 
-[ext_resource type="Texture2D" uid="uid://djbojubn7plf" path="res://nodes/ui/hud/assets/slot-borders/weapon-slot-border.png" id="1_mjugh"]
-[ext_resource type="Script" uid="uid://u2wpa457gaq2" path="res://nodes/ui/hud/WeaponSlot.cs" id="1_r8kae"]
-[ext_resource type="Texture2D" uid="uid://bbk7wfmggd6wr" path="res://nodes/ui/hud/assets/slot-borders/weapon-slot-border-mask.png" id="3_ycjvb"]
+[ext_resource type="Texture2D" uid="uid://djbojubn7plf" path="res://assets/item-borders/weapon-slot-border.png" id="1_mjugh"]
+[ext_resource type="Texture2D" uid="uid://bbk7wfmggd6wr" path="res://assets/item-borders/weapon-slot-border-mask.png" id="3_ycjvb"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_t7q1m"]
+
+[sub_resource type="CSharpScript" id="CSharpScript_mjugh"]
+script/source = "using System;
+using Godot;
+using Items;
+using Utility;
+
+namespace UI.HUD
+{
+    [GlobalClass]
+    public partial class WeaponSlot : PluginSlot
+    {
+        public new WeaponPlugin Plugin => _plugin as WeaponPlugin;
+
+        public WeaponPlugin Weapon => Plugin;
+
+        public void SetWeapon(WeaponPlugin weapon)
+        {
+            SetItem(weapon);
+        }
+
+        public override void SetItem(Item item)
+        {
+            DebugLogger.LogMessage($\"Setting item in WeaponSlot...{item}\", true);
+            try
+            {
+                if (_plugin == null || item != _plugin)
+                {
+                    if (item is not WeaponPlugin)
+                    {
+                        throw new ArgumentException(
+                            $\"WeaponSlot can only accept WeaponPlugin types! Recieved a {item?.GetType().Name} instead.\"
+                        );
+                    }
+                    else
+                    {
+                        base.SetItem(item);
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException(
+                        $\"Projectile type already equipped! Attempted to equip {item?.GetType().Name}\"
+                    );
+                }
+            }
+            catch (Exception e)
+            {
+                DebugLogger.LogMessage(e.Message, true, true);
+            }
+        }
+    }
+}
+"
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l2jms"]
 
@@ -20,7 +73,7 @@ grow_vertical = 2
 size_flags_horizontal = 6
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_t7q1m")
-script = ExtResource("1_r8kae")
+script = SubResource("CSharpScript_mjugh")
 metadata/_custom_type_script = "uid://u2wpa457gaq2"
 
 [node name="BorderRect" type="TextureRect" parent="."]

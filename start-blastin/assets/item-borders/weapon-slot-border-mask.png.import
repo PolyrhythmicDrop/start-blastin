@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d2b3ue4ow24pb"
-path="res://.godot/imported/plugin-slot-border.png-8bf29222967f6ab7995eb9e95e88b3c6.ctex"
+uid="uid://bbk7wfmggd6wr"
+path="res://.godot/imported/weapon-slot-border-mask.png-5d4a685ea0b5828cad245367df8af9d9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://nodes/ui/hud/assets/slot-borders/plugin-slot-border.png"
-dest_files=["res://.godot/imported/plugin-slot-border.png-8bf29222967f6ab7995eb9e95e88b3c6.ctex"]
+source_file="res://assets/item-borders/weapon-slot-border-mask.png"
+dest_files=["res://.godot/imported/weapon-slot-border-mask.png-5d4a685ea0b5828cad245367df8af9d9.ctex"]
 
 [params]
 

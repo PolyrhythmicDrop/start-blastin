@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://djbojubn7plf"
-path="res://.godot/imported/weapon-slot-border.png-6d1332aade8d4f4462d2bc3d956169a5.ctex"
+path="res://.godot/imported/weapon-slot-border.png-31d26be1e0f55d871c95fbcefc0cc76d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://nodes/ui/hud/assets/slot-borders/weapon-slot-border.png"
-dest_files=["res://.godot/imported/weapon-slot-border.png-6d1332aade8d4f4462d2bc3d956169a5.ctex"]
+source_file="res://assets/item-borders/weapon-slot-border.png"
+dest_files=["res://.godot/imported/weapon-slot-border.png-31d26be1e0f55d871c95fbcefc0cc76d.ctex"]
 
 [params]
 

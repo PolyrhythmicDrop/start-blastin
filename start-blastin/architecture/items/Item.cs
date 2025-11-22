@@ -22,6 +22,7 @@ namespace Items
         protected Texture2D _icon;
         protected int _fluxCost;
         protected int _byteCost;
+        protected bool _scrappable = true;
 
         public int ScrapValue => CalculateScrapValue();
 
@@ -66,6 +67,13 @@ namespace Items
         {
             get => _byteCost;
             set => _byteCost = value;
+        }
+
+        [Export]
+        public bool Scrappable
+        {
+            get => _scrappable;
+            set => _scrappable = value;
         }
 
         [ExportGroup("Effects")]

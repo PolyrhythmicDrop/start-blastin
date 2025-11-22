@@ -87,7 +87,7 @@ namespace UI
             }
         }
 
-        private async void OpenPluginScreen()
+        private void OpenPluginScreen()
         {
             GetTree().Paused = true;
             // CallDeferred(MethodName.AddChild, _pluginScreen);
@@ -96,7 +96,7 @@ namespace UI
             _pluginScreen.ToggleActivate(true);
         }
 
-        private async void ClosePluginScreen()
+        private void ClosePluginScreen()
         {
             _pluginScreen.ToggleActivate(false);
             // CallDeferred(MethodName.RemoveChild, _pluginScreen);

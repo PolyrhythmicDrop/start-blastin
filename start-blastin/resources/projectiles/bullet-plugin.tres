@@ -9,5 +9,6 @@ script = ExtResource("1_k3t2m")
 Name = &"Bullet"
 Description = &"Regular \'ol bullet"
 Icon = ExtResource("1_d8uwn")
+Scrappable = false
 Effects = null
 metadata/_custom_type_script = "uid://e8ufr3v1a1f"

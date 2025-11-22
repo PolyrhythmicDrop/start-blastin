@@ -37,6 +37,8 @@ namespace Autoloads
 
         public event EventHandler<ItemBoughtEventArgs> ItemBought;
 
+        public event EventHandler<ItemScrappedEventArgs> ItemScrapped;
+
         #endregion
 
         #region Player Status
@@ -58,6 +60,8 @@ namespace Autoloads
         public event EventHandler<PlayerWeaponChangedEventArgs> PlayerWeaponChanged;
 
         public event EventHandler<PlayerPluginEquippedEventArgs> PlayerPluginEquipped;
+
+        public event EventHandler<PlayerItemRemovedEventArgs> PlayerItemRemoved;
 
         #endregion
 
@@ -125,6 +129,12 @@ namespace Autoloads
             ItemBought?.Invoke(this, args);
         }
 
+        public void RaiseItemScrapped(Item item)
+        {
+            ItemScrappedEventArgs args = new(item);
+            ItemScrapped?.Invoke(this, args);
+        }
+
         public void RaisePlayerMaxHealthChanged(int playerId, float maxHealth)
         {
             PlayerMaxHealthChangedEventArgs args = new(playerId, maxHealth);
@@ -184,6 +194,12 @@ namespace Autoloads
         {
             PlayerPluginEquippedEventArgs args = new(playerId, newPlugin);
             PlayerPluginEquipped?.Invoke(this, args);
+        }
+
+        public void RaisePlayerItemRemoved(int playerId, Item item)
+        {
+            PlayerItemRemovedEventArgs args = new(playerId, item);
+            PlayerItemRemoved?.Invoke(this, args);
         }
 
         public void RaiseEnemyKilled(EnemyKilledEventArgs args)

@@ -310,6 +310,7 @@ namespace Entities
         {
             _stats.StatUpdated += OnStatUpdated;
             EventBus.Instance.ItemBought += OnItemBought;
+            EventBus.Instance.ItemScrapped += OnItemScrapped;
             EventBus.Instance.EnemyKilled += OnEnemyKilled;
         }
 
@@ -317,6 +318,7 @@ namespace Entities
         {
             _stats.StatUpdated -= OnStatUpdated;
             EventBus.Instance.ItemBought -= OnItemBought;
+            EventBus.Instance.ItemScrapped -= OnItemScrapped;
             EventBus.Instance.EnemyKilled -= OnEnemyKilled;
         }
 
@@ -461,35 +463,23 @@ namespace Entities
         /// <returns>True if the player is able to buy and equip the item, false if not.</returns>
         public bool CanBuyItem(Item item)
         {
-            DebugLogger.LogMessage(
-                $"Item cost: F = {item.FluxCost} | B = {item.ByteCost} / Player values: F = {_flux} | B = {_bytes}",
-                true
-            );
             bool canAfford = CanAffordItem(item);
             bool noDupePlugins = _plugins.Contains(item) ? false : true;
-            // Dupe plugins error checking
-            if (!noDupePlugins)
-            {
-                DebugLogger.LogMessage(
-                    $"Plugin (supposedly) already exists in Player's list of plugins! Attemping to buy {item} - {item.ResourceName}. Player plugins:",
-                    true,
-                    true
-                );
-                foreach (Plugin plugin in _plugins)
-                {
-                    DebugLogger.LogMessage($"{plugin} - {plugin.ResourceName}", true);
-                }
-            }
-
             bool noDupeWeapon = _weaponPlugin != item;
             bool freeSlot = (_plugins.Count + 1) <= _pluginSlots;
 
-            DebugLogger.LogMessage(
-                $"Results of {Name}'s CanBuyItem method for {item.ResourceName}...\ncanAfford = {canAfford} | noDupePlugins = {noDupePlugins} | noDupeWeapon = {noDupeWeapon} | freeSlot = {freeSlot}",
-                true
-            );
-
             return canAfford && noDupePlugins && noDupeWeapon && freeSlot;
+        }
+
+        /// <summary>
+        /// Checks to see if the player can scrap the passed item.
+        /// Currently only checks the item's <see cref="Item.Scrappable"/> variable, but putting it here to dovetail with CanBuyItem() and to make sure I can add additional checks later if necessary.
+        /// </summary>
+        /// <param name="item">The item to check.</param>
+        /// <returns>True if the player can scrap the item, false if not.</returns>
+        public bool CanScrapItem(Item item)
+        {
+            return item is not Modifier && item.Scrappable;
         }
 
         /// <summary>
@@ -544,6 +534,25 @@ namespace Entities
                     break;
             }
             ApplyStatEffects();
+        }
+
+        private void ScrapItem(Item item)
+        {
+            // Add to the player's byte count.
+            // TODO: consider adding an item that lets you scrap stuff for flux, or both currencies.
+            Bytes += item.ScrapValue;
+
+            // Remove the item from the player's equipment.
+
+            if (item is WeaponPlugin weapon)
+            {
+                // Revert to the basic bullet if you sell a weapon plugin.
+                ResetWeaponPlugin();
+            }
+            else if (item is Plugin plugin && _plugins.Contains(plugin))
+            {
+                _plugins.Remove(plugin);
+            }
         }
 
         public void AddModifier(params Modifier[] modifiers)
@@ -707,6 +716,11 @@ namespace Entities
             BuyItem(args.Item);
         }
 
+        private void OnItemScrapped(object sender, ItemScrappedEventArgs args)
+        {
+            ScrapItem(args.Item);
+        }
+
         /// <summary>
         /// Resets the player's projectile type to the base projectile.
         /// </summary>
@@ -714,6 +728,7 @@ namespace Entities
         {
             _weaponPlugin = ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
             _weaponComponent.SetWeaponProjectile(_weaponPlugin.ProjectileType);
+            EventBus.Instance.RaisePlayerWeaponChanged(_playerId, _weaponPlugin);
         }
 
         public override void _ExitTree()

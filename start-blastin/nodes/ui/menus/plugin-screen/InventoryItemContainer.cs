@@ -1,5 +1,7 @@
+using Factories;
 using Godot;
 using Items;
+using UI.HUD;
 using Utility;
 
 namespace UI.Loadout
@@ -7,16 +9,18 @@ namespace UI.Loadout
     [GlobalClass]
     public partial class InventoryItemContainer : ItemContainer
     {
-        private ItemSlot _itemSlot;
+        private ItemDisplay _itemDisplay;
         private VBoxContainer _vBox;
         private PricePanelContainer _pricePanel;
         public bool Empty = true;
-        public ItemSlot Slot => _itemSlot;
+        public ItemDisplay ItemDisplay => _itemDisplay;
 
         public override void _Ready()
         {
             DebugLogger.LogMessage($"Ready called!", true);
             _vBox = GetNode<VBoxContainer>("%VBox");
+
+            _itemDisplay = GetNode<ItemDisplay>("%ItemDisplay");
 
             _itemNamePanel = GetNode<ItemNamePanelContainer>("%ItemNamePanel");
             InitializeNamePanel();
@@ -24,7 +28,15 @@ namespace UI.Loadout
             _pricePanel = GetNode<PricePanelContainer>("%PricePanelContainer");
             InitializePricePanel();
 
+            // InitializeItemSlot();
+
             ConnectSignals();
+        }
+
+        public override void ConnectSignals()
+        {
+            _itemDisplay.SlotItemChanged += SetPanelInfo;
+            base.ConnectSignals();
         }
 
         private void InitializeNamePanel()
@@ -57,24 +69,46 @@ namespace UI.Loadout
             _pricePanel.Scale = new Vector2(2, 2);
         }
 
-        public void SetItemSlot(ItemSlot itemSlot)
+        public void SetItemDisplay(ItemDisplay display)
         {
-            DebugLogger.LogMessage($"Setting item slot for {Name}", true);
-            _itemSlot = itemSlot;
+            DebugLogger.LogMessage($"Setting item display for {Name}", true);
+
+            // _itemDisplay = display;
+
+            // Get the index of the current display scene
+            int index = _itemDisplay.GetIndex();
+            // Remove the current display scene
+            _vBox.RemoveChild(_itemDisplay);
+            // Add and move the new display scene to the correct index.
+            _vBox.AddChild(display);
+            _vBox.MoveChild(display, index);
+            // Set the variable to the new display scene.
+            _itemDisplay = display;
+
             SetPanelInfo();
-            _vBox.AddChild(_itemSlot);
-            // Move the slot to be beneath the namePanel
-            int nameIndex = _itemNamePanel.GetIndex();
-            _vBox.MoveChild(_itemSlot, nameIndex + 1);
+        }
+
+        private void InitializeItemSlot()
+        {
+            // Shouldn't have to do all this because now the item display is already in the scene
+
+            // if (_itemSlot == null)
+            // {
+            //     SetItemSlot(ItemDisplayFactory.CreateItemSlot<ItemDisplay>());
+            // }
+            // _vBox.AddChild(_itemSlot);
+            // // Move the slot to be beneath the namePanel
+            // int nameIndex = _itemNamePanel.GetIndex();
+            // _vBox.MoveChild(_itemSlot, nameIndex + 1);
         }
 
         private void SetPanelInfo()
         {
-            if (_itemSlot.Item != null)
+            if (_itemDisplay.Item != null)
             {
-                _itemNamePanel.Label.Text = _itemSlot.Item.Name;
+                _itemNamePanel.Label.Text = _itemDisplay.Item.Name;
                 _pricePanel.SetLabelText(
-                    _itemSlot.Item.ScrapValue.ToString(),
+                    _itemDisplay.Item.ScrapValue.ToString(),
                     PricePanelContainer.PriceLabel.Bytes
                 );
                 _pricePanel.TogglePanelVisibility(true, PricePanelContainer.PriceLabel.Bytes);
@@ -96,7 +130,7 @@ namespace UI.Loadout
                 tween.SetParallel(true);
                 tween.TweenProperty(_itemNamePanel, "modulate:a", 1.0, 0.3);
                 tween.TweenProperty(_itemNamePanel, "scale", Vector2.One, 0.3);
-                tween.TweenProperty(_itemSlot, "scale", Vector2.One, 0.3);
+                tween.TweenProperty(_itemDisplay, "scale", Vector2.One, 0.3);
                 tween.TweenProperty(_pricePanel, "modulate:a", 1.0, 0.3);
             }
         }
@@ -109,7 +143,7 @@ namespace UI.Loadout
                 tween.SetParallel(true);
                 tween.TweenProperty(_itemNamePanel, "modulate:a", 0, 0.3);
                 tween.TweenProperty(_itemNamePanel, "scale", new Vector2(2, 2), 0.3);
-                tween.TweenProperty(_itemSlot, "scale", new Vector2(0.8f, 0.8f), 0.3);
+                tween.TweenProperty(_itemDisplay, "scale", new Vector2(0.8f, 0.8f), 0.3);
                 tween.TweenProperty(_pricePanel, "modulate:a", 0, 0.3);
             }
         }

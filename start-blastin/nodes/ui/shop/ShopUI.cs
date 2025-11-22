@@ -32,10 +32,9 @@ namespace UI.Shop
         private Button _rerollButton;
         private Button _healButton;
 
-        private Dictionary<ShopItemContainer, Action> _containerFocusHandlers = new();
-        public event EventHandler<ItemBoughtEventArgs> ItemBought;
-
         // ~~~
+
+        private Dictionary<ShopItemContainer, Action> _containerFocusHandlers = new();
 
         public void LoadItemPool() =>
             PoolLoader.LoadResourcePool(_itemPool, "res://resources/items/", true);
@@ -137,16 +136,8 @@ namespace UI.Shop
         private void OnShopItemSelected(object source, ItemSelectedEventArgs args)
         {
             Player player = _service.GetPlayer(_playerId);
-            DebugLogger.LogMessage(
-                $"Shop item {args.Item} selected! Checking if player can buy item...",
-                true
-            );
             if (player.CanBuyItem(args.Item))
             {
-                DebugLogger.LogMessage(
-                    $"CanBuyItem returned true! Raising item bought signal...",
-                    true
-                );
                 EventBus.Instance.RaiseItemBought(args.Item);
                 if (source is ShopItemContainer container)
                 {

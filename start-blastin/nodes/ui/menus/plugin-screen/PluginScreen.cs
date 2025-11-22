@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using Autoloads;
+using Events;
 using Godot;
 using Interfaces;
+using Services;
 using UI.HUD;
 using Utility;
 
@@ -19,7 +22,6 @@ namespace UI.Loadout
         private Dictionary<InventoryItemContainer, Action> _containerFocusEnteredCallbacks = new();
         private Dictionary<InventoryItemContainer, Action> _containerFocusExitedCallbacks = new();
 
-        // private Dictionary<InventoryItemContainer,
         private InventoryItemContainer _weaponContainer;
         private DescriptionPanel _descriptionPanel;
 
@@ -57,6 +59,7 @@ namespace UI.Loadout
 
             foreach (InventoryItemContainer container in _pluginContainers)
             {
+                // Capture the containers to assign Action-based callbacks.
                 InventoryItemContainer capturedCont = container;
                 Action enteredHandler = () =>
                 {
@@ -70,6 +73,9 @@ namespace UI.Loadout
                 _containerFocusExitedCallbacks[capturedCont] = exitedHandler;
                 capturedCont.FocusEntered += enteredHandler;
                 capturedCont.FocusExited += exitedHandler;
+
+                // Connect item selected callbacks
+                container.ItemContainerSelected += OnItemContainerSelected;
             }
         }
 
@@ -89,6 +95,12 @@ namespace UI.Loadout
             )
             {
                 kvp.Key.FocusExited -= kvp.Value;
+            }
+
+            // Disconnect item selected callbacks
+            foreach (InventoryItemContainer container in _pluginContainers)
+            {
+                container.ItemContainerSelected -= OnItemContainerSelected;
             }
         }
 
@@ -112,9 +124,9 @@ namespace UI.Loadout
             // Create the container for the weapon slot
             WrapWeaponSlot();
             // Create containers for the rest of the equipped plugins
-            foreach (PluginSlot slot in _loadoutDisplay.PluginSlots)
+            foreach (ItemDisplay display in _loadoutDisplay.PluginDisplays)
             {
-                WrapPluginSlot(slot);
+                WrapPluginSlot(display);
             }
         }
 
@@ -126,20 +138,20 @@ namespace UI.Loadout
             _weaponContainer = weapContainer;
             // DebugLogger.LogMessage($"Adding the new container as a child to the HBox...", true);
             _pluginHBox.AddChild(_weaponContainer);
-            _weaponContainer.SetItemSlot(_loadoutDisplay.WeapSlot);
-            _weaponContainer.Slot.PivotOffset = _loadoutDisplay.WeapSlot.Size / 2;
-            _weaponContainer.Slot.Scale = new Vector2(0.8f, 0.8f);
+            _weaponContainer.SetItemDisplay(_loadoutDisplay.WeapSlot);
+            _weaponContainer.ItemDisplay.PivotOffset = _loadoutDisplay.WeapSlot.Size / 2;
+            _weaponContainer.ItemDisplay.Scale = new Vector2(0.8f, 0.8f);
         }
 
-        private void WrapPluginSlot(PluginSlot slot)
+        private void WrapPluginSlot(ItemDisplay display)
         {
             // DebugLogger.LogMessage($"Wrapping the plugin slot {slot.Name}", true);
             InventoryItemContainer itemContainer =
                 _inventoryItemContainerScene.Instantiate<InventoryItemContainer>();
             _pluginHBox.AddChild(itemContainer);
-            itemContainer.SetItemSlot(slot);
-            slot.PivotOffset = slot.Size / 2;
-            slot.Scale = new Vector2(0.8f, 0.8f);
+            itemContainer.SetItemDisplay(display);
+            display.PivotOffset = display.Size / 2;
+            display.Scale = new Vector2(0.8f, 0.8f);
             _pluginContainers.Add(itemContainer);
         }
 
@@ -192,9 +204,9 @@ namespace UI.Loadout
         private void OnContainerFocusEntered(InventoryItemContainer container)
         {
             DebugLogger.LogMessage($"{container} focus entered!");
-            if (container.Slot.Item != null)
+            if (container.ItemDisplay.Item != null)
             {
-                _descriptionPanel.DisplayItemDescription(container.Slot.Item);
+                _descriptionPanel.DisplayItemDescription(container.ItemDisplay.Item);
             }
             else
             {
@@ -203,6 +215,19 @@ namespace UI.Loadout
         }
 
         private void OnContainerFocusExited(InventoryItemContainer container) { }
+
+        private void OnItemContainerSelected(object source, ItemSelectedEventArgs args)
+        {
+            if (
+                ServiceManager
+                    .Instance.GetService<PlayerService>()
+                    .GetPlayer(_playerId)
+                    .CanScrapItem(args.Item)
+            )
+            {
+                EventBus.Instance.RaiseItemScrapped(args.Item);
+            }
+        }
 
         public override void _ExitTree()
         {

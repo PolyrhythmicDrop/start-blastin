@@ -20,15 +20,6 @@ namespace UI.Shop
             _pricePanel = GetNode<PricePanelContainer>("%PricePanelContainer");
         }
 
-        // public override void _GuiInput(InputEvent @event)
-        // {
-        //     if (Input.IsActionJustPressedByEvent("ui_accept", @event))
-        //     {
-        //         InvokeItemContainerSelected();
-        //         AcceptEvent();
-        //     }
-        // }
-
         /// <summary>
         /// Sets the item that belongs in the container.
         /// </summary>

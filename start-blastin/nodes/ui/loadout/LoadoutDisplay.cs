@@ -26,6 +26,8 @@ namespace UI.Loadout
 
         private Plugin _blankPlugin = ResourceLoader.Load<Plugin>("uid://cdf365jvnlftb");
 
+        public event Action DisplayUpdated;
+
         public void Initialize(LoadoutManager loadoutManager)
         {
             DebugLogger.LogMessage(
@@ -175,6 +177,8 @@ namespace UI.Loadout
 
                 // Shift plugins to fill gap
                 FillPluginSlotGaps();
+
+                DisplayUpdated?.Invoke();
             }
         }
 

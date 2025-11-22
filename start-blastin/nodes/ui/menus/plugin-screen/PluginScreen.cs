@@ -78,6 +78,9 @@ namespace UI.Loadout
                 // Connect item selected callbacks
                 container.ItemContainerSelected += OnItemContainerSelected;
             }
+
+            // Connect display updated
+            _loadoutDisplay.DisplayUpdated += OnDisplayUpdated;
         }
 
         public void DisconnectSignals()
@@ -103,6 +106,7 @@ namespace UI.Loadout
             {
                 container.ItemContainerSelected -= OnItemContainerSelected;
             }
+            _loadoutDisplay.DisplayUpdated -= OnDisplayUpdated;
         }
 
         public void ToggleActivate(bool activate)
@@ -228,6 +232,23 @@ namespace UI.Loadout
             )
             {
                 EventBus.Instance.RaiseItemScrapped(args.Item);
+            }
+        }
+
+        /// <summary>
+        /// Called whenever the loadout display is updated.
+        /// Currently only used to update the description panel if plugins move, but theoretically could be used for other stuff.
+        /// </summary>
+        private void OnDisplayUpdated()
+        {
+            if (Active)
+            {
+                // Get the current focus owner and update the description
+                var focused = GetViewport().GuiGetFocusOwner();
+                if (focused is InventoryItemContainer container)
+                {
+                    _descriptionPanel.DisplayItemDescription(container.Item);
+                }
             }
         }
 

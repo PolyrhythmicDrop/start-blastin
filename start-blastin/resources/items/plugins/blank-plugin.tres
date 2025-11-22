@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Plugin" load_steps=2 format=3 uid="uid://cdf365jvnlftb"]
+
+[ext_resource type="Script" uid="uid://b3qmdj461ykoi" path="res://architecture/items/plugins/Plugin.cs" id="1_p0api"]
+
+[resource]
+script = ExtResource("1_p0api")
+Name = &"Empty"
+Description = &"This slot is empty. How sad..."
+AppearsInShop = false
+Effects = null
+metadata/_custom_type_script = "uid://b3qmdj461ykoi"

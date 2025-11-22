@@ -23,6 +23,8 @@ namespace UI.Loadout
 
         public IReadOnlyList<ItemDisplay> PluginDisplays => _pluginDisplays.AsReadOnly();
 
+        private Plugin _blankPlugin = ResourceLoader.Load<Plugin>("uid://cdf365jvnlftb");
+
         public void Initialize(LoadoutManager loadoutManager)
         {
             DebugLogger.LogMessage(
@@ -85,7 +87,8 @@ namespace UI.Loadout
 
         private void AddSlot()
         {
-            ItemDisplay itemDisplay = ItemDisplayFactory.CreateEmptyItemDisplay();
+            // Create a blank plugin slot display
+            ItemDisplay itemDisplay = ItemDisplayFactory.CreateDisplayForItem(_blankPlugin);
 
             // Create a unique name for the slot so that it can easily be accessed by name
             _pluginDisplays.Add(itemDisplay);
@@ -97,7 +100,7 @@ namespace UI.Loadout
             // Find an empty slot to remove
             try
             {
-                int empty = _pluginDisplays.FindIndex(slot => slot.Empty);
+                int empty = _pluginDisplays.FindIndex(slot => slot.Item == _blankPlugin);
                 if (empty != -1)
                 {
                     ItemDisplay display = _pluginDisplays[empty];
@@ -130,7 +133,10 @@ namespace UI.Loadout
 
         private void OnPluginEquipped(object source, PlayerPluginEquippedEventArgs args)
         {
-            // Find the first empty slot (checking should have already happened before the player was allowed to equip something)
+            DebugLogger.LogMessage(
+                $"Attempting to display newly equipped plugin {args.NewPlugin} in {this}...",
+                true
+            );
             try
             {
                 ItemDisplay emptySlot = _pluginDisplays.Find(slot => slot.Empty);
@@ -142,6 +148,9 @@ namespace UI.Loadout
                 }
                 else
                 {
+                    DebugLogger.LogMessage(
+                        $"Empty slot found! Installing plugin in {emptySlot.Name}"
+                    );
                     FillSlot(emptySlot, args.NewPlugin);
                 }
             }

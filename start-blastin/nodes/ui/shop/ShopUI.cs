@@ -225,13 +225,19 @@ namespace UI.Shop
         /// <returns>True if the item can be displayed in the shop. False if not.</returns>
         private bool CanShowItem(Item item)
         {
+            // Return immediately if the item can't appear in the shop.
+            if (!item.AppearsInShop)
+            {
+                return false;
+            }
+
             // Does the item already exist in another item container in the shop?
             bool itemInContainer =
                 _itemContainers.Find(container => container.Item == item) != null;
 
+            // Does the player already have the item?
             bool playerHasItem = PlayerHasItem(item);
 
-            // Return true if both of the above are false
             return !itemInContainer && !playerHasItem;
         }
 

@@ -69,12 +69,16 @@ namespace Items
             set => _byteCost = value;
         }
 
+        [ExportGroup("Availability")]
         [Export]
         public bool Scrappable
         {
             get => _scrappable;
             set => _scrappable = value;
         }
+
+        [Export]
+        public bool AppearsInShop { get; set; } = true;
 
         [ExportGroup("Effects")]
         [Export]

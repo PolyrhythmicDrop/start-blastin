@@ -28,15 +28,35 @@ namespace UI.Loadout
             _pricePanel = GetNode<PricePanelContainer>("%PricePanelContainer");
             InitializePricePanel();
 
-            // InitializeItemSlot();
-
             ConnectSignals();
         }
 
         public override void ConnectSignals()
         {
-            _itemDisplay.SlotItemChanged += SetPanelInfo;
+            ConnectSlotItemChanged(true);
             base.ConnectSignals();
+        }
+
+        public override void DisconnectSignals()
+        {
+            ConnectSlotItemChanged(false);
+            base.DisconnectSignals();
+        }
+
+        /// <summary>
+        /// Connect or disconnect to the <see cref="ItemDisplay.SlotItemChanged"/> event for the current <see cref="_itemDisplay"/> variable.
+        /// </summary>
+        /// <param name="connect">True to connect the signal, false to disconnect it.</param>
+        public void ConnectSlotItemChanged(bool connect)
+        {
+            if (connect)
+            {
+                _itemDisplay.SlotItemChanged += SetPanelInfo;
+            }
+            else
+            {
+                _itemDisplay.SlotItemChanged -= SetPanelInfo;
+            }
         }
 
         private void InitializeNamePanel()
@@ -73,8 +93,6 @@ namespace UI.Loadout
         {
             DebugLogger.LogMessage($"Setting item display for {Name}", true);
 
-            // _itemDisplay = display;
-
             // Get the index of the current display scene
             int index = _itemDisplay.GetIndex();
             // Remove the current display scene
@@ -84,28 +102,20 @@ namespace UI.Loadout
             _vBox.MoveChild(display, index);
             // Set the variable to the new display scene.
             _itemDisplay = display;
+            // Reconnect to the SlotItemChanged event because we changed the variable to a new object, which severed the original connection.
+            ConnectSlotItemChanged(true);
 
             SetPanelInfo();
         }
 
-        private void InitializeItemSlot()
-        {
-            // Shouldn't have to do all this because now the item display is already in the scene
-
-            // if (_itemSlot == null)
-            // {
-            //     SetItemSlot(ItemDisplayFactory.CreateItemSlot<ItemDisplay>());
-            // }
-            // _vBox.AddChild(_itemSlot);
-            // // Move the slot to be beneath the namePanel
-            // int nameIndex = _itemNamePanel.GetIndex();
-            // _vBox.MoveChild(_itemSlot, nameIndex + 1);
-        }
-
         private void SetPanelInfo()
         {
-            if (_itemDisplay.Item != null)
+            DebugLogger.LogMessage($"Setting panel info for {Name}...", true);
+            if (!_itemDisplay.Empty)
             {
+                DebugLogger.LogMessage(
+                    $"Item display is not empty! Setting text and scrap price to the item in the display, which is {_itemDisplay.Item.ResourceName}"
+                );
                 _itemNamePanel.Label.Text = _itemDisplay.Item.Name;
                 _pricePanel.SetLabelText(
                     _itemDisplay.Item.ScrapValue.ToString(),
@@ -116,7 +126,12 @@ namespace UI.Loadout
             }
             else
             {
-                _itemNamePanel.Label.Text = "Empty";
+                // If the item display item isn't null (but also Empty is true, as per previous step), then it's probably a "blank" item, like an empty plugin slot.
+                // In this case just show the name of the item.
+                if (_itemDisplay.Item != null)
+                {
+                    _itemNamePanel.Label.Text = _itemDisplay.Item.Name;
+                }
                 _pricePanel.TogglePanelVisibility(false);
             }
         }

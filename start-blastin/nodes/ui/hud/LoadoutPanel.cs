@@ -11,7 +11,7 @@ using Utility;
 namespace UI.HUD
 {
     [GlobalClass]
-    public partial class LoadoutPanel : PanelContainer
+    public partial class LoadoutPanel : PanelContainer, IListener
     {
         private int _playerId;
 
@@ -26,7 +26,19 @@ namespace UI.HUD
         {
             DebugLogger.LogMessage($"Calling Ready...", true);
             _hBox = GetNode<HBoxContainer>("%LoadoutHBox");
+
+            ConnectSignals();
         }
+
+        public void ConnectSignals()
+        {
+            // foreach (ItemDisplay display in _loadoutDisplay.PluginDisplays)
+            // {
+
+            // }
+        }
+
+        public void DisconnectSignals() { }
 
         public void Initialize(int playerId)
         {
@@ -50,6 +62,7 @@ namespace UI.HUD
 
         public override void _ExitTree()
         {
+            DisconnectSignals();
             base._ExitTree();
         }
     }

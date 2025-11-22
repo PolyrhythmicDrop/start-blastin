@@ -18,7 +18,7 @@ public partial class ItemDisplay : PanelContainer, IListener
     protected TextureRect _iconRect;
 
     public Item Item => _item;
-    public bool Empty => _item == null;
+    public bool Empty => IsEmpty();
 
     public event Action SlotItemChanged;
 
@@ -98,5 +98,16 @@ public partial class ItemDisplay : PanelContainer, IListener
         {
             _iconRect.Texture = null;
         }
+    }
+
+    private bool IsEmpty()
+    {
+        bool itemNull = _item == null;
+        bool hasBlankPlugin = _item == ResourceLoader.Load<Plugin>("uid://cdf365jvnlftb");
+        DebugLogger.LogMessage(
+            $"{nameof(itemNull)}: {itemNull} | {nameof(hasBlankPlugin)}: {hasBlankPlugin}",
+            true
+        );
+        return itemNull || hasBlankPlugin;
     }
 }

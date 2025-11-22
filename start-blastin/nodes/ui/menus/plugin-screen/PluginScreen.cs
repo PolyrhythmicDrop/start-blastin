@@ -4,6 +4,7 @@ using Autoloads;
 using Events;
 using Godot;
 using Interfaces;
+using Items;
 using Services;
 using UI.HUD;
 using Utility;

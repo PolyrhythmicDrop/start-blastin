@@ -48,9 +48,7 @@ public partial class ItemDisplay : PanelContainer, IListener
 
     public virtual void SetItem(Item item)
     {
-        DebugLogger.LogMessage($"Setting item for {Name} to {item}", true);
         _item = item;
-
         SlotItemChanged?.Invoke();
     }
 
@@ -104,10 +102,6 @@ public partial class ItemDisplay : PanelContainer, IListener
     {
         bool itemNull = _item == null;
         bool hasBlankPlugin = _item == ResourceLoader.Load<Plugin>("uid://cdf365jvnlftb");
-        DebugLogger.LogMessage(
-            $"{nameof(itemNull)}: {itemNull} | {nameof(hasBlankPlugin)}: {hasBlankPlugin}",
-            true
-        );
         return itemNull || hasBlankPlugin;
     }
 }

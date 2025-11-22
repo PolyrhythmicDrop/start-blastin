@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Events;
 using Factories;
 using Godot;
@@ -167,10 +168,41 @@ namespace UI.Loadout
 
         private void OnItemRemoved(object source, PlayerItemRemovedEventArgs args)
         {
-            if (args.Item is not WeaponPlugin && args.Item is Plugin plugin)
+            if (args.Item is not WeaponPlugin && args.Item is Plugin removedPlugin)
             {
                 // Find the slot this plugin belongs to and set it to a blank plugin
-                _pluginDisplays.Find(slot => slot.Item == plugin).SetItem(_blankPlugin);
+                _pluginDisplays.Find(slot => slot.Item == removedPlugin).SetItem(_blankPlugin);
+
+                // Shift plugins to fill gap
+                FillPluginSlotGaps();
+            }
+        }
+
+        private void FillPluginSlotGaps()
+        {
+            // Find the first empty plugin slot (there should always be one, since we probably just removed a plugin)
+            int emptyIndex = _pluginDisplays.FindIndex(slot => slot.Empty);
+            // Determine if there are any more plugin slots past the empty one
+            if (emptyIndex != -1 && (emptyIndex + 1) < _pluginDisplays.Count)
+            {
+                // Find the next non-empty plugin, if one exists.
+                Plugin pluginToMove = null;
+                int moveFromIndex = -1;
+                for (int i = emptyIndex + 1; i < _pluginDisplays.Count; i++)
+                {
+                    if (_pluginDisplays[i].Item is Plugin plugin && plugin != _blankPlugin)
+                    {
+                        pluginToMove = plugin;
+                        moveFromIndex = i;
+                        break;
+                    }
+                }
+                // If we found a plugin, shift its item over to the empty index and clear the plugin slot where it once was.
+                if (pluginToMove != null && moveFromIndex != -1)
+                {
+                    _pluginDisplays[emptyIndex].SetItem(pluginToMove);
+                    _pluginDisplays[moveFromIndex].SetItem(_blankPlugin);
+                }
             }
         }
 

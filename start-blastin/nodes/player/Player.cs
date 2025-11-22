@@ -282,7 +282,7 @@ namespace Entities
             DebugLogger.LogMessage($"Player ready! Plugins:", true);
             foreach (Plugin plugin in _plugins)
             {
-                DebugLogger.LogMessage($"{plugin} - {plugin.ResourceName}", true);
+                DebugLogger.LogMessage($"{plugin.Name} - {plugin.ResourceName}", true);
             }
         }
 
@@ -568,7 +568,7 @@ namespace Entities
         {
             foreach (Plugin newPlugin in plugins)
             {
-                if (_plugins.Count < _pluginSlots && newPlugin is not Items.WeaponPlugin)
+                if (_plugins.Count <= _pluginSlots && newPlugin is not Items.WeaponPlugin)
                 {
                     _plugins.Add(newPlugin);
                     // EventBus.Instance.RaisePlayerPluginsChanged(_playerId, _plugins);

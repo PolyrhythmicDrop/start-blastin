@@ -1,25 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://dgcswjykgey5y"]
+[gd_scene load_steps=6 format=3 uid="uid://dgcswjykgey5y"]
 
 [ext_resource type="PackedScene" uid="uid://dxdlpe5yuamuy" path="res://nodes/wave-management/wave-manager/wave-manager.tscn" id="1_esqth"]
 [ext_resource type="Texture2D" uid="uid://cilgl08og1qhy" path="res://nodes/backgrounds/background-purple-nebulae-stars.png" id="1_rvdan"]
 [ext_resource type="PackedScene" uid="uid://dl7j0usiolxux" path="res://nodes/environmental/play-area-border.tscn" id="2_cw5wp"]
 [ext_resource type="PackedScene" uid="uid://nenl15kjphyb" path="res://nodes/player/player.tscn" id="3_pxe5x"]
-[ext_resource type="Resource" uid="uid://brlipjg8g6t5k" path="res://resources/items/plugins/evasive-manuevers.tres" id="4_ltqac"]
 [ext_resource type="PackedScene" uid="uid://bsyev7gatn1jy" path="res://nodes/environmental/oob-area.tscn" id="4_rl1rb"]
-[ext_resource type="Resource" uid="uid://bo57x7idkejky" path="res://resources/items/plugins/sample-plugin.tres" id="5_4foro"]
-[ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="6_bfdlf"]
-[ext_resource type="Script" uid="uid://b3qmdj461ykoi" path="res://architecture/items/plugins/Plugin.cs" id="7_kuid2"]
-
-[sub_resource type="Resource" id="Resource_ltqac"]
-script = ExtResource("7_kuid2")
-Name = &"My Fun Plugin"
-Description = &"This is fun!"
-Icon = ExtResource("6_bfdlf")
-FluxCost = 500
-ByteCost = 500
-AppearsInShop = false
-Effects = null
-metadata/_custom_type_script = "uid://b3qmdj461ykoi"
 
 [node name="MainLevel" type="Node" groups=["level"]]
 
@@ -40,7 +25,6 @@ stretch_mode = 5
 
 [node name="Player" parent="." instance=ExtResource("3_pxe5x")]
 position = Vector2(960, 770)
-InitialPlugins = Array[Object]([ExtResource("4_ltqac"), ExtResource("5_4foro"), SubResource("Resource_ltqac")])
 Bytes = 0
 Flux = 0
 

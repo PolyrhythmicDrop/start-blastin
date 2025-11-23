@@ -1,7 +1,9 @@
 using System;
 using Autoloads;
 using Enemies;
+using Entities;
 using Godot;
+using Services;
 using WaveManagement;
 
 namespace Utility
@@ -13,11 +15,34 @@ namespace Utility
     [GlobalClass]
     public partial class Debugger : Node
     {
+        private PlayerService _service;
+
+        public override void _Ready()
+        {
+            _service = ServiceManager.Instance?.GetService<PlayerService>();
+        }
+
         public override void _Input(InputEvent @event)
         {
             if (Input.IsActionJustPressedByEvent("debug-end-wave", @event, true))
             {
                 DebugEndWave();
+            }
+            if (Input.IsActionJustPressedByEvent("debug-add-flux", @event, true))
+            {
+                AddFlux();
+            }
+            if (Input.IsActionJustPressedByEvent("debug-add-bytes", @event, true))
+            {
+                AddBytes();
+            }
+            if (Input.IsActionJustPressedByEvent("debug-remove-flux", @event, true))
+            {
+                RemoveFlux();
+            }
+            if (Input.IsActionJustPressedByEvent("debug-remove-bytes", @event, true))
+            {
+                RemoveBytes();
             }
         }
 
@@ -31,6 +56,30 @@ namespace Utility
                 enemy.Die();
             }
             waveManager.DebugEndWave();
+        }
+
+        private void AddFlux()
+        {
+            Player playerOne = _service.GetPlayer(1);
+            playerOne.Flux += 100;
+        }
+
+        private void AddBytes()
+        {
+            Player playerOne = _service.GetPlayer(1);
+            playerOne.Bytes += 100;
+        }
+
+        private void RemoveFlux()
+        {
+            Player playerOne = _service.GetPlayer(1);
+            playerOne.Flux -= 100;
+        }
+
+        private void RemoveBytes()
+        {
+            Player playerOne = _service.GetPlayer(1);
+            playerOne.Bytes -= 100;
         }
     }
 }

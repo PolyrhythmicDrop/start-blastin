@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using Autoloads;
-using Enemies;
-using Enemies.Spawners;
 using Godot;
-using SafeResourcePicker;
+using Utility;
 
 namespace WaveManagement
 {
@@ -180,6 +176,18 @@ namespace WaveManagement
             EventBus.Instance.RaiseWaveComplete();
 
             IncrementWave();
+        }
+
+        /// <summary>
+        /// Debug version of ending a wave. Used by the <see cref="Debugger"/> class to manually end a wave.
+        /// </summary>
+        public void DebugEndWave()
+        {
+            if (!_waveTimer.IsStopped())
+            {
+                _waveTimer.Stop();
+            }
+            EndWave();
         }
 
         /// <summary>

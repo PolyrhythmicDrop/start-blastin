@@ -1,0 +1,58 @@
+[gd_scene load_steps=12 format=3 uid="uid://cca75d2re7isj"]
+
+[ext_resource type="Texture2D" uid="uid://cilgl08og1qhy" path="res://nodes/backgrounds/background-purple-nebulae-stars.png" id="1_1iju8"]
+[ext_resource type="Script" uid="uid://bpw7egf87stew" path="res://architecture/utility/Debugger.cs" id="1_hxhdr"]
+[ext_resource type="PackedScene" uid="uid://dl7j0usiolxux" path="res://nodes/environmental/play-area-border.tscn" id="2_hxhdr"]
+[ext_resource type="PackedScene" uid="uid://nenl15kjphyb" path="res://nodes/player/player.tscn" id="3_gl8ah"]
+[ext_resource type="Resource" uid="uid://brlipjg8g6t5k" path="res://resources/items/plugins/evasive-manuevers.tres" id="4_4imkk"]
+[ext_resource type="Resource" uid="uid://bo57x7idkejky" path="res://resources/items/plugins/sample-plugin.tres" id="5_avtic"]
+[ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="6_ald07"]
+[ext_resource type="Script" uid="uid://b3qmdj461ykoi" path="res://architecture/items/plugins/Plugin.cs" id="7_1p5wi"]
+[ext_resource type="PackedScene" uid="uid://bsyev7gatn1jy" path="res://nodes/environmental/oob-area.tscn" id="8_mybqq"]
+[ext_resource type="PackedScene" uid="uid://dxdlpe5yuamuy" path="res://nodes/wave-management/wave-manager/wave-manager.tscn" id="9_4usc6"]
+
+[sub_resource type="Resource" id="Resource_ltqac"]
+script = ExtResource("7_1p5wi")
+Name = &"My Fun Plugin"
+Description = &"This is fun!"
+Icon = ExtResource("6_ald07")
+FluxCost = 500
+ByteCost = 500
+AppearsInShop = false
+Effects = null
+metadata/_custom_type_script = "uid://b3qmdj461ykoi"
+
+[node name="DebugLevel" type="Node" groups=["level"]]
+
+[node name="Debugger" type="Node" parent="."]
+script = ExtResource("1_hxhdr")
+metadata/_custom_type_script = "uid://bpw7egf87stew"
+
+[node name="TextureRect" type="TextureRect" parent="."]
+z_index = -100
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("1_1iju8")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="PlayAreaBorder" parent="." instance=ExtResource("2_hxhdr")]
+
+[node name="Player" parent="." instance=ExtResource("3_gl8ah")]
+position = Vector2(960, 770)
+InitialPlugins = Array[Object]([ExtResource("4_4imkk"), ExtResource("5_avtic"), SubResource("Resource_ltqac")])
+Bytes = 0
+Flux = 0
+
+[node name="OOB-Area" parent="." instance=ExtResource("8_mybqq")]
+
+[node name="WaveManager" parent="." instance=ExtResource("9_4usc6")]
+Difficulty = 2
+
+[node name="LevelCamera" type="Camera2D" parent="."]
+anchor_mode = 0

@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Autoloads;
 using Events;
 using Factories;
 using Godot;
 using Interfaces;
 using Items;
-using UI.HUD;
+using Services;
 using Utility;
 
 namespace UI.Loadout
@@ -16,7 +16,10 @@ namespace UI.Loadout
     /// </summary>
     public class LoadoutDisplay : IListener
     {
-        private LoadoutManager _loadoutManager;
+        // private LoadoutManager _loadoutManager;
+
+        private int _playerId;
+        private PlayerService _service;
         private ItemDisplay _weaponSlot;
         private List<ItemDisplay> _pluginDisplays = new();
 
@@ -28,12 +31,14 @@ namespace UI.Loadout
 
         public event Action DisplayUpdated;
 
-        public void Initialize(LoadoutManager loadoutManager)
+        public void Initialize(int playerId)
         {
-            DebugLogger.LogMessage(
-                $"Initializing loadout display for {this} from {loadoutManager}"
-            );
-            _loadoutManager = loadoutManager;
+            // DebugLogger.LogMessage(
+            //     $"Initializing loadout display for {this} from {loadoutManager}"
+            // );
+            // _loadoutManager = loadoutManager;
+            _playerId = playerId;
+            _service = ServiceManager.Instance.GetService<PlayerService>();
             _weaponSlot = ItemDisplayFactory.CreateEmptyItemDisplay();
             SetWeaponSlot();
 
@@ -46,35 +51,43 @@ namespace UI.Loadout
 
         public void ConnectSignals()
         {
-            _loadoutManager.PluginEquipped += OnPluginEquipped;
-            _loadoutManager.WeaponChanged += OnPlayerWeaponChanged;
-            _loadoutManager.SlotCountUpdated += OnSlotCountUpdated;
-            _loadoutManager.ItemRemoved += OnItemRemoved;
+            // _loadoutManager.PluginEquipped += OnPluginEquipped;
+            // _loadoutManager.WeaponChanged += OnPlayerWeaponChanged;
+            // _loadoutManager.SlotCountUpdated += OnSlotCountUpdated;
+            // _loadoutManager.ItemRemoved += OnItemRemoved;
+            EventBus.Instance.PlayerPluginEquipped += OnPluginEquipped;
+            EventBus.Instance.PlayerWeaponChanged += OnPlayerWeaponChanged;
+            EventBus.Instance.PlayerItemRemoved += OnItemRemoved;
+            _service.GetPlayer(_playerId).GetStatManager().StatUpdated += OnPlayerStatUpdated;
         }
 
         public void DisconnectSignals()
         {
-            _loadoutManager.PluginEquipped -= OnPluginEquipped;
-            _loadoutManager.WeaponChanged -= OnPlayerWeaponChanged;
-            _loadoutManager.SlotCountUpdated -= OnSlotCountUpdated;
-            _loadoutManager.ItemRemoved -= OnItemRemoved;
+            // _loadoutManager.PluginEquipped -= OnPluginEquipped;
+            // _loadoutManager.WeaponChanged -= OnPlayerWeaponChanged;
+            // _loadoutManager.SlotCountUpdated -= OnSlotCountUpdated;
+            // _loadoutManager.ItemRemoved -= OnItemRemoved;
+            EventBus.Instance.PlayerPluginEquipped -= OnPluginEquipped;
+            EventBus.Instance.PlayerWeaponChanged -= OnPlayerWeaponChanged;
+            EventBus.Instance.PlayerItemRemoved -= OnItemRemoved;
+            _service.GetPlayer(_playerId).GetStatManager().StatUpdated -= OnPlayerStatUpdated;
         }
 
         private void SetWeaponSlot()
         {
-            FillSlot(_weaponSlot, _loadoutManager.GetWeaponPlugin());
+            FillSlot(_weaponSlot, _service.GetPlayer(_playerId).WeaponPlugin);
         }
 
         private void InitializePluginSlots()
         {
             DebugLogger.LogMessage($"Initializing plugin slots for {this}", true);
-            int slotCount = _loadoutManager.GetSlotCount();
+            int slotCount = _service.GetPlayer(_playerId).PluginSlots;
             for (int i = 0; i < slotCount; i++)
             {
                 AddSlot();
             }
-
-            int pluginCount = _loadoutManager.GetPlugins().Count;
+            IReadOnlyList<Plugin> plugins = _service.GetPlayer(_playerId).GetPlugins();
+            int pluginCount = plugins.Count;
             if (pluginCount > 0)
             {
                 DebugLogger.LogMessage(
@@ -83,7 +96,7 @@ namespace UI.Loadout
                 );
                 for (int i = 0; i < pluginCount; i++)
                 {
-                    FillSlot(_pluginDisplays[i], _loadoutManager.GetPlugins()[i]);
+                    FillSlot(_pluginDisplays[i], plugins[i]);
                 }
             }
         }
@@ -134,53 +147,89 @@ namespace UI.Loadout
             display.SetItem(plugin);
         }
 
+        #region Event Callbacks
+
         private void OnPluginEquipped(object source, PlayerPluginEquippedEventArgs args)
         {
             DebugLogger.LogMessage(
                 $"Attempting to display newly equipped plugin {args.NewPlugin} in {this}...",
                 true
             );
-            try
+            if (args.PlayerId == _playerId)
             {
-                ItemDisplay emptySlot = _pluginDisplays.Find(slot => slot.Empty);
-                if (emptySlot == null)
+                try
                 {
-                    throw new ArgumentNullException(
-                        "Could not locate an empty slot! Something may be wrong with the loadout display..."
-                    );
+                    ItemDisplay emptySlot = _pluginDisplays.Find(slot => slot.Empty);
+                    if (emptySlot == null)
+                    {
+                        throw new ArgumentNullException(
+                            "Could not locate an empty slot! Something may be wrong with the loadout display..."
+                        );
+                    }
+                    else
+                    {
+                        DebugLogger.LogMessage(
+                            $"Empty slot found! Installing plugin in {emptySlot.Name}"
+                        );
+                        FillSlot(emptySlot, args.NewPlugin);
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    DebugLogger.LogMessage(
-                        $"Empty slot found! Installing plugin in {emptySlot.Name}"
-                    );
-                    FillSlot(emptySlot, args.NewPlugin);
+                    DebugLogger.LogMessage(e.Message, true, true);
                 }
-            }
-            catch (Exception e)
-            {
-                DebugLogger.LogMessage(e.Message, true, true);
             }
         }
 
         private void OnPlayerWeaponChanged(object source, PlayerWeaponChangedEventArgs args)
         {
-            SetWeaponSlot();
+            if (args.PlayerId == _playerId)
+            {
+                SetWeaponSlot();
+            }
         }
 
         private void OnItemRemoved(object source, PlayerItemRemovedEventArgs args)
         {
-            if (args.Item is not WeaponPlugin && args.Item is Plugin removedPlugin)
+            if (args.PlayerId == _playerId)
             {
-                // Find the slot this plugin belongs to and set it to a blank plugin
-                _pluginDisplays.Find(slot => slot.Item == removedPlugin).SetItem(_blankPlugin);
+                if (args.Item is not WeaponPlugin && args.Item is Plugin removedPlugin)
+                {
+                    // Find the slot this plugin belongs to and set it to a blank plugin
+                    _pluginDisplays.Find(slot => slot.Item == removedPlugin).SetItem(_blankPlugin);
 
-                // Shift plugins to fill gap
-                FillPluginSlotGaps();
+                    // Shift plugins to fill gap
+                    FillPluginSlotGaps();
 
-                DisplayUpdated?.Invoke();
+                    DisplayUpdated?.Invoke();
+                }
             }
         }
+
+        private void OnPlayerStatUpdated(object source, StatUpdatedEventArgs args)
+        {
+            if (args.StatType == Stats.StatType.PluginSlots)
+            {
+                OnSlotCountUpdated((int)args.Stat.CurrentValue);
+            }
+        }
+
+        private void OnSlotCountUpdated(int newCount)
+        {
+            int diff = newCount - _pluginDisplays.Count;
+            if (diff > 0)
+            {
+                for (int i = 0; i < diff; i++)
+                {
+                    AddSlot();
+                }
+            }
+            else if (diff < 0)
+            {
+                RemoveSlot();
+            }
+        }
+        #endregion
 
         private void FillPluginSlotGaps()
         {
@@ -205,26 +254,6 @@ namespace UI.Loadout
                         }
                     }
                 }
-            }
-        }
-
-        private void OnSlotCountUpdated(int newCount)
-        {
-            int diff = newCount - _pluginDisplays.Count;
-            if (diff > 0)
-            {
-                for (int i = 0; i < diff; i++)
-                {
-                    AddSlot();
-                }
-            }
-            else if (diff < 0)
-            {
-                RemoveSlot();
-            }
-            else
-            {
-                return;
             }
         }
     }

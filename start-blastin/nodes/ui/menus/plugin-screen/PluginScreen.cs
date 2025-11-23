@@ -37,7 +37,7 @@ namespace UI.Loadout
             _playerId = playerId;
             Visible = false;
             _loadoutDisplay = new();
-            _loadoutDisplay.Initialize(UiLayer.GetUiLayer(_playerId).LoadoutManager);
+            _loadoutDisplay.Initialize(_playerId);
         }
 
         public override void _Ready()

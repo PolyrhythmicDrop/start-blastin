@@ -47,7 +47,7 @@ namespace UI.HUD
                 DebugLogger.LogMessage($"Initializing...", true);
                 _playerId = playerId;
                 _loadoutDisplay = new();
-                _loadoutDisplay.Initialize(UiLayer.GetUiLayer(_playerId).LoadoutManager);
+                _loadoutDisplay.Initialize(_playerId);
                 if (_hBox != null)
                 {
                     _hBox.AddChild(_loadoutDisplay.WeapSlot);

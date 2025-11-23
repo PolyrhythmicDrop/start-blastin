@@ -17,7 +17,6 @@ namespace UI
     {
         private static readonly Dictionary<int, UiLayer> _instances = new();
         private int _playerId;
-        private LoadoutManager _loadoutManager;
         private ShopManager _shopManager;
         private Hud _hud;
         private PackedScene _hudScene = ResourceLoader.Load<PackedScene>("uid://cs0msq3g3i6xk");
@@ -28,7 +27,6 @@ namespace UI
         );
 
         public int PlayerId => _playerId;
-        public LoadoutManager LoadoutManager => _loadoutManager;
 
         public static UiLayer GetUiLayer(int playerId)
         {
@@ -59,10 +57,6 @@ namespace UI
             _shopManager = new();
             _shopManager.Name = $"ShopManager {_playerId}";
             _shopManager.Initialize(_playerId, this);
-
-            // Initialize the loadout display for the player.
-            _loadoutManager = new LoadoutManager();
-            _loadoutManager.Initialize(_playerId);
 
             // Initialize the HUD
             _hud = _hudScene.Instantiate<Hud>();

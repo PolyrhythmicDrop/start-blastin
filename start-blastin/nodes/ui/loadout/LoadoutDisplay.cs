@@ -184,28 +184,26 @@ namespace UI.Loadout
 
         private void FillPluginSlotGaps()
         {
-            // Find the first empty plugin slot (there should always be one, since we probably just removed a plugin)
-            int emptyIndex = _pluginDisplays.FindIndex(slot => slot.Empty);
-            // Determine if there are any more plugin slots past the empty one
-            if (emptyIndex != -1 && (emptyIndex + 1) < _pluginDisplays.Count)
+            for (int i = 0; i < _pluginDisplays.Count; i++)
             {
-                // Find the next non-empty plugin, if one exists.
-                Plugin pluginToMove = null;
-                int moveFromIndex = -1;
-                for (int i = emptyIndex + 1; i < _pluginDisplays.Count; i++)
+                if (_pluginDisplays[i].Empty)
                 {
-                    if (_pluginDisplays[i].Item is Plugin plugin && plugin != _blankPlugin)
+                    // Find the next plugin in the list that is not empty
+                    for (int p = i + 1; p < _pluginDisplays.Count; p++)
                     {
-                        pluginToMove = plugin;
-                        moveFromIndex = i;
-                        break;
+                        // If the next plugin slot is not empty...
+                        if (!_pluginDisplays[p].Empty)
+                        {
+                            // ...Grab the plugin and move it to to the empty slot
+                            Plugin pluginToMove = _pluginDisplays[p].Item as Plugin;
+                            _pluginDisplays[i].SetItem(pluginToMove);
+
+                            // Set the slot the plugin just moved out of to blank.
+                            _pluginDisplays[p].SetItem(_blankPlugin);
+                            // Break out of this for loop and return to the first one to check for the next empty plugin slot.
+                            break;
+                        }
                     }
-                }
-                // If we found a plugin, shift its item over to the empty index and clear the plugin slot where it once was.
-                if (pluginToMove != null && moveFromIndex != -1)
-                {
-                    _pluginDisplays[emptyIndex].SetItem(pluginToMove);
-                    _pluginDisplays[moveFromIndex].SetItem(_blankPlugin);
                 }
             }
         }

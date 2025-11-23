@@ -16,8 +16,6 @@ namespace UI.Loadout
     /// </summary>
     public class LoadoutDisplay : IListener
     {
-        // private LoadoutManager _loadoutManager;
-
         private int _playerId;
         private PlayerService _service;
         private ItemDisplay _weaponSlot;
@@ -31,12 +29,17 @@ namespace UI.Loadout
 
         public event Action DisplayUpdated;
 
+        /// <summary>
+        /// Finalizer to disconnect event subscriptions when the LoadoutDisplay is being garbage collected
+        /// </summary>
+        ~LoadoutDisplay()
+        {
+            DisconnectSignals();
+        }
+
+        #region Init
         public void Initialize(int playerId)
         {
-            // DebugLogger.LogMessage(
-            //     $"Initializing loadout display for {this} from {loadoutManager}"
-            // );
-            // _loadoutManager = loadoutManager;
             _playerId = playerId;
             _service = ServiceManager.Instance.GetService<PlayerService>();
             _weaponSlot = ItemDisplayFactory.CreateEmptyItemDisplay();
@@ -51,10 +54,6 @@ namespace UI.Loadout
 
         public void ConnectSignals()
         {
-            // _loadoutManager.PluginEquipped += OnPluginEquipped;
-            // _loadoutManager.WeaponChanged += OnPlayerWeaponChanged;
-            // _loadoutManager.SlotCountUpdated += OnSlotCountUpdated;
-            // _loadoutManager.ItemRemoved += OnItemRemoved;
             EventBus.Instance.PlayerPluginEquipped += OnPluginEquipped;
             EventBus.Instance.PlayerWeaponChanged += OnPlayerWeaponChanged;
             EventBus.Instance.PlayerItemRemoved += OnItemRemoved;
@@ -63,19 +62,10 @@ namespace UI.Loadout
 
         public void DisconnectSignals()
         {
-            // _loadoutManager.PluginEquipped -= OnPluginEquipped;
-            // _loadoutManager.WeaponChanged -= OnPlayerWeaponChanged;
-            // _loadoutManager.SlotCountUpdated -= OnSlotCountUpdated;
-            // _loadoutManager.ItemRemoved -= OnItemRemoved;
             EventBus.Instance.PlayerPluginEquipped -= OnPluginEquipped;
             EventBus.Instance.PlayerWeaponChanged -= OnPlayerWeaponChanged;
             EventBus.Instance.PlayerItemRemoved -= OnItemRemoved;
             _service.GetPlayer(_playerId).GetStatManager().StatUpdated -= OnPlayerStatUpdated;
-        }
-
-        private void SetWeaponSlot()
-        {
-            FillSlot(_weaponSlot, _service.GetPlayer(_playerId).WeaponPlugin);
         }
 
         private void InitializePluginSlots()
@@ -99,6 +89,13 @@ namespace UI.Loadout
                     FillSlot(_pluginDisplays[i], plugins[i]);
                 }
             }
+        }
+        #endregion
+
+        #region Slot Management
+        private void SetWeaponSlot()
+        {
+            FillSlot(_weaponSlot, _service.GetPlayer(_playerId).WeaponPlugin);
         }
 
         private void AddSlot()
@@ -146,6 +143,33 @@ namespace UI.Loadout
             );
             display.SetItem(plugin);
         }
+
+        private void FillPluginSlotGaps()
+        {
+            for (int i = 0; i < _pluginDisplays.Count; i++)
+            {
+                if (_pluginDisplays[i].Empty)
+                {
+                    // Find the next plugin in the list that is not empty
+                    for (int p = i + 1; p < _pluginDisplays.Count; p++)
+                    {
+                        // If the next plugin slot is not empty...
+                        if (!_pluginDisplays[p].Empty)
+                        {
+                            // ...Grab the plugin and move it to to the empty slot
+                            Plugin pluginToMove = _pluginDisplays[p].Item as Plugin;
+                            _pluginDisplays[i].SetItem(pluginToMove);
+
+                            // Set the slot the plugin just moved out of to blank.
+                            _pluginDisplays[p].SetItem(_blankPlugin);
+                            // Break out of this for loop and return to the first one to check for the next empty plugin slot.
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
 
         #region Event Callbacks
 
@@ -230,31 +254,5 @@ namespace UI.Loadout
             }
         }
         #endregion
-
-        private void FillPluginSlotGaps()
-        {
-            for (int i = 0; i < _pluginDisplays.Count; i++)
-            {
-                if (_pluginDisplays[i].Empty)
-                {
-                    // Find the next plugin in the list that is not empty
-                    for (int p = i + 1; p < _pluginDisplays.Count; p++)
-                    {
-                        // If the next plugin slot is not empty...
-                        if (!_pluginDisplays[p].Empty)
-                        {
-                            // ...Grab the plugin and move it to to the empty slot
-                            Plugin pluginToMove = _pluginDisplays[p].Item as Plugin;
-                            _pluginDisplays[i].SetItem(pluginToMove);
-
-                            // Set the slot the plugin just moved out of to blank.
-                            _pluginDisplays[p].SetItem(_blankPlugin);
-                            // Break out of this for loop and return to the first one to check for the next empty plugin slot.
-                            break;
-                        }
-                    }
-                }
-            }
-        }
     }
 }

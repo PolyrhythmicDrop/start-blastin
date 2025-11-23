@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using Entities;
+using Autoloads;
 using Godot;
+using Interfaces;
 using UI.HUD;
 using UI.Loadout;
 using UI.Shop;
-using Utility;
 
 namespace UI
 {
@@ -13,11 +13,14 @@ namespace UI
     /// UI CanvasLayer for a specific player. Manages all UI elements for that player.
     /// </summary>
     [GlobalClass]
-    public partial class UiLayer : CanvasLayer
+    public partial class UiLayer : CanvasLayer, IListener
     {
         private static readonly Dictionary<int, UiLayer> _instances = new();
         private int _playerId;
-        private ShopManager _shopManager;
+
+        private ShopUI _shopUI;
+        private PackedScene _shopUiScene = ResourceLoader.Load<PackedScene>("uid://buyrlvs8oy1lu");
+
         private Hud _hud;
         private PackedScene _hudScene = ResourceLoader.Load<PackedScene>("uid://cs0msq3g3i6xk");
 
@@ -40,9 +43,23 @@ namespace UI
                 Initialize(1);
             }
 
-            AddChild(_shopManager);
+            AddChild(_shopUI);
             AddChild(_hud);
             AddChild(_pluginScreen);
+
+            ConnectSignals();
+        }
+
+        public void ConnectSignals()
+        {
+            EventBus.Instance.WaveComplete += OpenShop;
+            EventBus.Instance.StartWaveButtonPressed += CloseShop;
+        }
+
+        public void DisconnectSignals()
+        {
+            EventBus.Instance.WaveComplete -= OpenShop;
+            EventBus.Instance.StartWaveButtonPressed -= CloseShop;
         }
 
         public void Initialize(int playerId)
@@ -53,10 +70,10 @@ namespace UI
             // Register the instance in the static dictionary for easy finding
             _instances[_playerId] = this;
 
-            // Initialize the child shop manager.
-            _shopManager = new();
-            _shopManager.Name = $"ShopManager {_playerId}";
-            _shopManager.Initialize(_playerId, this);
+            // Initialize the shop
+            _shopUI = _shopUiScene.Instantiate<ShopUI>();
+            _shopUI.Initialize(_playerId);
+            _shopUI.Visible = false;
 
             // Initialize the HUD
             _hud = _hudScene.Instantiate<Hud>();
@@ -93,8 +110,22 @@ namespace UI
             GetTree().Paused = false;
         }
 
+        private void OpenShop()
+        {
+            _shopUI.OnShopOpen();
+            _shopUI.Visible = true;
+            EventBus.Instance.RaiseShopOpened();
+        }
+
+        private void CloseShop()
+        {
+            _shopUI.Visible = false;
+            EventBus.Instance.RaiseShopClosed();
+        }
+
         public override void _ExitTree()
         {
+            DisconnectSignals();
             _instances.Remove(_playerId);
             base._ExitTree();
         }

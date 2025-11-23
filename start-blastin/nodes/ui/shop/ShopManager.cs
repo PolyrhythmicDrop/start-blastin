@@ -21,6 +21,8 @@ namespace UI.Shop
             // DebugLogger.LogMessage("Ready called!", true);
             _shopUI = _shopUiScene.Instantiate<ShopUI>();
             _shopUI.Initialize(_playerId);
+            _shopUI.Visible = false;
+            _uiLayer.AddChild(_shopUI);
             ConnectSignals();
         }
 
@@ -43,11 +45,12 @@ namespace UI.Shop
             EventBus.Instance.StartWaveButtonPressed -= CloseShop;
         }
 
-        private async void OpenShop()
+        private void OpenShop()
         {
-            _uiLayer.CallDeferred(MethodName.AddChild, _shopUI);
-            _shopUI.RequestReady();
-            await ToSignal(_shopUI, Node.SignalName.Ready);
+            // _uiLayer.CallDeferred(MethodName.AddChild, _shopUI);
+            // _shopUI.RequestReady();
+            // await ToSignal(_shopUI, Node.SignalName.Ready);
+            _shopUI.OnShopOpen();
             _shopUI.Visible = true;
             EventBus.Instance.RaiseShopOpened();
         }
@@ -55,8 +58,8 @@ namespace UI.Shop
         private async void CloseShop()
         {
             _shopUI.Visible = false;
-            _uiLayer.CallDeferred(MethodName.RemoveChild, _shopUI);
-            await ToSignal(_shopUI, Node.SignalName.TreeExited);
+            // _uiLayer.CallDeferred(MethodName.RemoveChild, _shopUI);
+            // await ToSignal(_shopUI, Node.SignalName.TreeExited);
             EventBus.Instance.RaiseShopClosed();
         }
 

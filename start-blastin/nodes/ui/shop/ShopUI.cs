@@ -43,10 +43,10 @@ namespace UI.Shop
         {
             DebugLogger.LogMessage($"Calling _Ready...", true);
 
-            if (_itemPool.Count <= 0)
-            {
-                LoadItemPool();
-            }
+            // if (_itemPool.Count <= 0)
+            // {
+            //     LoadItemPool();
+            // }
 
             _nextWaveButton = GetNode<Button>("%NextWaveButton");
             _rerollButton = GetNode<Button>("%RerollButton");
@@ -61,11 +61,22 @@ namespace UI.Shop
                 GetNode<ShopItemContainer>("%ShopItemContainer3"),
             };
 
-            ReadyShopItemContainers();
+            // ReadyShopItemContainers();
 
             ConnectSignals();
-            PopulateShopSlots();
+            // PopulateShopSlots();
             // Grab the focus to the first shop item.
+            // _itemContainers[0].CallDeferred(MethodName.GrabFocus);
+        }
+
+        public void OnShopOpen()
+        {
+            if (_itemPool.Count <= 0)
+            {
+                LoadItemPool();
+            }
+            ReadyShopItemContainers();
+            PopulateShopSlots();
             _itemContainers[0].CallDeferred(MethodName.GrabFocus);
         }
 

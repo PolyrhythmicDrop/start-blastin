@@ -44,6 +44,10 @@ namespace Utility
             {
                 RemoveBytes();
             }
+            if (Input.IsActionJustPressedByEvent("debug-heal-player", @event, true))
+            {
+                HealPlayer();
+            }
         }
 
         private void DebugEndWave()
@@ -80,6 +84,12 @@ namespace Utility
         {
             Player playerOne = _service.GetPlayer(1);
             playerOne.Bytes -= 100;
+        }
+
+        private void HealPlayer()
+        {
+            Player playerOne = _service.GetPlayer(1);
+            playerOne.Heal(playerOne.MaxHealth);
         }
     }
 }

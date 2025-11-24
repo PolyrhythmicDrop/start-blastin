@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://b2fpxs1cgq4hk"]
+[gd_scene load_steps=8 format=3 uid="uid://b2fpxs1cgq4hk"]
 
 [ext_resource type="Texture2D" uid="uid://b1pls3wd1xmt8" path="res://assets/icons/currency/byte-icon-64.png" id="1_ql660"]
 [ext_resource type="Script" uid="uid://dtv01p3l3bvmu" path="res://nodes/ui/elements/PricePanelContainer.cs" id="1_wg3tc"]
@@ -10,6 +10,14 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ca63a"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
 draw_center = false
+
+[sub_resource type="LabelSettings" id="LabelSettings_ftx5u"]
+resource_local_to_scene = true
+resource_name = "flux-price-label-settings"
+font_size = 32
+shadow_size = 3
+shadow_color = Color(0, 0, 0, 0.69411767)
+shadow_offset = Vector2(2, 1)
 
 [node name="PricePanelContainer" type="PanelContainer"]
 anchors_preset = 5
@@ -103,6 +111,6 @@ size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
 theme_override_styles/normal = SubResource("StyleBoxFlat_ca63a")
 text = "000"
-label_settings = ExtResource("3_ftx5u")
+label_settings = SubResource("LabelSettings_ftx5u")
 horizontal_alignment = 1
 vertical_alignment = 1

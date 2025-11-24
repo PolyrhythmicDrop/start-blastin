@@ -36,17 +36,19 @@ namespace UI.Shop
 
         private Dictionary<ShopItemContainer, Action> _containerFocusHandlers = new();
 
+        /// <summary>
+        /// The object that was last in focus. Used for switching back focus after the plugin screen.
+        /// </summary>
+        private Node _lastFocused;
+
+        public bool Active { get; set; }
+
         public void LoadItemPool() =>
             PoolLoader.LoadResourcePool(_itemPool, "res://resources/items/", true);
 
         public override void _Ready()
         {
             DebugLogger.LogMessage($"Calling _Ready...", true);
-
-            // if (_itemPool.Count <= 0)
-            // {
-            //     LoadItemPool();
-            // }
 
             _nextWaveButton = GetNode<Button>("%NextWaveButton");
             _rerollButton = GetNode<Button>("%RerollButton");
@@ -61,15 +63,10 @@ namespace UI.Shop
                 GetNode<ShopItemContainer>("%ShopItemContainer3"),
             };
 
-            // ReadyShopItemContainers();
-
             ConnectSignals();
-            // PopulateShopSlots();
-            // Grab the focus to the first shop item.
-            // _itemContainers[0].CallDeferred(MethodName.GrabFocus);
         }
 
-        public void OnShopOpen()
+        public void StockShop()
         {
             if (_itemPool.Count <= 0)
             {
@@ -77,7 +74,27 @@ namespace UI.Shop
             }
             ReadyShopItemContainers();
             PopulateShopSlots();
-            _itemContainers[0].CallDeferred(MethodName.GrabFocus);
+        }
+
+        public void ToggleActivate(bool activate)
+        {
+            if (activate)
+            {
+                Active = true;
+                DebugLogger.LogMessage($"Last focused: {_lastFocused}");
+                if (_lastFocused != null)
+                {
+                    _lastFocused.CallDeferred(MethodName.GrabFocus);
+                }
+                else
+                {
+                    _itemContainers[0].CallDeferred(MethodName.GrabFocus);
+                }
+            }
+            else
+            {
+                Active = false;
+            }
         }
 
         private async void ReadyShopItemContainers()
@@ -108,7 +125,14 @@ namespace UI.Shop
             {
                 // container.FocusEntered += () => DisplayItemDescription(container);
                 ShopItemContainer captured = container;
-                Action handler = () => _descPanel.DisplayItemDescription(captured.Item);
+                Action handler = () =>
+                {
+                    _descPanel.DisplayItemDescription(captured.Item);
+                    _lastFocused = captured;
+                    DebugLogger.LogMessage(
+                        $"_lastFocused is set to {captured} in Focus Entered handler. 'container' variable is {container}"
+                    );
+                };
                 _containerFocusHandlers[captured] = handler;
                 captured.FocusEntered += handler;
 
@@ -138,11 +162,23 @@ namespace UI.Shop
             }
         }
 
-        private void RerollFocusEntered() => DisplayTickerFocusMessage(_rerollButton);
+        private void RerollFocusEntered()
+        {
+            DisplayTickerFocusMessage(_rerollButton);
+            _lastFocused = _rerollButton;
+        }
 
-        private void NextWaveFocusEntered() => DisplayTickerFocusMessage(_nextWaveButton);
+        private void NextWaveFocusEntered()
+        {
+            DisplayTickerFocusMessage(_nextWaveButton);
+            _lastFocused = _nextWaveButton;
+        }
 
-        private void HealFocusEntered() => DisplayTickerFocusMessage(_healButton);
+        private void HealFocusEntered()
+        {
+            DisplayTickerFocusMessage(_healButton);
+            _lastFocused = _healButton;
+        }
 
         private void OnShopItemSelected(object source, ItemSelectedEventArgs args)
         {
@@ -185,6 +221,7 @@ namespace UI.Shop
                 // Set the price label for the item to be the right color.
                 Player player = _service.GetPlayer(_playerId);
                 player.CanAffordItem(item, out bool flux, out bool bytes);
+                DebugLogger.LogMessage($"item: {item.Name} | bytes: {bytes} | flux: {flux}", true);
                 container.SetBuyable(flux, bytes);
             }
         }
@@ -286,13 +323,11 @@ namespace UI.Shop
         {
             GD.Print($"Rerolling shop...");
             ClearItemContainers();
-            ClearItemDescription();
             PopulateShopSlots();
         }
 
         private void DisplayItemDescription(ShopItemContainer itemContainer)
         {
-            ClearItemDescription();
             Item item = itemContainer.Item;
 
             if (item != null)
@@ -308,25 +343,12 @@ namespace UI.Shop
             }
         }
 
-        private void ClearItemDescription()
-        {
-            // if (_statsVBox.GetChildCount() > 0)
-            // {
-            //     var children = _statsVBox.GetChildren();
-            //     foreach (var child in children)
-            //     {
-            //         _statsVBox.RemoveChild(child);
-            //     }
-            // }
-        }
-
         /// <summary>
         /// Displays a message in the description bay based on the focused item.
         /// </summary>
         /// <param name="focusedControl"></param>
         private void DisplayTickerFocusMessage(Control focusedControl)
         {
-            ClearItemDescription();
             if (focusedControl == _rerollButton)
             {
                 _descPanel.DisplayString("Refresh the cache to see new items.");

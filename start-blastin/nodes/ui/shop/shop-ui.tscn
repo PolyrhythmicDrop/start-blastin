@@ -46,6 +46,7 @@ corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
 [node name="ShopUI" type="PanelContainer"]
+z_index = 20
 anchors_preset = -1
 anchor_left = 0.13177083
 anchor_top = 0.11388889

@@ -29,11 +29,14 @@ namespace Autoloads
 
         #endregion
 
-        #region Shop and Items
+        #region Items and UI
 
         public event Action ShopOpened;
 
         public event Action ShopClosed;
+
+        public event EventHandler<PlayerIdEventArgs> InventoryOpened;
+        public event EventHandler<PlayerIdEventArgs> InventoryClosed;
 
         public event EventHandler<ItemBoughtEventArgs> ItemBought;
 
@@ -121,6 +124,18 @@ namespace Autoloads
         public void RaiseShopClosed()
         {
             ShopClosed?.Invoke();
+        }
+
+        public void RaiseInventoryOpened(int id)
+        {
+            PlayerIdEventArgs args = new(id);
+            InventoryOpened?.Invoke(this, args);
+        }
+
+        public void RaiseInventoryClosed(int id)
+        {
+            PlayerIdEventArgs args = new(id);
+            InventoryClosed?.Invoke(this, args);
         }
 
         public void RaiseItemBought(Item item)

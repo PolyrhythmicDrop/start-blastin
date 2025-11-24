@@ -489,11 +489,12 @@ namespace Entities
         /// <param name="flux">Output that indicates whether or not the player has enough flux.</param>
         /// <param name="bytes">Output that indicates whether or not the player has enough bytes.</param>
         /// <returns>True if the player is able to buy and equip the item, false if not.</returns>
-        public bool CanAffordItem(Item item, out bool flux, out bool bytes)
+        public void CanAffordItem(Item item, out bool flux, out bool bytes)
         {
-            flux = item.FluxCost <= _flux;
-            bytes = item.ByteCost <= _bytes;
-            return flux && bytes;
+            flux = item.FluxCost <= Flux;
+            bytes = item.ByteCost <= Bytes;
+            DebugLogger.LogMessage($"item: {item.Name} | bytes: {bytes} | flux: {flux}", true);
+            // return flux && bytes;
         }
 
         /// <summary>

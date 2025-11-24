@@ -102,24 +102,37 @@ namespace UI
         {
             GetTree().Paused = true;
             _pluginScreen.ToggleActivate(true);
+
+            // Deactivate the shop if it's open
+            if (_shopUI.Active)
+            {
+                _shopUI.ToggleActivate(false);
+            }
         }
 
         private void ClosePluginScreen()
         {
             _pluginScreen.ToggleActivate(false);
             GetTree().Paused = false;
+            // Reactivate the shop if it's open.
+            if (_shopUI.Visible && !_shopUI.Active)
+            {
+                _shopUI.ToggleActivate(true);
+            }
         }
 
         private void OpenShop()
         {
-            _shopUI.OnShopOpen();
+            _shopUI.StockShop();
             _shopUI.Visible = true;
+            _shopUI.ToggleActivate(true);
             EventBus.Instance.RaiseShopOpened();
         }
 
         private void CloseShop()
         {
             _shopUI.Visible = false;
+            _shopUI.ToggleActivate(false);
             EventBus.Instance.RaiseShopClosed();
         }
 

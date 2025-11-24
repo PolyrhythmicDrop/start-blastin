@@ -72,8 +72,8 @@ namespace UI.Shop
             Color fluxColor = fluxBuyable ? _defaultPriceColor : _unbuyablePriceColor;
             Color byteColor = byteBuyable ? _defaultPriceColor : _unbuyablePriceColor;
 
-            _pricePanel.SetFontColor(fluxColor, PricePanelContainer.PriceLabel.Flux);
             _pricePanel.SetFontColor(byteColor, PricePanelContainer.PriceLabel.Bytes);
+            _pricePanel.SetFontColor(fluxColor, PricePanelContainer.PriceLabel.Flux);
         }
 
         public override void _ExitTree()

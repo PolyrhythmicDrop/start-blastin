@@ -9,6 +9,7 @@
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3pdy4"]
 
 [node name="Hud" type="PanelContainer"]
+z_index = 100
 custom_minimum_size = Vector2(16, 9)
 anchors_preset = -1
 anchor_top = 0.94166666

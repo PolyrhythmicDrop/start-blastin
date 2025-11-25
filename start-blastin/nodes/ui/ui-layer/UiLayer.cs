@@ -29,6 +29,8 @@ namespace UI
             "uid://dog71b3n5wml5"
         );
 
+        private Panel _uiBackgroundBlur;
+
         public int PlayerId => _playerId;
 
         public static UiLayer GetUiLayer(int playerId)
@@ -43,9 +45,17 @@ namespace UI
                 Initialize(1);
             }
 
+            // Initialize the background blur child scene
+            _uiBackgroundBlur = GD.Load<PackedScene>("uid://by2ymfys887qn").Instantiate<Panel>();
+
             AddChild(_shopUI);
             AddChild(_hud);
             AddChild(_pluginScreen);
+
+            // Add the background blur as a child
+            _uiBackgroundBlur.Visible = false;
+            AddChild(_uiBackgroundBlur);
+            _uiBackgroundBlur.ZIndex = _pluginScreen.ZIndex - 1;
 
             ConnectSignals();
         }
@@ -103,6 +113,8 @@ namespace UI
             GetTree().Paused = true;
             _pluginScreen.ToggleActivate(true);
 
+            _uiBackgroundBlur.Visible = true;
+
             // Deactivate the shop if it's open
             if (_shopUI.Active)
             {
@@ -114,6 +126,9 @@ namespace UI
         {
             _pluginScreen.ToggleActivate(false);
             GetTree().Paused = false;
+
+            _uiBackgroundBlur.Visible = false;
+
             // Reactivate the shop if it's open.
             if (_shopUI.Visible && !_shopUI.Active)
             {

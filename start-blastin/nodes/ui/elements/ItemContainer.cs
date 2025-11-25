@@ -19,7 +19,9 @@ namespace UI
     public partial class ItemContainer : PanelContainer, IListener
     {
         protected Item _item;
-        protected TextureRect _textureRect;
+        protected TextureRect _itemIconRect;
+
+        protected TextureRect _impossibleActionRect;
 
         protected ItemNamePanelContainer _itemNamePanel;
         protected StyleBoxFlat _defocusedStyleBox =>
@@ -35,8 +37,8 @@ namespace UI
 
         public override void _Ready()
         {
-            _textureRect = GetNode<TextureRect>("%ItemIcon");
-            // _itemNameLabel = GetNode<Label>("%ItemNameLabel");
+            _itemIconRect = GetNode<TextureRect>("%ItemIcon");
+            _impossibleActionRect = GetNode<TextureRect>("%ImpossibleActionRect");
             _itemNamePanel = GetNode<ItemNamePanelContainer>("%ItemNamePanelContainer");
             ConnectSignals();
         }
@@ -92,7 +94,7 @@ namespace UI
             _itemNamePanel.Label.LabelSettings.FontColor = _itemColor;
             _itemNamePanel.Label.Text = _item.Name;
 
-            _textureRect.Texture = _item.Icon;
+            _itemIconRect.Texture = _item.Icon;
         }
 
         /// <summary>
@@ -102,7 +104,7 @@ namespace UI
         {
             DebugLogger.LogMessage($"Clearing item...", true);
             _item = null;
-            _textureRect.Texture = null;
+            _itemIconRect.Texture = null;
         }
 
         protected virtual void OnFocusEnter()

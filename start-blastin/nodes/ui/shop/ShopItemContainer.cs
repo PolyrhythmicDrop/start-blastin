@@ -60,7 +60,7 @@ namespace UI.Shop
         }
 
         /// <summary>
-        /// Sets the color of the price labels according to whether or not the player has enough currency to purchase it.
+        /// Sets various aspects of the item container according to whether or not the player has enough currency to purchase it.
         /// </summary>
         /// <param name="fluxBuyable">True if the player has enough flux to buy the item.</param>
         /// <param name="byteBuyable">True if the player has enough bytes to buy the item.</param>
@@ -74,6 +74,15 @@ namespace UI.Shop
 
             _pricePanel.SetFontColor(byteColor, PricePanelContainer.PriceLabel.Bytes);
             _pricePanel.SetFontColor(fluxColor, PricePanelContainer.PriceLabel.Flux);
+
+            if (!fluxBuyable || !byteBuyable)
+            {
+                _impossibleActionRect.Visible = true;
+            }
+            else if (fluxBuyable && byteBuyable)
+            {
+                _impossibleActionRect.Visible = false;
+            }
         }
 
         public override void _ExitTree()

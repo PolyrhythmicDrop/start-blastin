@@ -4,7 +4,8 @@
 [ext_resource type="Resource" uid="uid://dfmi20atcp4he" path="res://resources/colors/color-ranges/indicator-colors.tres" id="2_mw5pk"]
 
 [node name="TextIndicator" type="Node2D"]
-z_index = 20
+top_level = true
+z_index = 101
 script = ExtResource("1_27mqb")
 Colors = ExtResource("2_mw5pk")
 

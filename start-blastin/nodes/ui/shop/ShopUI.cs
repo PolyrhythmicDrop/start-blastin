@@ -121,6 +121,8 @@ namespace UI.Shop
             _nextWaveButton.FocusEntered += NextWaveFocusEntered;
             _healButton.FocusEntered += HealFocusEntered;
 
+            EventBus.Instance.PlayerCurrencyChanged += OnPlayerCurrencyChanged;
+
             foreach (ShopItemContainer container in _itemContainers)
             {
                 // container.FocusEntered += () => DisplayItemDescription(container);
@@ -149,6 +151,8 @@ namespace UI.Shop
             _rerollButton.FocusEntered -= RerollFocusEntered;
             _nextWaveButton.FocusEntered -= NextWaveFocusEntered;
             _healButton.FocusEntered -= HealFocusEntered;
+
+            EventBus.Instance.PlayerCurrencyChanged -= OnPlayerCurrencyChanged;
 
             foreach (var kvp in _containerFocusHandlers)
             {
@@ -201,6 +205,20 @@ namespace UI.Shop
             }
         }
 
+        private void OnPlayerCurrencyChanged(object source, PlayerCurrencyChangedEventArgs args)
+        {
+            if (_playerId == args.PlayerId)
+            {
+                foreach (ShopItemContainer container in _itemContainers)
+                {
+                    if (container != null && container.Item != null)
+                    {
+                        SetContainerAffordability(container);
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Populates all shop slots with items for the player to buy.
         /// </summary>
@@ -217,13 +235,15 @@ namespace UI.Shop
                 }
 
                 container.SetItem(item);
-
-                // Set the price label for the item to be the right color.
-                Player player = _service.GetPlayer(_playerId);
-                player.CanAffordItem(item, out bool flux, out bool bytes);
-                DebugLogger.LogMessage($"item: {item.Name} | bytes: {bytes} | flux: {flux}", true);
-                container.SetBuyable(flux, bytes);
+                SetContainerAffordability(container);
             }
+        }
+
+        private void SetContainerAffordability(ShopItemContainer container)
+        {
+            Player player = _service.GetPlayer(_playerId);
+            player.CanAffordItem(container.Item, out bool flux, out bool bytes);
+            container.SetBuyable(flux, bytes);
         }
 
         /// <summary>

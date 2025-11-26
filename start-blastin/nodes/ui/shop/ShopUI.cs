@@ -112,6 +112,7 @@ namespace UI.Shop
             _service = ServiceManager.Instance.GetService<PlayerService>();
         }
 
+        #region Event Handling
         private void ConnectSignals()
         {
             _rerollButton.Pressed += RerollShop;
@@ -121,7 +122,10 @@ namespace UI.Shop
             _nextWaveButton.FocusEntered += NextWaveFocusEntered;
             _healButton.FocusEntered += HealFocusEntered;
 
+            // Connect player variables for instant refreshing
             EventBus.Instance.PlayerCurrencyChanged += OnPlayerCurrencyChanged;
+            EventBus.Instance.PlayerItemRemoved += OnPlayerItemRemoved;
+            EventBus.Instance.PlayerPluginEquipped += OnPlayerPluginEquipped;
 
             foreach (ShopItemContainer container in _itemContainers)
             {
@@ -153,6 +157,8 @@ namespace UI.Shop
             _healButton.FocusEntered -= HealFocusEntered;
 
             EventBus.Instance.PlayerCurrencyChanged -= OnPlayerCurrencyChanged;
+            EventBus.Instance.PlayerItemRemoved -= OnPlayerItemRemoved;
+            EventBus.Instance.PlayerPluginEquipped -= OnPlayerPluginEquipped;
 
             foreach (var kvp in _containerFocusHandlers)
             {
@@ -184,6 +190,12 @@ namespace UI.Shop
             _lastFocused = _healButton;
         }
 
+        private void RerollShop()
+        {
+            ClearItemContainers();
+            PopulateShopSlots();
+        }
+
         private void OnShopItemSelected(object source, ItemSelectedEventArgs args)
         {
             Player player = _service.GetPlayer(_playerId);
@@ -205,9 +217,18 @@ namespace UI.Shop
             }
         }
 
-        private void OnPlayerCurrencyChanged(object source, PlayerCurrencyChangedEventArgs args)
+        private void OnPlayerCurrencyChanged(object source, PlayerCurrencyChangedEventArgs args) =>
+            RefreshAllAffordability(args.PlayerId);
+
+        private void OnPlayerItemRemoved(object source, PlayerItemRemovedEventArgs args) =>
+            RefreshAllAffordability(args.PlayerId);
+
+        private void OnPlayerPluginEquipped(object source, PlayerPluginEquippedEventArgs args) =>
+            RefreshAllAffordability(args.PlayerId);
+
+        private void RefreshAllAffordability(int argsId)
         {
-            if (_playerId == args.PlayerId)
+            if (_playerId == argsId)
             {
                 foreach (ShopItemContainer container in _itemContainers)
                 {
@@ -218,6 +239,9 @@ namespace UI.Shop
                 }
             }
         }
+        #endregion
+
+        #region Shop Slots
 
         /// <summary>
         /// Populates all shop slots with items for the player to buy.
@@ -339,13 +363,6 @@ namespace UI.Shop
             }
         }
 
-        private void RerollShop()
-        {
-            GD.Print($"Rerolling shop...");
-            ClearItemContainers();
-            PopulateShopSlots();
-        }
-
         private void DisplayItemDescription(ShopItemContainer itemContainer)
         {
             Item item = itemContainer.Item;
@@ -384,6 +401,7 @@ namespace UI.Shop
                 );
             }
         }
+        #endregion
 
         public override void _ExitTree()
         {

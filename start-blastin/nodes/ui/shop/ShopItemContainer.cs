@@ -64,10 +64,11 @@ namespace UI.Shop
         /// </summary>
         /// <param name="fluxBuyable">True if the player has enough flux to buy the item.</param>
         /// <param name="byteBuyable">True if the player has enough bytes to buy the item.</param>
+        /// <param name="canBuy">True if the player can buy the item overall</param>
         /// <remarks>
         /// Called from the ShopUI object that manages this ShopItemContainer.
         /// </remarks>
-        public void SetBuyable(bool fluxBuyable, bool byteBuyable)
+        public void SetBuyable(bool fluxBuyable, bool byteBuyable, bool canBuy)
         {
             Color fluxColor = fluxBuyable ? _defaultPriceColor : _unbuyablePriceColor;
             Color byteColor = byteBuyable ? _defaultPriceColor : _unbuyablePriceColor;
@@ -75,11 +76,11 @@ namespace UI.Shop
             _pricePanel.SetFontColor(byteColor, PricePanelContainer.PriceLabel.Bytes);
             _pricePanel.SetFontColor(fluxColor, PricePanelContainer.PriceLabel.Flux);
 
-            if (!fluxBuyable || !byteBuyable)
+            if (!canBuy)
             {
                 _impossibleActionRect.Visible = true;
             }
-            else if (fluxBuyable && byteBuyable)
+            else
             {
                 _impossibleActionRect.Visible = false;
             }

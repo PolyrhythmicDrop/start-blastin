@@ -243,7 +243,7 @@ namespace UI.Shop
         {
             Player player = _service.GetPlayer(_playerId);
             player.CanAffordItem(container.Item, out bool flux, out bool bytes);
-            container.SetBuyable(flux, bytes);
+            container.SetBuyable(flux, bytes, player.CanBuyItem(container.Item));
         }
 
         /// <summary>

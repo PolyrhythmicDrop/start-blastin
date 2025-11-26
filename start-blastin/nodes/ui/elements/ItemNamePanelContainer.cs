@@ -53,6 +53,8 @@ public partial class ItemNamePanelContainer : PanelContainer
                 box = _inventoryStyleBox;
                 break;
         }
+        // Duplicate the label settings to enable individual parameters per ItemNamePanelContainer instance.
+        _label.LabelSettings = (LabelSettings)_label.LabelSettings.Duplicate(true);
         AddThemeStyleboxOverride("panel", box);
     }
 }

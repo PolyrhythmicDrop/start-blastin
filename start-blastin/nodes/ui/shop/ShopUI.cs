@@ -135,9 +135,6 @@ namespace UI.Shop
                 {
                     _descPanel.DisplayItemDescription(captured.Item);
                     _lastFocused = captured;
-                    DebugLogger.LogMessage(
-                        $"_lastFocused is set to {captured} in Focus Entered handler. 'container' variable is {container}"
-                    );
                 };
                 _containerFocusHandlers[captured] = handler;
                 captured.FocusEntered += handler;

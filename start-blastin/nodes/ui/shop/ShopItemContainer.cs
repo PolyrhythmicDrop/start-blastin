@@ -36,8 +36,11 @@ namespace UI.Shop
         /// </summary>
         private void SetItemPriceLabels()
         {
-            int flux = _item.FluxCost;
-            int bytes = _item.ByteCost;
+            // int flux = _item.FluxCost;
+            // int bytes = _item.ByteCost;
+
+            int flux = Item.FluxCost;
+            int bytes = Item.ByteCost;
 
             _pricePanel.SetLabelText(bytes.ToString("N0"), PricePanelContainer.PriceLabel.Bytes);
             _pricePanel.SetLabelText(flux.ToString("N0"), PricePanelContainer.PriceLabel.Flux);

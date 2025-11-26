@@ -42,7 +42,7 @@ namespace UI.Loadout
 
         public override void _Ready()
         {
-            DebugLogger.LogMessage($"Starting _Ready...", true);
+            DebugLogger.LogMessage($"Starting Plugin Screen _Ready...", true);
             _pluginMargins = GetNode<MarginContainer>("%PluginMargins");
             _pluginHBox = GetNode<HBoxContainer>("%PluginHBox");
 
@@ -137,11 +137,10 @@ namespace UI.Loadout
 
         private void WrapWeaponSlot()
         {
-            // DebugLogger.LogMessage($"Wrapping the loadout's weapon slot...", true);
+            DebugLogger.LogMessage($"Wrapping the loadout's weapon slot...", true);
             InventoryItemContainer weapContainer =
                 _inventoryItemContainerScene.Instantiate<InventoryItemContainer>();
             _weaponContainer = weapContainer;
-            // DebugLogger.LogMessage($"Adding the new container as a child to the HBox...", true);
             _pluginHBox.AddChild(_weaponContainer);
             _weaponContainer.SetItemDisplay(_loadoutDisplay.WeapSlot);
             _weaponContainer.ItemDisplay.PivotOffset = _loadoutDisplay.WeapSlot.Size / 2;
@@ -208,7 +207,6 @@ namespace UI.Loadout
 
         private void OnContainerFocusEntered(InventoryItemContainer container)
         {
-            DebugLogger.LogMessage($"{container} focus entered!");
             if (container.ItemDisplay.Item != null)
             {
                 _descriptionPanel.DisplayItemDescription(container.ItemDisplay.Item);

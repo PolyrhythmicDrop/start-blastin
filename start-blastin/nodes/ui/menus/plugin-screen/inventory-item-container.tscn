@@ -30,7 +30,7 @@ unique_name_in_owner = true
 layout_mode = 2
 alignment = 1
 
-[node name="ItemNamePanel" parent="VBox" instance=ExtResource("2_7hqfq")]
+[node name="ItemNamePanelContainer" parent="VBox" instance=ExtResource("2_7hqfq")]
 unique_name_in_owner = true
 layout_mode = 2
 NameLabelSettings = 2

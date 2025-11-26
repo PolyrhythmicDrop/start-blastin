@@ -7,21 +7,16 @@ using Utility;
 
 namespace UI
 {
-    public enum ItemType
-    {
-        Mod,
-        Plugin,
-        Weapon,
-        Consumable,
-    }
-
     [GlobalClass]
     public partial class ItemContainer : PanelContainer, IListener
     {
-        protected Item _item;
-        protected TextureRect _itemIconRect;
+        // protected Item _item;
+
+        // protected TextureRect _itemIconRect;
+        protected ItemDisplay _itemDisplay;
 
         protected TextureRect _impossibleActionRect;
+        protected PackedScene _impossibleScene => GD.Load<PackedScene>("uid://beguupgtrbesp");
 
         protected ItemNamePanelContainer _itemNamePanel;
         protected StyleBoxFlat _defocusedStyleBox =>
@@ -31,14 +26,17 @@ namespace UI
 
         protected Color _itemColor;
 
-        public Item Item => _item;
+        public ItemDisplay ItemDisplay => _itemDisplay;
+        public Item Item => _itemDisplay?.Item;
 
         public event EventHandler<ItemSelectedEventArgs> ItemContainerSelected;
 
         public override void _Ready()
         {
-            _itemIconRect = GetNode<TextureRect>("%ItemIcon");
-            _impossibleActionRect = GetNode<TextureRect>("%ImpossibleActionRect");
+            _itemDisplay = GetNode<ItemDisplay>("%ItemDisplay");
+            _impossibleActionRect = _impossibleScene.Instantiate<TextureRect>();
+            _itemDisplay.AddChild(_impossibleActionRect);
+
             _itemNamePanel = GetNode<ItemNamePanelContainer>("%ItemNamePanelContainer");
             ConnectSignals();
         }
@@ -67,14 +65,18 @@ namespace UI
 
         public virtual void SetItem(Item item)
         {
-            if (_item != null)
+            if (Item != null)
             {
                 ClearItem();
             }
 
-            _item = item;
-            _itemColor = new("FLORAL_WHITE");
+            // Set the item in the item display.
+            // Sets the display's texture and border
+            // Also sets the ItemContainer.Item variable, since that pulls from the item in the display
+            _itemDisplay.SetItem(item);
 
+            // TODO: Values are hardcoded here, but we could probably make them constants for item rarity.
+            _itemColor = new("FLORAL_WHITE");
             switch (item.Rarity)
             {
                 case Rarity.Common:
@@ -92,9 +94,7 @@ namespace UI
             }
 
             _itemNamePanel.Label.LabelSettings.FontColor = _itemColor;
-            _itemNamePanel.Label.Text = _item.Name;
-
-            _itemIconRect.Texture = _item.Icon;
+            _itemNamePanel.Label.Text = Item.Name;
         }
 
         /// <summary>
@@ -102,9 +102,7 @@ namespace UI
         /// </summary>
         public void ClearItem()
         {
-            DebugLogger.LogMessage($"Clearing item...", true);
-            _item = null;
-            _itemIconRect.Texture = null;
+            _itemDisplay.ClearItem();
         }
 
         protected virtual void OnFocusEnter()
@@ -120,14 +118,9 @@ namespace UI
 
         public virtual void InvokeItemContainerSelected()
         {
-            DebugLogger.LogMessage(
-                $"Attempting to invoke ItemContainerSelected. Is {nameof(_item)} null? {_item == null}",
-                true
-            );
-            if (_item != null)
+            if (Item != null)
             {
-                DebugLogger.LogMessage($"Invoking ItemContainerSelected...", true);
-                ItemContainerSelected?.Invoke(this, new ItemSelectedEventArgs(_item));
+                ItemContainerSelected?.Invoke(this, new ItemSelectedEventArgs(Item));
             }
         }
 

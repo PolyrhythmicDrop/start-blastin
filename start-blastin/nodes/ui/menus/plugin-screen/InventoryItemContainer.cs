@@ -1,7 +1,5 @@
-using Factories;
 using Godot;
 using Items;
-using UI.HUD;
 using Utility;
 
 namespace UI.Loadout
@@ -9,7 +7,6 @@ namespace UI.Loadout
     [GlobalClass]
     public partial class InventoryItemContainer : ItemContainer
     {
-        private ItemDisplay _itemDisplay;
         private VBoxContainer _vBox;
         private PricePanelContainer _pricePanel;
 
@@ -22,22 +19,20 @@ namespace UI.Loadout
         private Tween _tween;
 
         public bool Empty = true;
-        public ItemDisplay ItemDisplay => _itemDisplay;
+
+        // public ItemDisplay ItemDisplay => _itemDisplay;
 
         public override void _Ready()
         {
-            DebugLogger.LogMessage($"Ready called!", true);
+            base._Ready();
+
             _vBox = GetNode<VBoxContainer>("%VBox");
-
-            _itemDisplay = GetNode<ItemDisplay>("%ItemDisplay");
-
-            _itemNamePanel = GetNode<ItemNamePanelContainer>("%ItemNamePanel");
             InitializeNamePanel();
 
             _pricePanel = GetNode<PricePanelContainer>("%PricePanelContainer");
             InitializePricePanel();
-
-            ConnectSignals();
+            // Don't need to connect signals below, since we call base.Ready() above, which calls the derived class's ConnectSignals(), which calls base.ConnectSignals()...definitely not confusing
+            // ConnectSignals();
         }
 
         public override void ConnectSignals()
@@ -53,7 +48,7 @@ namespace UI.Loadout
         }
 
         /// <summary>
-        /// Connect or disconnect to the <see cref="ItemDisplay.SlotItemChanged"/> event for the current <see cref="_itemDisplay"/> variable.
+        /// Connect or disconnect to the <see cref="ItemDisplay.SlotItemChanged"/> event for the current <see cref="ItemContainer._itemDisplay"/> variable.
         /// </summary>
         /// <param name="connect">True to connect the signal, false to disconnect it.</param>
         public void ConnectSlotItemChanged(bool connect)
@@ -119,20 +114,22 @@ namespace UI.Loadout
 
         public override void SetItem(Item item)
         {
-            if (_itemDisplay != null)
-            {
-                _item = _itemDisplay.Item;
-            }
+            // if (_itemDisplay != null)
+            // {
+            //     _item = _itemDisplay.Item;
+            // }
         }
 
         private void SetPanelInfo()
         {
             if (!_itemDisplay.Empty)
             {
-                SetItem(_itemDisplay.Item);
-                _itemNamePanel.Label.Text = _itemDisplay.Item.Name;
+                // SetItem(_itemDisplay.Item);
+                // _itemNamePanel.Label.Text = _itemDisplay.Item.Name;
+                _itemNamePanel.Label.Text = Item.Name;
+
                 _pricePanel.SetLabelText(
-                    _itemDisplay.Item.ScrapValue.ToString(),
+                    Item.ScrapValue.ToString(),
                     PricePanelContainer.PriceLabel.Bytes
                 );
                 _pricePanel.TogglePanelVisibility(true, PricePanelContainer.PriceLabel.Bytes);
@@ -142,12 +139,13 @@ namespace UI.Loadout
             {
                 // If the item display item isn't null (but also Empty is true, as per previous step), then it's probably a "blank" item, like an empty plugin slot.
                 // In this case just show the name of the item.
-                if (_itemDisplay.Item != null)
+                if (Item != null)
                 {
-                    _itemNamePanel.Label.Text = _itemDisplay.Item.Name;
+                    // _itemNamePanel.Label.Text = _itemDisplay.Item.Name;
+                    _itemNamePanel.Label.Text = Item.Name;
                 }
                 _pricePanel.TogglePanelVisibility(false);
-                SetItem(null);
+                // SetItem(null);
             }
         }
 

@@ -1,22 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://bfvxyo46webpd"]
+[gd_scene load_steps=6 format=3 uid="uid://bfvxyo46webpd"]
 
 [ext_resource type="Script" uid="uid://cl536iq61ye8j" path="res://nodes/ui/shop/ShopItemContainer.cs" id="1_lifgi"]
 [ext_resource type="StyleBox" uid="uid://chnsppbtk2va0" path="res://resources/styleboxes/item-container-focused-stylebox.tres" id="2_stoc2"]
 [ext_resource type="PackedScene" uid="uid://cwxfvdq5l7brl" path="res://nodes/ui/elements/item-name-panel-container.tscn" id="3_2w48v"]
-[ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="3_ca63a"]
-[ext_resource type="Texture2D" uid="uid://dtd32dr2uqgvq" path="res://assets/icons/impossible-action.png" id="5_2w48v"]
+[ext_resource type="PackedScene" uid="uid://b38bjsfdg17o2" path="res://nodes/ui/elements/item-display.tscn" id="4_ca63a"]
 [ext_resource type="PackedScene" uid="uid://b2fpxs1cgq4hk" path="res://nodes/ui/elements/price-panel-container.tscn" id="5_ca63a"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7wm45"]
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
-draw_center = false
-border_width_left = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0.43529412, 0.11372549, 0.36078432, 1)
 
 [node name="ShopItemContainer" type="PanelContainer"]
 custom_minimum_size = Vector2(128, 256)
@@ -45,31 +33,11 @@ unique_name_in_owner = true
 layout_mode = 2
 NameLabelSettings = 1
 
-[node name="IconPanelContainer" type="PanelContainer" parent="VBoxContainer"]
-custom_minimum_size = Vector2(128, 128)
+[node name="ItemDisplay" parent="VBoxContainer" instance=ExtResource("4_ca63a")]
+unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 1
 size_flags_stretch_ratio = 3.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_7wm45")
-
-[node name="ItemIcon" type="TextureRect" parent="VBoxContainer/IconPanelContainer"]
-unique_name_in_owner = true
-z_index = 10
-custom_minimum_size = Vector2(320, 320)
-layout_mode = 2
-size_flags_horizontal = 4
-texture = ExtResource("3_ca63a")
-expand_mode = 3
-stretch_mode = 5
-
-[node name="ImpossibleActionRect" type="TextureRect" parent="VBoxContainer/IconPanelContainer"]
-unique_name_in_owner = true
-visible = false
-z_index = 11
-layout_mode = 2
-texture = ExtResource("5_2w48v")
-expand_mode = 5
-stretch_mode = 5
 
 [node name="PricePanelContainer" parent="VBoxContainer" instance=ExtResource("5_ca63a")]
 unique_name_in_owner = true

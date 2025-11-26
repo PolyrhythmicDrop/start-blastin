@@ -11,6 +11,8 @@ public partial class ItemDisplay : PanelContainer, IListener
     private Texture2D _pluginMask => GD.Load<Texture2D>("uid://drp3a6v1mvedl");
     private Texture2D _weaponBorder => GD.Load<Texture2D>("uid://djbojubn7plf");
     private Texture2D _weaponMask => GD.Load<Texture2D>("uid://bbk7wfmggd6wr");
+    private Texture2D _modifierBorder => GD.Load<Texture2D>("uid://c60qaie0b8t6j");
+    private Texture2D _modifierMask => GD.Load<Texture2D>("uid://cd4nma63teh5g");
 
     protected Item _item;
     protected TextureRect _border;
@@ -65,6 +67,10 @@ public partial class ItemDisplay : PanelContainer, IListener
                 case Plugin:
                     _border.Texture = _pluginBorder;
                     _mask.Texture = _pluginMask;
+                    break;
+                case Modifier:
+                    _border.Texture = _modifierBorder;
+                    _mask.Texture = _modifierMask;
                     break;
                 case null:
                 default:

@@ -1,4 +1,5 @@
 using System;
+using Autoloads;
 using Entities;
 using Godot;
 using Utility;
@@ -37,6 +38,21 @@ namespace PlayerComponents
             _phaseCooldownTimer.Timeout += _player.OnPhaseReady;
         }
 
+        public override void _Process(double delta)
+        {
+            if (!_phaseCooldownTimer.IsStopped())
+            {
+                // EventBus.Instance.EmitSignal(
+                //     EventBus.SignalName.PlayerPhaseTimeLeft,
+                //     [_player.PlayerId, _phaseCooldownTimer.TimeLeft]
+                // );
+                EventBus.Instance.RaisePlayerPhaseTimeLeft(
+                    _player.PlayerId,
+                    _phaseCooldownTimer.TimeLeft
+                );
+            }
+        }
+
         public Vector2 SetVelocity(float xInput, float yInput)
         {
             return new Vector2(xInput * _speed, yInput * _speed);
@@ -44,16 +60,22 @@ namespace PlayerComponents
 
         public void StartPhase()
         {
-            DebugLogger.LogMessage(
-                $"Dodge started! Dodge duration: {_player.PhaseDuration} | Dodge speed: {_player.PhaseSpeed}"
-            );
+            // DebugLogger.LogMessage(
+            //     $"Dodge started! Dodge duration: {_player.PhaseDuration} | Dodge speed: {_player.PhaseSpeed}"
+            // );
             PhaseReady = false;
             _phaseTimer.Start(_player.PhaseDuration);
+            // Set phase cooldown time left to reset the phase bar when the button is pressed instead of waiting until after the phase is done.
+            // EventBus.Instance.EmitSignal(
+            //     EventBus.SignalName.PlayerPhaseTimeLeft,
+            //     [_player.PlayerId, _player.PhaseCooldown]
+            // );
+            EventBus.Instance.RaisePlayerPhaseTimeLeft(_player.PlayerId, _player.PhaseCooldown);
         }
 
         public void EndPhase()
         {
-            DebugLogger.LogMessage($"Dodge ending! Dodge cooldown: {_player.PhaseCooldown}");
+            // DebugLogger.LogMessage($"Dodge ending! Dodge cooldown: {_player.PhaseCooldown}");
             _phaseCooldownTimer.Start(_player.PhaseCooldown);
         }
     }

@@ -30,17 +30,14 @@ namespace PlayerComponents
 
         private void ConnectSignals()
         {
-            EventBus.Instance.ShopOpened += () =>
-            {
-                _xDir = 0;
-                _yDir = 0;
-                _enabled = false;
-            };
+            EventBus.Instance.ShopOpened += OnShopOpened;
+            EventBus.Instance.ShopClosed += OnShopClosed;
+        }
 
-            EventBus.Instance.ShopClosed += () =>
-            {
-                _enabled = true;
-            };
+        private void DisconnectSignals()
+        {
+            EventBus.Instance.ShopOpened -= OnShopOpened;
+            EventBus.Instance.ShopClosed -= OnShopClosed;
         }
 
         public override void _Process(double delta)
@@ -51,6 +48,19 @@ namespace PlayerComponents
                 SetPhase();
                 SetFiring();
             }
+        }
+
+        private void OnShopOpened()
+        {
+            _xDir = 0;
+            _yDir = 0;
+            _enabled = false;
+            _player.StopFire();
+        }
+
+        private void OnShopClosed()
+        {
+            _enabled = true;
         }
 
         public void SetMovementDirection()
@@ -77,6 +87,12 @@ namespace PlayerComponents
             {
                 _player.StartPhase();
             }
+        }
+
+        public override void _ExitTree()
+        {
+            DisconnectSignals();
+            base._ExitTree();
         }
     }
 }

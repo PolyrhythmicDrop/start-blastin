@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="Modifier" load_steps=5 format=3 uid="uid://cnsic6vxvlfar"]
 
 [ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="1_rrpl7"]
-[ext_resource type="Texture2D" uid="uid://c7ee536ovn4vo" path="res://assets/item-icons/modifiers/big-pulse-engine.png" id="2_cotd3"]
+[ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="2_cotd3"]
 [ext_resource type="Script" uid="uid://bauhwivw4ftik" path="res://architecture/items/modifiers/Modifier.cs" id="2_hs28k"]
 
 [sub_resource type="Resource" id="Resource_5xvc6"]
@@ -16,5 +16,6 @@ Name = &"Speed Boost Lvl 2"
 Description = &"Better speed boost"
 Icon = ExtResource("2_cotd3")
 Rarity = 8
+ByteCost = 750
 Effects = Array[Object]([SubResource("Resource_5xvc6")])
 metadata/_custom_type_script = "uid://bauhwivw4ftik"

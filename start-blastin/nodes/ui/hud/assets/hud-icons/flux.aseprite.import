@@ -1,0 +1,14 @@
+[remap]
+
+importer="aseprite_wizard.plugin.noop"
+type="PackedDataContainer"
+uid="uid://866jlnwo2twh"
+path="res://.godot/imported/flux.aseprite-b9d1863cb9fe25e133e7b565cf4dc39c.res"
+
+[deps]
+
+source_file="res://nodes/ui/hud/assets/hud-icons/flux.aseprite"
+dest_files=["res://.godot/imported/flux.aseprite-b9d1863cb9fe25e133e7b565cf4dc39c.res"]
+
+[params]
+

@@ -12,6 +12,7 @@ MaxHealth = 1.0
 metadata/_custom_type_script = "uid://de8iusxhs0qem"
 
 [resource]
+resource_local_to_scene = true
 resource_name = "speedy-drone"
 script = ExtResource("1_5071d")
 ScenePath = "res://nodes/enemies/Drone/drone.tscn"
@@ -20,4 +21,6 @@ CrashDamage = 1
 HealthComponent = SubResource("Resource_6f781")
 WeaponResource = ExtResource("3_06c5b")
 PathCurve = ExtResource("2_76l53")
+FluxReward = 20
+ByteReward = 100
 metadata/_custom_type_script = "uid://cf7pn6qd7aa15"

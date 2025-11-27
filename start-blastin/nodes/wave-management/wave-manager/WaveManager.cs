@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using Autoloads;
-using Enemies;
-using Enemies.Spawners;
 using Godot;
-using SafeResourcePicker;
+using Utility;
 
 namespace WaveManagement
 {
@@ -82,7 +78,7 @@ namespace WaveManagement
         /// <summary>
         /// Connects WaveManager signals.
         /// <list type="unordered">
-        /// <item><see cref="EventBus.SignalName.StartWaveButtonPressed"/> => <see cref="StartWave()"/></item>
+        /// <item><see cref="EventBus.StartWaveButtonPressed"/> => <see cref="StartWave()"/></item>
         /// </list>
         /// </summary>
         private void ConnectSignals()
@@ -90,7 +86,24 @@ namespace WaveManagement
             EventBus.Instance.StartWaveButtonPressed += StartWave;
         }
 
+        private void DisconnectSignals()
+        {
+            EventBus.Instance.StartWaveButtonPressed -= StartWave;
+        }
+
         #endregion
+
+        public override void _Process(double delta)
+        {
+            if (!_waveTimer.IsStopped())
+            {
+                // EventBus.Instance.EmitSignal(
+                //     EventBus.SignalName.WaveTimeLeft,
+                //     [_waveTimer.TimeLeft, _waveTime]
+                // );
+                EventBus.Instance.RaiseWaveTimeLeft(_waveTimer.TimeLeft, _waveTime);
+            }
+        }
 
         #region Scaling
 
@@ -142,25 +155,39 @@ namespace WaveManagement
         {
             GD.Print($"Wave {_wave} starting!");
             _waveTimer.Start(_waveTime);
-            EventBus.Instance.EmitSignal(EventBus.SignalName.WaveStarted, _wave);
+            // EventBus.Instance.EmitSignal(EventBus.SignalName.WaveStarted, _wave);
+            EventBus.Instance.RaiseWaveStarted(_wave);
         }
 
         /// <summary>
         /// Ends a wave.
-        /// Emits the <see cref="EventBus.SignalName.WaveEnded"/> signal, then waits for all enemies to be freed before calling <see cref="IncrementWave()"/>.
+        /// Emits the <see cref="EventBus.WaveTimerEnded"/> event, then waits for all enemies to be freed before raising the WaveComplete event and incrementing the next wave.
         /// </summary>
         private async void EndWave()
         {
             // Emit the signal for the wave timer ending to stop enemy spawning
             GD.Print($"Wave {_wave} timer ended!");
-            EventBus.Instance.EmitSignal(EventBus.SignalName.WaveTimerEnded);
+            // EventBus.Instance.EmitSignal(EventBus.SignalName.WaveTimerEnded);
+            EventBus.Instance.RaiseWaveTimerEnded();
 
             // Wait for all enemies to clear before processing the next wave.
             bool enemiesCleared = await WaitForEnemiesToClear();
             GD.Print($"Enemies cleared: {enemiesCleared}");
-            EventBus.Instance.EmitSignal(EventBus.SignalName.WaveComplete);
+            EventBus.Instance.RaiseWaveComplete();
 
             IncrementWave();
+        }
+
+        /// <summary>
+        /// Debug version of ending a wave. Used by the <see cref="Debugger"/> class to manually end a wave.
+        /// </summary>
+        public void DebugEndWave()
+        {
+            if (!_waveTimer.IsStopped())
+            {
+                _waveTimer.Stop();
+            }
+            EndWave();
         }
 
         /// <summary>
@@ -217,5 +244,11 @@ namespace WaveManagement
         }
 
         #endregion
+
+        public override void _ExitTree()
+        {
+            DisconnectSignals();
+            base._ExitTree();
+        }
     }
 }

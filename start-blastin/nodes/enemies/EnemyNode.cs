@@ -1,9 +1,12 @@
 using System.Reflection;
+using Autoloads;
 using Components;
 using Entities;
+using Events;
 using Factories;
 using Godot;
 using Interfaces;
+using Microsoft.VisualBasic;
 using Stats;
 using WaveManagement;
 using Weapons;
@@ -11,11 +14,34 @@ using Weapons;
 namespace Enemies
 {
     [GlobalClass]
-    public abstract partial class EnemyNode : AnimatableBody2D, IDie, IHealthful, IVelocityProvider
+    public abstract partial class EnemyNode
+        : AnimatableBody2D,
+            IDie,
+            IHealthful,
+            IVelocityProvider,
+            IWeaponOwner
     {
         protected StatManager _stats;
-        protected HealthComponent _healthComponent;
+
+        // protected HealthComponent _healthComponent;
         protected WeaponNode _weapon;
+
+        protected CollisionShape2D _shape;
+        protected EntityPath _path;
+
+        #region Position and Velocity
+        protected Vector2 _currentGlobalPosition;
+        protected Vector2 _lastGlobalPosition;
+        protected Vector2 _motion => _currentGlobalPosition - _lastGlobalPosition;
+        protected Vector2 _lastFramePosition;
+        protected Vector2 _currentVelocity = Vector2.Zero;
+        #endregion
+
+        #region Stats
+
+        // current stats
+        protected float _currentHealth;
+        protected float _maxHealth;
 
         /// <summary>
         /// The speed at which this enemy follows its assigned path.
@@ -23,13 +49,6 @@ namespace Enemies
         protected float _followSpeed => _stats.GetStat(StatType.Speed).CurrentValue;
 
         protected float _crashDamage => _stats.GetStat(StatType.CrashDamage).CurrentValue;
-        protected CollisionShape2D _shape;
-        protected EntityPath _path;
-        protected EnemyState _state;
-
-        protected Vector2 _currentGlobalPosition;
-        protected Vector2 _lastGlobalPosition;
-        protected Vector2 _motion => _currentGlobalPosition - _lastGlobalPosition;
 
         // Base stats
         protected float _baseSpeed;
@@ -37,10 +56,20 @@ namespace Enemies
         protected float _baseMaxHealth;
         protected float _baseFireRate;
         protected float _baseWeaponDamage;
+        protected int _fluxReward;
+        protected int _byteReward;
 
-        public HealthComponent HealthComp => _healthComponent;
+        #endregion
+
+        // public HealthComponent HealthComp => _healthComponent;
         public WeaponNode Weapon => _weapon;
         public EntityPath Path => _path;
+
+        public float CurrentHealth
+        {
+            get => _currentHealth;
+            private set => _currentHealth = value;
+        }
 
         public override void _Ready()
         {
@@ -53,43 +82,64 @@ namespace Enemies
 
             // Start the weapon fire timer to fire on a set interval.
             _weapon.FireTimer.Timeout += FireWeapon;
-            _weapon.FireTimer.Start(_weapon.Stats.FireRate);
 
-            _path.FollowPath(_followSpeed);
+            // Set an initial firing delay
+            float delay = (float)GD.RandRange(0, _weapon.Stats.FireRate);
+            _weapon.FireTimer.Start(delay);
+
+            // Initialize position tracking
+            _lastFramePosition = GlobalPosition;
         }
 
         public Vector2 GetCurrentVelocity()
         {
-            return _motion;
+            return _currentVelocity;
         }
 
-        public void TakeDamage(float damage)
+        /// <summary>
+        /// Causes this enemy node to take damage.
+        /// </summary>
+        /// <param name="damage">The amount of damage to take.</param>
+        /// <param name="playerId">If a player caused the damage, the <see cref="Player.PlayerId"/> of the damaging player.</param>
+        public void TakeDamage(float damage, int? playerId = null)
         {
             PlayDamageAnimation();
-            _healthComponent.TakeDamage(damage);
+            _currentHealth -= damage;
+
+            if (_currentHealth <= 0)
+            {
+                _currentHealth = 0;
+                Die(playerId);
+            }
         }
 
-        public void Heal(float healAmount) => _healthComponent.Heal(healAmount);
+        public void Heal(float healAmount)
+        {
+            _currentHealth = Mathf.Min(_currentHealth + healAmount, _maxHealth);
+        }
 
         public virtual void Initialize(EnemyResource enemyResource)
         {
-            _healthComponent = (HealthComponent)enemyResource.HealthComponent.Duplicate();
-            _healthComponent.Initialize(this);
-            _baseMaxHealth = _healthComponent.MaxHealth;
+            Name = enemyResource.ResourceName + DateAndTime.Now.Ticks;
+            // _healthComponent = (HealthComponent)enemyResource.HealthComponent.Duplicate();
+            // _healthComponent.Initialize(this);
+            _baseMaxHealth = enemyResource.HealthComponent.MaxHealth;
+            _maxHealth = _baseMaxHealth;
+            _currentHealth = _baseMaxHealth;
 
             _weapon = WeaponFactory.CreateWeapon(
                 enemyResource.WeaponResource,
                 true,
-                velocityProvider: this
+                velocityProvider: this,
+                owner: this
             );
             _baseFireRate = enemyResource.WeaponResource.Stats.FireRate;
             _baseWeaponDamage = enemyResource.WeaponResource.Stats.Damage;
-
-            // _followSpeed = enemyResource.Speed;
             _baseSpeed = enemyResource.Speed;
-
-            // _crashDamage = enemyResource.CrashDamage;
             _baseCrashDamage = enemyResource.CrashDamage;
+
+            _fluxReward = enemyResource.FluxReward;
+            _byteReward = enemyResource.ByteReward;
 
             InitializeStats();
         }
@@ -112,17 +162,12 @@ namespace Enemies
             float waveLogMultiplier = Mathf.Log(1 + wave);
             float waveSqrtMultiplier = Mathf.Sqrt(wave) * 0.1f;
 
-            _healthComponent.MaxHealth =
-                _baseMaxHealth * (1 + (scaler.MaxHealthModifier * waveLogMultiplier));
+            _maxHealth = _baseMaxHealth * (1 + (scaler.MaxHealthModifier * waveLogMultiplier));
 
             float newCrashDamage =
                 _baseCrashDamage * (1 + (scaler.CrashDamageModifier * waveLogMultiplier));
             _stats.UpdateStat(StatType.CrashDamage, newCrashDamage);
 
-            // _crashDamage =
-            //     _baseCrashDamage * (1 + (scaler.CrashDamageModifier * waveLogMultiplier));
-
-            // _followSpeed = _baseSpeed * (1 + (scaler.SpeedModifier * waveSqrtMultiplier));
             float newFollowSpeed = _baseSpeed * (1 + (scaler.SpeedModifier * waveSqrtMultiplier));
             _stats.UpdateStat(StatType.Speed, newFollowSpeed);
 
@@ -132,10 +177,6 @@ namespace Enemies
             float waveExpoMultiplier = Mathf.Pow(0.95f, wave * scaler.FireRateModifier);
             // Fire rate should be decreased, since lower fire rates result in faster firing.
             _weapon.Stats.FireRate = Mathf.Max(0.1f, _baseFireRate * waveExpoMultiplier);
-
-            // GD.Print(
-            //     $"{MethodBase.GetCurrentMethod().Name}: Wave Config {scaler.ResourceName} applied! New stats:\nMaxHealth: {_healthComponent.MaxHealth} | Crash Damage {_crashDamage} | Speed {_speed}\nFire Rate {_weapon.Stats.FireRate} | Damage {_weapon.Stats.Damage}"
-            // );
         }
 
         public void SetPath(EntityPath path)
@@ -148,18 +189,19 @@ namespace Enemies
             _weapon.Fire();
         }
 
-        public virtual async void Die()
+        public virtual async void Die(int? playerId = null)
         {
-            // GD.Print(
-            //     $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name} called!"
-            // );
-
+            if (playerId != null)
+            {
+                EnemyKilledEventArgs args = new((int)playerId, _fluxReward, _byteReward);
+                EventBus.Instance.RaiseEnemyKilled(args);
+            }
             // Queue free after all child projectiles die
             bool projectilesDisabled = await _weapon.WaitForAllProjectilesDisabled();
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().ReflectedType}: Projectiles disabled? {projectilesDisabled}"
-            );
-            QueueFree();
+            if (projectilesDisabled)
+            {
+                QueueFree();
+            }
         }
 
         public virtual void PlayDamageAnimation() { }
@@ -174,6 +216,31 @@ namespace Enemies
                 // player.TakeDamage(crashDamage);
                 Die();
             }
+        }
+
+        public override void _PhysicsProcess(double delta)
+        {
+            base._PhysicsProcess(delta);
+            if (delta > 0)
+            {
+                _currentVelocity = (GlobalPosition - _lastFramePosition) / (float)delta;
+            }
+
+            _lastFramePosition = GlobalPosition;
+        }
+
+        /// <summary>
+        /// Follows an EntityPath at a set speed.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="speed"></param>
+        protected virtual void FollowPath(EntityPath path, float speed)
+        {
+            float pathLength = path.Curve.GetBakedLength();
+            float duration = Mathf.Max(pathLength / speed, 0.1f);
+
+            Tween tween = CreateTween();
+            tween.TweenProperty(path.PathFollow, "progress_ratio", 1.0, duration);
         }
     }
 }

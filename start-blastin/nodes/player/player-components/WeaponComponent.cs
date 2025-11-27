@@ -39,7 +39,8 @@ namespace PlayerComponents
                 _equippedWeapon = WeaponFactory.CreateWeapon(
                     weaponResource,
                     false,
-                    velocityProvider: _player
+                    velocityProvider: _player,
+                    owner: _player
                 );
                 GD.Print(
                     $"Weapon equipped! {_equippedWeapon}\nStats: {_equippedWeapon.Stats.FireRate} | {_equippedWeapon.Stats.Damage} | {_equippedWeapon.Stats.ProjectileType} | {_equippedWeapon.Stats.ProjectileSpeed}"
@@ -76,6 +77,13 @@ namespace PlayerComponents
         public void StopWeapon()
         {
             _equippedWeapon.FireTimer.Stop();
+        }
+
+        public void SetWeaponProjectile(ProjectileType type)
+        {
+            _equippedWeapon.Stats.ProjectileType = type;
+            // Clear the projectile pool and reset it with the new projectile type.
+            _equippedWeapon.InitializeProjectilePool();
         }
     }
 }

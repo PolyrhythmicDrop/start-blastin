@@ -22,6 +22,8 @@ namespace Enemies
 
             _currentGlobalPosition = GlobalPosition;
             _lastGlobalPosition = _currentGlobalPosition;
+
+            FollowPath(_path, _followSpeed);
         }
 
         public override void _Process(double delta)
@@ -58,12 +60,8 @@ namespace Enemies
             _base.Play("fire");
         }
 
-        public override void Die()
+        public override void Die(int? playerId = null)
         {
-            // GD.Print(
-            //     $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name} called!"
-            // );
-
             _weapon.FireTimer.Stop();
             _shape.Disabled = true;
 
@@ -77,14 +75,14 @@ namespace Enemies
             if (
                 !_destruction.IsConnected(
                     AnimatedSprite2D.SignalName.AnimationFinished,
-                    Callable.From(base.Die)
+                    Callable.From(() => base.Die(playerId))
                 )
             )
             // Free the node when the animation is finished.
             {
                 _destruction.Connect(
                     AnimatedSprite2D.SignalName.AnimationFinished,
-                    Callable.From(base.Die)
+                    Callable.From(() => base.Die(playerId))
                 );
             }
         }

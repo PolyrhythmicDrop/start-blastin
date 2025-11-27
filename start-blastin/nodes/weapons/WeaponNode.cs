@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Components;
+using Enemies;
 using Entities;
 using Godot;
 using Interfaces;
@@ -22,6 +23,7 @@ namespace Weapons
     {
         private WeaponStats _stats;
         private ProjectilePool _pool;
+        private IWeaponOwner _owner;
         private bool _enemyOwned;
         private bool _ownerSet;
         private int _activeProjectileCount;
@@ -33,7 +35,7 @@ namespace Weapons
         public WeaponStats Stats => _stats;
 
         /// <summary>
-        /// Whether or not the weapon is owned by an enemy or the player.
+        /// Whether or not the weapon is owned by an enemy or a player.
         /// </summary>
         /// <remarks>
         /// This value can be set only once, when the weapon is built by the factory. The <see cref="_ownerSet"/> variable is set to true when <see cref="EnemyOwned"/> is set the first time.
@@ -104,6 +106,8 @@ namespace Weapons
             set => _velocityProvider = value;
         }
 
+        public IWeaponOwner WeaponOwner => _owner;
+
         /// <summary>
         /// Constructor for the WeaponNode. Sets the <see cref="HitCallable"/> callback function to <see cref="OnProjectileCollision"/>.
         /// </summary>
@@ -133,6 +137,12 @@ namespace Weapons
         public void InitializeStats(WeaponStats stats)
         {
             _stats = stats;
+        }
+
+        public void SetOwner(IWeaponOwner owner)
+        {
+            _owner = owner;
+            _ownerSet = true;
         }
 
         /// <summary>
@@ -188,14 +198,19 @@ namespace Weapons
         /// <param name="collision">Information about the collision that occurred.</param>
         public virtual void OnProjectileCollision(CollisionComponent collision)
         {
+            int? playerId = null;
+            if (_owner is Player player)
+            {
+                playerId = player.PlayerId;
+            }
             // IHealthful objects take damage.
             if (collision.Collider is IHealthful healthful)
             {
-                if (healthful is Player player)
+                if (healthful is Player healthfulPlayer)
                 {
-                    if (!player.Dodging)
+                    if (!healthfulPlayer.Dodging)
                     {
-                        player.TakeDamage(_stats.Damage);
+                        healthfulPlayer.TakeDamage(_stats.Damage, playerId);
                     }
                     else
                     {
@@ -204,7 +219,7 @@ namespace Weapons
                 }
                 else
                 {
-                    healthful.TakeDamage(_stats.Damage);
+                    healthful.TakeDamage(_stats.Damage, playerId);
                 }
             }
 
@@ -235,6 +250,11 @@ namespace Weapons
             {
                 projectile.AddSourceVelocity();
             }
+
+            if (EnemyOwned && !FireTimer.IsStopped())
+            {
+                FireTimer.Start(Stats.FireRate);
+            }
         }
 
         public virtual void UpdateWeaponStats(StatType statType, Stat stat)
@@ -243,17 +263,12 @@ namespace Weapons
             {
                 case StatType.Damage:
                     _stats.Damage = stat.CurrentValue;
-                    GD.Print($"Updating {Name} weapon damage to {_stats.Damage}");
                     break;
                 case StatType.FireRate:
                     _stats.FireRate = stat.CurrentValue;
-                    GD.Print($"Updating {Name} weapon fire rate to {_stats.FireRate}");
                     break;
                 case StatType.ProjectileSpeed:
                     _stats.ProjectileSpeed = stat.CurrentValue;
-                    GD.Print(
-                        $"Updating {Name} weapon projectile speed to {_stats.ProjectileSpeed}"
-                    );
                     break;
                 default:
                     break;

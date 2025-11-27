@@ -1,6 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://nenl15kjphyb"]
+[gd_scene load_steps=11 format=3 uid="uid://nenl15kjphyb"]
 
 [ext_resource type="Script" uid="uid://ceknkp5q1onls" path="res://nodes/player/Player.cs" id="1_4j62c"]
+[ext_resource type="Resource" uid="uid://dmulsmpa1tm6h" path="res://resources/projectiles/bullet-plugin.tres" id="2_5h4ma"]
 [ext_resource type="PackedScene" uid="uid://cr3k7kv44d7a6" path="res://nodes/player/player-components/animation-component.tscn" id="2_hs1md"]
 [ext_resource type="Script" uid="uid://dcupxkt621nuk" path="res://nodes/player/player-components/PlayerController.cs" id="4_1fmtd"]
 [ext_resource type="Shader" uid="uid://bmacriris3r2k" path="res://nodes/shaders/color-cycling-hit-effect.gdshader" id="4_5h4ma"]
@@ -26,16 +27,20 @@ collision_mask = 6
 motion_mode = 1
 platform_on_leave = 2
 script = ExtResource("1_4j62c")
-MaxHealth = 4.0
+MaxHealth = 10.0
 Speed = 500.0
 CrashDamage = 2.0
 PhaseDuration = 0.7999999999999999
 PhaseCooldown = 2.0
 PhaseSpeed = 200.0
+WeaponPlugin = ExtResource("2_5h4ma")
 Damage = 1.0
 FireRate = 0.5
 ProjectileSpeed = 500.0
 PluginSlots = 3
+InitialPlugins = Array[Object]([])
+Bytes = 200
+Flux = 500
 
 [node name="AnimationComponent" parent="." instance=ExtResource("2_hs1md")]
 unique_name_in_owner = true

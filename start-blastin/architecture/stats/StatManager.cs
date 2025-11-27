@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Events;
 using Godot;
 using Utility;
 
@@ -16,8 +18,12 @@ namespace Stats
 
         public IReadOnlyDictionary<StatType, Stat> Stats => _stats;
 
-        [Signal]
-        public delegate void StatUpdatedEventHandler(StatType type, Stat stat);
+        public event EventHandler<StatUpdatedEventArgs> StatUpdated;
+
+        public void RaiseStatUpdated(StatUpdatedEventArgs args)
+        {
+            StatUpdated?.Invoke(this, args);
+        }
 
         /// <summary>
         /// Adds a new <see cref="Stat"/> of the specified type to the StatManager.
@@ -26,12 +32,12 @@ namespace Stats
         /// <param name="baseValue">The value of the stat.</param>
         public void AddStat(StatType type, float baseValue)
         {
-            DebugLogger.LogMessage(
-                $"Attempting to add new stat of type {type} and base value {baseValue}",
-                true
-            );
+            // DebugLogger.LogMessage(
+            //     $"Attempting to add new stat of type {type} and base value {baseValue}",
+            //     true
+            // );
             Stat stat = new(type, baseValue);
-            DebugLogger.LogMessage($"Stat object created! {stat.Type} - {stat.BaseValue}", true);
+            // DebugLogger.LogMessage($"Stat object created! {stat.Type} - {stat.BaseValue}", true);
             AddStat(stat);
         }
 
@@ -44,10 +50,10 @@ namespace Stats
             bool success = _stats.TryAdd(stat.Type, stat);
             if (success)
             {
-                DebugLogger.LogMessage(
-                    $"New StatType added to StatManager! {_stats[stat.Type].Type}: base value = {_stats[stat.Type].BaseValue} | current value = {_stats[stat.Type].CurrentValue}",
-                    true
-                );
+                // DebugLogger.LogMessage(
+                //     $"New StatType added to StatManager! {_stats[stat.Type].Type}: base value = {_stats[stat.Type].BaseValue} | current value = {_stats[stat.Type].CurrentValue}",
+                //     true
+                // );
             }
             else
             {
@@ -73,7 +79,9 @@ namespace Stats
             {
                 AddStat(type, newValue);
             }
-            EmitSignal(SignalName.StatUpdated, Variant.From(type), GetStat(type));
+            // EmitSignal(SignalName.StatUpdated, Variant.From(type), GetStat(type));
+            StatUpdatedEventArgs args = new(type, GetStat(type));
+            RaiseStatUpdated(args);
         }
 
         /// <summary>
@@ -87,7 +95,9 @@ namespace Stats
             {
                 stat.CurrentValue = stat.BaseValue;
             }
-            EmitSignal(SignalName.StatUpdated, Variant.From(stat.Type), stat);
+            // EmitSignal(SignalName.StatUpdated, Variant.From(stat.Type), stat);
+            StatUpdatedEventArgs args = new(stat.Type, stat);
+            RaiseStatUpdated(args);
         }
 
         /// <summary>

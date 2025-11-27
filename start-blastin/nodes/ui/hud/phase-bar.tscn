@@ -1,0 +1,59 @@
+[gd_scene load_steps=7 format=3 uid="uid://bhb0vriestttr"]
+
+[ext_resource type="Script" uid="uid://ctgtaydt7khfg" path="res://nodes/ui/hud/PhaseBar.cs" id="1_nu5l7"]
+[ext_resource type="Script" uid="uid://dts1aofdsvfvr" path="res://architecture/data-structures/ColorRange.cs" id="2_7sde7"]
+[ext_resource type="StyleBox" uid="uid://dnv0261dwkbr7" path="res://resources/styleboxes/hud-status-bar-bg-stylebox.tres" id="2_lf67u"]
+[ext_resource type="StyleBox" uid="uid://chbxqfjcugb10" path="res://resources/styleboxes/hud-status-bar-fill-stylebox.tres" id="3_7sde7"]
+
+[sub_resource type="Resource" id="Resource_v8h3f"]
+script = ExtResource("2_7sde7")
+Full = Color(0.34901962, 0.8509804, 0.35686275, 1)
+Mid = Color(0.44705883, 0.34901962, 0.8509804, 1)
+Low = Color(0.74509805, 0.60784316, 1, 1)
+metadata/_custom_type_script = "uid://dts1aofdsvfvr"
+
+[sub_resource type="Resource" id="Resource_7sde7"]
+script = ExtResource("2_7sde7")
+Full = Color(0.44705883, 0.34901962, 0.8509804, 1)
+Mid = Color(0.4117647, 0.38431373, 0.5176471, 1)
+Low = Color(0.18431373, 0.14509805, 0.3372549, 1)
+metadata/_custom_type_script = "uid://dts1aofdsvfvr"
+
+[node name="PhasePanelContainer" type="PanelContainer"]
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -20.0
+offset_right = 40.0
+offset_bottom = 20.0
+grow_vertical = 2
+size_flags_horizontal = 3
+script = ExtResource("1_nu5l7")
+TextColors = SubResource("Resource_v8h3f")
+BarColors = SubResource("Resource_7sde7")
+
+[node name="PhaseBar" type="ProgressBar" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 28
+theme_override_styles/background = ExtResource("2_lf67u")
+theme_override_styles/fill = ExtResource("3_7sde7")
+show_percentage = false
+
+[node name="PhaseLabel" type="RichTextLabel" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"StatusBarLabel"
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1

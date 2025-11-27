@@ -1,5 +1,9 @@
+using System;
+using System.Collections.Generic;
+using Events;
 using Godot;
 using Items;
+using UI.HUD;
 
 namespace Autoloads
 {
@@ -8,31 +12,68 @@ namespace Autoloads
         public static EventBus Instance { get; private set; }
 
         #region Waves
-        [Signal]
-        public delegate void WaveStartedEventHandler(int wave);
 
-        [Signal]
-        public delegate void WaveTimerEndedEventHandler();
+        public event EventHandler<WaveStartedEventArgs> WaveStarted;
 
-        [Signal]
-        public delegate void WaveCompleteEventHandler();
+        public event EventHandler<WaveTimeLeftEventArgs> WaveTimeLeft;
 
-        [Signal]
-        public delegate void StartWaveButtonPressedEventHandler();
+        private readonly WaveTimeLeftEventArgs _waveTimeLeftArgs = new();
 
-        [Signal]
-        public delegate void SpawnersReadyEventHandler();
+        public event Action WaveTimerEnded;
+
+        public event Action WaveComplete;
+
+        public event Action StartWaveButtonPressed;
+
+        public event Action SpawnersReady;
+
         #endregion
 
-        #region Shop and Items
-        [Signal]
-        public delegate void ShopOpenedEventHandler();
+        #region Items and UI
 
-        [Signal]
-        public delegate void ShopClosedEventHandler();
+        public event Action ShopOpened;
 
-        [Signal]
-        public delegate void ShopItemBoughtEventHandler(Item item);
+        public event Action ShopClosed;
+
+        public event EventHandler<PlayerIdEventArgs> InventoryOpened;
+        public event EventHandler<PlayerIdEventArgs> InventoryClosed;
+
+        public event EventHandler<ItemBoughtEventArgs> ItemBought;
+
+        public event EventHandler<ItemScrappedEventArgs> ItemScrapped;
+
+        #endregion
+
+        #region Player Status
+
+        public event EventHandler<PlayerMaxHealthChangedEventArgs> PlayerMaxHealthChanged;
+
+        public event EventHandler<PlayerCurrentHealthChangedEventArgs> PlayerCurrentHealthChanged;
+
+        public event EventHandler<PlayerPhaseTimeLeftEventArgs> PlayerPhaseTimeLeft;
+
+        private PlayerPhaseTimeLeftEventArgs _phaseTimeLeftArgs = new();
+
+        public event EventHandler<PlayerPhaseCooldownChangedEventArgs> PlayerPhaseCooldownChanged;
+
+        public event EventHandler<PlayerCurrencyChangedEventArgs> PlayerCurrencyChanged;
+
+        public event EventHandler<PlayerPluginsChangedEventArgs> PlayerPluginsChanged;
+
+        public event EventHandler<PlayerWeaponChangedEventArgs> PlayerWeaponChanged;
+
+        public event EventHandler<PlayerPluginEquippedEventArgs> PlayerPluginEquipped;
+
+        public event EventHandler<PlayerItemRemovedEventArgs> PlayerItemRemoved;
+
+        #endregion
+
+        #region Enemies
+
+        /// <summary>
+        /// Enemy was killed by player.
+        ///</summary>
+        public event EventHandler<EnemyKilledEventArgs> EnemyKilled;
 
         #endregion
 
@@ -40,6 +81,145 @@ namespace Autoloads
         public override void _Ready()
         {
             Instance = this;
+        }
+
+        public void RaiseWaveStarted(int wave)
+        {
+            WaveStartedEventArgs args = new(wave);
+            WaveStarted?.Invoke(this, args);
+        }
+
+        public void RaiseWaveTimeLeft(double timeLeft, double totalTime)
+        {
+            _waveTimeLeftArgs.TimeLeft = timeLeft;
+            _waveTimeLeftArgs.TotalTime = totalTime;
+            WaveTimeLeft?.Invoke(this, _waveTimeLeftArgs);
+        }
+
+        public void RaiseWaveTimerEnded()
+        {
+            WaveTimerEnded?.Invoke();
+        }
+
+        public void RaiseWaveComplete()
+        {
+            WaveComplete?.Invoke();
+        }
+
+        public void RaiseStartWaveButtonPressed()
+        {
+            StartWaveButtonPressed?.Invoke();
+        }
+
+        public void RaiseSpawnersReady()
+        {
+            SpawnersReady?.Invoke();
+        }
+
+        public void RaiseShopOpened()
+        {
+            ShopOpened?.Invoke();
+        }
+
+        public void RaiseShopClosed()
+        {
+            ShopClosed?.Invoke();
+        }
+
+        public void RaiseInventoryOpened(int id)
+        {
+            PlayerIdEventArgs args = new(id);
+            InventoryOpened?.Invoke(this, args);
+        }
+
+        public void RaiseInventoryClosed(int id)
+        {
+            PlayerIdEventArgs args = new(id);
+            InventoryClosed?.Invoke(this, args);
+        }
+
+        public void RaiseItemBought(Item item)
+        {
+            ItemBoughtEventArgs args = new(item);
+            ItemBought?.Invoke(this, args);
+        }
+
+        public void RaiseItemScrapped(Item item)
+        {
+            ItemScrappedEventArgs args = new(item);
+            ItemScrapped?.Invoke(this, args);
+        }
+
+        public void RaisePlayerMaxHealthChanged(int playerId, float maxHealth)
+        {
+            PlayerMaxHealthChangedEventArgs args = new(playerId, maxHealth);
+            PlayerMaxHealthChanged?.Invoke(this, args);
+        }
+
+        public void RaisePlayerCurrentHealthChanged(int playerId, float currentHealth)
+        {
+            PlayerCurrentHealthChangedEventArgs args = new(playerId, currentHealth);
+            PlayerCurrentHealthChanged?.Invoke(this, args);
+        }
+
+        public void RaisePlayerPhaseTimeLeft(int playerId, double timeLeft)
+        {
+            _phaseTimeLeftArgs.PlayerId = playerId;
+            _phaseTimeLeftArgs.TimeLeft = timeLeft;
+            PlayerPhaseTimeLeft?.Invoke(this, _phaseTimeLeftArgs);
+        }
+
+        public void RaisePlayerPhaseCooldownChanged(int playerId, float cooldown)
+        {
+            PlayerPhaseCooldownChangedEventArgs args = new(playerId, cooldown);
+            PlayerPhaseCooldownChanged?.Invoke(this, args);
+        }
+
+        public void RaisePlayerCurrencyChanged(
+            int playerId,
+            int totalBytes,
+            int totalFlux,
+            int bytesChange = 0,
+            int fluxChange = 0
+        )
+        {
+            PlayerCurrencyChangedEventArgs args = new(
+                playerId,
+                totalBytes,
+                totalFlux,
+                bytesChange,
+                fluxChange
+            );
+            PlayerCurrencyChanged?.Invoke(this, args);
+        }
+
+        public void RaisePlayerPluginsChanged(int playerId, List<Plugin> plugins)
+        {
+            PlayerPluginsChangedEventArgs args = new(playerId, plugins);
+            PlayerPluginsChanged?.Invoke(this, args);
+        }
+
+        public void RaisePlayerWeaponChanged(int playerId, WeaponPlugin plugin)
+        {
+            PlayerWeaponChangedEventArgs args = new(playerId, plugin);
+            PlayerWeaponChanged?.Invoke(this, args);
+        }
+
+        public void RaisePlayerPluginEquipped(int playerId, Plugin newPlugin)
+        {
+            PlayerPluginEquippedEventArgs args = new(playerId, newPlugin);
+            PlayerPluginEquipped?.Invoke(this, args);
+        }
+
+        public void RaisePlayerItemRemoved(int playerId, Item item)
+        {
+            PlayerItemRemovedEventArgs args = new(playerId, item);
+            PlayerItemRemoved?.Invoke(this, args);
+        }
+
+        public void RaiseEnemyKilled(EnemyKilledEventArgs args)
+        {
+            EnemyKilled?.Invoke(this, args);
         }
     }
 }

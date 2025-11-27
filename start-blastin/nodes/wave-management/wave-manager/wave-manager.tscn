@@ -4,8 +4,10 @@
 [ext_resource type="Script" uid="uid://dg4vu6iqxyj5p" path="res://nodes/wave-management/wave-manager/EnemyScaleManager.cs" id="2_2lj5f"]
 [ext_resource type="Script" uid="uid://m8au20mfn0x2" path="res://nodes/wave-management/wave-manager/SpawnerScaleManager.cs" id="3_22e4w"]
 
-[node name="WaveManager" type="Node"]
+[node name="WaveManager" type="Node" groups=["wave-manager"]]
+process_mode = 1
 script = ExtResource("1_qioyi")
+Difficulty = 1
 WaveTime = 10.0
 
 [node name="WaveTimer" type="Timer" parent="."]

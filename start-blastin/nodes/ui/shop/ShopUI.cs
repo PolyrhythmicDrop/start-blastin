@@ -1,25 +1,47 @@
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
+using System.Linq;
+using System.Threading.Tasks;
 using Autoloads;
+using Effects;
 using Entities;
+using Events;
 using FileIO;
 using Godot;
 using Items;
 using Services;
+using Stats;
 using Utility;
 
-namespace Shop
+namespace UI.Shop
 {
     [GlobalClass]
-    public partial class ShopUI : Control
+    public partial class ShopUI : PanelContainer
     {
         private int _playerId;
+        private PlayerService _service;
         private List<ShopItemContainer> _itemContainers;
         private List<Item> _itemPool = new();
+
+        // ~~ Description section ~~
+        private DescriptionPanel _descPanel;
+        private RichTextLabel _descriptionLabel => _descPanel.DescriptionLabel;
+
+        // ~~ Wave button deck ~~
         private Button _nextWaveButton;
         private Button _rerollButton;
         private Button _healButton;
+
+        // ~~~
+
+        private Dictionary<ShopItemContainer, Action> _containerFocusHandlers = new();
+
+        /// <summary>
+        /// The object that was last in focus. Used for switching back focus after the plugin screen.
+        /// </summary>
+        private Node _lastFocused;
+
+        public bool Active { get; set; }
 
         public void LoadItemPool() =>
             PoolLoader.LoadResourcePool(_itemPool, "res://resources/items/", true);
@@ -28,11 +50,11 @@ namespace Shop
         {
             DebugLogger.LogMessage($"Calling _Ready...", true);
 
-            LoadItemPool();
-
             _nextWaveButton = GetNode<Button>("%NextWaveButton");
             _rerollButton = GetNode<Button>("%RerollButton");
-            _healButton = GetNode<Button>("%Heal50");
+            _healButton = GetNode<Button>("%Heal");
+
+            _descPanel = GetNode<DescriptionPanel>("%DescriptionPanelContainer");
 
             _itemContainers = new()
             {
@@ -42,48 +64,181 @@ namespace Shop
             };
 
             ConnectSignals();
+        }
+
+        public void StockShop()
+        {
+            if (_itemPool.Count <= 0)
+            {
+                LoadItemPool();
+            }
+            ReadyShopItemContainers();
             PopulateShopSlots();
-            // Grab the focus to the first shop item.
-            _itemContainers[0].CallDeferred(MethodName.GrabFocus);
+        }
+
+        public void ToggleActivate(bool activate)
+        {
+            if (activate)
+            {
+                Active = true;
+                DebugLogger.LogMessage($"Last focused: {_lastFocused}");
+                if (_lastFocused != null)
+                {
+                    _lastFocused.CallDeferred(MethodName.GrabFocus);
+                }
+                else
+                {
+                    _itemContainers[0].CallDeferred(MethodName.GrabFocus);
+                }
+            }
+            else
+            {
+                Active = false;
+            }
+        }
+
+        private async void ReadyShopItemContainers()
+        {
+            foreach (ShopItemContainer container in _itemContainers)
+            {
+                container.RequestReady();
+                await ToSignal(container, Node.SignalName.Ready);
+            }
         }
 
         public void Initialize(int playerId)
         {
             _playerId = playerId;
+            _service = ServiceManager.Instance.GetService<PlayerService>();
         }
 
+        #region Event Handling
         private void ConnectSignals()
         {
-            // Connect reroll button signal
-            Callable rerollCallable = Callable.From(RerollShop);
-            if (!_rerollButton.IsConnected(Button.SignalName.Pressed, rerollCallable))
-            {
-                _rerollButton.Connect(Button.SignalName.Pressed, rerollCallable);
-                GD.Print($"Reroll button connected!");
-            }
+            _rerollButton.Pressed += RerollShop;
+            _nextWaveButton.Pressed += EventBus.Instance.RaiseStartWaveButtonPressed;
 
-            // Connect next wave signal
-            Callable wavePressedCallable = Callable.From(() =>
-            {
-                EventBus.Instance.EmitSignal(EventBus.SignalName.StartWaveButtonPressed);
-            });
-            if (!_nextWaveButton.IsConnected(Button.SignalName.Pressed, wavePressedCallable))
-            {
-                _nextWaveButton.Connect(Button.SignalName.Pressed, wavePressedCallable);
-                GD.Print($"Next wave button connected!");
-            }
+            _rerollButton.FocusEntered += RerollFocusEntered;
+            _nextWaveButton.FocusEntered += NextWaveFocusEntered;
+            _healButton.FocusEntered += HealFocusEntered;
 
-            // Connect heal button signal
-            // Callable playerHealCallable = Callable.From(() =>
-            // {
-            //     float healAmount = _player.MaxHealth * 0.5f;
-            //     _player.Heal(healAmount);
-            // });
-            // if (!_healButton.IsConnected(Button.SignalName.Pressed, playerHealCallable))
-            // {
-            //     _healButton.Connect(Button.SignalName.Pressed, playerHealCallable);
-            // }
+            // Connect player variables for instant refreshing
+            EventBus.Instance.PlayerCurrencyChanged += OnPlayerCurrencyChanged;
+            EventBus.Instance.PlayerItemRemoved += OnPlayerItemRemoved;
+            EventBus.Instance.PlayerPluginEquipped += OnPlayerPluginEquipped;
+
+            foreach (ShopItemContainer container in _itemContainers)
+            {
+                // container.FocusEntered += () => DisplayItemDescription(container);
+                ShopItemContainer captured = container;
+                Action handler = () =>
+                {
+                    _descPanel.DisplayItemDescription(captured.Item);
+                    _lastFocused = captured;
+                };
+                _containerFocusHandlers[captured] = handler;
+                captured.FocusEntered += handler;
+
+                // Connect to the shop item selected signal
+                container.ItemContainerSelected += OnShopItemSelected;
+            }
         }
+
+        private void DisconnectSignals()
+        {
+            _rerollButton.Pressed -= RerollShop;
+            _nextWaveButton.Pressed -= EventBus.Instance.RaiseStartWaveButtonPressed;
+
+            _rerollButton.FocusEntered -= RerollFocusEntered;
+            _nextWaveButton.FocusEntered -= NextWaveFocusEntered;
+            _healButton.FocusEntered -= HealFocusEntered;
+
+            EventBus.Instance.PlayerCurrencyChanged -= OnPlayerCurrencyChanged;
+            EventBus.Instance.PlayerItemRemoved -= OnPlayerItemRemoved;
+            EventBus.Instance.PlayerPluginEquipped -= OnPlayerPluginEquipped;
+
+            foreach (var kvp in _containerFocusHandlers)
+            {
+                kvp.Key.FocusEntered -= kvp.Value;
+            }
+            _containerFocusHandlers.Clear();
+
+            foreach (ShopItemContainer container in _itemContainers)
+            {
+                container.ItemContainerSelected -= OnShopItemSelected;
+            }
+        }
+
+        private void RerollFocusEntered()
+        {
+            DisplayTickerFocusMessage(_rerollButton);
+            _lastFocused = _rerollButton;
+        }
+
+        private void NextWaveFocusEntered()
+        {
+            DisplayTickerFocusMessage(_nextWaveButton);
+            _lastFocused = _nextWaveButton;
+        }
+
+        private void HealFocusEntered()
+        {
+            DisplayTickerFocusMessage(_healButton);
+            _lastFocused = _healButton;
+        }
+
+        private void RerollShop()
+        {
+            ClearItemContainers();
+            PopulateShopSlots();
+        }
+
+        private void OnShopItemSelected(object source, ItemSelectedEventArgs args)
+        {
+            Player player = _service.GetPlayer(_playerId);
+            if (player.CanBuyItem(args.Item))
+            {
+                EventBus.Instance.RaiseItemBought(args.Item);
+                if (source is ShopItemContainer container)
+                {
+                    container.ItemBought();
+                }
+            }
+            else
+            {
+                DebugLogger.LogMessage(
+                    $"Player cannot buy item {args.Item.Name}! Returning...",
+                    true,
+                    true
+                );
+            }
+        }
+
+        private void OnPlayerCurrencyChanged(object source, PlayerCurrencyChangedEventArgs args) =>
+            RefreshAllAffordability(args.PlayerId);
+
+        private void OnPlayerItemRemoved(object source, PlayerItemRemovedEventArgs args) =>
+            RefreshAllAffordability(args.PlayerId);
+
+        private void OnPlayerPluginEquipped(object source, PlayerPluginEquippedEventArgs args) =>
+            RefreshAllAffordability(args.PlayerId);
+
+        private void RefreshAllAffordability(int argsId)
+        {
+            if (_playerId == argsId)
+            {
+                foreach (ShopItemContainer container in _itemContainers)
+                {
+                    if (container != null && container.Item != null)
+                    {
+                        SetContainerAffordability(container);
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region Shop Slots
 
         /// <summary>
         /// Populates all shop slots with items for the player to buy.
@@ -101,7 +256,15 @@ namespace Shop
                 }
 
                 container.SetItem(item);
+                SetContainerAffordability(container);
             }
+        }
+
+        private void SetContainerAffordability(ShopItemContainer container)
+        {
+            Player player = _service.GetPlayer(_playerId);
+            player.CanAffordItem(container.Item, out bool flux, out bool bytes);
+            container.SetBuyable(flux, bytes, player.CanBuyItem(container.Item));
         }
 
         /// <summary>
@@ -151,19 +314,42 @@ namespace Shop
         /// <returns>True if the item can be displayed in the shop. False if not.</returns>
         private bool CanShowItem(Item item)
         {
+            // Return immediately if the item can't appear in the shop.
+            if (!item.AppearsInShop)
+            {
+                return false;
+            }
+
             // Does the item already exist in another item container in the shop?
             bool itemInContainer =
                 _itemContainers.Find(container => container.Item == item) != null;
 
-            PlayerService service = ServiceManager.Instance.GetService<PlayerService>();
+            // Does the player already have the item?
+            bool playerHasItem = PlayerHasItem(item);
 
-            // Is the item a plugin, and, if so, does the player already have it?
-            bool playerHasPlugin = item is Plugin plugin
-                ? service.PlayerHasPlugin(_playerId, plugin)
-                : false;
+            return !itemInContainer && !playerHasItem;
+        }
 
-            // Return true if both of the above are false
-            return !itemInContainer && !playerHasPlugin;
+        /// <summary>
+        /// Checks if the player has the passed Item in their inventory.
+        /// </summary>
+        /// <param name="item">The item to check for.</param>
+        /// <returns>True if the player has the item. False if the player does not.</returns>
+        /// <remarks>
+        /// Currently, this method only checks for Plugins, since the player can have multiples of the same modifier.
+        /// Expand this to check for consumables or other exclusive items later.
+        /// </remarks>
+        private bool PlayerHasItem(Item item)
+        {
+            Player player = _service.GetPlayer(_playerId);
+            if (item is Plugin plugin)
+            {
+                return player.HasPlugin(plugin);
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private void ClearItemContainers()
@@ -174,11 +360,50 @@ namespace Shop
             }
         }
 
-        private void RerollShop()
+        private void DisplayItemDescription(ShopItemContainer itemContainer)
         {
-            GD.Print($"Rerolling shop...");
-            ClearItemContainers();
-            PopulateShopSlots();
+            Item item = itemContainer.Item;
+
+            if (item != null)
+            {
+                string descString = item.Description + "\n";
+                foreach (StatEffect statEffect in item.GetEffectList())
+                {
+                    descString += statEffect.GetEffectText() + "\n";
+                }
+
+                descString.TrimEnd('\n');
+                _descriptionLabel.Text = descString;
+            }
+        }
+
+        /// <summary>
+        /// Displays a message in the description bay based on the focused item.
+        /// </summary>
+        /// <param name="focusedControl"></param>
+        private void DisplayTickerFocusMessage(Control focusedControl)
+        {
+            if (focusedControl == _rerollButton)
+            {
+                _descPanel.DisplayString("Refresh the cache to see new items.");
+            }
+            else if (focusedControl == _healButton)
+            {
+                _descPanel.DisplayString("Spend flux to repair your frail human form.");
+            }
+            else if (focusedControl == _nextWaveButton)
+            {
+                _descPanel.DisplayString(
+                    "Move on to the next wave and pray to whatever primitive superstition keeps you going."
+                );
+            }
+        }
+        #endregion
+
+        public override void _ExitTree()
+        {
+            DisconnectSignals();
+            base._ExitTree();
         }
     }
 }

@@ -2,12 +2,12 @@
 
 [ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="1_76cwm"]
 [ext_resource type="Script" uid="uid://bauhwivw4ftik" path="res://architecture/items/modifiers/Modifier.cs" id="1_k6eos"]
-[ext_resource type="Texture2D" uid="uid://de0kclva11fav" path="res://assets/item-icons/modifiers/auto-cannon.png" id="2_tuxu7"]
+[ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="2_tuxu7"]
 
 [sub_resource type="Resource" id="Resource_tuxu7"]
 script = ExtResource("1_76cwm")
-Type = 3
-Value = 4.0
+Type = 6
+Value = 2.0
 metadata/_custom_type_script = "uid://bmeda5w63vsw7"
 
 [resource]
@@ -16,5 +16,6 @@ Name = &"Damage Boost Lvl 2"
 Description = &"A more powerful damage boost"
 Icon = ExtResource("2_tuxu7")
 Rarity = 8
+ByteCost = 500
 Effects = Array[Object]([SubResource("Resource_tuxu7")])
 metadata/_custom_type_script = "uid://bauhwivw4ftik"

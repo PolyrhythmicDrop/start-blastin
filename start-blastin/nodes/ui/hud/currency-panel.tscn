@@ -1,0 +1,77 @@
+[gd_scene load_steps=5 format=3 uid="uid://3ws4d3upadvm"]
+
+[ext_resource type="Script" uid="uid://b7jfokf43vyda" path="res://nodes/ui/hud/CurrencyPanel.cs" id="1_2627c"]
+[ext_resource type="Texture2D" uid="uid://b1pls3wd1xmt8" path="res://assets/icons/currency/byte-icon-64.png" id="2_cro27"]
+[ext_resource type="Texture2D" uid="uid://de20b5acmv0cq" path="res://assets/icons/currency/flux-icon.png" id="3_cro27"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_cro27"]
+font_size = 26
+
+[node name="CurrencyPanel" type="PanelContainer"]
+anchors_preset = -1
+anchor_top = 0.4810185
+anchor_right = 1.0
+anchor_bottom = 0.51898146
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_2627c")
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_right = 10
+
+[node name="VBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+alignment = 2
+
+[node name="BytesBox" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="BytesIcon" type="TextureRect" parent="MarginContainer/VBoxContainer/BytesBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("2_cro27")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="BytesLabel" type="Label" parent="MarginContainer/VBoxContainer/BytesBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 8.0
+theme_override_font_sizes/font_size = 16
+text = "1000"
+label_settings = SubResource("LabelSettings_cro27")
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="FluxBox" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="FluxIcon" type="TextureRect" parent="MarginContainer/VBoxContainer/FluxBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("3_cro27")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="FluxLabel" type="Label" parent="MarginContainer/VBoxContainer/FluxBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 8.0
+theme_override_font_sizes/font_size = 32
+text = "1000"
+label_settings = SubResource("LabelSettings_cro27")
+horizontal_alignment = 2
+vertical_alignment = 1

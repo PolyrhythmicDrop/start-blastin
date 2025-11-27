@@ -1,0 +1,14 @@
+[remap]
+
+importer="aseprite_wizard.plugin.noop"
+type="PackedDataContainer"
+uid="uid://bmp1ooia10hy5"
+path="res://.godot/imported/basic-wave-clock.aseprite-5f726831b9c45fee79f353af11d2d32a.res"
+
+[deps]
+
+source_file="res://nodes/ui/hud/assets/wave-clock/basic-wave-clock.aseprite"
+dest_files=["res://.godot/imported/basic-wave-clock.aseprite-5f726831b9c45fee79f353af11d2d32a.res"]
+
+[params]
+

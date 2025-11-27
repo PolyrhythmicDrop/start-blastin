@@ -3,7 +3,7 @@ using Entities;
 using Godot;
 using SafeResourcePicker;
 using Services;
-using Shop;
+using UI;
 using Utility;
 
 namespace Autoloads
@@ -58,6 +58,7 @@ namespace Autoloads
 
         public override void _Ready()
         {
+            // SetMinWindowSize();
             InitializeServices();
 
             bool success;
@@ -68,6 +69,11 @@ namespace Autoloads
                 {
                     DebugLogger.LogMessage("Failed to load override scene!", true, true);
                 }
+                else
+                {
+                    DebugLogger.LogMessage("Adding players...", true);
+                    AddPlayers();
+                }
             }
             else
             {
@@ -77,15 +83,23 @@ namespace Autoloads
                     DebugLogger.LogMessage("Failed to load default scene!", true, true);
                 }
             }
+        }
 
-            if (success)
-            {
-                AddPlayers();
-            }
-            else
-            {
-                DebugLogger.LogMessage("Scene loading failed!", true, true);
-            }
+        private void SetMinWindowSize()
+        {
+            DebugLogger.LogMessage("Setting minimum window size...", true);
+            Vector2I minSize = Vector2I.Zero;
+            minSize.X = (int)ProjectSettings.GetSetting("display/window/size/viewport_width");
+            minSize.Y = (int)ProjectSettings.GetSetting("display/window/size/viewport_height");
+            DebugLogger.LogMessage(
+                $"Current minimum size: {GetWindow().MinSize} | New minimum size: {minSize}",
+                true
+            );
+            GetWindow().MinSize = minSize;
+            DebugLogger.LogMessage(
+                $"Window minimum size set! New minimum size: {GetWindow().MinSize}",
+                true
+            );
         }
 
         private void InitializeServices()
@@ -144,12 +158,13 @@ namespace Autoloads
                     // Add the player to the PlayerService list
                     PlayerService playerService =
                         ServiceManager.Instance.GetService<PlayerService>();
-                    playerService.AddPlayerToService(player);
+                    playerService.AddPlayer(player);
 
-                    // Instantiate this player's shop
-                    ShopBase shopBase = new();
-                    shopBase.Initialize(player.PlayerId);
-                    _loadedSceneNode.AddChild(shopBase);
+                    // Instantiate the player's UI
+                    UiLayer ui = GD.Load<PackedScene>("res://nodes/ui/ui-layer/ui-layer.tscn")
+                        .Instantiate<UiLayer>();
+                    ui.Initialize(player.PlayerId);
+                    _loadedSceneNode.AddChild(ui);
                 }
             }
         }

@@ -1,69 +1,44 @@
-[gd_scene load_steps=5 format=3 uid="uid://bfvxyo46webpd"]
+[gd_scene load_steps=6 format=3 uid="uid://bfvxyo46webpd"]
 
 [ext_resource type="Script" uid="uid://cl536iq61ye8j" path="res://nodes/ui/shop/ShopItemContainer.cs" id="1_lifgi"]
-[ext_resource type="Texture2D" uid="uid://cehgs6gdgmwi5" path="res://assets/item-icons/modifiers/auto-cannon-bullet.png" id="2_r4day"]
-[ext_resource type="StyleBox" uid="uid://chnsppbtk2va0" path="res://resources/themes/styleboxes/item-container-focused-stylebox.tres" id="2_stoc2"]
+[ext_resource type="StyleBox" uid="uid://chnsppbtk2va0" path="res://resources/styleboxes/item-container-focused-stylebox.tres" id="2_stoc2"]
+[ext_resource type="PackedScene" uid="uid://cwxfvdq5l7brl" path="res://nodes/ui/elements/item-name-panel-container.tscn" id="3_2w48v"]
+[ext_resource type="PackedScene" uid="uid://b38bjsfdg17o2" path="res://nodes/ui/elements/item-display.tscn" id="4_ca63a"]
+[ext_resource type="PackedScene" uid="uid://b2fpxs1cgq4hk" path="res://nodes/ui/elements/price-panel-container.tscn" id="5_ca63a"]
 
-[sub_resource type="Theme" id="Theme_r4day"]
-
-[node name="ShopItemContainer" type="Control"]
-custom_minimum_size = Vector2(256, 275)
-layout_mode = 3
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
+[node name="ShopItemContainer" type="PanelContainer"]
+custom_minimum_size = Vector2(128, 256)
+anchors_preset = -1
+anchor_left = 0.44791666
+anchor_top = 0.48976603
+anchor_right = 0.62604165
+anchor_bottom = 0.8769142
+offset_top = 3.5599976
+offset_bottom = -3.5599976
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-tooltip_text = "This is a tooltip."
 focus_mode = 2
 focus_behavior_recursive = 2
-theme = SubResource("Theme_r4day")
-script = ExtResource("1_lifgi")
-metadata/_edit_use_anchors_ = true
-
-[node name="PanelContainer" type="PanelContainer" parent="."]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 6
-size_flags_vertical = 6
 theme_override_styles/panel = ExtResource("2_stoc2")
+script = ExtResource("1_lifgi")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
-theme_override_constants/separation = 10
-alignment = 1
+theme_override_constants/separation = 0
 
-[node name="IconPanelContainer" type="PanelContainer" parent="PanelContainer/VBoxContainer"]
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="ItemIcon" type="TextureRect" parent="PanelContainer/VBoxContainer/IconPanelContainer"]
+[node name="ItemNamePanelContainer" parent="VBoxContainer" instance=ExtResource("3_2w48v")]
 unique_name_in_owner = true
-z_index = 10
 layout_mode = 2
-texture = ExtResource("2_r4day")
-expand_mode = 5
-stretch_mode = 5
+NameLabelSettings = 1
 
-[node name="LabelPanelContainer" type="PanelContainer" parent="PanelContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 2
-
-[node name="RTLabel" type="RichTextLabel" parent="PanelContainer/VBoxContainer/LabelPanelContainer"]
+[node name="ItemDisplay" parent="VBoxContainer" instance=ExtResource("4_ca63a")]
 unique_name_in_owner = true
-z_index = 10
 layout_mode = 2
-theme_override_colors/default_color = Color(1, 1, 1, 1)
-fit_content = true
-horizontal_alignment = 1
-vertical_alignment = 1
+size_flags_horizontal = 1
+size_flags_stretch_ratio = 3.0
+
+[node name="PricePanelContainer" parent="VBoxContainer" instance=ExtResource("5_ca63a")]
+unique_name_in_owner = true
+layout_mode = 2

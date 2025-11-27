@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="Modifier" load_steps=5 format=3 uid="uid://cqdqquvdtq0us"]
 
 [ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="1_28wb4"]
-[ext_resource type="Texture2D" uid="uid://cmty2wsc2733e" path="res://assets/item-icons/modifiers/shield-generator-2.png" id="2_cfseg"]
+[ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="2_cfseg"]
 [ext_resource type="Script" uid="uid://bauhwivw4ftik" path="res://architecture/items/modifiers/Modifier.cs" id="2_kt3di"]
 
 [sub_resource type="Resource" id="Resource_qhk8d"]
@@ -15,5 +15,7 @@ Name = &"Max Health Upgrade Lvl 2"
 Description = &"Gain even more health."
 Icon = ExtResource("2_cfseg")
 Rarity = 8
+FluxCost = 50
+ByteCost = 300
 Effects = Array[Object]([SubResource("Resource_qhk8d")])
 metadata/_custom_type_script = "uid://bauhwivw4ftik"

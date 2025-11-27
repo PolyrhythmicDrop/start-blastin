@@ -1,0 +1,34 @@
+[gd_scene load_steps=3 format=3 uid="uid://8rk4lla2rn8s"]
+
+[ext_resource type="Script" uid="uid://u6to88g7ub5m" path="res://nodes/ui/elements/DescriptionPanel.cs" id="1_1oe7e"]
+[ext_resource type="FontFile" uid="uid://cl4qr5jjiwdn4" path="res://resources/fonts/sixtyfour-convergence/SixtyfourConvergence-Regular-VariableFont_BLED,SCAN,XELA,YELA.ttf" id="1_ts4ih"]
+
+[node name="DescriptionPanelContainer" type="PanelContainer"]
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+script = ExtResource("1_1oe7e")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = -12
+
+[node name="DescriptionLabel" type="RichTextLabel" parent="MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/paragraph_separation = 12
+theme_override_fonts/normal_font = ExtResource("1_ts4ih")
+theme_override_font_sizes/normal_font_size = 18
+theme_override_font_sizes/bold_font_size = 20
+bbcode_enabled = true
+text = "This is an item description. It tells you what the Item does."
+fit_content = true
+scroll_following = true
+scroll_following_visible_characters = true
+autowrap_mode = 2
+shortcut_keys_enabled = false
+vertical_alignment = 1
+justification_flags = 3

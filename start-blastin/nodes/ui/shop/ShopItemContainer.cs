@@ -1,124 +1,97 @@
 using System;
-using System.Diagnostics;
-using Autoloads;
+using Events;
 using Godot;
 using Items;
 using Utility;
 
-namespace Shop
+namespace UI.Shop
 {
     [GlobalClass]
-    public partial class ShopItemContainer : Control
+    public partial class ShopItemContainer : ItemContainer
     {
-        private Item _item;
-        private TextureRect _textureRect;
-        private RichTextLabel _rtLabel;
-        private PanelContainer _panelContainer;
-        private StyleBoxFlat _defocusedStyleBox;
-        private StyleBoxFlat _focusedStyleBox;
-        private Color _itemColor;
-        public Item Item => _item;
+        private PricePanelContainer _pricePanel;
+
+        private Color _defaultPriceColor = new Color("#ffffff");
+        private Color _unbuyablePriceColor = new Color("#ff5470");
 
         public override void _Ready()
         {
-            GD.Print($"{Name} ready called!");
-            _textureRect = GetNode<TextureRect>("%ItemIcon");
-            _rtLabel = GetNode<RichTextLabel>("%RTLabel");
-            _panelContainer = GetNode<PanelContainer>("%PanelContainer");
-            _focusedStyleBox = ResourceLoader.Load<StyleBoxFlat>(
-                "res://resources/themes/styleboxes/item-container-focused-stylebox.tres"
-            );
-            _defocusedStyleBox = ResourceLoader.Load<StyleBoxFlat>(
-                "res://resources/themes/styleboxes/item-container-defocused-stylebox.tres"
-            );
-            FocusEntered += OnFocusEnter;
-            FocusExited += OnFocusExit;
+            base._Ready();
+            _pricePanel = GetNode<PricePanelContainer>("%PricePanelContainer");
         }
-
-        public override void _GuiInput(InputEvent @event)
-        {
-            if (@event.IsAction("ui_accept"))
-            {
-                ItemSelected();
-                AcceptEvent();
-            }
-        }
-
-        public override void _Process(double delta) { }
 
         /// <summary>
         /// Sets the item that belongs in the container.
         /// </summary>
         /// <param name="item">The item to place in the container.</param>
-        public void SetItem(Item item)
+        public override void SetItem(Item item)
         {
-            if (_item != null)
-            {
-                ClearItem();
-            }
+            base.SetItem(item);
 
-            _item = item;
-            _itemColor = new("FLORAL_WHITE");
-
-            switch (item.Rarity)
-            {
-                case Rarity.Common:
-                default:
-                    break;
-                case Rarity.Uncommon:
-                    _itemColor = new("#78d8b7");
-                    break;
-                case Rarity.Rare:
-                    _itemColor = new("#fdfe89");
-                    break;
-                case Rarity.Legendary:
-                    _itemColor = new("#ff5470");
-                    break;
-            }
-
-            _rtLabel.AddThemeColorOverride("default_color", _itemColor);
-            _rtLabel.Text = _item.Name;
-
-            _textureRect.Texture = _item.Icon;
+            SetItemPriceLabels();
         }
 
         /// <summary>
-        /// Clears the container's current item.
+        /// Sets the price label text and visibility based on the ShopItemContainer's loaded item.
         /// </summary>
-        public void ClearItem()
+        private void SetItemPriceLabels()
         {
-            GD.Print($"Clearing item...");
-            _item = null;
-            _textureRect.Texture = null;
+            // int flux = _item.FluxCost;
+            // int bytes = _item.ByteCost;
+
+            int flux = Item.FluxCost;
+            int bytes = Item.ByteCost;
+
+            _pricePanel.SetLabelText(bytes.ToString("N0"), PricePanelContainer.PriceLabel.Bytes);
+            _pricePanel.SetLabelText(flux.ToString("N0"), PricePanelContainer.PriceLabel.Flux);
+
+            bool costsBytes = bytes > 0;
+            bool costsFlux = flux > 0;
+            _pricePanel.TogglePanelVisibility(costsBytes, PricePanelContainer.PriceLabel.Bytes);
+            _pricePanel.TogglePanelVisibility(costsFlux, PricePanelContainer.PriceLabel.Flux);
+        }
+
+        private void ClearPriceLabels()
+        {
+            _pricePanel.TogglePanelVisibility(false);
+        }
+
+        public void ItemBought()
+        {
+            _itemNamePanel.Label.Text += " Bought!";
+            ClearItem();
         }
 
         /// <summary>
-        /// Called when the player presses the "ui_select" action while this ShopItemContainer is in focus.
+        /// Sets various aspects of the item container according to whether or not the player has enough currency to purchase it.
         /// </summary>
-        public void ItemSelected()
+        /// <param name="fluxBuyable">True if the player has enough flux to buy the item.</param>
+        /// <param name="byteBuyable">True if the player has enough bytes to buy the item.</param>
+        /// <param name="canBuy">True if the player can buy the item overall</param>
+        /// <remarks>
+        /// Called from the ShopUI object that manages this ShopItemContainer.
+        /// </remarks>
+        public void SetBuyable(bool fluxBuyable, bool byteBuyable, bool canBuy)
         {
-            if (_item != null)
-            {
-                DebugLogger.LogMessage($"Shop item {_item.Name} bought!", true);
-                // Buy the item
-                // TODO: display the item's description and stuff before buying it. This is just to test that I *can* buy it.
-                EventBus.Instance.EmitSignal(EventBus.SignalName.ShopItemBought, _item);
-                _rtLabel.Text += " Bought!";
+            Color fluxColor = fluxBuyable ? _defaultPriceColor : _unbuyablePriceColor;
+            Color byteColor = byteBuyable ? _defaultPriceColor : _unbuyablePriceColor;
 
-                // Clear the item.
-                ClearItem();
+            _pricePanel.SetFontColor(byteColor, PricePanelContainer.PriceLabel.Bytes);
+            _pricePanel.SetFontColor(fluxColor, PricePanelContainer.PriceLabel.Flux);
+
+            if (!canBuy)
+            {
+                _impossibleActionRect.Visible = true;
+            }
+            else
+            {
+                _impossibleActionRect.Visible = false;
             }
         }
 
-        private void OnFocusEnter()
+        public override void _ExitTree()
         {
-            _focusedStyleBox.BorderColor = _itemColor;
-            _panelContainer.AddThemeStyleboxOverride("panel", _focusedStyleBox);
-        }
-
-        private void OnFocusExit()
-        {
-            _panelContainer.AddThemeStyleboxOverride("panel", _defocusedStyleBox);
+            base._ExitTree();
         }
     }
 }

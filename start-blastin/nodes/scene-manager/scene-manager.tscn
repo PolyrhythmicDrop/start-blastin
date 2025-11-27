@@ -5,4 +5,5 @@
 [node name="SceneManager" type="Node"]
 script = ExtResource("1_ue856")
 DefaultScenePath = "uid://dgcswjykgey5y"
-OverrideScenePath = "res://nodes/level/main-level.tscn"
+OverrideScene = true
+OverrideScenePath = "uid://cca75d2re7isj"

@@ -1,0 +1,64 @@
+[gd_scene load_steps=7 format=3 uid="uid://cs0msq3g3i6xk"]
+
+[ext_resource type="Script" uid="uid://b5d31qrfgoid4" path="res://nodes/ui/hud/Hud.cs" id="1_qndsm"]
+[ext_resource type="PackedScene" uid="uid://y075h5i8lhs0" path="res://nodes/ui/hud/status-panel.tscn" id="2_tajdg"]
+[ext_resource type="PackedScene" uid="uid://dlx5jgo75t8wb" path="res://nodes/ui/hud/wave-panel.tscn" id="3_tajdg"]
+[ext_resource type="PackedScene" uid="uid://b3t5it47lwtr1" path="res://nodes/ui/hud/loadout-panel.tscn" id="4_3kxy6"]
+[ext_resource type="PackedScene" uid="uid://3ws4d3upadvm" path="res://nodes/ui/hud/currency-panel.tscn" id="4_3pdy4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3pdy4"]
+
+[node name="Hud" type="PanelContainer"]
+z_index = 100
+custom_minimum_size = Vector2(16, 9)
+anchors_preset = -1
+anchor_top = 0.94166666
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_3pdy4")
+script = ExtResource("1_qndsm")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 2
+color = Color(0, 0, 0, 1)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1
+
+[node name="StatusPanel" parent="HBoxContainer" instance=ExtResource("2_tajdg")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 1
+size_flags_stretch_ratio = 3.0
+
+[node name="WavePanel" parent="HBoxContainer" instance=ExtResource("3_tajdg")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="LoadoutPanel" parent="HBoxContainer" instance=ExtResource("4_3kxy6")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_stretch_ratio = 2.0
+
+[node name="CurrencyPanel" parent="HBoxContainer" instance=ExtResource("4_3pdy4")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 1
+
+[node name="HUDBody" type="StaticBody2D" parent="."]
+unique_name_in_owner = true
+disable_mode = 1
+collision_layer = 2
+
+[node name="HUDCollision" type="CollisionShape2D" parent="HUDBody"]
+unique_name_in_owner = true
+position = Vector2(-1, 0)
+debug_color = Color(0.9197264, 0.24762714, 0.35803878, 0.41960785)

@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using Autoloads;
+using Events;
 using Factories;
 using Godot;
 using WaveManagement;
@@ -102,22 +103,7 @@ namespace Enemies.Spawners
             _spawnTimer.WaitTime = _spawnInterval;
             _spawnTimer.Timeout += SpawnEnemy;
 
-            // Connect to wave signals
-            EventBus.Instance.Connect(
-                EventBus.SignalName.WaveStarted,
-                Callable.From(
-                    (int wave) =>
-                    {
-                        ToggleSpawning(true);
-                        _currentWave = wave;
-                    }
-                )
-            );
-
-            EventBus.Instance.Connect(
-                EventBus.SignalName.WaveTimerEnded,
-                Callable.From(() => ToggleSpawning(false))
-            );
+            ConnectSignals();
 
             // ToggleSpawning(true);
             MoveSpawnPoint();
@@ -125,6 +111,18 @@ namespace Enemies.Spawners
             GD.Print(
                 $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name} finished!"
             );
+        }
+
+        private void ConnectSignals()
+        {
+            EventBus.Instance.WaveStarted += OnWaveStarted;
+            EventBus.Instance.WaveTimerEnded += OnWaveTimerEnded;
+        }
+
+        private void DisconnectSignals()
+        {
+            EventBus.Instance.WaveStarted -= OnWaveStarted;
+            EventBus.Instance.WaveTimerEnded -= OnWaveTimerEnded;
         }
 
         public override void _Process(double delta)
@@ -148,12 +146,8 @@ namespace Enemies.Spawners
                 totalWeight += data.Weight;
             }
 
-            // GD.Print($"Total weight: {totalWeight}");
-
             // Generate random number within total weight
             int randomValue = GD.RandRange(0, totalWeight - 1);
-
-            // GD.Print($"Random value: {randomValue}");
 
             // Find the enemy that corresponds to this weight
             int currentWeight = 0;
@@ -292,6 +286,23 @@ namespace Enemies.Spawners
             {
                 _spawnTimer.Stop();
             }
+        }
+
+        private void OnWaveStarted(object sender, WaveStartedEventArgs args)
+        {
+            ToggleSpawning(true);
+            _currentWave = args.Wave;
+        }
+
+        private void OnWaveTimerEnded()
+        {
+            ToggleSpawning(false);
+        }
+
+        public override void _ExitTree()
+        {
+            DisconnectSignals();
+            base._ExitTree();
         }
     }
 }

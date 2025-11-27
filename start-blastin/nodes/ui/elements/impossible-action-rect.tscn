@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://beguupgtrbesp"]
+
+[ext_resource type="Texture2D" uid="uid://dtd32dr2uqgvq" path="res://assets/icons/impossible-action.png" id="1_qimh2"]
+
+[node name="ImpossibleActionRect" type="TextureRect"]
+texture = ExtResource("1_qimh2")
+expand_mode = 5
+stretch_mode = 5

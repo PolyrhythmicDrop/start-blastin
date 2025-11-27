@@ -1,6 +1,8 @@
 using System;
 using Components;
+using Enemies;
 using Godot;
+using Utility;
 using Weapons;
 
 namespace Projectiles
@@ -101,6 +103,19 @@ namespace Projectiles
             {
                 InitializeRay();
             }
+        }
+
+        /// <summary>
+        /// Initialize stats again every time the projectile enters the tree, since it can be added and removed from the tree by the ProjectilePool. We need to account for any change in the source's rotation to rotate the bullet successfully.
+        /// </summary>
+        public override void _EnterTree()
+        {
+            InitializeStats();
+            // DebugLogger.LogMessage(
+            //     $"Projectile added to scene tree! Base speed: {_baseSpeed} | Current speed: {_currentSpeed} | Source velocity: {_sourceVelocity} | Global rotation: {GlobalRotation}",
+            //     true
+            // );
+            base._EnterTree();
         }
 
         protected virtual void InitializeRay()
@@ -213,6 +228,7 @@ namespace Projectiles
             if (active)
             {
                 _sourceWeapon.ProjectileParent.AddChild(this);
+
                 _sourceWeapon.ActiveProjectileCount++;
             }
             else
@@ -239,6 +255,10 @@ namespace Projectiles
             float extraVelocity = Mathf.Max(0, projectionMagnitude) * 0.6f;
 
             _currentSpeed = _baseSpeed + extraVelocity;
+            // DebugLogger.LogMessage(
+            //     $"Source velocity added! New current speed: {_currentSpeed} | Source velocity: {_sourceVelocity}",
+            //     true
+            // );
         }
 
         /// <summary>
@@ -274,6 +294,18 @@ namespace Projectiles
         protected virtual Vector2 SetTrajectory(double delta)
         {
             Vector2 fireAngle = Vector2.Right.Rotated(GlobalRotation);
+
+            // Logging for trajectory, since speedy drones don't seem to set it quite accurately.
+            // if (_sourceWeapon.WeaponOwner is EnemyNode enemy)
+            // {
+            //     string enemyName = enemy.Name;
+            //     if (enemyName.Contains("speedy-drone"))
+            //     {
+            //         DebugLogger.LogMessage(
+            //             $"Tractory set! Fire angle: {fireAngle} | Projectile rotation: {GlobalRotation} | Source: {enemyName} | Source rotation: {enemy.GlobalRotation}"
+            //         );
+            //     }
+            // }
             return _currentSpeed * (float)delta * fireAngle;
         }
 

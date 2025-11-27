@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=3 uid="uid://cwxfvdq5l7brl"]
+
+[ext_resource type="LabelSettings" uid="uid://dhmvqno5lqhj" path="res://resources/label-settings/item-name-label/item-name-label-settings.tres" id="1_aqbyl"]
+[ext_resource type="Script" uid="uid://bo3yflg5ry23w" path="res://nodes/ui/elements/ItemNamePanelContainer.cs" id="1_vahb0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vahb0"]
+
+[node name="ItemNamePanelContainer" type="PanelContainer"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -132.0
+offset_right = 132.0
+offset_bottom = 25.0
+grow_horizontal = 2
+theme_type_variation = &"ItemNamePanelContainer"
+theme_override_styles/panel = SubResource("StyleBoxEmpty_vahb0")
+script = ExtResource("1_vahb0")
+
+[node name="ItemNameLabel" type="Label" parent="."]
+unique_name_in_owner = true
+z_index = 10
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Sample Item"
+label_settings = ExtResource("1_aqbyl")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2

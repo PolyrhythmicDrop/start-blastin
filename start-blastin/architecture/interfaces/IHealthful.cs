@@ -5,7 +5,7 @@ namespace Interfaces
 {
     public interface IHealthful
     {
-        void TakeDamage(float damage);
+        void TakeDamage(float damage, int? playerId = null);
         void Heal(float healAmount);
     }
 }

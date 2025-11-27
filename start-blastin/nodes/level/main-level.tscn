@@ -24,10 +24,14 @@ stretch_mode = 5
 [node name="PlayAreaBorder" parent="." instance=ExtResource("2_cw5wp")]
 
 [node name="Player" parent="." instance=ExtResource("3_pxe5x")]
-position = Vector2(933, 883)
-Plugins = Array[Object]([])
+position = Vector2(960, 770)
+Bytes = 0
+Flux = 0
 
 [node name="OOB-Area" parent="." instance=ExtResource("4_rl1rb")]
 
 [node name="WaveManager" parent="." instance=ExtResource("1_esqth")]
 Difficulty = 2
+
+[node name="LevelCamera" type="Camera2D" parent="."]
+anchor_mode = 0

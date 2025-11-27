@@ -1,0 +1,61 @@
+[gd_scene load_steps=4 format=3 uid="uid://dog71b3n5wml5"]
+
+[ext_resource type="Script" uid="uid://cc53ow4m1vtrm" path="res://nodes/ui/menus/plugin-screen/PluginScreen.cs" id="1_k1tid"]
+[ext_resource type="PackedScene" uid="uid://8rk4lla2rn8s" path="res://nodes/ui/elements/description-panel.tscn" id="2_jd4gq"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_04cqw"]
+
+[node name="PluginScreen" type="PanelContainer"]
+process_mode = 3
+z_index = 50
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -776.0
+offset_top = -400.0
+offset_right = 776.0
+offset_bottom = 312.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+theme_override_styles/panel = SubResource("StyleBoxEmpty_04cqw")
+script = ExtResource("1_k1tid")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.0
+
+[node name="PluginPanel" type="PanelContainer" parent="VBoxContainer/MarginContainer"]
+unique_name_in_owner = true
+process_mode = 3
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+metadata/_edit_use_anchors_ = true
+
+[node name="PluginMargins" type="MarginContainer" parent="VBoxContainer/MarginContainer/PluginPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 30
+
+[node name="PluginHBox" type="HBoxContainer" parent="VBoxContainer/MarginContainer/PluginPanel/PluginMargins"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"PluginScreenLoadoutHBox"
+alignment = 1
+
+[node name="DescriptionPanelContainer" parent="VBoxContainer" instance=ExtResource("2_jd4gq")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_stretch_ratio = 1.0

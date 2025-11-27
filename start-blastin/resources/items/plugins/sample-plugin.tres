@@ -11,10 +11,12 @@ Value = 150.0
 metadata/_custom_type_script = "uid://bmeda5w63vsw7"
 
 [resource]
+resource_name = "sample-plugin"
 script = ExtResource("3_n8wk6")
 Level = 1
 Name = &"Sample Plugin"
 Description = &"It\'s a sample."
 Icon = ExtResource("2_ad7uv")
+FluxCost = 10
 Effects = Array[Object]([SubResource("Resource_yle3v")])
 metadata/_custom_type_script = "uid://b3qmdj461ykoi"

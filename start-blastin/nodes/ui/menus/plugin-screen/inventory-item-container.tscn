@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://b2fpxs1cgq4hk" path="res://nodes/ui/elements/price-panel-container.tscn" id="3_5tp8i"]
 [ext_resource type="PackedScene" uid="uid://b38bjsfdg17o2" path="res://nodes/ui/elements/item-display.tscn" id="3_8lxbq"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7hqfq"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5tp8i"]
 
 [node name="InventoryItemContainer" type="PanelContainer"]
 anchors_preset = 8
@@ -21,7 +21,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 6
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxEmpty_7hqfq")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_5tp8i")
 script = ExtResource("1_xmjwr")
 metadata/_custom_type_script = "uid://ccb5txlroa4u3"
 

@@ -13,14 +13,14 @@ namespace UI.Loadout
         private new StyleBoxFlat _focusedStyleBox =>
             ResourceLoader.Load<StyleBoxFlat>("uid://dx4qv4oioa55");
 
-        private new StyleBoxEmpty _defocusedStyleBox =>
-            ResourceLoader.Load<StyleBoxEmpty>("uid://cofe4xg4ah36y");
+        private StyleBoxFlat _currentStyleBox;
+
+        private Color _focusedBorderColor;
+        private Color _defocusedBorderColor;
 
         private Tween _tween;
 
         public bool Empty = true;
-
-        // public ItemDisplay ItemDisplay => _itemDisplay;
 
         public override void _Ready()
         {
@@ -31,6 +31,7 @@ namespace UI.Loadout
 
             _pricePanel = GetNode<PricePanelContainer>("%PricePanelContainer");
             InitializePricePanel();
+
             // Don't need to connect signals below, since we call base.Ready() above, which calls the derived class's ConnectSignals(), which calls base.ConnectSignals()...definitely not confusing
             // ConnectSignals();
         }
@@ -109,6 +110,13 @@ namespace UI.Loadout
             // Reconnect to the SlotItemChanged event because we changed the variable to a new object, which severed the original connection.
             ConnectSlotItemChanged(true);
 
+            _currentStyleBox = _focusedStyleBox.Duplicate(true) as StyleBoxFlat;
+            _itemDisplay.AddThemeStyleboxOverride("panel", _currentStyleBox);
+            _focusedBorderColor = _currentStyleBox.BorderColor;
+            _defocusedBorderColor = new Color(_focusedBorderColor);
+            _defocusedBorderColor.A = 0;
+            _currentStyleBox.BorderColor = _defocusedBorderColor;
+
             SetPanelInfo();
         }
 
@@ -124,8 +132,6 @@ namespace UI.Loadout
         {
             if (!_itemDisplay.Empty)
             {
-                // SetItem(_itemDisplay.Item);
-                // _itemNamePanel.Label.Text = _itemDisplay.Item.Name;
                 _itemNamePanel.Label.Text = Item.Name;
 
                 _pricePanel.SetLabelText(
@@ -151,7 +157,7 @@ namespace UI.Loadout
 
         protected override void OnFocusEnter()
         {
-            _itemDisplay.AddThemeStyleboxOverride("panel", _focusedStyleBox);
+            _currentStyleBox.BorderColor = _focusedBorderColor;
             if (_itemNamePanel != null)
             {
                 if (_tween != null)
@@ -168,7 +174,7 @@ namespace UI.Loadout
 
         protected override void OnFocusExit()
         {
-            _itemDisplay.AddThemeStyleboxOverride("panel", _defocusedStyleBox);
+            _currentStyleBox.BorderColor = _defocusedBorderColor;
             if (_itemNamePanel != null)
             {
                 if (_tween != null)

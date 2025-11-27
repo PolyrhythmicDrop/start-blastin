@@ -1,6 +1,7 @@
 [gd_resource type="StyleBoxFlat" format=3 uid="uid://dx4qv4oioa55"]
 
 [resource]
+resource_local_to_scene = true
 draw_center = false
 border_width_left = 6
 border_width_right = 6

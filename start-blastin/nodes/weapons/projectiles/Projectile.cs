@@ -83,7 +83,7 @@ namespace Projectiles
         public Projectile()
         {
             _deactivationTimer = new Timer();
-            _deactivationTimer.WaitTime = 5;
+            _deactivationTimer.WaitTime = 100;
             _deactivateCallable = Callable.From(() => ToggleActive(false));
         }
 

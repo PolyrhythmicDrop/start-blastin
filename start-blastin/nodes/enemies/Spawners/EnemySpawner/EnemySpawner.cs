@@ -241,10 +241,6 @@ namespace Enemies.Spawners
         {
             float waveMultiplier = Mathf.Log(1 + wave);
             _spawnPool = new SpawnPool(spawnerScaler.SpawnPool);
-
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Spawn pool applied!"
-            );
             foreach (SpawnData spawnData in _spawnPool)
             {
                 GD.Print($"{spawnData.EnemyResource.ResourceName} | Weight: {spawnData.Weight}");
@@ -265,10 +261,6 @@ namespace Enemies.Spawners
             float movePercentReduction =
                 (spawnerScaler.MoveDurationModifier / 100f) * waveMultiplier;
             _pointMoveDuration = Mathf.Max(0.2f, _baseMoveDuration * (1 - movePercentReduction));
-
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().Name}: Spawner scaler {spawnerScaler.ResourceName} applied! Interval: {_spawnInterval} | Move Duration {_pointMoveDuration}"
-            );
         }
 
         /// <summary>

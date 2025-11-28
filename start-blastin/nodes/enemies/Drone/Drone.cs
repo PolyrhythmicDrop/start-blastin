@@ -1,5 +1,3 @@
-using System.Reflection;
-using Entities;
 using Godot;
 
 namespace Enemies
@@ -78,7 +76,7 @@ namespace Enemies
                     Callable.From(() => base.Die(playerId))
                 )
             )
-            // Free the node when the animation is finished.
+            // Call the base "die" method when the animation is finished.
             {
                 _destruction.Connect(
                     AnimatedSprite2D.SignalName.AnimationFinished,

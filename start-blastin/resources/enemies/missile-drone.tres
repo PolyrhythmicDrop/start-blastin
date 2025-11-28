@@ -1,0 +1,44 @@
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=9 format=3 uid="uid://dwt1kb13007cq"]
+
+[ext_resource type="Script" uid="uid://de8iusxhs0qem" path="res://nodes/components/HealthComponent.cs" id="1_lbdoq"]
+[ext_resource type="Curve2D" uid="uid://bnvfjkrio8lfp" path="res://resources/curves/straight-down.tres" id="2_o4e7f"]
+[ext_resource type="Script" uid="uid://bytfm61mpkr5u" path="res://nodes/weapons/WeaponStats.cs" id="3_o4e7f"]
+[ext_resource type="Script" uid="uid://boyq442k65gay" path="res://nodes/weapons/WeaponResource.cs" id="4_jn13m"]
+[ext_resource type="Script" uid="uid://cf7pn6qd7aa15" path="res://nodes/enemies/EnemyResource.cs" id="4_ypucy"]
+
+[sub_resource type="Resource" id="Resource_0bm52"]
+resource_local_to_scene = true
+script = ExtResource("1_lbdoq")
+MaxHealth = 2.0
+metadata/_custom_type_script = "uid://de8iusxhs0qem"
+
+[sub_resource type="Resource" id="Resource_yebq7"]
+resource_local_to_scene = true
+script = ExtResource("3_o4e7f")
+ProjectileType = 1
+Damage = 2.0
+FireRate = 0.7
+ProjectileSpeed = 300.0
+metadata/_custom_type_script = "uid://bytfm61mpkr5u"
+
+[sub_resource type="Resource" id="Resource_o4e7f"]
+resource_local_to_scene = true
+resource_name = "missile-drone-weapon"
+script = ExtResource("4_jn13m")
+Stats = SubResource("Resource_yebq7")
+ScenePath = "res://nodes/weapons/Blaster.tscn"
+metadata/_custom_type_script = "uid://bytfm61mpkr5u"
+
+[resource]
+resource_local_to_scene = true
+resource_name = "missile-drone"
+script = ExtResource("4_ypucy")
+ScenePath = "res://nodes/enemies/Drone/drone.tscn"
+Speed = 100.0
+CrashDamage = 2
+HealthComponent = SubResource("Resource_0bm52")
+WeaponResource = SubResource("Resource_o4e7f")
+PathCurve = ExtResource("2_o4e7f")
+FluxReward = 20
+ByteReward = 150
+metadata/_custom_type_script = "uid://cf7pn6qd7aa15"

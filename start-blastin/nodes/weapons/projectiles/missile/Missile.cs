@@ -84,17 +84,29 @@ public partial class Missile : Projectile
             {
                 if (body is Player player && _currentTarget != player)
                 {
-                    _currentTarget = player;
+                    SetCurrentTarget(player);
                 }
             }
             else
             {
                 if (body is EnemyNode enemy && _currentTarget != enemy)
                 {
-                    _currentTarget = enemy;
+                    SetCurrentTarget(enemy);
                 }
             }
         }
+    }
+
+    private void SetCurrentTarget(Node2D target = null)
+    {
+        if (target != null)
+        {
+            target.TreeExiting += () =>
+            {
+                _currentTarget = null;
+            };
+        }
+        _currentTarget = target;
     }
 
     public void OnTargetAreaExited(Node2D body)
@@ -116,7 +128,7 @@ public partial class Missile : Projectile
                     Node2D found = bodies.Find(body => body is Player);
                     if (found != null)
                     {
-                        _currentTarget = (Player)found;
+                        SetCurrentTarget((Player)found);
                     }
                 }
                 // If the missile is the player's, search for other enemies in the area.
@@ -125,7 +137,7 @@ public partial class Missile : Projectile
                     Node2D found = bodies.Find(body => body is EnemyNode);
                     if (found != null)
                     {
-                        _currentTarget = (EnemyNode)found;
+                        SetCurrentTarget((EnemyNode)found);
                     }
                 }
             }

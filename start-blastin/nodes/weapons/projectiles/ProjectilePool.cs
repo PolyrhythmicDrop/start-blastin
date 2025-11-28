@@ -127,5 +127,15 @@ namespace Projectiles
             RemoveAll(Inactive);
             TrimExcess();
         }
+
+        /// <summary>
+        /// Resets the pool. Removes all current members, resets the capacity, and refills the pool to starting capacity.
+        /// </summary>
+        public void ResetPool()
+        {
+            CullPool();
+            Clear();
+            Initialize();
+        }
     }
 }

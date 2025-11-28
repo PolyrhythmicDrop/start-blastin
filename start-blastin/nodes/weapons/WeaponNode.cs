@@ -142,6 +142,18 @@ namespace Weapons
             AddChild(ProjectileParent);
         }
 
+        public void ResetProjectilePool()
+        {
+            if (_pool != null)
+            {
+                _pool.ResetPool();
+            }
+            else
+            {
+                InitializeProjectilePool();
+            }
+        }
+
         /// <summary>
         /// Initializes the weapon's fire timer.
         /// Sets the WaitTime to the weapon's fire rate, then adds the FireTimer to the scene tree.

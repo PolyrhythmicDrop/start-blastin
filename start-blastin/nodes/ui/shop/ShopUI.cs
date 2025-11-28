@@ -81,7 +81,7 @@ namespace UI.Shop
             if (activate)
             {
                 Active = true;
-                DebugLogger.LogMessage($"Last focused: {_lastFocused}");
+                RefreshAllAffordability(_playerId);
                 if (_lastFocused != null)
                 {
                     _lastFocused.CallDeferred(MethodName.GrabFocus);
@@ -225,13 +225,16 @@ namespace UI.Shop
 
         private void RefreshAllAffordability(int argsId)
         {
-            if (_playerId == argsId)
+            if (Active)
             {
-                foreach (ShopItemContainer container in _itemContainers)
+                if (_playerId == argsId)
                 {
-                    if (container != null && container.Item != null)
+                    foreach (ShopItemContainer container in _itemContainers)
                     {
-                        SetContainerAffordability(container);
+                        if (container != null && container.Item != null)
+                        {
+                            SetContainerAffordability(container);
+                        }
                     }
                 }
             }

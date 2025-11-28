@@ -95,7 +95,6 @@ public partial class Missile : Projectile
                 }
             }
         }
-        DebugLogger.LogMessage($"{Name} current target: {_currentTarget?.Name}", true);
     }
 
     public void OnTargetAreaExited(Node2D body)
@@ -130,7 +129,6 @@ public partial class Missile : Projectile
                     }
                 }
             }
-            DebugLogger.LogMessage($"{Name} current target: {_currentTarget?.Name}", true);
         }
     }
 

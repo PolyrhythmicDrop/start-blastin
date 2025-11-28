@@ -4,7 +4,7 @@
 [ext_resource type="Resource" uid="uid://dmulsmpa1tm6h" path="res://resources/items/weapon-plugins/bullet-plugin.tres" id="2_5h4ma"]
 [ext_resource type="PackedScene" uid="uid://cr3k7kv44d7a6" path="res://nodes/player/player-components/animation-component.tscn" id="2_hs1md"]
 [ext_resource type="Script" uid="uid://dcupxkt621nuk" path="res://nodes/player/player-components/PlayerController.cs" id="4_1fmtd"]
-[ext_resource type="Shader" uid="uid://bmacriris3r2k" path="res://nodes/shaders/color-cycling-hit-effect.gdshader" id="4_5h4ma"]
+[ext_resource type="Shader" uid="uid://bmacriris3r2k" path="res://resources/shaders/color-cycling-hit-effect.gdshader" id="4_5h4ma"]
 [ext_resource type="PackedScene" uid="uid://bh7mbhu54my3n" path="res://nodes/player/player-components/movement-component.tscn" id="4_xl06i"]
 [ext_resource type="Script" uid="uid://wvxahp2d8k6f" path="res://nodes/player/player-components/WeaponComponent.cs" id="5_5h4ma"]
 [ext_resource type="Resource" uid="uid://coiv5i1pkqvv8" path="res://resources/weapons/blaster.tres" id="6_1fmtd"]

@@ -10,6 +10,13 @@ namespace Factories
     /// </summary>
     public static class ProjectileFactory
     {
+        private static ShaderMaterial _bulletPalette =>
+            ResourceLoader.Load<ShaderMaterial>(
+                "res://resources/materials/enemy-bullet-palette-swap.tres"
+            );
+        private static ShaderMaterial _missilePalette =>
+            ResourceLoader.Load<ShaderMaterial>("uid://cfd51ihwk3ior");
+
         /// <summary>
         /// Creates a new projectile appropriate for the passed weapon.
         /// </summary>
@@ -67,10 +74,13 @@ namespace Factories
             // TODO: Add different palette swaps for different types of projectiles
             if (projectile.SourceWeapon.EnemyOwned)
             {
-                ShaderMaterial shaderMaterial = ResourceLoader.Load<ShaderMaterial>(
-                    "res://resources/materials/enemy-bullet-palette-swap.tres"
-                );
-                projectile.Material = shaderMaterial;
+                projectile.Material = projectile switch
+                {
+                    Bullet => _bulletPalette,
+                    Missile => _missilePalette,
+                    _ => _bulletPalette,
+                };
+                // projectile.Material = shaderMaterial;
             }
         }
     }

@@ -1,6 +1,7 @@
 [gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://c2utwn3c0waxt"]
 
-[ext_resource type="Shader" uid="uid://bmacriris3r2k" path="res://nodes/shaders/color-cycling-hit-effect.gdshader" id="1_xpdna"]
+[ext_resource type="Shader" uid="uid://bmacriris3r2k" path="res://resources/shaders/color-cycling-hit-effect.gdshader" id="1_xpdna"]
+
 
 [resource]
 resource_local_to_scene = true

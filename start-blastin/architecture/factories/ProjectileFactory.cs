@@ -24,6 +24,9 @@ namespace Factories
                 case ProjectileType.Bullet:
                     ammo = GD.Load<PackedScene>(Bullet.ScenePath).Instantiate<Bullet>();
                     break;
+                case ProjectileType.Missile:
+                    ammo = GD.Load<PackedScene>(Missile.ScenePath).Instantiate<Missile>();
+                    break;
             }
             ammo.SourceWeapon = weapon;
 
@@ -57,14 +60,11 @@ namespace Factories
                 // Set the mask so the projectile does not hit other player projectiles.
                 projectile.SetCollisionMaskValue(4, false);
             }
-
-            // GD.Print(
-            //     $"Projectile collision layers set! Enemy owned = {projectile.SourceWeapon.EnemyOwned} | Is in Projectiles-Enemy collision layer = {projectile.GetCollisionLayerValue(5)}"
-            // );
         }
 
         private static void SetProjectileShaderMaterial(Projectile projectile)
         {
+            // TODO: Add different palette swaps for different types of projectiles
             if (projectile.SourceWeapon.EnemyOwned)
             {
                 ShaderMaterial shaderMaterial = ResourceLoader.Load<ShaderMaterial>(

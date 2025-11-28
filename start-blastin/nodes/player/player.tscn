@@ -36,11 +36,9 @@ PhaseSpeed = 200.0
 WeaponPlugin = ExtResource("2_5h4ma")
 Damage = 1.0
 FireRate = 0.5
-ProjectileSpeed = 500.0
+ProjectileSpeed = 100.0
 PluginSlots = 3
 InitialPlugins = Array[Object]([])
-Bytes = 200
-Flux = 500
 
 [node name="AnimationComponent" parent="." instance=ExtResource("2_hs1md")]
 unique_name_in_owner = true

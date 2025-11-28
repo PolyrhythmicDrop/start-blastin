@@ -167,7 +167,8 @@ namespace Entities
         }
 
         /// <summary>
-        /// The base speed of a projectile coming out of this weapon.
+        /// The base speed of any projectile coming out of the player's weapon.
+        /// The player's WeaponPlugin can modify this value.
         /// </summary>
         /// <remarks>
         /// Projectile speed is augmented by the firing object's speed.
@@ -622,6 +623,9 @@ namespace Entities
             {
                 SortEffects(plugin.Effects, addStatEffects, multiplyStatEffects);
             }
+
+            // Add the weapon plugin to the mix
+            SortEffects(_weaponPlugin.Effects, addStatEffects, multiplyStatEffects);
 
             UpdateStatsWithEffects(addStatEffects, multiplyStatEffects);
         }

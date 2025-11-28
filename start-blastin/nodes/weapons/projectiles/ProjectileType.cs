@@ -5,6 +5,6 @@ namespace Projectiles
     public enum ProjectileType
     {
         Bullet,
-        Rocket,
+        Missile,
     }
 }

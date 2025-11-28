@@ -7,7 +7,6 @@
 resource_local_to_scene = true
 resource_name = "player-blaster"
 script = ExtResource("1_bv6pg")
-ProjectileSpeed = 500.0
 metadata/_custom_type_script = "uid://bytfm61mpkr5u"
 
 [resource]

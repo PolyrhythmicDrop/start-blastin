@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://cca75d2re7isj"]
+[gd_scene load_steps=12 format=3 uid="uid://cca75d2re7isj"]
 
 [ext_resource type="Texture2D" uid="uid://cilgl08og1qhy" path="res://nodes/backgrounds/background-purple-nebulae-stars.png" id="1_1iju8"]
 [ext_resource type="Script" uid="uid://bpw7egf87stew" path="res://architecture/utility/Debugger.cs" id="1_hxhdr"]
 [ext_resource type="PackedScene" uid="uid://dl7j0usiolxux" path="res://nodes/environmental/play-area-border.tscn" id="2_hxhdr"]
 [ext_resource type="PackedScene" uid="uid://nenl15kjphyb" path="res://nodes/player/player.tscn" id="3_gl8ah"]
+[ext_resource type="Resource" uid="uid://cfbrihynipg38" path="res://resources/projectiles/missile-plugin.tres" id="4_hxhdr"]
 [ext_resource type="Resource" uid="uid://bo57x7idkejky" path="res://resources/items/plugins/sample-plugin.tres" id="5_avtic"]
 [ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="6_ald07"]
 [ext_resource type="Script" uid="uid://b3qmdj461ykoi" path="res://architecture/items/plugins/Plugin.cs" id="7_1p5wi"]
@@ -40,9 +41,8 @@ stretch_mode = 5
 
 [node name="Player" parent="." instance=ExtResource("3_gl8ah")]
 position = Vector2(960, 770)
+WeaponPlugin = ExtResource("4_hxhdr")
 InitialPlugins = Array[Object]([ExtResource("5_avtic"), SubResource("Resource_ltqac")])
-Bytes = 0
-Flux = 0
 
 [node name="OOB-Area" parent="." instance=ExtResource("8_mybqq")]
 

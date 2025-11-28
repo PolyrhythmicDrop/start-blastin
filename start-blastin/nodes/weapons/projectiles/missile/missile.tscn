@@ -60,6 +60,7 @@ radius = 151.0
 
 [node name="Missile" type="Area2D" groups=["projectiles"]]
 z_index = -2
+position = Vector2(-1, 0)
 collision_layer = 0
 collision_mask = 7
 script = ExtResource("1_3sv20")
@@ -107,6 +108,9 @@ shape = SubResource("CapsuleShape2D_nppro")
 
 [node name="TargetingArea" type="Area2D" parent="."]
 unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 5
+monitorable = false
 
 [node name="TargetingCollisionShape" type="CollisionShape2D" parent="TargetingArea"]
 unique_name_in_owner = true

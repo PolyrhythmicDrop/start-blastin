@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="WeaponPlugin" load_steps=5 format=3 uid="uid://dmulsmpa1tm6h"]
+[gd_resource type="Resource" script_class="WeaponPlugin" load_steps=6 format=3 uid="uid://dmulsmpa1tm6h"]
 
 [ext_resource type="Texture2D" uid="uid://cr72gwqck8b8v" path="res://assets/icons/item-icons/projectiles/bullet-icon.png" id="1_d8uwn"]
 [ext_resource type="Script" uid="uid://e8ufr3v1a1f" path="res://architecture/items/plugins/WeaponPlugin.cs" id="1_k3t2m"]
@@ -10,12 +10,20 @@ Type = 8
 Value = 600.0
 metadata/_custom_type_script = "uid://bmeda5w63vsw7"
 
+[sub_resource type="Resource" id="Resource_m6jy5"]
+script = ExtResource("1_m6jy5")
+Type = 6
+Value = 1.0
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
 [resource]
+resource_local_to_scene = true
 resource_name = "bullet-plugin"
 script = ExtResource("1_k3t2m")
 Name = &"Bullet"
 Description = &"Regular \'ol bullet"
 Icon = ExtResource("1_d8uwn")
 Scrappable = false
-Effects = Array[Object]([SubResource("Resource_c7qc0")])
+AppearsInShop = false
+Effects = Array[Object]([SubResource("Resource_c7qc0"), SubResource("Resource_m6jy5")])
 metadata/_custom_type_script = "uid://e8ufr3v1a1f"

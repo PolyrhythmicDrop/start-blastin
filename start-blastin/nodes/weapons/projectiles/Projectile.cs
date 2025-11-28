@@ -202,7 +202,7 @@ namespace Projectiles
         /// Adds or removes the projectile from the scene tree, and increments or decrements the source weapon's active projectile count.
         /// </summary>
         /// <param name="active">True to activate the projectile. False to deactivate the projectile.</param>
-        public void ToggleActive(bool active)
+        public virtual void ToggleActive(bool active)
         {
             if (active)
             {
@@ -265,8 +265,8 @@ namespace Projectiles
 
         protected virtual Vector2 SetTrajectory(double delta)
         {
-            Vector2 fireAngle = Vector2.Right.Rotated(GlobalRotation);
-            return _currentSpeed * (float)delta * fireAngle;
+            Vector2 fireVector = Vector2.Right.Rotated(GlobalRotation);
+            return _currentSpeed * (float)delta * fireVector;
         }
 
         /// <summary>

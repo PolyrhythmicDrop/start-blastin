@@ -59,8 +59,8 @@ namespace Entities
 
         // ~ Weapon Variables ~ //
 
-        // private ProjectileType _projType = ProjectileType.Bullet;
         private float _damage => _stats.GetStat(StatType.Damage).CurrentValue;
+
         private float _crashDamage => _stats.GetStat(StatType.CrashDamage).CurrentValue;
         private float _fireRate => _stats.GetStat(StatType.FireRate).CurrentValue;
         private float _projectileSpeed => _stats.GetStat(StatType.ProjectileSpeed).CurrentValue;
@@ -105,7 +105,7 @@ namespace Entities
         public float Speed
         {
             get => _speed;
-            set => _stats.UpdateStat(StatType.Speed, Mathf.Max(0, value));
+            set => _stats.UpdateStat(StatType.Speed, Mathf.Max(0.0f, value));
         }
 
         [Export]
@@ -134,7 +134,7 @@ namespace Entities
         public float PhaseSpeed
         {
             get => _phaseSpeed;
-            set => _stats.UpdateStat(StatType.PhaseSpeed, Mathf.Max(0, value));
+            set => _stats.UpdateStat(StatType.PhaseSpeed, Mathf.Max(0.0f, value));
         }
 
         [ExportGroup("Weapon Stats")]
@@ -151,8 +151,19 @@ namespace Entities
         [Export]
         public float Damage
         {
-            get => _damage;
-            set => _stats.UpdateStat(StatType.Damage, Mathf.Max(0, value));
+            get { return _stats.GetStat(StatType.Damage).CurrentValue; }
+            set
+            {
+                DebugLogger.LogMessage($"Setting Damage...", true);
+                if (_stats.HasStat(StatType.Damage))
+                {
+                    _stats.UpdateStat(StatType.Damage, Mathf.Max(0.0f, value));
+                }
+                else
+                {
+                    _stats.AddStat(new Stat(StatType.Damage, Mathf.Max(0.0f, value)));
+                }
+            }
         }
 
         /// <summary>
@@ -269,6 +280,8 @@ namespace Entities
 
         public override void _Ready()
         {
+            DebugLogger.LogMessage($"_damage on Ready = {_damage}");
+            DebugLogger.LogMessage($"Damage on _Ready() = {Damage}");
             _animationComponent = GetNode<AnimationComponent>("%AnimationComponent");
             _hitBox = GetNode<CollisionShape2D>("%HitBox");
             _movementComponent = GetNode<MovementComponent>("%MovementComponent");
@@ -298,13 +311,7 @@ namespace Entities
             {
                 _weaponComponent.SetWeaponProjectile(_weaponPlugin.ProjectileType);
             }
-
-            // Initialize plugin slots
             _plugins.Capacity = (int)_stats.GetStat(StatType.PluginSlots).CurrentValue;
-            // DebugLogger.LogMessage(
-            //     $"Plugin capacity: {_plugins.Capacity} | Plugin slot count: {_pluginSlots} | Equipped plugins: {_plugins.Count}",
-            //     true
-            // );
         }
 
         private void ConnectSignals()

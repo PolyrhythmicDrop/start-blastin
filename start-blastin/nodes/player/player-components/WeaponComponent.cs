@@ -2,6 +2,7 @@ using Entities;
 using Factories;
 using Godot;
 using Projectiles;
+using Utility;
 using Weapons;
 
 namespace PlayerComponents
@@ -41,9 +42,6 @@ namespace PlayerComponents
                     false,
                     velocityProvider: _player,
                     owner: _player
-                );
-                GD.Print(
-                    $"Weapon equipped! {_equippedWeapon}\nStats: {_equippedWeapon.Stats.FireRate} | {_equippedWeapon.Stats.Damage} | {_equippedWeapon.Stats.ProjectileType} | {_equippedWeapon.Stats.ProjectileSpeed}"
                 );
                 // Initialize stats
                 _equippedWeapon.Stats.FireRate = _player.FireRate;

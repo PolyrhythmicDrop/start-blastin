@@ -137,11 +137,8 @@ namespace UI.Loadout
 
         private void FillSlot(ItemDisplay display, Plugin plugin)
         {
-            DebugLogger.LogMessage(
-                $"Filling slot {display.Name} of type {display.GetType()} with plugin {plugin.ResourceName}",
-                true
-            );
             display.SetItem(plugin);
+            DisplayUpdated?.Invoke();
         }
 
         private void FillPluginSlotGaps()
@@ -224,9 +221,8 @@ namespace UI.Loadout
 
                     // Shift plugins to fill gap
                     FillPluginSlotGaps();
-
-                    DisplayUpdated?.Invoke();
                 }
+                DisplayUpdated?.Invoke();
             }
         }
 

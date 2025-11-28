@@ -552,7 +552,7 @@ namespace Entities
 
             // Remove the item from the player's equipment.
 
-            if (item is WeaponPlugin weapon)
+            if (item is WeaponPlugin)
             {
                 // Revert to the basic bullet if you sell a weapon plugin.
                 ResetWeaponPlugin();

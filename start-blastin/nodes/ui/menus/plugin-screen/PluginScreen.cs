@@ -57,6 +57,7 @@ namespace UI.Loadout
         public void ConnectSignals()
         {
             _weaponContainer.FocusEntered += OnWeaponContainerFocusEntered;
+            _weaponContainer.ItemContainerSelected += OnItemContainerSelected;
 
             foreach (InventoryItemContainer container in _pluginContainers)
             {
@@ -86,6 +87,7 @@ namespace UI.Loadout
         public void DisconnectSignals()
         {
             _weaponContainer.FocusEntered -= OnWeaponContainerFocusEntered;
+            _weaponContainer.ItemContainerSelected -= OnItemContainerSelected;
 
             foreach (
                 KeyValuePair<InventoryItemContainer, Action> kvp in _containerFocusEnteredCallbacks

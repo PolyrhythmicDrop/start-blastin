@@ -21,12 +21,17 @@ public partial class Missile : Projectile
     // Targeting variables
     private Area2D _targetingArea;
     private Node2D _currentTarget;
+    private Callable _nullTargetCallable;
 
     public override void _Ready()
     {
         base._Ready();
         _sprite = GetNode<AnimatedSprite2D>("%Sprite");
         _targetingArea = GetNode<Area2D>("%TargetingArea");
+        _nullTargetCallable = Callable.From(() =>
+        {
+            _currentTarget = null;
+        });
 
         ConnectSignals();
     }
@@ -101,10 +106,10 @@ public partial class Missile : Projectile
     {
         if (target != null)
         {
-            target.TreeExiting += () =>
+            if (!target.IsConnected(SignalName.TreeExiting, _nullTargetCallable))
             {
-                _currentTarget = null;
-            };
+                target.Connect(SignalName.TreeExiting, _nullTargetCallable);
+            }
         }
         _currentTarget = target;
     }

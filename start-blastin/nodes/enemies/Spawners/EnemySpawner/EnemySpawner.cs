@@ -241,10 +241,6 @@ namespace Enemies.Spawners
         {
             float waveMultiplier = Mathf.Log(1 + wave);
             _spawnPool = new SpawnPool(spawnerScaler.SpawnPool);
-            foreach (SpawnData spawnData in _spawnPool)
-            {
-                GD.Print($"{spawnData.EnemyResource.ResourceName} | Weight: {spawnData.Weight}");
-            }
 
             // Don't apply scaling on the first wave.
             if (wave == 1)
@@ -269,7 +265,6 @@ namespace Enemies.Spawners
         /// <param name="spawn">Whether or not to spawn enemies.</param>
         public void ToggleSpawning(bool spawn)
         {
-            GD.Print($"{Name}.{MethodBase.GetCurrentMethod().Name}: Toggling spawning to {spawn}!");
             if (spawn)
             {
                 _spawnTimer.Start(_spawnInterval);

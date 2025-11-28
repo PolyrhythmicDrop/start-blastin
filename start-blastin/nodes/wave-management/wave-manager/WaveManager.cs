@@ -203,7 +203,6 @@ namespace WaveManagement
             {
                 if (enemyCount != prevEnemyCount)
                 {
-                    GD.Print($"Enemy count: {enemyCount}");
                     prevEnemyCount = enemyCount;
                 }
                 await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);

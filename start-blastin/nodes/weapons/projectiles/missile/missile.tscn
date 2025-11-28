@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cgh78hdll5s2h"]
+[gd_scene load_steps=10 format=3 uid="uid://cgh78hdll5s2h"]
 
 [ext_resource type="Script" uid="uid://uppktldxytxy" path="res://nodes/weapons/projectiles/missile/Missile.cs" id="1_3sv20"]
 [ext_resource type="Texture2D" uid="uid://dsgdq5pkj63d8" path="res://assets/projectiles/missile/missile-sprite.png" id="2_3sv20"]
@@ -47,12 +47,16 @@ animations = [{
 "texture": SubResource("AtlasTexture_qbllr")
 }],
 "loop": true,
-"name": &"default",
+"name": &"flight",
 "speed": 20.0
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nppro"]
 radius = 6.0
+height = 24.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_3sv20"]
+radius = 151.0
 
 [node name="Missile" type="Area2D" groups=["projectiles"]]
 z_index = -2
@@ -65,7 +69,8 @@ unique_name_in_owner = true
 texture_filter = 1
 use_parent_material = true
 sprite_frames = SubResource("SpriteFrames_162eo")
-autoplay = "default"
+animation = &"flight"
+autoplay = "flight"
 metadata/_aseprite_wizard_interface_config_ = {
 "animation_section": true,
 "layer_section": false,
@@ -87,14 +92,23 @@ metadata/_aseprite_wizard_config_ = {
 }
 metadata/_aseprite_wizard_source_file_hash_ = "2cc3f52ea4e8006ed03ee61cc4ec7e47"
 
-[node name="RayCast2D" type="RayCast2D" parent="."]
+[node name="TrajRayCast" type="RayCast2D" parent="."]
+unique_name_in_owner = true
 position = Vector2(18, 0)
 target_position = Vector2(0, 0)
 collision_mask = 2
 hit_from_inside = true
 collide_with_areas = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="BodyCollisionShape" type="CollisionShape2D" parent="."]
 position = Vector2(4, 0)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_nppro")
+
+[node name="TargetingArea" type="Area2D" parent="."]
+unique_name_in_owner = true
+
+[node name="TargetingCollisionShape" type="CollisionShape2D" parent="TargetingArea"]
+unique_name_in_owner = true
+shape = SubResource("CircleShape2D_3sv20")
+debug_color = Color(0.57659876, 0.5439903, 0.29771233, 0.41960785)

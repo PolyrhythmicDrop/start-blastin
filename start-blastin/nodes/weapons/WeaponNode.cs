@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Components;
 using Enemies;
 using Entities;
+using Events;
 using Godot;
 using Interfaces;
 using Projectiles;
@@ -93,11 +94,6 @@ namespace Weapons
         public Timer FireTimer;
 
         /// <summary>
-        /// Callback method that runs when a projectile from this weapon hits an object.
-        /// </summary>
-        public Callable HitCallable;
-
-        /// <summary>
         /// The weapon's velocity provider. Used to add a parent object's velocity to projectile speed.
         /// </summary>
         public IVelocityProvider VelocityProvider
@@ -107,16 +103,6 @@ namespace Weapons
         }
 
         public IWeaponOwner WeaponOwner => _owner;
-
-        /// <summary>
-        /// Constructor for the WeaponNode. Sets the <see cref="HitCallable"/> callback function to <see cref="OnProjectileCollision"/>.
-        /// </summary>
-        public WeaponNode()
-        {
-            HitCallable = Callable.From(
-                (CollisionComponent collision) => OnProjectileCollision(collision)
-            );
-        }
 
         /// <summary>
         /// Calls <see cref="InitializeProjectilePool"/> and <see cref="InitializeFireTimer"/>.
@@ -191,12 +177,7 @@ namespace Weapons
             return true;
         }
 
-        /// <summary>
-        /// Callback function assigned to the weapon's <see cref="HitCallable"/> variable.
-        /// Determines what to do when a projectile from this weapon hits an object.
-        /// </summary>
-        /// <param name="collision">Information about the collision that occurred.</param>
-        public virtual void OnProjectileCollision(CollisionComponent collision)
+        public virtual void OnProjectileCollision(object source, CollisionEventArgs args)
         {
             int? playerId = null;
             if (_owner is Player player)
@@ -204,7 +185,7 @@ namespace Weapons
                 playerId = player.PlayerId;
             }
             // IHealthful objects take damage.
-            if (collision.Collider is IHealthful healthful)
+            if (args.Collider is IHealthful healthful)
             {
                 if (healthful is Player healthfulPlayer)
                 {
@@ -225,13 +206,13 @@ namespace Weapons
 
             // Projectiles deactivate.
             // TODO: Also add some kind of animation that plays.
-            if (collision.Collider is Projectile projectile)
+            if (args.Collider is Projectile projectile)
             {
                 projectile.ToggleActive(false);
             }
 
             // Deactivate the source projectile on collision.
-            if (collision.Source is Projectile sourceProj)
+            if (source is Projectile sourceProj)
             {
                 sourceProj.ToggleActive(false);
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using FileIO;
 using Godot;
+using Utility;
 
 namespace WaveManagement
 {
@@ -63,20 +64,11 @@ namespace WaveManagement
                     );
                 }
 
-                // string[] resourceStrings = ResourceLoader.ListDirectory(directory);
-                // foreach (string resourceName in resourceStrings)
-                // {
-                //     string fullPath = directory + resourceName;
-                //     GD.Print(
-                //         $"{MethodBase.GetCurrentMethod().Name}: Adding resource from {fullPath} to {pool}..."
-                //     );
-                //     pool.Add(ResourceLoader.Load<T>(fullPath));
-                // }
                 PoolLoader.LoadResourcePool(pool, directory);
             }
             catch (Exception e)
             {
-                GD.PrintErr(e.Message);
+                DebugLogger.LogMessage(e.Message, true, true);
             }
         }
 
@@ -98,9 +90,6 @@ namespace WaveManagement
         protected T SelectScaler<T>(List<T> pool, int wave, string defaultPath)
             where T : WaveScaler
         {
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Selecting {typeof(T).Name} for wave {wave}..."
-            );
             try
             {
                 List<T> matchingConfigs = pool.FindAll(config =>
@@ -115,14 +104,11 @@ namespace WaveManagement
                 }
 
                 int selection = GD.RandRange(0, matchingConfigs.Count - 1);
-                GD.Print(
-                    $"Returning {matchingConfigs[selection].ResourceName} as the selected scaler!"
-                );
                 return matchingConfigs[selection];
             }
             catch (Exception e)
             {
-                GD.PrintErr(e.Message);
+                DebugLogger.LogMessage(e.Message, true, true);
                 return ResourceLoader.Load<T>(defaultPath);
             }
         }

@@ -107,10 +107,6 @@ namespace Enemies.Spawners
 
             // ToggleSpawning(true);
             MoveSpawnPoint();
-
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name} finished!"
-            );
         }
 
         private void ConnectSignals()
@@ -135,7 +131,6 @@ namespace Enemies.Spawners
         /// </summary>
         private EnemyResource GetEnemyFromPool()
         {
-            // GD.Print($"{MethodBase.GetCurrentMethod().Name}:\n");
             if (_spawnPool == null || _spawnPool.Count == 0)
                 return null;
 
@@ -159,11 +154,6 @@ namespace Enemies.Spawners
                     return data.EnemyResource;
                 }
             }
-
-            // Fallback
-            GD.PrintErr(
-                $"Something went wrong! Returning first EnemyResource in enemy pool, which is: {_spawnPool[0].EnemyResource.ResourceName}"
-            );
             return _spawnPool[0].EnemyResource;
         }
 

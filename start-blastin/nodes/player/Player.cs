@@ -424,11 +424,8 @@ namespace Entities
         public void TakeDamage(float damage, int? playerId = null)
         {
             _animationComponent.PlayDamageAnimation();
-            // _healthComponent.TakeDamage(damage);
             _currentHealth -= damage;
 
-            // GD.Print($"Player has taken damage! Current health: {_currentHealth}");
-            // _service.UpdateCurrentHealth(_playerId, _currentHealth);
             EventBus.Instance.RaisePlayerCurrentHealthChanged(_playerId, _currentHealth);
 
             if (_currentHealth <= 0)
@@ -440,12 +437,7 @@ namespace Entities
 
         public void Heal(float healAmount)
         {
-            DebugLogger.LogMessage(
-                $"{Name} is healing. Current health: {_currentHealth} | Heal amount: {healAmount} | Max health: {_maxHealth}",
-                true
-            );
             _currentHealth = Mathf.Min(_currentHealth + healAmount, _maxHealth);
-            // _service.UpdateCurrentHealth(_playerId, _currentHealth);
             EventBus.Instance.RaisePlayerCurrentHealthChanged(_playerId, _currentHealth);
         }
 
@@ -459,7 +451,6 @@ namespace Entities
 
         public void Despawn()
         {
-            GD.Print("Game over, man! Game over!");
             EmitSignal(SignalName.PlayerDied);
             QueueFree();
         }
@@ -520,8 +511,6 @@ namespace Entities
         /// <param name="item">The item that was bought.</param>
         private void BuyItem(Item item)
         {
-            DebugLogger.LogMessage($"Buying item! {item.ResourceName}", true);
-
             // Subtract appropriate currency (currency changed event should fire automatically)
             Flux -= item.FluxCost;
             Bytes -= item.ByteCost;
@@ -699,8 +688,9 @@ namespace Entities
                 if (finalValues.ContainsKey(multiplyEffect.Type))
                 {
                     finalValues[multiplyEffect.Type] *= multiplyEffect.Value;
-                    GD.Print(
-                        $"Multiplying {multiplyEffect.Value} on {multiplyEffect.Type}. New final value = {finalValues[multiplyEffect.Type]}"
+                    DebugLogger.LogMessage(
+                        $"Multiplying {multiplyEffect.Value} on {multiplyEffect.Type}. New final value = {finalValues[multiplyEffect.Type]}",
+                        true
                     );
                 }
                 else

@@ -17,8 +17,8 @@ resource_local_to_scene = true
 script = ExtResource("3_o4e7f")
 ProjectileType = 1
 Damage = 2.0
-FireRate = 0.7
-ProjectileSpeed = 300.0
+FireRate = 1.5
+ProjectileSpeed = 400.0
 metadata/_custom_type_script = "uid://bytfm61mpkr5u"
 
 [sub_resource type="Resource" id="Resource_o4e7f"]

@@ -265,7 +265,11 @@ namespace Projectiles
 
         protected virtual Vector2 SetTrajectory(double delta)
         {
-            Vector2 fireVector = Vector2.Right.Rotated(GlobalRotation);
+            if (Mathf.Sign(GlobalRotation) == -1)
+            {
+                GlobalRotation = UtilityMethods.ConvertNegativeRotationRads(GlobalRotation);
+            }
+            Vector2 fireVector = Vector2.Right.Rotated(GlobalRotation).Normalized();
             return _currentSpeed * (float)delta * fireVector;
         }
 

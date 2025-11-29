@@ -111,7 +111,6 @@ namespace WaveManagement
 
         private void PrintScalerProperties(WaveScaler scaler)
         {
-            GD.Print($"{scaler.ResourceName} properties:");
             foreach (Godot.Collections.Dictionary property in scaler.GetPropertyList())
             {
                 foreach (KeyValuePair<Variant, Variant> kvp in property)
@@ -119,7 +118,6 @@ namespace WaveManagement
                     if (kvp.Key.ToString() == "name")
                     {
                         StringName stringName = new(kvp.Value.ToString());
-                        GD.Print($"{stringName} = {scaler.Get(stringName)}");
                     }
                 }
             }
@@ -130,7 +128,6 @@ namespace WaveManagement
         /// </summary>
         public async Task AssembleFormation()
         {
-            GD.Print($"Assembling formation...");
             // Get the number of spawners that should be in each location.
             foreach (KeyValuePair<SpawnerLocation, List<EnemySpawner>> activeKvp in _activeSpawners)
             {
@@ -175,7 +172,6 @@ namespace WaveManagement
             {
                 return;
             }
-            GD.Print($"Attempting to add {quantity} spawners to {location}...");
             // Get the scene tree and the root level node
             SceneTree tree = GetTree();
             Node levelNode = tree.GetFirstNodeInGroup("level");
@@ -226,8 +222,6 @@ namespace WaveManagement
                 spawner.RotationDegrees = rotationDegrees;
                 spawner.Location = location;
                 _activeSpawners[location].Add(spawner);
-                // AddChild(spawner);
-                // levelNode.AddChild(spawner);
                 levelNode.CallDeferred(MethodName.AddChild, spawner);
                 await ToSignal(spawner, Node.SignalName.Ready);
             }
@@ -239,7 +233,6 @@ namespace WaveManagement
             {
                 return;
             }
-            GD.Print($"Attempting to remove {quantity} spawners from {location}...");
             // Get all the spawners at the specified location
             if (_activeSpawners.TryGetValue(location, out var spawnerList))
             {
@@ -256,10 +249,5 @@ namespace WaveManagement
         }
 
         #endregion
-
-        // private void OnSpawnersReady()
-        // {
-        //     EventBus.Instance.EmitSignal(EventBus.SignalName.SpawnersReady);
-        // }
     }
 }

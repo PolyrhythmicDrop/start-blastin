@@ -68,6 +68,7 @@ script = ExtResource("1_3sv20")
 unique_name_in_owner = true
 texture_filter = 1
 use_parent_material = true
+position = Vector2(-1, 0)
 sprite_frames = SubResource("SpriteFrames_162eo")
 animation = &"flight"
 autoplay = "flight"

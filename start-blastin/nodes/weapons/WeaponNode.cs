@@ -9,6 +9,7 @@ using Godot;
 using Interfaces;
 using Projectiles;
 using Stats;
+using Utility;
 
 namespace Weapons
 {
@@ -163,7 +164,11 @@ namespace Weapons
             FireTimer = new();
             if (Stats == null)
             {
-                GD.PrintErr($"Stats is null in {Name} before setting FireTimer.WaitTime!");
+                DebugLogger.LogMessage(
+                    $"Stats is null in {Name} before setting FireTimer.WaitTime!",
+                    true,
+                    true
+                );
             }
             else
             {

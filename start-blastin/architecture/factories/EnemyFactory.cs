@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using Enemies;
 using Godot;
+using Utility;
 
 namespace Factories
 {
@@ -25,10 +26,6 @@ namespace Factories
                 }
                 else if (enemy is EnemyNode enemyNode)
                 {
-                    // Initialize the enemy's stats and weapon based on the passed resource
-                    // GD.Print(
-                    //     $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Building new enemy from factory. Crash damage: {enemyResource.CrashDamage} | Speed: {enemyResource.Speed}"
-                    // );
                     enemyNode.Initialize(enemyResource);
                     return enemyNode;
                 }
@@ -41,7 +38,7 @@ namespace Factories
             }
             catch (Exception e)
             {
-                GD.PrintErr($"{e.Source}: {e.Message}");
+                DebugLogger.LogMessage($"{e.Source}: {e.Message}", true, true);
                 return enemy;
             }
         }

@@ -13,4 +13,5 @@ metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
 [resource]
 script = ExtResource("1_as5l1")
 SpawnPool = Array[Object]([SubResource("Resource_hjptu")])
+SpawnIntervalModifier = -3.0
 metadata/_custom_type_script = "uid://b2dathygef0kk"

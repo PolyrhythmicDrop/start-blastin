@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Godot;
+using Utility;
 
 namespace FileIO
 {
@@ -51,9 +52,6 @@ namespace FileIO
                     foreach (string resourceName in rootResourceStrings)
                     {
                         string fullPath = rootDirectory + resourceName;
-                        GD.Print(
-                            $"{System.Reflection.MethodBase.GetCurrentMethod().Name}: Adding resource from {fullPath} to {nameof(pool)}..."
-                        );
                         pool.Add(ResourceLoader.Load<T>(fullPath));
                     }
 
@@ -70,9 +68,6 @@ namespace FileIO
                             foreach (string resourceName in subDirResources)
                             {
                                 string fullPath = subDirPath + resourceName;
-                                GD.Print(
-                                    $"{System.Reflection.MethodBase.GetCurrentMethod().Name}: Adding resource from subdirectory {fullPath} to {pool}..."
-                                );
                                 pool.Add(ResourceLoader.Load<T>(fullPath));
                             }
                         }
@@ -81,7 +76,7 @@ namespace FileIO
             }
             catch (Exception e)
             {
-                GD.PrintErr(e.Message);
+                DebugLogger.LogMessage(e.Message, true, true);
             }
         }
     }

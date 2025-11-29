@@ -2,6 +2,7 @@ using System;
 using Enemies;
 using Godot;
 using Interfaces;
+using Utility;
 using WaveManagement;
 using Weapons;
 
@@ -30,7 +31,11 @@ namespace Factories
 
                 if (weaponResource.ScenePath == null || weaponResource.ScenePath == "")
                 {
-                    GD.PrintErr("Scene path is empty! Skipping weapon creation...");
+                    DebugLogger.LogMessage(
+                        "Scene path is empty! Skipping weapon creation...",
+                        true,
+                        true
+                    );
                     return null;
                 }
                 else
@@ -68,7 +73,7 @@ namespace Factories
             }
             catch (Exception e)
             {
-                GD.PrintErr(e.Message);
+                DebugLogger.LogMessage(e.Message, true, true);
                 return null;
             }
         }

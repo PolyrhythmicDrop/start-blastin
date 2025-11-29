@@ -210,10 +210,7 @@ namespace Enemies
         {
             if (collision.GetCollider() is Player player)
             {
-                // float crashDamage = _stats.GetStat(StatType.CrashDamage).Value;
-                GD.Print($"{player.Name} was crashed into! Player takes {_crashDamage} damage.");
                 player.TakeDamage(_crashDamage);
-                // player.TakeDamage(crashDamage);
                 Die();
             }
         }

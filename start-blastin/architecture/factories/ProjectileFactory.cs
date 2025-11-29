@@ -1,5 +1,6 @@
 using System.Reflection;
 using Godot;
+using NanoidDotNet;
 using Projectiles;
 using Weapons;
 
@@ -39,7 +40,7 @@ namespace Factories
 
             SetProjectileShaderMaterial(ammo);
             SetProjectileCollisionLayers(ammo);
-
+            ammo.Name = $"{ammo.GetType()}-{Nanoid.Generate(size: 8)}";
             return ammo;
         }
 

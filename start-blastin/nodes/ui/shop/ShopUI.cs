@@ -250,7 +250,6 @@ namespace UI.Shop
         {
             foreach (ShopItemContainer container in _itemContainers)
             {
-                GD.Print("Retrieving item from pool...");
                 Item item = GetItemFromPool();
 
                 while (!CanShowItem(item))

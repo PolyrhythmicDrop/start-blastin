@@ -1,11 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Enemies;
 using Entities;
 using Godot;
 using Projectiles;
-using Utility;
 
 [GlobalClass]
 public partial class Missile : Projectile
@@ -16,7 +13,7 @@ public partial class Missile : Projectile
     /// <summary>
     /// Rotation speed per frame, in radians.
     /// </summary>
-    private const float TURNSPEED = 0.04f;
+    private const float TURNRAD = 0.04f;
 
     // Targeting variables
     private Area2D _targetingArea;
@@ -52,33 +49,48 @@ public partial class Missile : Projectile
 
     protected override Vector2 SetTrajectory(double delta)
     {
-        Vector2 fireVector;
-        if (_currentTarget == null)
+        if (_currentTarget != null)
         {
-            fireVector = Vector2.Right.Rotated(GlobalRotation);
-        }
-        else
-        {
-            // Get the angle to the target, given no rotation
+            // Get the angle to the target in global space
             float angleToTarget = GlobalPosition.AngleToPoint(_currentTarget.GlobalPosition);
             // Get the difference between the angle to target and the current rotation
             float angleDelta = angleToTarget - GlobalRotation;
 
-            float rotationThisFrame;
+            // Handle wrap-around from the angleToTarget turning negative past Pi
+            if (angleDelta > Mathf.Pi)
+            {
+                angleDelta -= Mathf.Tau;
+            }
+            else if (angleDelta < -Mathf.Pi)
+            {
+                angleDelta += Mathf.Tau;
+            }
+
+            // Set the rotation for this frame to the turn radius, positive or negative depending on the sign of the delta
+            float rotationThisFrame = Mathf.Sign(angleDelta) * TURNRAD;
+
             // Snap to the target if we're within the turn radius
-            if (Mathf.Abs(angleDelta) <= TURNSPEED)
+            if (Mathf.Abs(angleDelta) <= TURNRAD * 2)
             {
                 rotationThisFrame = angleDelta;
             }
-            else
-            {
-                rotationThisFrame = Mathf.Sign(angleDelta) * TURNSPEED;
-            }
 
-            Rotate(rotationThisFrame);
-            fireVector = Vector2.Right.Rotated(GlobalRotation);
+            // Rotate the missile
+            GlobalRotation += rotationThisFrame;
         }
-        return _currentSpeed * (float)delta * fireVector;
+
+        // Set the direction vector according to the current rotation.
+        Vector2 directionVector = Vector2.Right.Rotated(GlobalRotation).Normalized();
+        if (Mathf.Abs(directionVector.X) < 0.0001f)
+        {
+            directionVector.X = 0;
+        }
+        if (Mathf.Abs(directionVector.Y) < 0.0001f)
+        {
+            directionVector.Y = 0;
+        }
+
+        return _currentSpeed * (float)delta * directionVector;
     }
 
     public void OnTargetAreaEntered(Node2D body)
@@ -116,7 +128,11 @@ public partial class Missile : Projectile
 
     public void OnTargetAreaExited(Node2D body)
     {
-        if (body == _currentTarget)
+        if (body != _currentTarget)
+        {
+            return;
+        }
+        else
         {
             // If the current target left the area, reset the current target
             _currentTarget = null;

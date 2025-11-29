@@ -106,7 +106,6 @@ namespace Autoloads
         {
             // Add PlayerService
             ServiceManager.Instance.RegisterService(new PlayerService());
-            DebugLogger.LogMessage($"Player service registered!", true);
         }
 
         private bool LoadScene(string scenePath)
@@ -142,7 +141,6 @@ namespace Autoloads
         /// </summary>
         private void AddPlayers()
         {
-            DebugLogger.LogMessage("Adding players...", true);
             var players = GetTree().GetNodesInGroup("players");
             _playerCount = players.Count;
 

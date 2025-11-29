@@ -11,7 +11,6 @@ using Godot;
 using Interfaces;
 using Items;
 using PlayerComponents;
-using Projectiles;
 using Services;
 using Stats;
 using Utility;
@@ -44,8 +43,8 @@ namespace Entities
 
         private WeaponPlugin _defaultWeaponPlugin =>
             ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
-        #endregion
 
+        #endregion
         #region Stats
 
         private float _maxHealth => _stats.GetStat(StatType.MaxHealth).CurrentValue;
@@ -278,6 +277,8 @@ namespace Entities
             _playerId = id;
         }
 
+        #region Initialization
+
         public override void _Ready()
         {
             DebugLogger.LogMessage($"_damage on Ready = {_damage}");
@@ -354,6 +355,9 @@ namespace Entities
             }
         }
 
+        #endregion
+
+        #region Movement
         public override void _Process(double delta)
         {
             Move();
@@ -420,6 +424,9 @@ namespace Entities
             _animationComponent.PlayPhaseReadyEffect();
             _movementComponent.PhaseReady = true;
         }
+        #endregion
+
+        #region Health
 
         public void TakeDamage(float damage, int? playerId = null)
         {
@@ -454,6 +461,9 @@ namespace Entities
             EmitSignal(SignalName.PlayerDied);
             QueueFree();
         }
+
+        #endregion
+        #region Shop
 
         /// <summary>
         /// Checks to see if the player can purchase the passed item based on its flux and byte cost.
@@ -505,6 +515,11 @@ namespace Entities
             return item.FluxCost <= _flux && item.ByteCost <= _bytes;
         }
 
+        private void OnItemBought(object sender, ItemBoughtEventArgs args)
+        {
+            BuyItem(args.Item);
+        }
+
         /// <summary>
         /// Buys and equips an item from the store.
         /// </summary>
@@ -531,6 +546,15 @@ namespace Entities
                     break;
             }
             ApplyStatEffects();
+        }
+
+        #endregion
+
+        #region Inventory
+
+        private void OnItemScrapped(object sender, ItemScrappedEventArgs args)
+        {
+            ScrapItem(args.Item);
         }
 
         private void ScrapItem(Item item)
@@ -588,6 +612,16 @@ namespace Entities
         {
             _weaponPlugin = weaponPlugin;
             _weaponComponent.SetWeaponProjectile(weaponPlugin.ProjectileType);
+            EventBus.Instance.RaisePlayerWeaponChanged(_playerId, _weaponPlugin);
+        }
+
+        /// <summary>
+        /// Resets the player's projectile type to the base projectile.
+        /// </summary>
+        private void ResetWeaponPlugin()
+        {
+            _weaponPlugin = ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
+            _weaponComponent.SetWeaponProjectile(_weaponPlugin.ProjectileType);
             EventBus.Instance.RaisePlayerWeaponChanged(_playerId, _weaponPlugin);
         }
 
@@ -706,6 +740,8 @@ namespace Entities
             }
         }
 
+        #endregion
+
         private void OnEnemyKilled(object sender, EnemyKilledEventArgs args)
         {
             if (args.PlayerId == _playerId)
@@ -713,26 +749,6 @@ namespace Entities
                 Flux += args.FluxReward;
                 Bytes += args.BytesReward;
             }
-        }
-
-        private void OnItemBought(object sender, ItemBoughtEventArgs args)
-        {
-            BuyItem(args.Item);
-        }
-
-        private void OnItemScrapped(object sender, ItemScrappedEventArgs args)
-        {
-            ScrapItem(args.Item);
-        }
-
-        /// <summary>
-        /// Resets the player's projectile type to the base projectile.
-        /// </summary>
-        private void ResetWeaponPlugin()
-        {
-            _weaponPlugin = ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
-            _weaponComponent.SetWeaponProjectile(_weaponPlugin.ProjectileType);
-            EventBus.Instance.RaisePlayerWeaponChanged(_playerId, _weaponPlugin);
         }
 
         public override void _ExitTree()

@@ -39,7 +39,6 @@ namespace PlayerComponents
             {
                 _equippedWeapon = WeaponFactory.CreateWeapon(
                     weaponResource,
-                    false,
                     velocityProvider: _player,
                     owner: _player
                 );

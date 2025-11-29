@@ -6,10 +6,10 @@ namespace Weapons
     {
         private Node2D _projSpawnPointNode;
 
-        public override Vector2 ProjSpawnPoint
-        {
-            get => _projSpawnPointNode.GlobalPosition;
-        }
+        // public override Vector2 ProjSpawnPoint
+        // {
+        //     get => _projSpawnPointNode.GlobalPosition;
+        // }
 
         public override void _Ready()
         {

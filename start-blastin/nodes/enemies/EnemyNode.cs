@@ -129,7 +129,6 @@ namespace Enemies
 
             _weapon = WeaponFactory.CreateWeapon(
                 enemyResource.WeaponResource,
-                true,
                 velocityProvider: this,
                 owner: this
             );

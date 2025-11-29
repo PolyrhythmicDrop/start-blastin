@@ -81,10 +81,10 @@ namespace Weapons
         /// </summary>
         public Node ProjectileParent;
 
-        /// <summary>
-        /// The position where projectiles should spawn from this weapon, i.e. the barrel of the weapon.
-        /// </summary>
-        public virtual Vector2 ProjSpawnPoint => GlobalPosition;
+        // /// <summary>
+        // /// The position where projectiles should spawn from this weapon, i.e. the barrel of the weapon.
+        // /// </summary>
+        // public virtual Vector2 ProjSpawnPoint => GlobalPosition;
 
         public List<Barrel> Barrels = new();
 

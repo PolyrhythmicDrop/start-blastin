@@ -19,63 +19,30 @@ namespace Factories
         /// <returns>A built <see cref="WeaponNode"/> with its stats set by the passed <see cref="WeaponResource"/> and (optionally) <see cref="EnemyScaler"/>.</returns>
         public static WeaponNode CreateWeapon(
             WeaponResource weaponResource,
-            bool enemyWeapon,
-            EnemyScaler enemyScaler = null,
             IVelocityProvider velocityProvider = null,
             IWeaponOwner owner = null
         )
         {
-            try
-            {
-                GodotObject builtWeapon;
+            WeaponNode builtWeapon = new();
 
-                if (weaponResource.ScenePath == null || weaponResource.ScenePath == "")
-                {
-                    DebugLogger.LogMessage(
-                        "Scene path is empty! Skipping weapon creation...",
-                        true,
-                        true
-                    );
-                    return null;
-                }
-                else
-                {
-                    builtWeapon = GD.Load<PackedScene>(weaponResource.ScenePath).Instantiate();
-                }
-
-                if (builtWeapon is WeaponNode weaponNode)
-                {
-                    if (owner is EnemyNode enemyNode)
-                    {
-                        weaponNode.EnemyOwned = true;
-                    }
-                    WeaponResource newResource = (WeaponResource)
-                        weaponResource.DuplicateDeep(Resource.DeepDuplicateMode.Internal);
-                    WeaponStats weaponStats = newResource.Stats;
-                    weaponNode.InitializeStats(weaponStats);
-                    if (velocityProvider != null)
-                    {
-                        weaponNode.VelocityProvider = velocityProvider;
-                    }
-                    if (owner != null)
-                    {
-                        weaponNode.SetOwner(owner);
-                    }
-                    return weaponNode;
-                }
-                else
-                {
-                    throw new ArgumentException(
-                        "Weapon resource either does not have a scene path or could not be instantiated!",
-                        paramName: nameof(weaponResource)
-                    );
-                }
-            }
-            catch (Exception e)
+            builtWeapon.EnemyOwned = owner is EnemyNode ? true : false;
+            if (owner != null)
             {
-                DebugLogger.LogMessage(e.Message, true, true);
-                return null;
+                builtWeapon.SetOwner(owner);
             }
+
+            WeaponResource newResource = (WeaponResource)
+                weaponResource.DuplicateDeep(Resource.DeepDuplicateMode.Internal);
+            WeaponStats weaponStats = newResource.Stats;
+
+            builtWeapon.InitializeStats(weaponStats);
+
+            if (velocityProvider != null)
+            {
+                builtWeapon.VelocityProvider = velocityProvider;
+            }
+
+            return builtWeapon;
         }
     }
 }

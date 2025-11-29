@@ -253,18 +253,24 @@ namespace Weapons
         /// </summary>
         public virtual void Fire()
         {
-            Projectile projectile = _pool.RequestProjectile();
-            // projectile.Position = ProjSpawnPoint;
-            projectile.Position = Barrels[0].GlobalPosition;
+            // Fire from all barrels.
+            // TODO: Maybe add extra methods to fire from particular barrels?
 
-            if (_velocityProvider != null)
+            foreach (Barrel barrel in Barrels)
             {
-                projectile.AddSourceVelocity();
-            }
+                Projectile projectile = _pool.RequestProjectile();
+                // projectile.Position = ProjSpawnPoint;
+                projectile.Position = barrel.GlobalPosition;
 
-            if (EnemyOwned && !FireTimer.IsStopped())
-            {
-                FireTimer.Start(Stats.FireRate);
+                if (_velocityProvider != null)
+                {
+                    projectile.AddSourceVelocity();
+                }
+
+                if (EnemyOwned && !FireTimer.IsStopped())
+                {
+                    FireTimer.Start(Stats.FireRate);
+                }
             }
         }
 

@@ -290,6 +290,6 @@ metadata/_aseprite_wizard_config_ = {
 metadata/_aseprite_wizard_source_file_hash_ = "619bbfa9dec3e9f2fd42a06f5dedf62e"
 
 [node name="Barrel" type="Node2D" parent="."]
-position = Vector2(14, 0)
+position = Vector2(14, -1.9073486e-06)
 script = ExtResource("6_eyaxp")
 metadata/_custom_type_script = "uid://bekbgunrmk3ad"

@@ -86,6 +86,8 @@ namespace Weapons
         /// </summary>
         public virtual Vector2 ProjSpawnPoint => GlobalPosition;
 
+        public List<Barrel> Barrels = new();
+
         /// <summary>
         /// Timer used to re-trigger firing of the weapon when the "fire" button is held down.
         /// </summary>
@@ -112,6 +114,7 @@ namespace Weapons
         {
             InitializeProjectilePool();
             InitializeFireTimer();
+            SetBarrels();
         }
 
         /// <summary>
@@ -130,6 +133,15 @@ namespace Weapons
         {
             _owner = owner;
             _ownerSet = true;
+        }
+
+        public void SetBarrels()
+        {
+            List<Node> children = [.. GetParent().GetChildren()];
+            foreach (Barrel barrel in children.FindAll(child => child is Barrel))
+            {
+                Barrels.Add(barrel);
+            }
         }
 
         /// <summary>
@@ -242,7 +254,8 @@ namespace Weapons
         public virtual void Fire()
         {
             Projectile projectile = _pool.RequestProjectile();
-            projectile.Position = ProjSpawnPoint;
+            // projectile.Position = ProjSpawnPoint;
+            projectile.Position = Barrels[0].GlobalPosition;
 
             if (_velocityProvider != null)
             {

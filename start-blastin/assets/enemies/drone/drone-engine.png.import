@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dm0dl4ev8bx27"
-path="res://.godot/imported/drone-base.png-b9cbbd337411ff55af79d99b5245a2c4.ctex"
+uid="uid://dniqs2y5gnx25"
+path="res://.godot/imported/drone-engine.png-694add850f7acfee5d717608f4227fba.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://nodes/enemies/Drone/sprites/drone-base.png"
-dest_files=["res://.godot/imported/drone-base.png-b9cbbd337411ff55af79d99b5245a2c4.ctex"]
+source_file="res://assets/enemies/drone/drone-engine.png"
+dest_files=["res://.godot/imported/drone-engine.png-694add850f7acfee5d717608f4227fba.ctex"]
 
 [params]
 

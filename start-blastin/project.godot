@@ -65,7 +65,6 @@ folder_colors={
 "res://architecture/": "purple",
 "res://assets/": "pink",
 "res://nodes/": "green",
-"res://nodes/enemies/Drone/sprites/": "pink",
 "res://nodes/player/components/": "purple",
 "res://nodes/player/sprites/": "pink",
 "res://nodes/ui/hud/assets/": "pink",

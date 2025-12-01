@@ -2,7 +2,6 @@
 
 [ext_resource type="Shader" uid="uid://bmacriris3r2k" path="res://resources/shaders/color-cycling-hit-effect.gdshader" id="1_xpdna"]
 
-
 [resource]
 resource_local_to_scene = true
 shader = ExtResource("1_xpdna")

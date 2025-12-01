@@ -76,7 +76,7 @@ namespace Enemies
             base._Ready();
             AddToGroup("enemies");
 
-            _shape = GetNode<CollisionShape2D>("CollisionShape2D");
+            _shape = GetNode<CollisionShape2D>("%CollisionShape2D");
 
             AddChild(_weapon);
 

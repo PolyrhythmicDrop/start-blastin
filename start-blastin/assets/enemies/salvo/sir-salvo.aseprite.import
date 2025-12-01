@@ -1,6 +1,6 @@
 [remap]
 
-importer="aseprite_wizard.plugin.noop"
+importer="aseprite_wizard.plugin.spriteframes-split"
 type="PackedDataContainer"
 uid="uid://nhyk6ccbgcgi"
 path="res://.godot/imported/sir-salvo.aseprite-986476693cb4ac6e04eae5e1b5f28fec.res"
@@ -12,3 +12,11 @@ dest_files=["res://.godot/imported/sir-salvo.aseprite-986476693cb4ac6e04eae5e1b5
 
 [params]
 
+layer/exclude_layers_pattern=""
+layer/only_visible_layers=true
+sheet/sheet_type="packed"
+sheet/sheet_columns=12
+sheet/frame_padding=0
+sheet/scale=1
+animation/round_fps=true
+output/layers_resources_folder=""

@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using Enemies;
 using Godot;
+using NanoidDotNet;
 using Utility;
 
 namespace Factories
@@ -27,6 +28,8 @@ namespace Factories
                 else if (enemy is EnemyNode enemyNode)
                 {
                     enemyNode.Initialize(enemyResource);
+                    enemyNode.Name = $"{enemyNode.GetType()}-{Nanoid.Generate(size: 8)}";
+
                     return enemyNode;
                 }
                 else

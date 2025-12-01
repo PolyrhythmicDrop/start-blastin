@@ -142,6 +142,10 @@ namespace Weapons
             {
                 Barrels.Add(barrel);
             }
+            DebugLogger.LogMessage(
+                $"Barrels added to {GetParent()?.Name}! Count: {Barrels.Count}",
+                true
+            );
         }
 
         /// <summary>
@@ -261,6 +265,7 @@ namespace Weapons
                 Projectile projectile = _pool.RequestProjectile();
                 // projectile.Position = ProjSpawnPoint;
                 projectile.Position = barrel.GlobalPosition;
+                projectile.GlobalRotation = barrel.GlobalRotation;
 
                 if (_velocityProvider != null)
                 {

@@ -14,19 +14,8 @@ public partial class EntityPath : Path2D
         _pathFollow = GetNode<PathFollow2D>("%PathFollow2D");
     }
 
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta) { }
-
-    /// <summary>
-    /// Makes any child of this EntityPath follow the path at a set speed.
-    /// </summary>
-    /// <param name="speed">The speed at which the child should follow the path.</param>
-    // public virtual void FollowPath(float speed)
-    // {
-    //     float pathLength = Curve.GetBakedLength();
-    //     float duration = Mathf.Max(pathLength / speed, 0.1f);
-
-    //     Tween tween = CreateTween();
-    //     tween.TweenProperty(_pathFollow, "progress_ratio", 1.0, duration);
-    // }
+    public bool EntityIsAtPoint(Node2D entity, Vector2 point)
+    {
+        return entity.GlobalPosition == point;
+    }
 }

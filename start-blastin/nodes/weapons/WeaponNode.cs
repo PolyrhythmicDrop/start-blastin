@@ -142,10 +142,6 @@ namespace Weapons
             {
                 Barrels.Add(barrel);
             }
-            DebugLogger.LogMessage(
-                $"Barrels added to {GetParent()?.Name}! Count: {Barrels.Count}",
-                true
-            );
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://ceskd66h14gf0"]
+[gd_scene load_steps=41 format=3 uid="uid://ceskd66h14gf0"]
 
 [ext_resource type="Script" uid="uid://7vphrsrmft36" path="res://nodes/enemies/salvo/Salvo.cs" id="1_mymqi"]
 [ext_resource type="Texture2D" uid="uid://cr8hhvb3u07xl" path="res://assets/enemies/salvo/sir-salvo-engines.png" id="2_ntjbn"]
@@ -32,6 +32,18 @@ region = Rect2(128, 0, 128, 128)
 atlas = ExtResource("2_ntjbn")
 region = Rect2(256, 0, 128, 128)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_d3n7u"]
+atlas = ExtResource("2_ntjbn")
+region = Rect2(0, 256, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x3uih"]
+atlas = ExtResource("2_ntjbn")
+region = Rect2(128, 256, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8mo2p"]
+atlas = ExtResource("2_ntjbn")
+region = Rect2(256, 256, 128, 128)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_5wugx"]
 atlas = ExtResource("2_ntjbn")
 region = Rect2(0, 128, 128, 128)
@@ -62,13 +74,13 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_5wugx")
+"texture": SubResource("AtlasTexture_d3n7u")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_f8qq7")
+"texture": SubResource("AtlasTexture_x3uih")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_isr5w")
+"texture": SubResource("AtlasTexture_8mo2p")
 }],
 "loop": true,
 "name": &"strafe-left",
@@ -272,9 +284,8 @@ material = SubResource("ShaderMaterial_sfe3p")
 unique_name_in_owner = true
 use_parent_material = true
 sprite_frames = SubResource("SpriteFrames_k6amw")
-animation = &"idle"
+animation = &"strafe-left"
 autoplay = "idle"
-frame_progress = 0.5551561
 
 [node name="Body" type="AnimatedSprite2D" parent="SpriteContainer"]
 unique_name_in_owner = true

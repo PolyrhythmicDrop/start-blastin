@@ -13,7 +13,7 @@ public partial class Missile : Projectile
     /// <summary>
     /// Rotation speed per frame, in radians.
     /// </summary>
-    private const float TURNRAD = 0.04f;
+    private const float TURNRAD = 0.035f;
 
     // Targeting variables
     private Area2D _targetingArea;

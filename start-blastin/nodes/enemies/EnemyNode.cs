@@ -61,7 +61,8 @@ namespace Enemies
 
         #endregion
 
-        // public HealthComponent HealthComp => _healthComponent;
+        protected bool _alive = true;
+
         public WeaponNode Weapon => _weapon;
         public EntityPath Path => _path;
 

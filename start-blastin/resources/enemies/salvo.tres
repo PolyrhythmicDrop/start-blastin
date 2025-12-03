@@ -15,8 +15,7 @@ metadata/_custom_type_script = "uid://de8iusxhs0qem"
 script = ExtResource("2_eisoc")
 ProjectileType = 1
 Damage = 2.0
-FireRate = 0.8
-ProjectileSpeed = 300.0
+FireRate = 1.0
 metadata/_custom_type_script = "uid://bytfm61mpkr5u"
 
 [sub_resource type="Resource" id="Resource_0b4fe"]
@@ -28,7 +27,7 @@ metadata/_custom_type_script = "uid://boyq442k65gay"
 [resource]
 script = ExtResource("1_2n6d0")
 ScenePath = "res://nodes/enemies/salvo/salvo.tscn"
-Speed = 300.0
+Speed = 200.0
 CrashDamage = 4
 HealthComponent = SubResource("Resource_aj0yx")
 WeaponResource = SubResource("Resource_0b4fe")

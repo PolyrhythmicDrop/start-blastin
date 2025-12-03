@@ -22,7 +22,10 @@ public partial class Salvo : EnemyNode
     private Tween _followTween;
     private Tween _spinTween;
 
-    private event Action<Vector2> FirePositionReached;
+    private event Action InitialFirePosReached;
+    private event Action<Vector2> FireWaypointReached;
+    private event Action FireComplete;
+    private event Action FinalFireComplete;
 
     public override void _Ready()
     {
@@ -41,24 +44,45 @@ public partial class Salvo : EnemyNode
         _firePositions.Add(_path.Curve.GetPointPosition(2), false);
         _firePositions.Add(_path.Curve.GetPointPosition(3), false);
 
+        ConnectSignals();
+
         FollowPath(_path, _followSpeed);
+    }
+
+    public void ConnectSignals()
+    {
+        InitialFirePosReached += OnInitialFirePositionReached;
+        FireWaypointReached += OnFireWaypointReached;
+        FireComplete += OnFireComplete;
+        FinalFireComplete += OnFinalFireComplete;
+    }
+
+    public void DisconnectSignals()
+    {
+        InitialFirePosReached -= OnInitialFirePositionReached;
+        FireWaypointReached -= OnFireWaypointReached;
+        FireComplete -= OnFireComplete;
+        FinalFireComplete -= OnFinalFireComplete;
     }
 
     public override void _Process(double delta)
     {
-        _lastGlobalPosition = _currentGlobalPosition;
-        _currentGlobalPosition = GlobalPosition;
-
-        CheckWaypoints();
-
-        base._Process(delta);
-        SetMoveAnimation();
-
-        KinematicCollision2D collision = MoveAndCollide(_motion, true);
-
-        if (collision != null)
+        if (_alive)
         {
-            OnCrash(collision);
+            _lastGlobalPosition = _currentGlobalPosition;
+            _currentGlobalPosition = GlobalPosition;
+
+            CheckWaypoints();
+
+            base._Process(delta);
+            SetMoveAnimation();
+
+            KinematicCollision2D collision = MoveAndCollide(_motion, true);
+
+            if (collision != null)
+            {
+                OnCrash(collision);
+            }
         }
     }
 
@@ -116,6 +140,7 @@ public partial class Salvo : EnemyNode
 
     public override void Die(int? playerId = null)
     {
+        _alive = false;
         _weapon.FireTimer.Stop();
         _shape.Disabled = true;
 
@@ -132,11 +157,6 @@ public partial class Salvo : EnemyNode
 
     protected override void FollowPath(EntityPath path, float speed)
     {
-        // This should follow three main phases:
-        // 1. Get to the firing position (no firing during this time)
-        // 2. Strafe along the firing line whilst firing.
-        // 3. Spin and depart.
-
         // Pause firing initially
         _weapon.FireTimer.Stop();
 
@@ -148,22 +168,62 @@ public partial class Salvo : EnemyNode
         _followTween.TweenProperty(path.PathFollow, "progress_ratio", 1.0, duration);
     }
 
-    private void CheckWaypoints()
+    private async void CheckWaypoints()
     {
+        KeyValuePair<Vector2, bool> initFirePos = _firePositions.ElementAt(0);
+        KeyValuePair<Vector2, bool> finalFirePos = _firePositions.ElementAt(2);
+        if (
+            _path.PathFollow.Position.DistanceSquaredTo(initFirePos.Key) <= 30
+            && initFirePos.Value == false
+        )
+        {
+            InitialFirePosReached?.Invoke();
+        }
+
         foreach (KeyValuePair<Vector2, bool> kvp in _firePositions)
         {
             if (_path.PathFollow.Position.DistanceSquaredTo(kvp.Key) <= 30 && kvp.Value == false)
             {
-                ToggleFirePattern(true);
+                FireWaypointReached?.Invoke(kvp.Key);
                 _firePositions[kvp.Key] = true;
             }
         }
+    }
 
-        // Resume rotation after the last fire position
-        if (_firePositions.ElementAt(2).Value == true && _firingBegun == true)
+    private void OnInitialFirePositionReached()
+    {
+        _path.PathFollow.Rotates = false;
+        _firingBegun = true;
+    }
+
+    private async void OnFireWaypointReached(Vector2 waypoint)
+    {
+        // Pause movement for a spell
+        _followTween.Pause();
+        // Fire weapon
+        FireWeapon();
+        _weapon.FireTimer.Start();
+        await StayAndSpin();
+        _weapon.FireTimer.Stop();
+
+        if (waypoint != _firePositions.ElementAt(2).Key)
         {
-            ToggleFirePattern(false);
+            FireComplete?.Invoke();
         }
+        else
+        {
+            FinalFireComplete?.Invoke();
+        }
+    }
+
+    private void OnFireComplete()
+    {
+        _followTween.Play();
+    }
+
+    private void OnFinalFireComplete()
+    {
+        Flounce();
     }
 
     private async Task<bool> StayAndSpin()
@@ -178,40 +238,30 @@ public partial class Salvo : EnemyNode
         return true;
     }
 
-    private async void ToggleFirePattern(bool fire)
+    private async void Flounce()
     {
-        if (fire)
-        {
-            _firingBegun = true;
-            _path.PathFollow.Rotates = false;
-            // Fire
-            FireWeapon();
-            _weapon.FireTimer.Start();
-            // Pause movement for a spell
-            _followTween.Pause();
-            // Spin and fire
-            bool spinComplete = await StayAndSpin();
-            if (spinComplete)
-            {
-                // Stop firing and continue movement.
-                _weapon.FireTimer.Stop();
-                _followTween.Play();
-            }
-        }
-        else
-        {
-            _firingBegun = false;
-            float offset = _path.Curve.GetClosestOffset(_firePositions.ElementAt(2).Key);
-            // Tween tween = CreateTween();
-            _spinTween.TweenInterval(0.3f);
-            _spinTween.TweenProperty(
-                _path.PathFollow,
-                "rotation",
-                _path.Curve.SampleBakedWithRotation(offset).Rotation,
-                0.3f
-            );
-            await ToSignal(_spinTween, Tween.SignalName.Finished);
-            _path.PathFollow.Rotates = true;
-        }
+        _followTween.Pause();
+        // Get the offset at the current progress ratio
+        float pathRotation = _path
+            .Curve.SampleBakedWithRotation(
+                _path.PathFollow.ProgressRatio * _path.Curve.GetBakedLength()
+            )
+            .Rotation;
+
+        // Tween the spin
+        Tween flounceTween = CreateTween();
+        flounceTween.TweenInterval(0.4f);
+        flounceTween.TweenProperty(_path.PathFollow, "rotation", pathRotation, 0.4f);
+
+        // Resume following when the spin is complete
+        await ToSignal(flounceTween, Tween.SignalName.Finished);
+        _path.PathFollow.Rotates = true;
+        _followTween.Play();
+    }
+
+    public override void _ExitTree()
+    {
+        DisconnectSignals();
+        base._ExitTree();
     }
 }

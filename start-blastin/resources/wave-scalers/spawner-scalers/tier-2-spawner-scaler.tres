@@ -25,5 +25,4 @@ SpawnPool = Array[Object]([SubResource("Resource_tdq61"), SubResource("Resource_
 MoveDurationModifier = 10.0
 SpawnIntervalModifier = 10.0
 MinWave = 2
-MaxWave = 5
 metadata/_custom_type_script = "uid://b2dathygef0kk"

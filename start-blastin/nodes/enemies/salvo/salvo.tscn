@@ -8,10 +8,6 @@
 [ext_resource type="Texture2D" uid="uid://c7nqm5bu87a12" path="res://assets/enemies/salvo/sir-salvo-rack-green.png" id="5_p7tmb"]
 [ext_resource type="Texture2D" uid="uid://bk1vfy16djv4w" path="res://assets/enemies/salvo/sir-salvo-destruction.png" id="6_y5jid"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8tbgu"]
-radius = 19.0
-height = 40.0
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sfe3p"]
 resource_local_to_scene = true
 shader = ExtResource("3_p7tmb")
@@ -264,16 +260,16 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8tbgu"]
+radius = 37.0
+height = 90.0
+
 [node name="Salvo" type="AnimatableBody2D"]
 collision_layer = 4
 collision_mask = 11
 sync_to_physics = false
 script = ExtResource("1_mymqi")
 metadata/_custom_type_script = "uid://7vphrsrmft36"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-unique_name_in_owner = true
-shape = SubResource("CapsuleShape2D_8tbgu")
 
 [node name="SpriteContainer" type="Node2D" parent="."]
 unique_name_in_owner = true
@@ -346,3 +342,7 @@ position = Vector2(27.999998, -25)
 rotation = 5.5850534
 script = ExtResource("5_3pyoe")
 metadata/_custom_type_script = "uid://bekbgunrmk3ad"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
+shape = SubResource("CapsuleShape2D_8tbgu")

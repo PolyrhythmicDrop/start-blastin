@@ -30,6 +30,7 @@ theme_override_constants/separation = 0
 
 [node name="ItemNamePanelContainer" parent="VBoxContainer" instance=ExtResource("3_2w48v")]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 NameLabelSettings = 1
 

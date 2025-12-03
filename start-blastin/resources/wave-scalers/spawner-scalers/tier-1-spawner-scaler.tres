@@ -17,5 +17,4 @@ script = ExtResource("1_iddpe")
 SpawnPool = Array[Object]([SubResource("Resource_cmqwa")])
 MoveDurationModifier = 5.0
 SpawnIntervalModifier = 5.0
-MaxWave = 3
 metadata/_custom_type_script = "uid://b2dathygef0kk"

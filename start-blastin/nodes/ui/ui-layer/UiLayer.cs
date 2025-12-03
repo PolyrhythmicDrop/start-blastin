@@ -41,7 +41,6 @@ namespace UI
 
         public override void _Ready()
         {
-            DebugLogger.LogMessage($"Calling Ready on UILayer...", true);
             if (_playerId == 0)
             {
                 Initialize(1);
@@ -50,11 +49,8 @@ namespace UI
             // Initialize the background blur child scene
             _uiBackgroundBlur = GD.Load<PackedScene>("uid://by2ymfys887qn").Instantiate<Panel>();
 
-            DebugLogger.LogMessage($"Adding shop UI screen as child...", true);
             AddChild(_shopUI);
-            DebugLogger.LogMessage($"Adding HUD as child...", true);
             AddChild(_hud);
-            DebugLogger.LogMessage($"Adding plugin screen as child...", true);
             AddChild(_pluginScreen);
 
             // Add the background blur as a child

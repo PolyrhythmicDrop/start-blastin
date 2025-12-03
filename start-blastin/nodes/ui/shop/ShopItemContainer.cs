@@ -36,9 +36,6 @@ namespace UI.Shop
         /// </summary>
         private void SetItemPriceLabels()
         {
-            // int flux = _item.FluxCost;
-            // int bytes = _item.ByteCost;
-
             int flux = Item.FluxCost;
             int bytes = Item.ByteCost;
 

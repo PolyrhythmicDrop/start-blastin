@@ -37,8 +37,10 @@ NameLabelSettings = 1
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 1
+size_flags_vertical = 6
 size_flags_stretch_ratio = 3.0
 
 [node name="PricePanelContainer" parent="VBoxContainer" instance=ExtResource("5_ca63a")]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 4

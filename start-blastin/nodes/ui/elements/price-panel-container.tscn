@@ -14,7 +14,7 @@ draw_center = false
 [sub_resource type="LabelSettings" id="LabelSettings_ftx5u"]
 resource_local_to_scene = true
 resource_name = "flux-price-label-settings"
-font_size = 32
+font_size = 26
 shadow_size = 3
 shadow_color = Color(0, 0, 0, 0.69411767)
 shadow_offset = Vector2(2, 1)
@@ -39,7 +39,7 @@ alignment = 1
 [node name="BytePanelContainer" type="PanelContainer" parent="HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 6
+size_flags_horizontal = 3
 theme_type_variation = &"ShopPricePanelContainer"
 
 [node name="ByteMarginContainer" type="MarginContainer" parent="HBoxContainer/BytePanelContainer"]
@@ -78,7 +78,7 @@ vertical_alignment = 1
 [node name="FluxPanelContainer" type="PanelContainer" parent="HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 6
+size_flags_horizontal = 3
 theme_type_variation = &"ShopPricePanelContainer"
 
 [node name="FluxMarginContainer" type="MarginContainer" parent="HBoxContainer/FluxPanelContainer"]

@@ -19,12 +19,14 @@ namespace UI
         protected PackedScene _impossibleScene => GD.Load<PackedScene>("uid://beguupgtrbesp");
 
         protected ItemNamePanelContainer _itemNamePanel;
-        protected StyleBoxFlat _defocusedStyleBox =>
-            ResourceLoader.Load<StyleBoxFlat>("uid://bluwbrc16b4ns");
-        protected StyleBoxFlat _focusedStyleBox =>
+
+        protected StyleBoxFlat _styleBoxResource =>
             ResourceLoader.Load<StyleBoxFlat>("uid://chnsppbtk2va0");
 
+        protected StyleBoxFlat _currentStyleBox;
+
         protected Color _itemColor;
+        protected Color _transColor = new Color(0, 0, 0, 0);
 
         public ItemDisplay ItemDisplay => _itemDisplay;
         public Item Item => _itemDisplay?.Item;
@@ -38,6 +40,10 @@ namespace UI
             _itemDisplay.AddChild(_impossibleActionRect);
 
             _itemNamePanel = GetNode<ItemNamePanelContainer>("%ItemNamePanelContainer");
+
+            _currentStyleBox = (StyleBoxFlat)_styleBoxResource.Duplicate(true);
+            AddThemeStyleboxOverride("panel", _currentStyleBox);
+
             ConnectSignals();
         }
 
@@ -107,13 +113,12 @@ namespace UI
 
         protected virtual void OnFocusEnter()
         {
-            _focusedStyleBox.BorderColor = _itemColor;
-            AddThemeStyleboxOverride("panel", _focusedStyleBox);
+            _currentStyleBox.BorderColor = _itemColor;
         }
 
         protected virtual void OnFocusExit()
         {
-            AddThemeStyleboxOverride("panel", _defocusedStyleBox);
+            _currentStyleBox.BorderColor = _transColor;
         }
 
         public virtual void InvokeItemContainerSelected()

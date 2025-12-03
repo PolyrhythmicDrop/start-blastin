@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Modifier" load_steps=3 format=3 uid="uid://uhmqmg6gy0y"]
+
+[ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="1_fd4fh"]
+[ext_resource type="Script" uid="uid://bauhwivw4ftik" path="res://architecture/items/modifiers/Modifier.cs" id="1_o7nod"]
+
+[resource]
+script = ExtResource("1_o7nod")
+Name = &"Debug"
+Description = &"Debugging a legendary mod"
+Icon = ExtResource("1_fd4fh")
+Rarity = 1
+FluxCost = 10
+ByteCost = 10
+Effects = null
+metadata/_custom_type_script = "uid://bauhwivw4ftik"

@@ -189,7 +189,7 @@ namespace UI.Shop
 
         private void RerollShop()
         {
-            ClearItemContainers();
+            // ClearItemContainers();
             PopulateShopSlots();
         }
 

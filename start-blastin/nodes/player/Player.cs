@@ -632,7 +632,9 @@ namespace Entities
 
         public bool HasPlugin(Plugin plugin)
         {
-            return _plugins.Contains(plugin);
+            bool hasWeapon = _weaponPlugin == plugin ? true : false;
+            bool hasPlugin = _plugins.Contains(plugin);
+            return hasWeapon || hasPlugin;
         }
 
         /// <summary>

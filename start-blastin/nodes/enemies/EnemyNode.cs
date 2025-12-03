@@ -23,7 +23,6 @@ namespace Enemies
     {
         protected StatManager _stats;
 
-        // protected HealthComponent _healthComponent;
         protected WeaponNode _weapon;
 
         protected CollisionShape2D _shape;
@@ -121,9 +120,6 @@ namespace Enemies
 
         public virtual void Initialize(EnemyResource enemyResource)
         {
-            Name = enemyResource.ResourceName + DateAndTime.Now.Ticks;
-            // _healthComponent = (HealthComponent)enemyResource.HealthComponent.Duplicate();
-            // _healthComponent.Initialize(this);
             _baseMaxHealth = enemyResource.HealthComponent.MaxHealth;
             _maxHealth = _baseMaxHealth;
             _currentHealth = _baseMaxHealth;

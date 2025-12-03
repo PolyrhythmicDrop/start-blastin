@@ -2,7 +2,6 @@ using System;
 using Enemies;
 using Godot;
 using Interfaces;
-using NanoidDotNet;
 using Utility;
 using WaveManagement;
 using Weapons;
@@ -43,7 +42,11 @@ namespace Factories
                 builtWeapon.VelocityProvider = velocityProvider;
             }
 
-            builtWeapon.Name = $"{builtWeapon.GetType()}-{Nanoid.Generate(size: 8)}";
+            if (owner is Node node)
+            {
+                DebugLogger.LogMessage($"Weapon created for {node.Name}. owner: {owner}");
+                builtWeapon.Name = $"{node?.Name}-{builtWeapon.GetType().Name}";
+            }
 
             return builtWeapon;
         }

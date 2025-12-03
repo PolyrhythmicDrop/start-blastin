@@ -27,8 +27,8 @@ namespace Factories
                 }
                 else if (enemy is EnemyNode enemyNode)
                 {
+                    enemyNode.Name = $"{enemyNode.GetType().Name}-{Nanoid.Generate(size: 8)}";
                     enemyNode.Initialize(enemyResource);
-                    enemyNode.Name = $"{enemyNode.GetType()}-{Nanoid.Generate(size: 8)}";
 
                     return enemyNode;
                 }

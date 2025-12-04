@@ -287,7 +287,8 @@ namespace UI.Shop
                 totalWeight += (int)item.Rarity;
             }
 
-            int randomValue = GD.RandRange(0, totalWeight - 1);
+            // int randomValue = GD.RandRange(0, totalWeight - 1);
+            int randomValue = RNG.GetRandomInt(0, totalWeight - 1);
 
             int currentWeight = 0;
 

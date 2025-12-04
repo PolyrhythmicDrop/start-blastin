@@ -44,7 +44,6 @@ namespace Factories
 
             if (owner is Node node)
             {
-                DebugLogger.LogMessage($"Weapon created for {node.Name}. owner: {owner}");
                 builtWeapon.Name = $"{node?.Name}-{builtWeapon.GetType().Name}";
             }
 

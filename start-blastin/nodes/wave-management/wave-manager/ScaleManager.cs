@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Autoloads;
 using FileIO;
 using Godot;
 using Utility;
@@ -103,7 +104,9 @@ namespace WaveManagement
                     );
                 }
 
-                int selection = GD.RandRange(0, matchingConfigs.Count - 1);
+                // int selection = GD.RandRange(0, matchingConfigs.Count - 1);
+                int selection = RNG.GetRandomInt(0, matchingConfigs.Count - 1);
+
                 return matchingConfigs[selection];
             }
             catch (Exception e)

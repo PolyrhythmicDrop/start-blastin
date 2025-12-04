@@ -153,7 +153,6 @@ namespace Entities
             get { return _stats.GetStat(StatType.Damage).CurrentValue; }
             set
             {
-                DebugLogger.LogMessage($"Setting Damage...", true);
                 if (_stats.HasStat(StatType.Damage))
                 {
                     _stats.UpdateStat(StatType.Damage, Mathf.Max(0.0f, value));
@@ -214,7 +213,6 @@ namespace Entities
                 {
                     EquipPlugin(plugin);
                 }
-                DebugLogger.LogMessage("Plugins list set from initial values!", true);
             }
         }
 
@@ -281,8 +279,6 @@ namespace Entities
 
         public override void _Ready()
         {
-            DebugLogger.LogMessage($"_damage on Ready = {_damage}");
-            DebugLogger.LogMessage($"Damage on _Ready() = {Damage}");
             _animationComponent = GetNode<AnimationComponent>("%AnimationComponent");
             _hitBox = GetNode<CollisionShape2D>("%HitBox");
             _movementComponent = GetNode<MovementComponent>("%MovementComponent");
@@ -293,12 +289,6 @@ namespace Entities
             InitializeComponents();
             ConnectSignals();
             ApplyStatEffects();
-
-            DebugLogger.LogMessage($"Player ready! Plugins:", true);
-            foreach (Plugin plugin in _plugins)
-            {
-                DebugLogger.LogMessage($"{plugin.Name} - {plugin.ResourceName}", true);
-            }
         }
 
         private void InitializeComponents()
@@ -377,7 +367,6 @@ namespace Entities
         {
             if (CanPhase())
             {
-                DebugLogger.LogMessage($"Starting dodge!");
                 _isPhasing = true;
                 Speed += PhaseSpeed;
 
@@ -397,7 +386,6 @@ namespace Entities
 
         public void EndPhase()
         {
-            DebugLogger.LogMessage($"Ending phase!");
             _isPhasing = false;
             Speed -= PhaseSpeed;
 
@@ -675,10 +663,6 @@ namespace Entities
                 {
                     if (statEffect.Operation == Operation.Add)
                     {
-                        DebugLogger.LogMessage(
-                            $"Adding {statEffect.Value} for {statEffect.Type} to addEffects List...",
-                            true
-                        );
                         addEffects.Add(statEffect);
                     }
                     else if (statEffect.Operation == Operation.Multiply)

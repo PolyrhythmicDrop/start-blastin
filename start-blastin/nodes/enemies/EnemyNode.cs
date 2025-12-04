@@ -84,7 +84,8 @@ namespace Enemies
             _weapon.FireTimer.Timeout += FireWeapon;
 
             // Set an initial firing delay
-            float delay = (float)GD.RandRange(0, _weapon.Stats.FireRate);
+            // float delay = (float)GD.RandRange(0, _weapon.Stats.FireRate);
+            double delay = RNG.GetRandomDouble(max: _weapon.Stats.FireRate);
             _weapon.FireTimer.Start(delay);
 
             // Initialize position tracking

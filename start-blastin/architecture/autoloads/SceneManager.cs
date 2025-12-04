@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Entities;
 using Godot;
 using SafeResourcePicker;
@@ -60,6 +61,7 @@ namespace Autoloads
         {
             // SetMinWindowSize();
             InitializeServices();
+            InitializeRNG();
 
             bool success;
             if (_shouldOverrideScene)
@@ -83,6 +85,15 @@ namespace Autoloads
                     DebugLogger.LogMessage("Failed to load default scene!", true, true);
                 }
             }
+        }
+
+        /// <summary>
+        /// Initialize the seeded RNG.
+        /// TODO: This should eventually be part of the main menu, where the user can set a seed. For now, putting this at the start of Ready() so I know it's called before we start making random number calls.
+        /// </summary>
+        private void InitializeRNG()
+        {
+            RNG.InitializeRNG();
         }
 
         private void SetMinWindowSize()

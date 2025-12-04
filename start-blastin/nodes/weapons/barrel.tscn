@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bajml0u2freln"]
+
+[ext_resource type="Script" uid="uid://bekbgunrmk3ad" path="res://nodes/weapons/Barrel.cs" id="1_kskx5"]
+
+[node name="Barrel" type="Node2D"]
+script = ExtResource("1_kskx5")
+metadata/_custom_type_script = "uid://bekbgunrmk3ad"

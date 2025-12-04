@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using Utility;
 
 namespace Stats
 {
@@ -7,8 +8,8 @@ namespace Stats
     public partial class Stat : Resource
     {
         private StatType _type;
-        private float _baseValue;
-        private float _currentValue;
+        private float _baseValue = 0;
+        private float _currentValue = 0;
 
         [Export]
         public StatType Type
@@ -34,7 +35,7 @@ namespace Stats
         {
             _type = type;
             _baseValue = baseValue;
-            _currentValue = _baseValue;
+            _currentValue = baseValue;
         }
 
         public float GetCurrentValue()

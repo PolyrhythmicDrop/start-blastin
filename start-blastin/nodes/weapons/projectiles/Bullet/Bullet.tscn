@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://07rkya3u10jt"]
 
 [ext_resource type="Script" uid="uid://c581icoxx0s37" path="res://nodes/weapons/projectiles/Bullet/Bullet.cs" id="1_ajx7a"]
-[ext_resource type="Texture2D" uid="uid://d2bgkt4md412u" path="res://nodes/weapons/projectiles/Bullet/bullet-sprite.png" id="2_nppro"]
+[ext_resource type="Texture2D" uid="uid://d2bgkt4md412u" path="res://assets/projectiles/bullet/bullet-sprite.png" id="2_nppro"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_nppro"]
 atlas = ExtResource("2_nppro")
@@ -67,12 +67,15 @@ use_parent_material = true
 sprite_frames = SubResource("SpriteFrames_obge1")
 animation = &"flight"
 autoplay = "flight"
-frame_progress = 0.6978722
+frame = 1
+frame_progress = 0.48213208
 metadata/_aseprite_wizard_interface_config_ = {
 "animation_section": false,
 "layer_section": false,
 "output_section": true,
-"pending_changes": {}
+"pending_changes": {
+"source": "res://assets/projectiles/bullet/bullet-alt.aseprite"
+}
 }
 metadata/_aseprite_wizard_config_ = {
 "embed_tex": false,
@@ -89,7 +92,8 @@ metadata/_aseprite_wizard_config_ = {
 }
 metadata/_aseprite_wizard_source_file_hash_ = "0c6dfed3e2dfef714e6b29018b88c7b9"
 
-[node name="RayCast2D" type="RayCast2D" parent="."]
+[node name="TrajRayCast" type="RayCast2D" parent="."]
+unique_name_in_owner = true
 position = Vector2(18, 0)
 target_position = Vector2(0, 0)
 collision_mask = 2

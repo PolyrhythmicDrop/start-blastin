@@ -57,6 +57,7 @@ namespace UI.Loadout
         public void ConnectSignals()
         {
             _weaponContainer.FocusEntered += OnWeaponContainerFocusEntered;
+            _weaponContainer.ItemContainerSelected += OnItemContainerSelected;
 
             foreach (InventoryItemContainer container in _pluginContainers)
             {
@@ -86,6 +87,7 @@ namespace UI.Loadout
         public void DisconnectSignals()
         {
             _weaponContainer.FocusEntered -= OnWeaponContainerFocusEntered;
+            _weaponContainer.ItemContainerSelected -= OnItemContainerSelected;
 
             foreach (
                 KeyValuePair<InventoryItemContainer, Action> kvp in _containerFocusEnteredCallbacks
@@ -137,7 +139,6 @@ namespace UI.Loadout
 
         private void WrapWeaponSlot()
         {
-            DebugLogger.LogMessage($"Wrapping the loadout's weapon slot...", true);
             InventoryItemContainer weapContainer =
                 _inventoryItemContainerScene.Instantiate<InventoryItemContainer>();
             _weaponContainer = weapContainer;
@@ -149,7 +150,6 @@ namespace UI.Loadout
 
         private void WrapPluginSlot(ItemDisplay display)
         {
-            // DebugLogger.LogMessage($"Wrapping the plugin slot {slot.Name}", true);
             InventoryItemContainer itemContainer =
                 _inventoryItemContainerScene.Instantiate<InventoryItemContainer>();
             _pluginHBox.AddChild(itemContainer);
@@ -161,7 +161,6 @@ namespace UI.Loadout
 
         private void SetFocusModes()
         {
-            DebugLogger.LogMessage($"Setting focus modes...", true);
             _weaponContainer.SetFocusMode(FocusModeEnum.All);
             foreach (InventoryItemContainer container in _pluginContainers)
             {
@@ -221,7 +220,6 @@ namespace UI.Loadout
 
         private void OnItemContainerSelected(object source, ItemSelectedEventArgs args)
         {
-            DebugLogger.LogMessage($"Item container {source} selected!");
             if (
                 ServiceManager
                     .Instance.GetService<PlayerService>()

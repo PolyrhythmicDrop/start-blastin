@@ -107,10 +107,6 @@ namespace Enemies.Spawners
 
             // ToggleSpawning(true);
             MoveSpawnPoint();
-
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name} finished!"
-            );
         }
 
         private void ConnectSignals()
@@ -135,7 +131,6 @@ namespace Enemies.Spawners
         /// </summary>
         private EnemyResource GetEnemyFromPool()
         {
-            // GD.Print($"{MethodBase.GetCurrentMethod().Name}:\n");
             if (_spawnPool == null || _spawnPool.Count == 0)
                 return null;
 
@@ -147,7 +142,8 @@ namespace Enemies.Spawners
             }
 
             // Generate random number within total weight
-            int randomValue = GD.RandRange(0, totalWeight - 1);
+            // int randomValue = GD.RandRange(0, totalWeight - 1);
+            int randomValue = RNG.GetRandomInt(0, totalWeight - 1);
 
             // Find the enemy that corresponds to this weight
             int currentWeight = 0;
@@ -159,11 +155,6 @@ namespace Enemies.Spawners
                     return data.EnemyResource;
                 }
             }
-
-            // Fallback
-            GD.PrintErr(
-                $"Something went wrong! Returning first EnemyResource in enemy pool, which is: {_spawnPool[0].EnemyResource.ResourceName}"
-            );
             return _spawnPool[0].EnemyResource;
         }
 
@@ -242,14 +233,6 @@ namespace Enemies.Spawners
             float waveMultiplier = Mathf.Log(1 + wave);
             _spawnPool = new SpawnPool(spawnerScaler.SpawnPool);
 
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name}: Spawn pool applied!"
-            );
-            foreach (SpawnData spawnData in _spawnPool)
-            {
-                GD.Print($"{spawnData.EnemyResource.ResourceName} | Weight: {spawnData.Weight}");
-            }
-
             // Don't apply scaling on the first wave.
             if (wave == 1)
             {
@@ -265,10 +248,6 @@ namespace Enemies.Spawners
             float movePercentReduction =
                 (spawnerScaler.MoveDurationModifier / 100f) * waveMultiplier;
             _pointMoveDuration = Mathf.Max(0.2f, _baseMoveDuration * (1 - movePercentReduction));
-
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().Name}: Spawner scaler {spawnerScaler.ResourceName} applied! Interval: {_spawnInterval} | Move Duration {_pointMoveDuration}"
-            );
         }
 
         /// <summary>
@@ -277,7 +256,6 @@ namespace Enemies.Spawners
         /// <param name="spawn">Whether or not to spawn enemies.</param>
         public void ToggleSpawning(bool spawn)
         {
-            GD.Print($"{Name}.{MethodBase.GetCurrentMethod().Name}: Toggling spawning to {spawn}!");
             if (spawn)
             {
                 _spawnTimer.Start(_spawnInterval);

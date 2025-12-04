@@ -44,7 +44,6 @@ file_logging/max_log_files=1
 window/size/viewport_width=1920
 window/size/viewport_height=1080
 window/stretch/mode="viewport"
-window/stretch/aspect="expand"
 window/vsync/vsync_mode=0
 
 [dotnet]
@@ -65,7 +64,6 @@ folder_colors={
 "res://architecture/": "purple",
 "res://assets/": "pink",
 "res://nodes/": "green",
-"res://nodes/enemies/Drone/sprites/": "pink",
 "res://nodes/player/components/": "purple",
 "res://nodes/player/sprites/": "pink",
 "res://nodes/ui/hud/assets/": "pink",
@@ -214,3 +212,6 @@ debug-heal-player={
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
+environment/screen_space_reflection/roughness_quality=0
+environment/subsurface_scattering/subsurface_scattering_quality=0
+2d/snap/snap_2d_transforms_to_pixel=true

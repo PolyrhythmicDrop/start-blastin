@@ -135,13 +135,9 @@ namespace WaveManagement
         /// </summary>
         private async void InitializeFirstWave()
         {
-            GD.Print("Initializing first wave...");
             _enemyScaleManager.Initialize(this);
             _spawnerScaleManager.Initialize(this);
             await _spawnerScaleManager.AssembleFormation();
-            GD.Print(
-                $"{MethodBase.GetCurrentMethod().Name}: Formation assembled, scaling spawners..."
-            );
             ScaleSpawners();
 
             StartWave();
@@ -153,7 +149,6 @@ namespace WaveManagement
         /// </summary>
         private void StartWave()
         {
-            GD.Print($"Wave {_wave} starting!");
             _waveTimer.Start(_waveTime);
             // EventBus.Instance.EmitSignal(EventBus.SignalName.WaveStarted, _wave);
             EventBus.Instance.RaiseWaveStarted(_wave);
@@ -165,14 +160,10 @@ namespace WaveManagement
         /// </summary>
         private async void EndWave()
         {
-            // Emit the signal for the wave timer ending to stop enemy spawning
-            GD.Print($"Wave {_wave} timer ended!");
-            // EventBus.Instance.EmitSignal(EventBus.SignalName.WaveTimerEnded);
             EventBus.Instance.RaiseWaveTimerEnded();
 
             // Wait for all enemies to clear before processing the next wave.
-            bool enemiesCleared = await WaitForEnemiesToClear();
-            GD.Print($"Enemies cleared: {enemiesCleared}");
+            await WaitForEnemiesToClear();
             EventBus.Instance.RaiseWaveComplete();
 
             IncrementWave();
@@ -203,7 +194,6 @@ namespace WaveManagement
             {
                 if (enemyCount != prevEnemyCount)
                 {
-                    GD.Print($"Enemy count: {enemyCount}");
                     prevEnemyCount = enemyCount;
                 }
                 await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
@@ -216,7 +206,6 @@ namespace WaveManagement
         /// </summary>
         private void IncrementWave()
         {
-            GD.Print($"{MethodBase.GetCurrentMethod().Name}");
             _wave++;
             ScaleWave();
         }
@@ -227,7 +216,6 @@ namespace WaveManagement
         /// </summary>
         private async void ScaleWave()
         {
-            GD.Print($"{MethodBase.GetCurrentMethod().Name}");
             SetScalers();
             await _spawnerScaleManager.AssembleFormation();
             ScaleSpawners();
@@ -238,7 +226,6 @@ namespace WaveManagement
         /// </summary>
         public void ResetWave()
         {
-            GD.Print($"{MethodBase.GetCurrentMethod().Name}");
             _wave = 1;
             InitializeFirstWave();
         }

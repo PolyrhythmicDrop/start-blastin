@@ -32,12 +32,7 @@ namespace Stats
         /// <param name="baseValue">The value of the stat.</param>
         public void AddStat(StatType type, float baseValue)
         {
-            // DebugLogger.LogMessage(
-            //     $"Attempting to add new stat of type {type} and base value {baseValue}",
-            //     true
-            // );
             Stat stat = new(type, baseValue);
-            // DebugLogger.LogMessage($"Stat object created! {stat.Type} - {stat.BaseValue}", true);
             AddStat(stat);
         }
 
@@ -45,21 +40,20 @@ namespace Stats
         /// Adds a new stat using an existing <see cref="Stat"/> object to the StatManager.
         /// </summary>
         /// <param name="stat">The Stat object to add.</param>
-        public void AddStat(Stat stat)
+        public bool AddStat(Stat stat)
         {
             bool success = _stats.TryAdd(stat.Type, stat);
             if (success)
             {
-                // DebugLogger.LogMessage(
-                //     $"New StatType added to StatManager! {_stats[stat.Type].Type}: base value = {_stats[stat.Type].BaseValue} | current value = {_stats[stat.Type].CurrentValue}",
-                //     true
-                // );
+                return success;
             }
             else
             {
-                GD.PrintErr(
-                    $"{stat.Type} already exists in this StatManager! Did you mean to use UpdateStat() instead?"
+                DebugLogger.LogMessage(
+                    $"{stat.Type} already exists in this StatManager! Did you mean to use UpdateStat() instead?",
+                    true
                 );
+                return success;
             }
         }
 
@@ -70,7 +64,9 @@ namespace Stats
         /// <param name="newValue">The new value of the stat.</param>
         public void UpdateStat(StatType type, float newValue)
         {
+            // DebugLogger.LogMessage($"newValue = {newValue}", true);
             Stat stat = GetStat(type);
+
             if (stat != null)
             {
                 stat.CurrentValue = newValue;
@@ -79,7 +75,6 @@ namespace Stats
             {
                 AddStat(type, newValue);
             }
-            // EmitSignal(SignalName.StatUpdated, Variant.From(type), GetStat(type));
             StatUpdatedEventArgs args = new(type, GetStat(type));
             RaiseStatUpdated(args);
         }
@@ -95,7 +90,6 @@ namespace Stats
             {
                 stat.CurrentValue = stat.BaseValue;
             }
-            // EmitSignal(SignalName.StatUpdated, Variant.From(stat.Type), stat);
             StatUpdatedEventArgs args = new(stat.Type, stat);
             RaiseStatUpdated(args);
         }
@@ -110,18 +104,39 @@ namespace Stats
         /// </returns>
         public Stat GetStat(StatType type)
         {
-            bool success = _stats.TryGetValue(type, out Stat stat);
-            if (success)
+            bool success;
+            if (HasStat(type))
             {
-                return stat;
+                try
+                {
+                    success = _stats.TryGetValue(type, out Stat stat);
+                    if (success)
+                    {
+                        return stat;
+                    }
+                    else
+                    {
+                        throw new ArgumentNullException(
+                            $"Stat of type {type} does not exist in StatManager dictionary."
+                        );
+                    }
+                }
+                catch (Exception e)
+                {
+                    DebugLogger.LogMessage(e.Message, true, true);
+                    return null;
+                }
             }
             else
             {
-                GD.PrintErr(
-                    $"{MethodBase.GetCurrentMethod().ReflectedType}.{MethodBase.GetCurrentMethod().Name} - Stat of type {type} does not exist in StatManager dictionary. Returning null."
-                );
+                DebugLogger.LogMessage($"Stat manager does not have a stat of type {type}!", true);
                 return null;
             }
+        }
+
+        public bool HasStat(StatType type)
+        {
+            return _stats.ContainsKey(type);
         }
     }
 }

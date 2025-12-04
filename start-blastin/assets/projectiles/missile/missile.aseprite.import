@@ -1,0 +1,14 @@
+[remap]
+
+importer="aseprite_wizard.plugin.noop"
+type="PackedDataContainer"
+uid="uid://bv4735wpylhmb"
+path="res://.godot/imported/missile.aseprite-6a2ec0cb54753d4d1e58af44705d7bd5.res"
+
+[deps]
+
+source_file="res://assets/projectiles/missile/missile.aseprite"
+dest_files=["res://.godot/imported/missile.aseprite-6a2ec0cb54753d4d1e58af44705d7bd5.res"]
+
+[params]
+

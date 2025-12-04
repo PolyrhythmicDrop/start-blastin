@@ -12,7 +12,7 @@ namespace Projectiles
         public override void _Ready()
         {
             base._Ready();
-            _sprite = GetNode<AnimatedSprite2D>("Sprite");
+            _sprite = GetNode<AnimatedSprite2D>("%Sprite");
         }
     }
 }

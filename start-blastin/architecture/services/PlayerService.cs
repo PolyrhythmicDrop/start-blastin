@@ -38,16 +38,11 @@ namespace Services
 
         public Player GetPlayer(int id)
         {
-            GD.Print("Getting Player by ID...");
             try
             {
                 bool found = _players.TryGetValue(id, out Player player);
                 if (found)
                 {
-                    DebugLogger.LogMessage(
-                        $"Player found! Name: {player.Name} | ID: {player.PlayerId}",
-                        true
-                    );
                     return player;
                 }
                 else

@@ -1,6 +1,7 @@
 using System;
 using Components;
 using Enemies;
+using Events;
 using Godot;
 using Utility;
 using Weapons;
@@ -74,12 +75,7 @@ namespace Projectiles
             }
         }
 
-        /// <summary>
-        /// Signal that fires when this projectile collides with another object.
-        /// </summary>
-        /// <param name="collision">Information on the collision, including the collider, collision location, and source.</param>
-        [Signal]
-        public delegate void CollisionEventHandler(CollisionComponent collision);
+        public event EventHandler<CollisionEventArgs> Collision;
 
         /// <summary>
         /// Constructor for the Projectile. Initializes the <see cref="DeactivationTimer"/> and the <see cref="_deactivateCallable"/>.
@@ -87,7 +83,7 @@ namespace Projectiles
         public Projectile()
         {
             _deactivationTimer = new Timer();
-            _deactivationTimer.WaitTime = 5;
+            _deactivationTimer.WaitTime = 100;
             _deactivateCallable = Callable.From(() => ToggleActive(false));
         }
 
@@ -97,7 +93,7 @@ namespace Projectiles
         public override void _Ready()
         {
             InitializeStats();
-            _ray = GetNode<RayCast2D>("RayCast2D");
+            _ray = GetNode<RayCast2D>("%TrajRayCast");
 
             if (_ray != null && !_rayInitialized)
             {
@@ -111,10 +107,6 @@ namespace Projectiles
         public override void _EnterTree()
         {
             InitializeStats();
-            // DebugLogger.LogMessage(
-            //     $"Projectile added to scene tree! Base speed: {_baseSpeed} | Current speed: {_currentSpeed} | Source velocity: {_sourceVelocity} | Global rotation: {GlobalRotation}",
-            //     true
-            // );
             base._EnterTree();
         }
 
@@ -124,7 +116,6 @@ namespace Projectiles
             {
                 _ray.SetCollisionMaskValue(1, true);
                 _ray.SetCollisionMaskValue(4, true);
-                // _ray.SetCollisionMaskValue(3, false);
             }
             else
             {
@@ -198,23 +189,11 @@ namespace Projectiles
         {
             if (connect)
             {
-                if (!IsConnected(SignalName.Collision, _sourceWeapon.HitCallable))
-                {
-                    Connect(SignalName.Collision, _sourceWeapon.HitCallable, 4);
-                }
-                else
-                {
-                    throw new InvalidOperationException(
-                        Name + " is already connected to " + SignalName.Collision
-                    );
-                }
+                Collision += _sourceWeapon.OnProjectileCollision;
             }
             else
             {
-                if (IsConnected(SignalName.Collision, _sourceWeapon.HitCallable))
-                {
-                    Disconnect(SignalName.Collision, _sourceWeapon.HitCallable);
-                }
+                Collision -= _sourceWeapon.OnProjectileCollision;
             }
         }
 
@@ -223,7 +202,7 @@ namespace Projectiles
         /// Adds or removes the projectile from the scene tree, and increments or decrements the source weapon's active projectile count.
         /// </summary>
         /// <param name="active">True to activate the projectile. False to deactivate the projectile.</param>
-        public void ToggleActive(bool active)
+        public virtual void ToggleActive(bool active)
         {
             if (active)
             {
@@ -255,10 +234,6 @@ namespace Projectiles
             float extraVelocity = Mathf.Max(0, projectionMagnitude) * 0.6f;
 
             _currentSpeed = _baseSpeed + extraVelocity;
-            // DebugLogger.LogMessage(
-            //     $"Source velocity added! New current speed: {_currentSpeed} | Source velocity: {_sourceVelocity}",
-            //     true
-            // );
         }
 
         /// <summary>
@@ -279,34 +254,23 @@ namespace Projectiles
 
             if (Ray.IsColliding())
             {
-                CollisionComponent collision = new CollisionComponent()
-                {
-                    Source = this,
-                    Collider = Ray.GetCollider(),
-                    GlobalCollisionPoint = Ray.GetCollisionPoint(),
-                    CollisionNormal = Ray.GetCollisionNormal() * -1,
-                };
-
-                EmitSignal(SignalName.Collision, collision);
+                CollisionEventArgs collision = new(
+                    Ray.GetCollider(),
+                    Ray.GetCollisionPoint(),
+                    Ray.GetCollisionNormal() * -1
+                );
+                Collision?.Invoke(this, collision);
             }
         }
 
         protected virtual Vector2 SetTrajectory(double delta)
         {
-            Vector2 fireAngle = Vector2.Right.Rotated(GlobalRotation);
-
-            // Logging for trajectory, since speedy drones don't seem to set it quite accurately.
-            // if (_sourceWeapon.WeaponOwner is EnemyNode enemy)
-            // {
-            //     string enemyName = enemy.Name;
-            //     if (enemyName.Contains("speedy-drone"))
-            //     {
-            //         DebugLogger.LogMessage(
-            //             $"Tractory set! Fire angle: {fireAngle} | Projectile rotation: {GlobalRotation} | Source: {enemyName} | Source rotation: {enemy.GlobalRotation}"
-            //         );
-            //     }
-            // }
-            return _currentSpeed * (float)delta * fireAngle;
+            if (Mathf.Sign(GlobalRotation) == -1)
+            {
+                GlobalRotation = UtilityMethods.ConvertNegativeRotationRads(GlobalRotation);
+            }
+            Vector2 fireVector = Vector2.Right.Rotated(GlobalRotation).Normalized();
+            return _currentSpeed * (float)delta * fireVector;
         }
 
         /// <summary>

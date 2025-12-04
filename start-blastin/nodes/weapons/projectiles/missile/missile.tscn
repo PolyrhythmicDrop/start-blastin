@@ -1,0 +1,119 @@
+[gd_scene load_steps=10 format=3 uid="uid://cgh78hdll5s2h"]
+
+[ext_resource type="Script" uid="uid://uppktldxytxy" path="res://nodes/weapons/projectiles/missile/Missile.cs" id="1_3sv20"]
+[ext_resource type="Texture2D" uid="uid://dsgdq5pkj63d8" path="res://assets/projectiles/missile/missile-sprite.png" id="2_3sv20"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3sv20"]
+atlas = ExtResource("2_3sv20")
+region = Rect2(0, 0, 32, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l8yxs"]
+atlas = ExtResource("2_3sv20")
+region = Rect2(32, 0, 32, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kht41"]
+atlas = ExtResource("2_3sv20")
+region = Rect2(0, 21, 32, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qbllr"]
+atlas = ExtResource("2_3sv20")
+region = Rect2(32, 21, 32, 21)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_162eo"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3sv20")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l8yxs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kht41")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qbllr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3sv20")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l8yxs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kht41")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qbllr")
+}],
+"loop": true,
+"name": &"flight",
+"speed": 20.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nppro"]
+radius = 6.0
+height = 24.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_3sv20"]
+radius = 144.0
+
+[node name="Missile" type="Area2D" groups=["projectiles"]]
+z_index = -2
+collision_layer = 0
+collision_mask = 7
+script = ExtResource("1_3sv20")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
+texture_filter = 1
+use_parent_material = true
+position = Vector2(-1, 0)
+sprite_frames = SubResource("SpriteFrames_162eo")
+animation = &"flight"
+autoplay = "flight"
+metadata/_aseprite_wizard_interface_config_ = {
+"animation_section": true,
+"layer_section": false,
+"output_section": true,
+"pending_changes": {}
+}
+metadata/_aseprite_wizard_config_ = {
+"embed_tex": false,
+"layers": [],
+"o_ex_p": "",
+"o_folder": "res://assets/projectiles/missile",
+"o_name": "missile-sprite",
+"only_visible": true,
+"scale": "1.0",
+"should_round_fps": true,
+"slice": "",
+"source": "res://assets/projectiles/missile/missile.aseprite",
+"source_uid": 3922247911357624301
+}
+metadata/_aseprite_wizard_source_file_hash_ = "2cc3f52ea4e8006ed03ee61cc4ec7e47"
+
+[node name="TrajRayCast" type="RayCast2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(18, 0)
+target_position = Vector2(0, 0)
+collision_mask = 2
+hit_from_inside = true
+collide_with_areas = true
+
+[node name="BodyCollisionShape" type="CollisionShape2D" parent="."]
+position = Vector2(4, 0)
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_nppro")
+
+[node name="TargetingArea" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 5
+monitorable = false
+
+[node name="TargetingCollisionShape" type="CollisionShape2D" parent="TargetingArea"]
+unique_name_in_owner = true
+position = Vector2(48, 0)
+shape = SubResource("CircleShape2D_3sv20")
+debug_color = Color(0.57659876, 0.5439903, 0.29771233, 0.41960785)

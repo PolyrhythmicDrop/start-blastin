@@ -66,7 +66,6 @@ namespace UI.Loadout
 
         private void InitializeNamePanel()
         {
-            DebugLogger.LogMessage($"Initializing the name panel for {Name}", true);
             // Set the stylebox and label settings
             _itemNamePanel.SetStyle();
             // Set the name panel as invisible until it gains focus.
@@ -77,7 +76,6 @@ namespace UI.Loadout
             _itemNamePanel.PivotOffset = _itemNamePanel.Size / 2;
             // Set the initial scane to 2
             _itemNamePanel.Scale = new Vector2(2, 2);
-            DebugLogger.LogMessage($"{Name} name panel initialization complete!", true);
         }
 
         private void InitializePricePanel()
@@ -96,8 +94,6 @@ namespace UI.Loadout
 
         public void SetItemDisplay(ItemDisplay display)
         {
-            DebugLogger.LogMessage($"Setting item display for {Name}", true);
-
             // Get the index of the current display scene
             int index = _itemDisplay.GetIndex();
             // Remove the current display scene
@@ -118,14 +114,6 @@ namespace UI.Loadout
             _currentStyleBox.BorderColor = _defocusedBorderColor;
 
             SetPanelInfo();
-        }
-
-        public override void SetItem(Item item)
-        {
-            // if (_itemDisplay != null)
-            // {
-            //     _item = _itemDisplay.Item;
-            // }
         }
 
         private void SetPanelInfo()

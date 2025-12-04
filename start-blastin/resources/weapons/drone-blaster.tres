@@ -3,17 +3,17 @@
 [ext_resource type="Script" uid="uid://bytfm61mpkr5u" path="res://nodes/weapons/WeaponStats.cs" id="1_yebq7"]
 [ext_resource type="Script" uid="uid://boyq442k65gay" path="res://nodes/weapons/WeaponResource.cs" id="2_e1j6k"]
 
-[sub_resource type="Resource" id="Resource_pd5pf"]
+[sub_resource type="Resource" id="Resource_yebq7"]
 resource_local_to_scene = true
-resource_name = "drone-blaster"
 script = ExtResource("1_yebq7")
-FireRate = 1.7
-ProjectileSpeed = 400.0
+ProjectileType = 1
+FireRate = 0.8
+ProjectileSpeed = 300.0
 metadata/_custom_type_script = "uid://bytfm61mpkr5u"
 
 [resource]
 resource_local_to_scene = true
+resource_name = "basic-drone-weapon"
 script = ExtResource("2_e1j6k")
-Stats = SubResource("Resource_pd5pf")
-ScenePath = "res://nodes/weapons/Blaster.tscn"
+Stats = SubResource("Resource_yebq7")
 metadata/_custom_type_script = "uid://bytfm61mpkr5u"

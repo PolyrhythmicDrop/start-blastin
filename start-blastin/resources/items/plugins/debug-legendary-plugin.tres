@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Plugin" load_steps=3 format=3 uid="uid://cj3p8cbr1p3hs"]
+
+[ext_resource type="Script" uid="uid://b3qmdj461ykoi" path="res://architecture/items/plugins/Plugin.cs" id="1_56nnj"]
+[ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="1_au7hl"]
+
+[resource]
+script = ExtResource("1_56nnj")
+Name = &"Debug Plugin"
+Description = &"debugging a legendary plugin :tada:"
+Icon = ExtResource("1_au7hl")
+Rarity = 1
+FluxCost = 1000
+ByteCost = 1000
+Effects = null
+metadata/_custom_type_script = "uid://b3qmdj461ykoi"

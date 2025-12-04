@@ -4,6 +4,8 @@
 [ext_resource type="Script" uid="uid://bo3yflg5ry23w" path="res://nodes/ui/elements/ItemNamePanelContainer.cs" id="1_vahb0"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vahb0"]
+content_margin_top = 5.0
+content_margin_bottom = 10.0
 
 [node name="ItemNamePanelContainer" type="PanelContainer"]
 anchors_preset = 5
@@ -17,7 +19,10 @@ theme_type_variation = &"ItemNamePanelContainer"
 theme_override_styles/panel = SubResource("StyleBoxEmpty_vahb0")
 script = ExtResource("1_vahb0")
 
-[node name="ItemNameLabel" type="Label" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 2
+
+[node name="ItemNameLabel" type="Label" parent="CenterContainer"]
 unique_name_in_owner = true
 z_index = 10
 custom_minimum_size = Vector2(256, 0)
@@ -28,3 +33,4 @@ label_settings = ExtResource("1_aqbyl")
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
+justification_flags = 35

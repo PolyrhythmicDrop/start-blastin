@@ -11,7 +11,6 @@ using Godot;
 using Interfaces;
 using Items;
 using PlayerComponents;
-using Projectiles;
 using Services;
 using Stats;
 using Utility;
@@ -44,8 +43,8 @@ namespace Entities
 
         private WeaponPlugin _defaultWeaponPlugin =>
             ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
-        #endregion
 
+        #endregion
         #region Stats
 
         private float _maxHealth => _stats.GetStat(StatType.MaxHealth).CurrentValue;
@@ -59,8 +58,8 @@ namespace Entities
 
         // ~ Weapon Variables ~ //
 
-        // private ProjectileType _projType = ProjectileType.Bullet;
         private float _damage => _stats.GetStat(StatType.Damage).CurrentValue;
+
         private float _crashDamage => _stats.GetStat(StatType.CrashDamage).CurrentValue;
         private float _fireRate => _stats.GetStat(StatType.FireRate).CurrentValue;
         private float _projectileSpeed => _stats.GetStat(StatType.ProjectileSpeed).CurrentValue;
@@ -105,7 +104,7 @@ namespace Entities
         public float Speed
         {
             get => _speed;
-            set => _stats.UpdateStat(StatType.Speed, Mathf.Max(0, value));
+            set => _stats.UpdateStat(StatType.Speed, Mathf.Max(0.0f, value));
         }
 
         [Export]
@@ -134,7 +133,7 @@ namespace Entities
         public float PhaseSpeed
         {
             get => _phaseSpeed;
-            set => _stats.UpdateStat(StatType.PhaseSpeed, Mathf.Max(0, value));
+            set => _stats.UpdateStat(StatType.PhaseSpeed, Mathf.Max(0.0f, value));
         }
 
         [ExportGroup("Weapon Stats")]
@@ -151,8 +150,18 @@ namespace Entities
         [Export]
         public float Damage
         {
-            get => _damage;
-            set => _stats.UpdateStat(StatType.Damage, Mathf.Max(0, value));
+            get { return _stats.GetStat(StatType.Damage).CurrentValue; }
+            set
+            {
+                if (_stats.HasStat(StatType.Damage))
+                {
+                    _stats.UpdateStat(StatType.Damage, Mathf.Max(0.0f, value));
+                }
+                else
+                {
+                    _stats.AddStat(new Stat(StatType.Damage, Mathf.Max(0.0f, value)));
+                }
+            }
         }
 
         /// <summary>
@@ -167,7 +176,8 @@ namespace Entities
         }
 
         /// <summary>
-        /// The base speed of a projectile coming out of this weapon.
+        /// The base speed of any projectile coming out of the player's weapon.
+        /// The player's WeaponPlugin can modify this value.
         /// </summary>
         /// <remarks>
         /// Projectile speed is augmented by the firing object's speed.
@@ -203,7 +213,6 @@ namespace Entities
                 {
                     EquipPlugin(plugin);
                 }
-                DebugLogger.LogMessage("Plugins list set from initial values!", true);
             }
         }
 
@@ -266,6 +275,8 @@ namespace Entities
             _playerId = id;
         }
 
+        #region Initialization
+
         public override void _Ready()
         {
             _animationComponent = GetNode<AnimationComponent>("%AnimationComponent");
@@ -278,12 +289,6 @@ namespace Entities
             InitializeComponents();
             ConnectSignals();
             ApplyStatEffects();
-
-            DebugLogger.LogMessage($"Player ready! Plugins:", true);
-            foreach (Plugin plugin in _plugins)
-            {
-                DebugLogger.LogMessage($"{plugin.Name} - {plugin.ResourceName}", true);
-            }
         }
 
         private void InitializeComponents()
@@ -297,13 +302,7 @@ namespace Entities
             {
                 _weaponComponent.SetWeaponProjectile(_weaponPlugin.ProjectileType);
             }
-
-            // Initialize plugin slots
             _plugins.Capacity = (int)_stats.GetStat(StatType.PluginSlots).CurrentValue;
-            // DebugLogger.LogMessage(
-            //     $"Plugin capacity: {_plugins.Capacity} | Plugin slot count: {_pluginSlots} | Equipped plugins: {_plugins.Count}",
-            //     true
-            // );
         }
 
         private void ConnectSignals()
@@ -346,6 +345,9 @@ namespace Entities
             }
         }
 
+        #endregion
+
+        #region Movement
         public override void _Process(double delta)
         {
             Move();
@@ -365,7 +367,6 @@ namespace Entities
         {
             if (CanPhase())
             {
-                DebugLogger.LogMessage($"Starting dodge!");
                 _isPhasing = true;
                 Speed += PhaseSpeed;
 
@@ -385,7 +386,6 @@ namespace Entities
 
         public void EndPhase()
         {
-            DebugLogger.LogMessage($"Ending phase!");
             _isPhasing = false;
             Speed -= PhaseSpeed;
 
@@ -412,15 +412,15 @@ namespace Entities
             _animationComponent.PlayPhaseReadyEffect();
             _movementComponent.PhaseReady = true;
         }
+        #endregion
+
+        #region Health
 
         public void TakeDamage(float damage, int? playerId = null)
         {
             _animationComponent.PlayDamageAnimation();
-            // _healthComponent.TakeDamage(damage);
             _currentHealth -= damage;
 
-            // GD.Print($"Player has taken damage! Current health: {_currentHealth}");
-            // _service.UpdateCurrentHealth(_playerId, _currentHealth);
             EventBus.Instance.RaisePlayerCurrentHealthChanged(_playerId, _currentHealth);
 
             if (_currentHealth <= 0)
@@ -432,12 +432,7 @@ namespace Entities
 
         public void Heal(float healAmount)
         {
-            DebugLogger.LogMessage(
-                $"{Name} is healing. Current health: {_currentHealth} | Heal amount: {healAmount} | Max health: {_maxHealth}",
-                true
-            );
             _currentHealth = Mathf.Min(_currentHealth + healAmount, _maxHealth);
-            // _service.UpdateCurrentHealth(_playerId, _currentHealth);
             EventBus.Instance.RaisePlayerCurrentHealthChanged(_playerId, _currentHealth);
         }
 
@@ -451,10 +446,12 @@ namespace Entities
 
         public void Despawn()
         {
-            GD.Print("Game over, man! Game over!");
             EmitSignal(SignalName.PlayerDied);
             QueueFree();
         }
+
+        #endregion
+        #region Shop
 
         /// <summary>
         /// Checks to see if the player can purchase the passed item based on its flux and byte cost.
@@ -489,12 +486,11 @@ namespace Entities
         /// <param name="flux">Output that indicates whether or not the player has enough flux.</param>
         /// <param name="bytes">Output that indicates whether or not the player has enough bytes.</param>
         /// <returns>True if the player is able to buy and equip the item, false if not.</returns>
-        public void CanAffordItem(Item item, out bool flux, out bool bytes)
+        public bool CanAffordItem(Item item, out bool flux, out bool bytes)
         {
             flux = item.FluxCost <= Flux;
             bytes = item.ByteCost <= Bytes;
-            DebugLogger.LogMessage($"item: {item.Name} | bytes: {bytes} | flux: {flux}", true);
-            // return flux && bytes;
+            return flux && bytes;
         }
 
         /// <summary>
@@ -507,14 +503,17 @@ namespace Entities
             return item.FluxCost <= _flux && item.ByteCost <= _bytes;
         }
 
+        private void OnItemBought(object sender, ItemBoughtEventArgs args)
+        {
+            BuyItem(args.Item);
+        }
+
         /// <summary>
         /// Buys and equips an item from the store.
         /// </summary>
         /// <param name="item">The item that was bought.</param>
         private void BuyItem(Item item)
         {
-            DebugLogger.LogMessage($"Buying item! {item.ResourceName}", true);
-
             // Subtract appropriate currency (currency changed event should fire automatically)
             Flux -= item.FluxCost;
             Bytes -= item.ByteCost;
@@ -537,6 +536,15 @@ namespace Entities
             ApplyStatEffects();
         }
 
+        #endregion
+
+        #region Inventory
+
+        private void OnItemScrapped(object sender, ItemScrappedEventArgs args)
+        {
+            ScrapItem(args.Item);
+        }
+
         private void ScrapItem(Item item)
         {
             // Add to the player's byte count.
@@ -545,7 +553,7 @@ namespace Entities
 
             // Remove the item from the player's equipment.
 
-            if (item is WeaponPlugin weapon)
+            if (item is WeaponPlugin)
             {
                 // Revert to the basic bullet if you sell a weapon plugin.
                 ResetWeaponPlugin();
@@ -555,6 +563,9 @@ namespace Entities
                 _plugins.Remove(plugin);
                 EventBus.Instance.RaisePlayerItemRemoved(_playerId, plugin);
             }
+
+            // Apply stat effects based on the new loadout.
+            ApplyStatEffects();
         }
 
         public void AddModifier(params Modifier[] modifiers)
@@ -572,7 +583,6 @@ namespace Entities
                 if (_plugins.Count <= _pluginSlots && newPlugin is not Items.WeaponPlugin)
                 {
                     _plugins.Add(newPlugin);
-                    // EventBus.Instance.RaisePlayerPluginsChanged(_playerId, _plugins);
                     EventBus.Instance.RaisePlayerPluginEquipped(_playerId, newPlugin);
                 }
                 else
@@ -593,6 +603,16 @@ namespace Entities
             EventBus.Instance.RaisePlayerWeaponChanged(_playerId, _weaponPlugin);
         }
 
+        /// <summary>
+        /// Resets the player's projectile type to the base projectile.
+        /// </summary>
+        private void ResetWeaponPlugin()
+        {
+            _weaponPlugin = ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
+            _weaponComponent.SetWeaponProjectile(_weaponPlugin.ProjectileType);
+            EventBus.Instance.RaisePlayerWeaponChanged(_playerId, _weaponPlugin);
+        }
+
         public IReadOnlyList<Plugin> GetPlugins()
         {
             return _plugins.AsReadOnly();
@@ -600,7 +620,9 @@ namespace Entities
 
         public bool HasPlugin(Plugin plugin)
         {
-            return _plugins.Contains(plugin);
+            bool hasWeapon = _weaponPlugin == plugin ? true : false;
+            bool hasPlugin = _plugins.Contains(plugin);
+            return hasWeapon || hasPlugin;
         }
 
         /// <summary>
@@ -623,6 +645,9 @@ namespace Entities
                 SortEffects(plugin.Effects, addStatEffects, multiplyStatEffects);
             }
 
+            // Add the weapon plugin to the mix
+            SortEffects(_weaponPlugin.Effects, addStatEffects, multiplyStatEffects);
+
             UpdateStatsWithEffects(addStatEffects, multiplyStatEffects);
         }
 
@@ -638,10 +663,6 @@ namespace Entities
                 {
                     if (statEffect.Operation == Operation.Add)
                     {
-                        DebugLogger.LogMessage(
-                            $"Adding {statEffect.Value} for {statEffect.Type} to addEffects List...",
-                            true
-                        );
                         addEffects.Add(statEffect);
                     }
                     else if (statEffect.Operation == Operation.Multiply)
@@ -687,8 +708,9 @@ namespace Entities
                 if (finalValues.ContainsKey(multiplyEffect.Type))
                 {
                     finalValues[multiplyEffect.Type] *= multiplyEffect.Value;
-                    GD.Print(
-                        $"Multiplying {multiplyEffect.Value} on {multiplyEffect.Type}. New final value = {finalValues[multiplyEffect.Type]}"
+                    DebugLogger.LogMessage(
+                        $"Multiplying {multiplyEffect.Value} on {multiplyEffect.Type}. New final value = {finalValues[multiplyEffect.Type]}",
+                        true
                     );
                 }
                 else
@@ -704,6 +726,8 @@ namespace Entities
             }
         }
 
+        #endregion
+
         private void OnEnemyKilled(object sender, EnemyKilledEventArgs args)
         {
             if (args.PlayerId == _playerId)
@@ -711,26 +735,6 @@ namespace Entities
                 Flux += args.FluxReward;
                 Bytes += args.BytesReward;
             }
-        }
-
-        private void OnItemBought(object sender, ItemBoughtEventArgs args)
-        {
-            BuyItem(args.Item);
-        }
-
-        private void OnItemScrapped(object sender, ItemScrappedEventArgs args)
-        {
-            ScrapItem(args.Item);
-        }
-
-        /// <summary>
-        /// Resets the player's projectile type to the base projectile.
-        /// </summary>
-        private void ResetWeaponPlugin()
-        {
-            _weaponPlugin = ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
-            _weaponComponent.SetWeaponProjectile(_weaponPlugin.ProjectileType);
-            EventBus.Instance.RaisePlayerWeaponChanged(_playerId, _weaponPlugin);
         }
 
         public override void _ExitTree()

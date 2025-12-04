@@ -4,10 +4,12 @@ using System.Threading.Tasks;
 using Components;
 using Enemies;
 using Entities;
+using Events;
 using Godot;
 using Interfaces;
 using Projectiles;
 using Stats;
+using Utility;
 
 namespace Weapons
 {
@@ -79,10 +81,12 @@ namespace Weapons
         /// </summary>
         public Node ProjectileParent;
 
-        /// <summary>
-        /// The position where projectiles should spawn from this weapon, i.e. the barrel of the weapon.
-        /// </summary>
-        public virtual Vector2 ProjSpawnPoint => GlobalPosition;
+        // /// <summary>
+        // /// The position where projectiles should spawn from this weapon, i.e. the barrel of the weapon.
+        // /// </summary>
+        // public virtual Vector2 ProjSpawnPoint => GlobalPosition;
+
+        public List<Barrel> Barrels = new();
 
         /// <summary>
         /// Timer used to re-trigger firing of the weapon when the "fire" button is held down.
@@ -91,11 +95,6 @@ namespace Weapons
         /// The WaitTime of the FireTimer is set using the <see cref="WeaponStats.FireRate"/> of the weapon.
         /// </remarks>
         public Timer FireTimer;
-
-        /// <summary>
-        /// Callback method that runs when a projectile from this weapon hits an object.
-        /// </summary>
-        public Callable HitCallable;
 
         /// <summary>
         /// The weapon's velocity provider. Used to add a parent object's velocity to projectile speed.
@@ -109,22 +108,13 @@ namespace Weapons
         public IWeaponOwner WeaponOwner => _owner;
 
         /// <summary>
-        /// Constructor for the WeaponNode. Sets the <see cref="HitCallable"/> callback function to <see cref="OnProjectileCollision"/>.
-        /// </summary>
-        public WeaponNode()
-        {
-            HitCallable = Callable.From(
-                (CollisionComponent collision) => OnProjectileCollision(collision)
-            );
-        }
-
-        /// <summary>
         /// Calls <see cref="InitializeProjectilePool"/> and <see cref="InitializeFireTimer"/>.
         /// </summary>
         public override void _Ready()
         {
             InitializeProjectilePool();
             InitializeFireTimer();
+            SetBarrels();
         }
 
         /// <summary>
@@ -145,6 +135,15 @@ namespace Weapons
             _ownerSet = true;
         }
 
+        public void SetBarrels()
+        {
+            List<Node> children = [.. GetParent().GetChildren()];
+            foreach (Barrel barrel in children.FindAll(child => child is Barrel))
+            {
+                Barrels.Add(barrel);
+            }
+        }
+
         /// <summary>
         /// Initializes the weapon's <see cref="ProjectilePool"/> by creating a new pool and projectile parent, then adding the projectile parent to the scene tree.
         /// </summary>
@@ -156,6 +155,18 @@ namespace Weapons
             AddChild(ProjectileParent);
         }
 
+        public void ResetProjectilePool()
+        {
+            if (_pool != null)
+            {
+                _pool.ResetPool();
+            }
+            else
+            {
+                InitializeProjectilePool();
+            }
+        }
+
         /// <summary>
         /// Initializes the weapon's fire timer.
         /// Sets the WaitTime to the weapon's fire rate, then adds the FireTimer to the scene tree.
@@ -165,7 +176,11 @@ namespace Weapons
             FireTimer = new();
             if (Stats == null)
             {
-                GD.PrintErr($"Stats is null in {Name} before setting FireTimer.WaitTime!");
+                DebugLogger.LogMessage(
+                    $"Stats is null in {Name} before setting FireTimer.WaitTime!",
+                    true,
+                    true
+                );
             }
             else
             {
@@ -191,12 +206,7 @@ namespace Weapons
             return true;
         }
 
-        /// <summary>
-        /// Callback function assigned to the weapon's <see cref="HitCallable"/> variable.
-        /// Determines what to do when a projectile from this weapon hits an object.
-        /// </summary>
-        /// <param name="collision">Information about the collision that occurred.</param>
-        public virtual void OnProjectileCollision(CollisionComponent collision)
+        public virtual void OnProjectileCollision(object source, CollisionEventArgs args)
         {
             int? playerId = null;
             if (_owner is Player player)
@@ -204,7 +214,7 @@ namespace Weapons
                 playerId = player.PlayerId;
             }
             // IHealthful objects take damage.
-            if (collision.Collider is IHealthful healthful)
+            if (args.Collider is IHealthful healthful)
             {
                 if (healthful is Player healthfulPlayer)
                 {
@@ -225,13 +235,13 @@ namespace Weapons
 
             // Projectiles deactivate.
             // TODO: Also add some kind of animation that plays.
-            if (collision.Collider is Projectile projectile)
+            if (args.Collider is Projectile projectile)
             {
                 projectile.ToggleActive(false);
             }
 
             // Deactivate the source projectile on collision.
-            if (collision.Source is Projectile sourceProj)
+            if (source is Projectile sourceProj)
             {
                 sourceProj.ToggleActive(false);
             }
@@ -243,17 +253,25 @@ namespace Weapons
         /// </summary>
         public virtual void Fire()
         {
-            Projectile projectile = _pool.RequestProjectile();
-            projectile.Position = ProjSpawnPoint;
+            // Fire from all barrels.
+            // TODO: Maybe add extra methods to fire from particular barrels?
 
-            if (_velocityProvider != null)
+            foreach (Barrel barrel in Barrels)
             {
-                projectile.AddSourceVelocity();
-            }
+                Projectile projectile = _pool.RequestProjectile();
+                // projectile.Position = ProjSpawnPoint;
+                projectile.Position = barrel.GlobalPosition;
+                projectile.GlobalRotation = barrel.GlobalRotation;
 
-            if (EnemyOwned && !FireTimer.IsStopped())
-            {
-                FireTimer.Start(Stats.FireRate);
+                if (_velocityProvider != null)
+                {
+                    projectile.AddSourceVelocity();
+                }
+
+                if (EnemyOwned && !FireTimer.IsStopped())
+                {
+                    FireTimer.Start(Stats.FireRate);
+                }
             }
         }
 

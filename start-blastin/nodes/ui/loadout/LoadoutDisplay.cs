@@ -70,7 +70,6 @@ namespace UI.Loadout
 
         private void InitializePluginSlots()
         {
-            DebugLogger.LogMessage($"Initializing plugin slots for {this}", true);
             int slotCount = _service.GetPlayer(_playerId).PluginSlots;
             for (int i = 0; i < slotCount; i++)
             {
@@ -80,10 +79,6 @@ namespace UI.Loadout
             int pluginCount = plugins.Count;
             if (pluginCount > 0)
             {
-                DebugLogger.LogMessage(
-                    "Player initial plugins list was greater than 0! Adding plugins to UI...",
-                    true
-                );
                 for (int i = 0; i < pluginCount; i++)
                 {
                     FillSlot(_pluginDisplays[i], plugins[i]);
@@ -137,11 +132,8 @@ namespace UI.Loadout
 
         private void FillSlot(ItemDisplay display, Plugin plugin)
         {
-            DebugLogger.LogMessage(
-                $"Filling slot {display.Name} of type {display.GetType()} with plugin {plugin.ResourceName}",
-                true
-            );
             display.SetItem(plugin);
+            DisplayUpdated?.Invoke();
         }
 
         private void FillPluginSlotGaps()
@@ -175,10 +167,6 @@ namespace UI.Loadout
 
         private void OnPluginEquipped(object source, PlayerPluginEquippedEventArgs args)
         {
-            DebugLogger.LogMessage(
-                $"Attempting to display newly equipped plugin {args.NewPlugin} in {this}...",
-                true
-            );
             if (args.PlayerId == _playerId)
             {
                 try
@@ -192,9 +180,6 @@ namespace UI.Loadout
                     }
                     else
                     {
-                        DebugLogger.LogMessage(
-                            $"Empty slot found! Installing plugin in {emptySlot.Name}"
-                        );
                         FillSlot(emptySlot, args.NewPlugin);
                     }
                 }
@@ -224,9 +209,8 @@ namespace UI.Loadout
 
                     // Shift plugins to fill gap
                     FillPluginSlotGaps();
-
-                    DisplayUpdated?.Invoke();
                 }
+                DisplayUpdated?.Invoke();
             }
         }
 

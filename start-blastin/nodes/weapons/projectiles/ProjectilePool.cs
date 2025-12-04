@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Factories;
 using Godot;
+using Utility;
 using Weapons;
 
 namespace Projectiles
@@ -51,7 +52,7 @@ namespace Projectiles
             }
             catch (Exception e)
             {
-                GD.PrintErr(e.Message);
+                DebugLogger.LogMessage(e.Message, true, true);
             }
 
             Projectile proj = ProjectileFactory.CreateProjectile(_weapon);
@@ -126,6 +127,16 @@ namespace Projectiles
             }
             RemoveAll(Inactive);
             TrimExcess();
+        }
+
+        /// <summary>
+        /// Resets the pool. Removes all current members, resets the capacity, and refills the pool to starting capacity.
+        /// </summary>
+        public void ResetPool()
+        {
+            CullPool();
+            Clear();
+            Initialize();
         }
     }
 }

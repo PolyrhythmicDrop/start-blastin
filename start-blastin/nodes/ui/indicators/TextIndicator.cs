@@ -1,4 +1,5 @@
 using System;
+using Autoloads;
 using DataStructures;
 using Godot;
 
@@ -68,7 +69,8 @@ public partial class TextIndicator : Node2D
 
     private void Animate()
     {
-        float finalYPos = GlobalPosition.Y - GD.RandRange(20, 40);
+        // float finalYPos = GlobalPosition.Y - GD.RandRange(20, 40);
+        float finalYPos = GlobalPosition.Y - (float)RNG.GetRandomDouble(20, 40);
         _tween = CreateTween();
         _tween
             .TweenProperty(this, "global_position:y", finalYPos, 0.5)

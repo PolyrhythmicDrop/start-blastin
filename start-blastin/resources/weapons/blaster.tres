@@ -7,11 +7,9 @@
 resource_local_to_scene = true
 resource_name = "player-blaster"
 script = ExtResource("1_bv6pg")
-ProjectileSpeed = 500.0
 metadata/_custom_type_script = "uid://bytfm61mpkr5u"
 
 [resource]
 script = ExtResource("2_ar6ct")
 Stats = SubResource("Resource_ar6ct")
-ScenePath = "res://nodes/weapons/Blaster.tscn"
 metadata/_custom_type_script = "uid://boyq442k65gay"

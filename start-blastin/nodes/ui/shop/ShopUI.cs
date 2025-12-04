@@ -81,7 +81,7 @@ namespace UI.Shop
             if (activate)
             {
                 Active = true;
-                DebugLogger.LogMessage($"Last focused: {_lastFocused}");
+                RefreshAllAffordability(_playerId);
                 if (_lastFocused != null)
                 {
                     _lastFocused.CallDeferred(MethodName.GrabFocus);
@@ -189,7 +189,7 @@ namespace UI.Shop
 
         private void RerollShop()
         {
-            ClearItemContainers();
+            // ClearItemContainers();
             PopulateShopSlots();
         }
 
@@ -225,13 +225,16 @@ namespace UI.Shop
 
         private void RefreshAllAffordability(int argsId)
         {
-            if (_playerId == argsId)
+            if (Active)
             {
-                foreach (ShopItemContainer container in _itemContainers)
+                if (_playerId == argsId)
                 {
-                    if (container != null && container.Item != null)
+                    foreach (ShopItemContainer container in _itemContainers)
                     {
-                        SetContainerAffordability(container);
+                        if (container != null && container.Item != null)
+                        {
+                            SetContainerAffordability(container);
+                        }
                     }
                 }
             }
@@ -247,7 +250,6 @@ namespace UI.Shop
         {
             foreach (ShopItemContainer container in _itemContainers)
             {
-                GD.Print("Retrieving item from pool...");
                 Item item = GetItemFromPool();
 
                 while (!CanShowItem(item))
@@ -285,7 +287,8 @@ namespace UI.Shop
                 totalWeight += (int)item.Rarity;
             }
 
-            int randomValue = GD.RandRange(0, totalWeight - 1);
+            // int randomValue = GD.RandRange(0, totalWeight - 1);
+            int randomValue = RNG.GetRandomInt(0, totalWeight - 1);
 
             int currentWeight = 0;
 

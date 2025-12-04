@@ -23,7 +23,6 @@ namespace Enemies
     {
         protected StatManager _stats;
 
-        // protected HealthComponent _healthComponent;
         protected WeaponNode _weapon;
 
         protected CollisionShape2D _shape;
@@ -61,7 +60,8 @@ namespace Enemies
 
         #endregion
 
-        // public HealthComponent HealthComp => _healthComponent;
+        protected bool _alive = true;
+
         public WeaponNode Weapon => _weapon;
         public EntityPath Path => _path;
 
@@ -76,7 +76,7 @@ namespace Enemies
             base._Ready();
             AddToGroup("enemies");
 
-            _shape = GetNode<CollisionShape2D>("CollisionShape2D");
+            _shape = GetNode<CollisionShape2D>("%CollisionShape2D");
 
             AddChild(_weapon);
 
@@ -84,7 +84,8 @@ namespace Enemies
             _weapon.FireTimer.Timeout += FireWeapon;
 
             // Set an initial firing delay
-            float delay = (float)GD.RandRange(0, _weapon.Stats.FireRate);
+            // float delay = (float)GD.RandRange(0, _weapon.Stats.FireRate);
+            double delay = RNG.GetRandomDouble(max: _weapon.Stats.FireRate);
             _weapon.FireTimer.Start(delay);
 
             // Initialize position tracking
@@ -120,16 +121,12 @@ namespace Enemies
 
         public virtual void Initialize(EnemyResource enemyResource)
         {
-            Name = enemyResource.ResourceName + DateAndTime.Now.Ticks;
-            // _healthComponent = (HealthComponent)enemyResource.HealthComponent.Duplicate();
-            // _healthComponent.Initialize(this);
             _baseMaxHealth = enemyResource.HealthComponent.MaxHealth;
             _maxHealth = _baseMaxHealth;
             _currentHealth = _baseMaxHealth;
 
             _weapon = WeaponFactory.CreateWeapon(
                 enemyResource.WeaponResource,
-                true,
                 velocityProvider: this,
                 owner: this
             );
@@ -210,10 +207,7 @@ namespace Enemies
         {
             if (collision.GetCollider() is Player player)
             {
-                // float crashDamage = _stats.GetStat(StatType.CrashDamage).Value;
-                GD.Print($"{player.Name} was crashed into! Player takes {_crashDamage} damage.");
                 player.TakeDamage(_crashDamage);
-                // player.TakeDamage(crashDamage);
                 Die();
             }
         }

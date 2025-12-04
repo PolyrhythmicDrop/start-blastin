@@ -1,13 +1,14 @@
-[gd_scene load_steps=11 format=3 uid="uid://nenl15kjphyb"]
+[gd_scene load_steps=12 format=3 uid="uid://nenl15kjphyb"]
 
 [ext_resource type="Script" uid="uid://ceknkp5q1onls" path="res://nodes/player/Player.cs" id="1_4j62c"]
-[ext_resource type="Resource" uid="uid://dmulsmpa1tm6h" path="res://resources/projectiles/bullet-plugin.tres" id="2_5h4ma"]
+[ext_resource type="Resource" uid="uid://dmulsmpa1tm6h" path="res://resources/items/weapon-plugins/bullet-plugin.tres" id="2_5h4ma"]
 [ext_resource type="PackedScene" uid="uid://cr3k7kv44d7a6" path="res://nodes/player/player-components/animation-component.tscn" id="2_hs1md"]
 [ext_resource type="Script" uid="uid://dcupxkt621nuk" path="res://nodes/player/player-components/PlayerController.cs" id="4_1fmtd"]
-[ext_resource type="Shader" uid="uid://bmacriris3r2k" path="res://nodes/shaders/color-cycling-hit-effect.gdshader" id="4_5h4ma"]
+[ext_resource type="Shader" uid="uid://bmacriris3r2k" path="res://resources/shaders/color-cycling-hit-effect.gdshader" id="4_5h4ma"]
 [ext_resource type="PackedScene" uid="uid://bh7mbhu54my3n" path="res://nodes/player/player-components/movement-component.tscn" id="4_xl06i"]
 [ext_resource type="Script" uid="uid://wvxahp2d8k6f" path="res://nodes/player/player-components/WeaponComponent.cs" id="5_5h4ma"]
 [ext_resource type="Resource" uid="uid://coiv5i1pkqvv8" path="res://resources/weapons/blaster.tres" id="6_1fmtd"]
+[ext_resource type="PackedScene" uid="uid://bajml0u2freln" path="res://nodes/weapons/barrel.tscn" id="9_xl06i"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_xl06i"]
 resource_local_to_scene = true
@@ -34,13 +35,11 @@ PhaseDuration = 0.7999999999999999
 PhaseCooldown = 2.0
 PhaseSpeed = 200.0
 WeaponPlugin = ExtResource("2_5h4ma")
-Damage = 1.0
+Damage = 0.1
 FireRate = 0.5
-ProjectileSpeed = 500.0
+ProjectileSpeed = 100.0
 PluginSlots = 3
 InitialPlugins = Array[Object]([])
-Bytes = 200
-Flux = 500
 
 [node name="AnimationComponent" parent="." instance=ExtResource("2_hs1md")]
 unique_name_in_owner = true
@@ -57,6 +56,9 @@ script = ExtResource("4_1fmtd")
 unique_name_in_owner = true
 script = ExtResource("5_5h4ma")
 InitWeaponResource = ExtResource("6_1fmtd")
+
+[node name="Barrel" parent="WeaponComponent" instance=ExtResource("9_xl06i")]
+position = Vector2(14, 6.119594e-07)
 
 [node name="HitBox" type="CollisionShape2D" parent="."]
 unique_name_in_owner = true

@@ -7,9 +7,8 @@ namespace Effects
 {
     public enum TargetType
     {
-        Player,
-        Projectile,
-        Weapon,
+        Self,
+        Ally,
         Enemy,
     }
 
@@ -19,6 +18,21 @@ namespace Effects
         Multiply,
     }
 
+    public enum Trigger
+    {
+        Equip,
+        EnemyKilled,
+    }
+
     [GlobalClass]
-    public abstract partial class Effect : Resource { }
+    public abstract partial class Effect : Resource
+    {
+        protected GodotObject _target;
+
+        [Export]
+        public TargetType Target { get; set; }
+
+        [Export]
+        public Trigger Trigger { get; set; }
+    }
 }

@@ -22,9 +22,7 @@ namespace Effects
 
         public string GetEffectText()
         {
-            // string typeColor = "#6e5181";
             string typeName = SplitCamelCase(Type.ToString());
-            // string type = $"[color={typeColor}]{typeName}[/color]";
             string valueColor = Value > 0 ? "#25bcc6" : "#ff5470";
 
             string operation;

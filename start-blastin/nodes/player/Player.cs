@@ -288,7 +288,7 @@ namespace Entities
 
             InitializeComponents();
             ConnectSignals();
-            ApplyStatEffects();
+            ApplyEquipStatEffects();
         }
 
         private void InitializeComponents()
@@ -527,7 +527,7 @@ namespace Entities
                     EquipPlugin(plugin);
                     break;
             }
-            ApplyStatEffects();
+            ApplyEquipStatEffects();
         }
 
         #endregion
@@ -559,7 +559,7 @@ namespace Entities
             }
 
             // Apply stat effects based on the new loadout.
-            ApplyStatEffects();
+            ApplyEquipStatEffects();
         }
 
         public void AddModifier(params Modifier[] modifiers)
@@ -623,11 +623,15 @@ namespace Entities
             return hasWeapon || hasPlugin;
         }
 
+        #endregion
+
+        #region Equipment Effects
+
         /// <summary>
         /// Applies StatEffects from all equipped items, starting with addition operations and ending with multiplicative operations.
         /// Starts with base values of all stats and applies the changes to each stat's current values.
         /// </summary>
-        private void ApplyStatEffects()
+        private void ApplyEquipStatEffects()
         {
             // Sort the StatEffects by operation
             List<StatEffect> addStatEffects = new();
@@ -640,11 +644,17 @@ namespace Entities
 
             foreach (Plugin plugin in _plugins)
             {
-                SortEffects(plugin.Effects, addStatEffects, multiplyStatEffects);
+                List<Effect> equipEffects = plugin
+                    .GetEffectList()
+                    .FindAll(effect => effect.Trigger == Trigger.Equip);
+                SortEffects(equipEffects, addStatEffects, multiplyStatEffects);
             }
 
             // Add the weapon plugin to the mix
-            SortEffects(_weaponPlugin.Effects, addStatEffects, multiplyStatEffects);
+            List<Effect> weapEffects = _weaponPlugin
+                .GetEffectList()
+                .FindAll(effect => effect.Trigger == Trigger.Equip);
+            SortEffects(weapEffects, addStatEffects, multiplyStatEffects);
 
             UpdateStatsWithEffects(addStatEffects, multiplyStatEffects);
         }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Enemies;
 using Events;
 using Godot;
 using Items;
@@ -74,6 +75,8 @@ namespace Autoloads
         /// Enemy was killed by player.
         ///</summary>
         public event EventHandler<EnemyKilledEventArgs> EnemyKilled;
+
+        public event EventHandler<EnemyHitEventArgs> EnemyHit;
 
         #endregion
 
@@ -220,6 +223,12 @@ namespace Autoloads
         public void RaiseEnemyKilled(EnemyKilledEventArgs args)
         {
             EnemyKilled?.Invoke(this, args);
+        }
+
+        public void RaiseEnemyHit(int playerId, EnemyNode enemy)
+        {
+            EnemyHitEventArgs args = new(playerId, enemy);
+            EnemyHit?.Invoke(this, args);
         }
     }
 }

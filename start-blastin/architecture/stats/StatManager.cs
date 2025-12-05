@@ -64,7 +64,6 @@ namespace Stats
         /// <param name="newValue">The new value of the stat.</param>
         public void UpdateStat(StatType type, float newValue)
         {
-            // DebugLogger.LogMessage($"newValue = {newValue}", true);
             Stat stat = GetStat(type);
 
             if (stat != null)

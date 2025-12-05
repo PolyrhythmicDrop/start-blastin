@@ -8,6 +8,7 @@ using Godot;
 using Interfaces;
 using Microsoft.VisualBasic;
 using Stats;
+using Utility;
 using WaveManagement;
 using Weapons;
 
@@ -69,6 +70,11 @@ namespace Enemies
         {
             get => _currentHealth;
             private set => _currentHealth = value;
+        }
+
+        public StatManager Stats
+        {
+            get => _stats;
         }
 
         public override void _Ready()
@@ -146,6 +152,21 @@ namespace Enemies
             _stats = new();
             _stats.AddStat(StatType.CrashDamage, _baseCrashDamage);
             _stats.AddStat(StatType.Speed, _baseSpeed);
+            _stats.AddStat(StatType.FireRate, _baseFireRate);
+            _stats.AddStat(StatType.MaxHealth, _baseMaxHealth);
+            _stats.AddStat(StatType.Damage, _baseWeaponDamage);
+        }
+
+        /// <summary>
+        /// Sets a stat value based on a passed StatType.
+        /// Used for Effects and other objects so you can use the correct getters/setters instead of accessing the StatManager directly.
+        /// </summary>
+        /// <param name="type">The stat type to set.</param>
+        /// <param name="value">The new value for the stat type.</param>
+        public virtual void SetStat(StatType type, float value)
+        {
+            DebugLogger.LogMessage($"Setting {Name} {type} to {value}!", true);
+            _stats.UpdateStat(type, value);
         }
 
         public virtual void ApplyWaveScaling(EnemyScaler scaler, int wave)
@@ -160,6 +181,7 @@ namespace Enemies
             float waveSqrtMultiplier = Mathf.Sqrt(wave) * 0.1f;
 
             _maxHealth = _baseMaxHealth * (1 + (scaler.MaxHealthModifier * waveLogMultiplier));
+            _stats.UpdateStat(StatType.MaxHealth, _maxHealth);
 
             float newCrashDamage =
                 _baseCrashDamage * (1 + (scaler.CrashDamageModifier * waveLogMultiplier));

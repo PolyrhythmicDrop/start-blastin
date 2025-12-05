@@ -1,5 +1,6 @@
 using System;
 using System.Text.RegularExpressions;
+using Enemies;
 using Entities;
 using Godot;
 using Interfaces;
@@ -19,6 +20,59 @@ namespace Effects
 
         [Export(PropertyHint.Enum)]
         public Operation Operation { get; set; }
+
+        public override void ApplyEffect(object source, EventArgs args)
+        {
+            StatManager statManager;
+            // If the current target is a player...
+            if (_target is Player player)
+            {
+                statManager = player.GetStatManager();
+                float currentVal = statManager.GetStat(Type).CurrentValue;
+                float newVal = CalcNewStatValue(currentVal, true);
+                player.SetStat(Type, newVal);
+            }
+            // If the target type is not self, then it's something other than a player
+            else if (Target != TargetType.Self)
+            {
+                // Set the target based on the event type passed
+                SetTarget(args);
+                if (_target is EnemyNode enemy)
+                {
+                    statManager = enemy.Stats;
+                    float currentVal = statManager.GetStat(Type).CurrentValue;
+                    float newVal = CalcNewStatValue(currentVal, true);
+                    enemy.SetStat(Type, newVal);
+                }
+            }
+        }
+
+        private float CalcNewStatValue(float currentValue, bool positive)
+        {
+            switch (Operation)
+            {
+                case Operation.Add:
+                    if (positive)
+                    {
+                        return currentValue + Value;
+                    }
+                    else
+                    {
+                        return currentValue + (Value * -1);
+                    }
+                case Operation.Multiply:
+                    if (positive)
+                    {
+                        return currentValue * Value;
+                    }
+                    else
+                    {
+                        return Math.Max(currentValue, 0.1f) / Value;
+                    }
+                default:
+                    return currentValue;
+            }
+        }
 
         public string GetEffectText()
         {

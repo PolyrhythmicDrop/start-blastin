@@ -527,7 +527,6 @@ namespace Entities
                     EquipPlugin(plugin);
                     break;
             }
-            ApplyEquipStatEffects();
         }
 
         #endregion
@@ -592,6 +591,31 @@ namespace Entities
                     );
                 }
             }
+
+            // Set all targets for "Self" effects to this player
+            SetSelfEffectTargets(plugins);
+
+            // Apply equip effects
+            ApplyEquipStatEffects();
+        }
+
+        private void SetSelfEffectTargets(params Plugin[] plugins)
+        {
+            List<Effect> selfEffects = new();
+
+            // Get all the effects that target Self and add them to the selfEffects list.
+            for (int i = 0; i < plugins.Count(); i++)
+            {
+                selfEffects.Concat(
+                    plugins[i].GetEffectList().FindAll(effect => effect.Target == TargetType.Self)
+                );
+            }
+
+            // Set the target for each "self effect" to this Player.
+            foreach (Effect effect in selfEffects)
+            {
+                effect.SetTarget(this);
+            }
         }
 
         public void SwapWeaponPlugin(WeaponPlugin weaponPlugin)
@@ -626,6 +650,60 @@ namespace Entities
         #endregion
 
         #region Equipment Effects
+
+        /// <summary>
+        /// Sets a stat value based on a passed StatType.
+        /// Used for Effects and other objects so you can use the correct getters/setters instead of accessing the StatManager directly.
+        /// </summary>
+        /// <param name="type">The stat type to set.</param>
+        /// <param name="value">The new value for the stat type.</param>
+        public void SetStat(StatType type, float value)
+        {
+            try
+            {
+                switch (type)
+                {
+                    case StatType.CrashDamage:
+                        CrashDamage = value;
+                        break;
+                    case StatType.Damage:
+                        Damage = value;
+                        break;
+                    case StatType.FireRate:
+                        FireRate = value;
+                        break;
+                    case StatType.MaxHealth:
+                        MaxHealth = value;
+                        break;
+                    case StatType.PhaseCooldown:
+                        PhaseCooldown = value;
+                        break;
+                    case StatType.PhaseDuration:
+                        PhaseDuration = value;
+                        break;
+                    case StatType.PhaseSpeed:
+                        PhaseSpeed = value;
+                        break;
+                    case StatType.PluginSlots:
+                        PluginSlots = (int)value;
+                        break;
+                    case StatType.ProjectileSpeed:
+                        ProjectileSpeed = value;
+                        break;
+                    case StatType.Speed:
+                        Speed = value;
+                        break;
+                    default:
+                        throw new ArgumentException(
+                            $"The passed StatType {type} does not have a corresponding variable!"
+                        );
+                }
+            }
+            catch (Exception e)
+            {
+                DebugLogger.LogMessage(e.Message, true, true);
+            }
+        }
 
         /// <summary>
         /// Applies StatEffects from all equipped items, starting with addition operations and ending with multiplicative operations.

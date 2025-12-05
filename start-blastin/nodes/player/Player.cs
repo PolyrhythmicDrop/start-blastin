@@ -523,14 +523,8 @@ namespace Entities
                 case Modifier modifier:
                     AddModifier(modifier);
                     break;
-                case WeaponPlugin weaponPlugin:
-                    SwapWeaponPlugin(weaponPlugin);
-                    break;
                 case Plugin plugin:
-                    if (plugin is not Items.WeaponPlugin)
-                    {
-                        EquipPlugin(plugin);
-                    }
+                    EquipPlugin(plugin);
                     break;
             }
             ApplyStatEffects();
@@ -584,6 +578,10 @@ namespace Entities
                 {
                     _plugins.Add(newPlugin);
                     EventBus.Instance.RaisePlayerPluginEquipped(_playerId, newPlugin);
+                }
+                else if (newPlugin is WeaponPlugin weaponPlugin)
+                {
+                    SwapWeaponPlugin(weaponPlugin);
                 }
                 else
                 {

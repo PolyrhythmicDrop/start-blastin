@@ -321,7 +321,7 @@ namespace Entities
             EventBus.Instance.EnemyKilled -= OnEnemyKilled;
         }
 
-        private void OnStatUpdated(object source, StatUpdatedEventArgs args)
+        public void OnStatUpdated(object source, StatUpdatedEventArgs args)
         {
             switch (args.StatType)
             {

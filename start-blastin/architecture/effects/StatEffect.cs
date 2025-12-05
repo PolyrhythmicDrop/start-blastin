@@ -39,7 +39,7 @@ namespace Effects
                 SetTarget(args);
                 if (_target is EnemyNode enemy)
                 {
-                    statManager = enemy.Stats;
+                    statManager = enemy.GetStatManager();
                     float currentVal = statManager.GetStat(Type).CurrentValue;
                     float newVal = CalcNewStatValue(currentVal, true);
                     enemy.SetStat(Type, newVal);

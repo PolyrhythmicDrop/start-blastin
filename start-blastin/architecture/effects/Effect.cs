@@ -72,7 +72,7 @@ namespace Effects
         protected bool _timed = false;
         protected float _time = 0.0f;
 
-        protected Callable _nullTargetCallable;
+        protected Callable _targetExitCallable;
 
         [Export]
         public TargetType Target { get; set; }
@@ -112,9 +112,14 @@ namespace Effects
 
         public Effect()
         {
-            _nullTargetCallable = Callable.From(() =>
+            _targetExitCallable = Callable.From(() =>
             {
-                _target = null;
+                // Remove the target and effect state from the dictionary.
+                if (_target != null)
+                {
+                    _targetStates.Remove(_target);
+                    _target = null;
+                }
             });
         }
 
@@ -130,12 +135,6 @@ namespace Effects
             if (!_targetStates.ContainsKey(target))
             {
                 _targetStates[target] = new EffectState(this);
-
-                // Remove the target's effect state when the target is freed
-                if (target is Node node)
-                {
-                    node.TreeExited += () => _targetStates.Remove(target);
-                }
             }
             // Return the current state of the effect on the target.
             return _targetStates[target];
@@ -155,10 +154,10 @@ namespace Effects
             // Nullify the target if it leaves the scene
             if (_target is Node node)
             {
-                if (!node.IsConnected(Node.SignalName.TreeExited, _nullTargetCallable))
+                if (!node.IsConnected(Node.SignalName.TreeExited, _targetExitCallable))
                 {
                     DebugLogger.LogMessage($"Connecting nullify signal on {node.Name}", true);
-                    node.Connect(Node.SignalName.TreeExited, _nullTargetCallable);
+                    node.Connect(Node.SignalName.TreeExited, _targetExitCallable);
                 }
             }
         }
@@ -211,10 +210,10 @@ namespace Effects
             // Nullify the target if it leaves the scene
             if (_target is Node node)
             {
-                if (!node.IsConnected(Node.SignalName.TreeExited, _nullTargetCallable))
+                if (!node.IsConnected(Node.SignalName.TreeExited, _targetExitCallable))
                 {
                     DebugLogger.LogMessage($"Connecting nullify signal on {node.Name}", true);
-                    node.Connect(Node.SignalName.TreeExited, _nullTargetCallable);
+                    node.Connect(Node.SignalName.TreeExited, _targetExitCallable);
                 }
             }
         }
@@ -233,7 +232,17 @@ namespace Effects
             if (_target is Node node)
             {
                 state.Timer = node.GetTree().CreateTimer(_time, processAlways: false);
-                state.Timer.Timeout += () => RemoveEffectFromTarget(_target);
+                state.Timer.Timeout += () =>
+                {
+                    if (_target != null)
+                    {
+                        DebugLogger.LogMessage(
+                            $"SceneTreeTimer {state?.Timer} timed out! Removing effect from {node?.Name}.",
+                            true
+                        );
+                        RemoveEffectFromTarget(_target);
+                    }
+                };
             }
         }
 

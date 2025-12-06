@@ -15,6 +15,10 @@ Type = 1
 Value = 200.0
 Target = 2
 Trigger = 2
+Stacking = true
+MaxStacks = 3
+Timed = true
+Time = 2.0
 metadata/_custom_type_script = "uid://bmeda5w63vsw7"
 
 [resource]

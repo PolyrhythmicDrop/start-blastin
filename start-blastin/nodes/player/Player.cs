@@ -95,7 +95,6 @@ namespace Entities
             private set
             {
                 _currentHealth = Mathf.Min(value, _maxHealth);
-                // _service.UpdateCurrentHealth(_playerId, _currentHealth);
                 EventBus.Instance.RaisePlayerCurrentHealthChanged(_playerId, _currentHealth);
             }
         }
@@ -284,7 +283,7 @@ namespace Entities
             _movementComponent = GetNode<MovementComponent>("%MovementComponent");
             _controller = GetNode<PlayerController>("%PlayerController");
             _weaponComponent = GetNode<WeaponComponent>("%WeaponComponent");
-            _currentHealth = _maxHealth;
+            CurrentHealth = _maxHealth;
 
             InitializeComponents();
             ConnectSignals();
@@ -419,21 +418,18 @@ namespace Entities
         public void TakeDamage(float damage, int? playerId = null)
         {
             _animationComponent.PlayDamageAnimation();
-            _currentHealth -= damage;
-
-            EventBus.Instance.RaisePlayerCurrentHealthChanged(_playerId, _currentHealth);
+            CurrentHealth -= damage;
 
             if (_currentHealth <= 0)
             {
-                _currentHealth = 0;
+                CurrentHealth = 0;
                 Die();
             }
         }
 
         public void Heal(float healAmount)
         {
-            _currentHealth = Mathf.Min(_currentHealth + healAmount, _maxHealth);
-            EventBus.Instance.RaisePlayerCurrentHealthChanged(_playerId, _currentHealth);
+            CurrentHealth = Mathf.Min(_currentHealth + healAmount, _maxHealth);
         }
 
         public void Die(int? playerId = null)
@@ -557,7 +553,7 @@ namespace Entities
                 _plugins.Remove(plugin);
                 foreach (Effect effect in plugin.GetEffectList())
                 {
-                    effect.RemoveEffect();
+                    effect.RemoveAllEffectStacks();
                 }
                 DisconnectPluginEffectTriggers(plugin);
                 EventBus.Instance.RaisePlayerItemRemoved(_playerId, plugin);

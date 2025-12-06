@@ -34,7 +34,16 @@ namespace Effects
     {
         protected GodotObject _target;
 
-        protected bool _active;
+        protected bool _active = false;
+        protected bool _stacking = false;
+        protected int _currentStacks = 0;
+        protected int _maxStacks = 1;
+
+        protected bool _timed = false;
+        protected float _time = 0.0f;
+        protected Timer _timer;
+
+        public bool Active => _active;
 
         [Export]
         public TargetType Target { get; set; }
@@ -42,7 +51,41 @@ namespace Effects
         [Export]
         public Trigger Trigger { get; set; }
 
-        public bool Active => _active;
+        [ExportGroup("Stacking")]
+        [Export(PropertyHint.GroupEnable)]
+        public bool Stacking
+        {
+            get => _stacking;
+            set => _stacking = value;
+        }
+
+        [Export(PropertyHint.Range, "1,10,1,greater_than")]
+        public int MaxStacks
+        {
+            get => _maxStacks;
+            set => _maxStacks = Math.Max(1, value);
+        }
+
+        public int CurrentStacks
+        {
+            get => _currentStacks;
+            set => _currentStacks = Math.Min(_maxStacks, value);
+        }
+
+        [ExportGroup("Timer")]
+        [Export(PropertyHint.GroupEnable)]
+        public bool Timed
+        {
+            get => _timed;
+            set => _timed = value;
+        }
+
+        [Export(PropertyHint.Range, "0.1,20,0.1,greater_than")]
+        public float Time
+        {
+            get => _time;
+            set => _time = Math.Max(0.1f, value);
+        }
 
         /// <summary>
         /// Set a target for the effect by passing in an object.
@@ -90,5 +133,7 @@ namespace Effects
         public virtual void ApplyEffect(object source, EventArgs args) { }
 
         public virtual void RemoveEffect() { }
+
+        public virtual void RemoveAllEffectStacks() { }
     }
 }

@@ -23,12 +23,12 @@ namespace Effects
 
         public override void ApplyEffect(object source, EventArgs args)
         {
-            if (_active)
+            // Don't apply the effect if we're either active (if not stacking) or at max stacks (if stacking)
+            if (!_stacking && _active || (_stacking && _currentStacks >= _maxStacks))
             {
                 return;
             }
 
-            StatManager statMan;
             // If the _target is not already set to the Player, set the _target based on the passed args.
             if (_target is not Player || _target == null)
             {
@@ -37,17 +37,22 @@ namespace Effects
 
             if (_target is IStats statful)
             {
-                statMan = statful.GetStatManager();
+                StatManager statMan = statful.GetStatManager();
                 float currentVal = statMan.GetStat(Type).CurrentValue;
                 float newVal = CalcNewStatValue(currentVal, true);
                 statful.SetStat(Type, newVal);
                 _active = true;
+                if (_stacking)
+                {
+                    CurrentStacks++;
+                }
             }
         }
 
         public override void RemoveEffect()
         {
-            if (!_active)
+            // Don't remove the effect if it's not active (if not stacking) or if there are no current stacks.
+            if (!_stacking && !_active || _stacking && _currentStacks == 0)
             {
                 return;
             }
@@ -58,7 +63,32 @@ namespace Effects
                 float currentVal = statMan.GetStat(Type).CurrentValue;
                 float newVal = CalcNewStatValue(currentVal, false);
                 statful.SetStat(Type, newVal);
-                _active = false;
+
+                CurrentStacks = Math.Max(0, CurrentStacks - 1);
+
+                if (_stacking && _currentStacks == 0 || !_stacking)
+                {
+                    _active = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove all effect stacks.
+        /// </summary>
+        public override void RemoveAllEffectStacks()
+        {
+            if (!_stacking)
+            {
+                RemoveEffect();
+                return;
+            }
+            else
+            {
+                for (int i = 0; i < _currentStacks; i++)
+                {
+                    RemoveEffect();
+                }
             }
         }
 

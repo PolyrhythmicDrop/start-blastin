@@ -458,7 +458,11 @@ namespace Entities
         public bool CanBuyItem(Item item)
         {
             bool canAfford = CanAffordItem(item);
-            bool noDupePlugins = _plugins.Contains(item) ? false : true;
+            // bool noDupePlugins = _plugins.Contains(item) ? false : true;
+            bool noDupePlugins =
+                _plugins.Find(plugin => plugin.ResourceName == item.ResourceName) == null
+                    ? true
+                    : false;
             bool noDupeWeapon = _weaponPlugin != item;
             bool freeSlot = (_plugins.Count + 1) <= _pluginSlots;
 
@@ -574,8 +578,11 @@ namespace Entities
 
         public void EquipPlugin(params Plugin[] plugins)
         {
-            foreach (Plugin newPlugin in plugins)
+            foreach (Plugin plugin in plugins)
             {
+                // Dupe the plugin so that it's a unique instance and won't retain values
+                Plugin newPlugin = (Plugin)plugin.Duplicate(true);
+
                 // Add the plugin to the plugins list and raise the PlayerPluginEquipped event for this particular plugin
                 if (_plugins.Count <= _pluginSlots && newPlugin is not Items.WeaponPlugin)
                 {
@@ -590,7 +597,7 @@ namespace Entities
                 else
                 {
                     DebugLogger.LogMessage(
-                        $"Cannot add {newPlugin.Name} to plugin list! Equipped plugin count cannot exceed plugin slots. Slots: {_pluginSlots} | Current equipped plugins: {_plugins.Count}",
+                        $"Cannot add {newPlugin.ResourceName} to plugin list! Equipped plugin count cannot exceed plugin slots. Slots: {_pluginSlots} | Current equipped plugins: {_plugins.Count}",
                         true,
                         true
                     );
@@ -695,7 +702,10 @@ namespace Entities
         public bool HasPlugin(Plugin plugin)
         {
             bool hasWeapon = _weaponPlugin == plugin ? true : false;
-            bool hasPlugin = _plugins.Contains(plugin);
+            bool hasPlugin =
+                _plugins.Find(eqPlugin => eqPlugin.ResourceName == plugin.ResourceName) != null
+                    ? true
+                    : false;
             return hasWeapon || hasPlugin;
         }
 

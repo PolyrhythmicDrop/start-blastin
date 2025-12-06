@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using Autoloads;
 using Components;
 using Effects;
@@ -534,7 +535,7 @@ namespace Entities
             ScrapItem(args.Item);
         }
 
-        private void ScrapItem(Item item)
+        private async void ScrapItem(Item item)
         {
             // Add to the player's byte count.
             // TODO: consider adding an item that lets you scrap stuff for flux, or both currencies.

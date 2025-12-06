@@ -1,10 +1,12 @@
 using System;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Enemies;
 using Entities;
 using Godot;
 using Interfaces;
 using Stats;
+using Utility;
 
 namespace Effects
 {
@@ -46,6 +48,10 @@ namespace Effects
                 {
                     CurrentStacks++;
                 }
+                DebugLogger.LogMessage(
+                    $"Effect applied! Current stacks: {CurrentStacks} | Max Stacks: {MaxStacks} | Active: {Active}",
+                    true
+                );
             }
         }
 
@@ -66,7 +72,7 @@ namespace Effects
 
                 CurrentStacks = Math.Max(0, CurrentStacks - 1);
 
-                if (_stacking && _currentStacks == 0 || !_stacking)
+                if (_stacking && _currentStacks <= 0 || !_stacking)
                 {
                     _active = false;
                 }
@@ -85,10 +91,11 @@ namespace Effects
             }
             else
             {
-                for (int i = 0; i < _currentStacks; i++)
+                for (int i = _currentStacks; i > 0; i--)
                 {
                     RemoveEffect();
                 }
+                return;
             }
         }
 

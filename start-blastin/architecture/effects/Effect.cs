@@ -117,6 +117,12 @@ namespace Effects
                 // Remove the target and effect state from the dictionary.
                 if (_target != null)
                 {
+                    // Remove the state timer from the state.
+                    EffectState state = _targetStates[_target];
+                    if (state.Timer != null)
+                    {
+                        state.Timer.Timeout -= OnEffectTimerTimeout;
+                    }
                     _targetStates.Remove(_target);
                     _target = null;
                 }
@@ -156,8 +162,8 @@ namespace Effects
             {
                 if (!node.IsConnected(Node.SignalName.TreeExited, _targetExitCallable))
                 {
-                    DebugLogger.LogMessage($"Connecting nullify signal on {node.Name}", true);
-                    node.Connect(Node.SignalName.TreeExited, _targetExitCallable);
+                    DebugLogger.LogMessage($"Connecting nullify signal on {node?.Name}", true);
+                    node?.Connect(Node.SignalName.TreeExited, _targetExitCallable);
                 }
             }
         }
@@ -231,18 +237,16 @@ namespace Effects
             }
             if (_target is Node node)
             {
-                state.Timer = node.GetTree().CreateTimer(_time, processAlways: false);
-                state.Timer.Timeout += () =>
-                {
-                    if (_target != null)
-                    {
-                        DebugLogger.LogMessage(
-                            $"SceneTreeTimer {state?.Timer} timed out! Removing effect from {node?.Name}.",
-                            true
-                        );
-                        RemoveEffectFromTarget(_target);
-                    }
-                };
+                state.Timer = node?.GetTree().CreateTimer(_time, processAlways: false);
+                state.Timer.Timeout += OnEffectTimerTimeout;
+            }
+        }
+
+        protected virtual void OnEffectTimerTimeout()
+        {
+            if (_target != null)
+            {
+                RemoveEffectFromTarget(_target);
             }
         }
 

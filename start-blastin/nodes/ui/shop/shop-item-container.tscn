@@ -17,8 +17,6 @@ offset_top = 3.5599976
 offset_bottom = -3.5599976
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
 focus_mode = 2
 focus_behavior_recursive = 2
 theme_override_styles/panel = ExtResource("2_stoc2")
@@ -32,16 +30,17 @@ theme_override_constants/separation = 0
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
+size_flags_vertical = 3
 NameLabelSettings = 1
 
 [node name="ItemDisplay" parent="VBoxContainer" instance=ExtResource("4_ca63a")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 1
-size_flags_vertical = 6
 size_flags_stretch_ratio = 3.0
 
 [node name="PricePanelContainer" parent="VBoxContainer" instance=ExtResource("5_ca63a")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
+size_flags_vertical = 1

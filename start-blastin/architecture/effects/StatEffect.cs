@@ -48,10 +48,7 @@ namespace Effects
                 {
                     CurrentStacks++;
                 }
-                DebugLogger.LogMessage(
-                    $"Effect applied! Current stacks: {CurrentStacks} | Max Stacks: {MaxStacks} | Active: {Active}",
-                    true
-                );
+                base.ApplyEffect(source, args);
             }
         }
 
@@ -70,7 +67,10 @@ namespace Effects
                 float newVal = CalcNewStatValue(currentVal, false);
                 statful.SetStat(Type, newVal);
 
-                CurrentStacks = Math.Max(0, CurrentStacks - 1);
+                if (_stacking)
+                {
+                    CurrentStacks = Math.Max(0, CurrentStacks - 1);
+                }
 
                 if (_stacking && _currentStacks <= 0 || !_stacking)
                 {

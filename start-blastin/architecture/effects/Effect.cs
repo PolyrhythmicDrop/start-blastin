@@ -35,14 +35,17 @@ namespace Effects
     {
         protected GodotObject _target;
 
+        // ~~ Stacks and State ~~
         protected bool _active = false;
         protected bool _stacking = false;
         protected int _currentStacks = 0;
         protected int _maxStacks = 1;
 
+        // ~~ Timed Stuff ~~
+
         protected bool _timed = false;
         protected float _time = 0.0f;
-        protected Timer _timer;
+        protected SceneTreeTimer _timer;
 
         public bool Active => _active;
 
@@ -73,7 +76,7 @@ namespace Effects
             set => _currentStacks = Math.Min(_maxStacks, value);
         }
 
-        [ExportGroup("Timer")]
+        [ExportGroup("Timing")]
         [Export(PropertyHint.GroupEnable)]
         public bool Timed
         {
@@ -85,7 +88,7 @@ namespace Effects
         public float Time
         {
             get => _time;
-            set => _time = Math.Max(0.1f, value);
+            set { _time = Math.Max(0.1f, value); }
         }
 
         /// <summary>
@@ -131,7 +134,22 @@ namespace Effects
             }
         }
 
-        public virtual void ApplyEffect(object source, EventArgs args) { }
+        public virtual void InitializeTimer() { }
+
+        public virtual void ApplyEffect(object source, EventArgs args)
+        {
+            if (!_timed || _target == null)
+            {
+                return;
+            }
+
+            // Create a one-shot timer and start it.
+            if (_target is Node node)
+            {
+                _timer = node.GetTree().CreateTimer(_time, processAlways: false);
+                _timer.Timeout += RemoveEffect;
+            }
+        }
 
         public virtual void RemoveEffect() { }
 

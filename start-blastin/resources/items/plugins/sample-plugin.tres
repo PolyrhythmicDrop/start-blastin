@@ -6,18 +6,15 @@
 
 [sub_resource type="Resource" id="Resource_jv5gu"]
 script = ExtResource("1_jv5gu")
-Type = 1
-Value = 100.0
+Value = 2.0
 metadata/_custom_type_script = "uid://bmeda5w63vsw7"
 
 [sub_resource type="Resource" id="Resource_ad7uv"]
 script = ExtResource("1_jv5gu")
-Value = 5.0
-Trigger = 1
-Stacking = true
-MaxStacks = 3
-Timed = true
-Time = 5.0
+Type = 1
+Value = 200.0
+Target = 2
+Trigger = 2
 metadata/_custom_type_script = "uid://bmeda5w63vsw7"
 
 [resource]

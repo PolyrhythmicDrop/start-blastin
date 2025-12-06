@@ -539,7 +539,7 @@ namespace Entities
             ScrapItem(args.Item);
         }
 
-        private async void ScrapItem(Item item)
+        private void ScrapItem(Item item)
         {
             // Add to the player's byte count.
             // TODO: consider adding an item that lets you scrap stuff for flux, or both currencies.

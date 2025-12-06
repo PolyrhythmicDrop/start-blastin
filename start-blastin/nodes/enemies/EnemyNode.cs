@@ -37,6 +37,7 @@ namespace Enemies
         protected Vector2 _motion => _currentGlobalPosition - _lastGlobalPosition;
         protected Vector2 _lastFramePosition;
         protected Vector2 _currentVelocity = Vector2.Zero;
+        protected Tween _followTween;
         #endregion
 
         #region Stats
@@ -97,7 +98,7 @@ namespace Enemies
             ConnectSignals();
         }
 
-        public void ConnectSignals()
+        public virtual void ConnectSignals()
         {
             if (_stats != null)
             {
@@ -105,7 +106,7 @@ namespace Enemies
             }
         }
 
-        public void DisconnectSignals()
+        public virtual void DisconnectSignals()
         {
             _stats.StatUpdated -= OnStatUpdated;
         }
@@ -173,6 +174,12 @@ namespace Enemies
         public virtual void SetStat(StatType type, float value)
         {
             _stats.UpdateStat(type, value);
+            if (type == StatType.Speed)
+            {
+                DebugLogger.LogMessage(
+                    $"{Name} Speed set to {_stats.GetStat(type).CurrentValue}! _followSpeed is {_followSpeed}"
+                );
+            }
         }
 
         public void OnStatUpdated(object source, StatUpdatedEventArgs args)
@@ -183,6 +190,9 @@ namespace Enemies
                 case StatType.Damage:
                 case StatType.ProjectileSpeed:
                     Weapon.UpdateWeaponStats(args.StatType, args.Stat);
+                    break;
+                case StatType.Speed:
+                    FollowPath(_path, _followSpeed);
                     break;
                 default:
                     return;
@@ -313,8 +323,13 @@ namespace Enemies
             float pathLength = path.Curve.GetBakedLength();
             float duration = Mathf.Max(pathLength / speed, 0.1f);
 
-            Tween tween = CreateTween();
-            tween.TweenProperty(path.PathFollow, "progress_ratio", 1.0, duration);
+            if (_followTween != null)
+            {
+                _followTween.Kill();
+            }
+
+            _followTween = CreateTween();
+            _followTween.TweenProperty(path.PathFollow, "progress_ratio", 1.0, duration);
         }
 
         public override void _ExitTree()

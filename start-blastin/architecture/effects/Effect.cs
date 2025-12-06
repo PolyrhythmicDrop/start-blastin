@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices.Swift;
 using System.Threading.Tasks;
 using Entities;
@@ -7,6 +8,7 @@ using Godot;
 using Interfaces;
 using Services;
 using Stats;
+using Utility;
 
 namespace Effects
 {
@@ -33,21 +35,44 @@ namespace Effects
     [GlobalClass]
     public abstract partial class Effect : Resource
     {
+        /// <summary>
+        /// Manages state of a given effect on a specific target object.
+        /// </summary>
+        protected class EffectState
+        {
+            private Effect _parent;
+            private int _currentStacks = 0;
+            public bool Active { get; set; } = false;
+            public int CurrentStacks
+            {
+                get => _currentStacks;
+                set => _currentStacks = Math.Min(_parent._maxStacks, value);
+            }
+            public SceneTreeTimer Timer { get; set; }
+
+            internal EffectState(Effect parent)
+            {
+                _parent = parent;
+            }
+        }
+
+        /// <summary>
+        /// Per-target effect state tracking. Key is the target, value is the state of the effect on the target.
+        /// </summary>
+        protected Dictionary<GodotObject, EffectState> _targetStates = new();
+
         protected GodotObject _target;
 
-        // ~~ Stacks and State ~~
-        protected bool _active = false;
+        // ~~ Stacking ~~
         protected bool _stacking = false;
-        protected int _currentStacks = 0;
         protected int _maxStacks = 1;
 
-        // ~~ Timed Stuff ~~
+        // ~~ Timing ~~
 
         protected bool _timed = false;
         protected float _time = 0.0f;
-        protected SceneTreeTimer _timer;
 
-        public bool Active => _active;
+        protected Callable _nullTargetCallable;
 
         [Export]
         public TargetType Target { get; set; }
@@ -70,12 +95,6 @@ namespace Effects
             set => _maxStacks = Math.Max(1, value);
         }
 
-        public int CurrentStacks
-        {
-            get => _currentStacks;
-            set => _currentStacks = Math.Min(_maxStacks, value);
-        }
-
         [ExportGroup("Timing")]
         [Export(PropertyHint.GroupEnable)]
         public bool Timed
@@ -91,13 +110,57 @@ namespace Effects
             set { _time = Math.Max(0.1f, value); }
         }
 
+        public Effect()
+        {
+            _nullTargetCallable = Callable.From(() =>
+            {
+                _target = null;
+            });
+        }
+
+        /// <summary>
+        /// Retrieves the current state of the effect on a specified target.
+        /// If the target doesn't have the effect active, adds a new EffectState to the <see cref="_targetStates"/> dictionary.
+        /// </summary>
+        /// <param name="target">The object whose effect state will be added or retrieved.</param>
+        /// <returns>The current state of the effect on the <paramref name="target"/>.</returns>
+        protected EffectState GetOrCreateEffectState(GodotObject target)
+        {
+            // If the targetStates dictionary doesn't contain the current target, add a new EffectState
+            if (!_targetStates.ContainsKey(target))
+            {
+                _targetStates[target] = new EffectState(this);
+
+                // Remove the target's effect state when the target is freed
+                if (target is Node node)
+                {
+                    node.TreeExited += () => _targetStates.Remove(target);
+                }
+            }
+            // Return the current state of the effect on the target.
+            return _targetStates[target];
+        }
+
         /// <summary>
         /// Set a target for the effect by passing in an object.
         /// </summary>
         /// <param name="target">The target for the effect.</param>
         public void SetTarget(GodotObject target)
         {
-            _target = target;
+            if (_target != target)
+            {
+                _target = target;
+            }
+
+            // Nullify the target if it leaves the scene
+            if (_target is Node node)
+            {
+                if (!node.IsConnected(Node.SignalName.TreeExited, _nullTargetCallable))
+                {
+                    DebugLogger.LogMessage($"Connecting nullify signal on {node.Name}", true);
+                    node.Connect(Node.SignalName.TreeExited, _nullTargetCallable);
+                }
+            }
         }
 
         /// <summary>
@@ -110,11 +173,12 @@ namespace Effects
         public virtual void SetTarget(EventArgs args)
         {
             PlayerService playerService = ServiceManager.Instance.GetService<PlayerService>();
+            GodotObject newTarget = null;
             switch (Target)
             {
                 case TargetType.Self:
                 {
-                    _target = args switch
+                    newTarget = args switch
                     {
                         EnemyHitEventArgs enemyHit => playerService.GetPlayer(enemyHit.PlayerId),
                         EnemyKilledEventArgs enemyKilled => playerService.GetPlayer(
@@ -125,16 +189,53 @@ namespace Effects
                     break;
                 }
                 case TargetType.Enemy:
-                    _target = args switch
+                    newTarget = args switch
                     {
                         EnemyHitEventArgs enemyHit => enemyHit.Enemy,
                         _ => null,
                     };
                     break;
             }
+
+            // If the new target isn't the same as the current target, set the target.
+            // This is to avoid duplicating the nullification signal
+            if (newTarget != _target)
+            {
+                _target = newTarget;
+            }
+            else
+            {
+                return;
+            }
+
+            // Nullify the target if it leaves the scene
+            if (_target is Node node)
+            {
+                if (!node.IsConnected(Node.SignalName.TreeExited, _nullTargetCallable))
+                {
+                    DebugLogger.LogMessage($"Connecting nullify signal on {node.Name}", true);
+                    node.Connect(Node.SignalName.TreeExited, _nullTargetCallable);
+                }
+            }
         }
 
-        public virtual void InitializeTimer() { }
+        /// <summary>
+        /// Connects the effect timer's signals and starts the effect timer.
+        /// Removes the EffectState when the timer goes off.
+        /// </summary>
+        /// <param name="state">The EffectState to remove when the timer goes off.</param>
+        protected virtual void StartTimer(EffectState state)
+        {
+            if (!_timed || _target == null)
+            {
+                return;
+            }
+            if (_target is Node node)
+            {
+                state.Timer = node.GetTree().CreateTimer(_time, processAlways: false);
+                state.Timer.Timeout += () => RemoveEffectFromTarget(_target);
+            }
+        }
 
         public virtual void ApplyEffect(object source, EventArgs args)
         {
@@ -142,16 +243,11 @@ namespace Effects
             {
                 return;
             }
-
-            // Create a one-shot timer and start it.
-            if (_target is Node node)
-            {
-                _timer = node.GetTree().CreateTimer(_time, processAlways: false);
-                _timer.Timeout += RemoveEffect;
-            }
         }
 
         public virtual void RemoveEffect() { }
+
+        protected virtual void RemoveEffectFromTarget(GodotObject target) { }
 
         public virtual void RemoveAllEffectStacks() { }
     }

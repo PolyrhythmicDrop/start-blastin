@@ -13,7 +13,7 @@ metadata/_custom_type_script = "uid://bmeda5w63vsw7"
 [sub_resource type="Resource" id="Resource_lyair"]
 script = ExtResource("1_qwm1n")
 Type = 6
-Value = 3.0
+Value = 0.1
 metadata/_custom_type_script = "uid://bmeda5w63vsw7"
 
 [resource]

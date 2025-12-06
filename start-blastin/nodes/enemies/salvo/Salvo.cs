@@ -16,10 +16,9 @@ public partial class Salvo : EnemyNode
     private AnimatedSprite2D _destruction;
 
     // Waypointing and path following
-    // private List<Vector2> _firingPositions = new();
     private Dictionary<Vector2, bool> _firePositions = new();
     private bool _firingBegun = false;
-    private Tween _followTween;
+
     private Tween _spinTween;
 
     private event Action InitialFirePosReached;
@@ -49,20 +48,22 @@ public partial class Salvo : EnemyNode
         FollowPath(_path, _followSpeed);
     }
 
-    public void ConnectSignals()
+    public override void ConnectSignals()
     {
         InitialFirePosReached += OnInitialFirePositionReached;
         FireWaypointReached += OnFireWaypointReached;
         FireComplete += OnFireComplete;
         FinalFireComplete += OnFinalFireComplete;
+        base.ConnectSignals();
     }
 
-    public void DisconnectSignals()
+    public override void DisconnectSignals()
     {
         InitialFirePosReached -= OnInitialFirePositionReached;
         FireWaypointReached -= OnFireWaypointReached;
         FireComplete -= OnFireComplete;
         FinalFireComplete -= OnFinalFireComplete;
+        base.DisconnectSignals();
     }
 
     public override void _Process(double delta)
@@ -168,7 +169,7 @@ public partial class Salvo : EnemyNode
         _followTween.TweenProperty(path.PathFollow, "progress_ratio", 1.0, duration);
     }
 
-    private async void CheckWaypoints()
+    private void CheckWaypoints()
     {
         KeyValuePair<Vector2, bool> initFirePos = _firePositions.ElementAt(0);
         KeyValuePair<Vector2, bool> finalFirePos = _firePositions.ElementAt(2);
@@ -184,8 +185,8 @@ public partial class Salvo : EnemyNode
         {
             if (_path.PathFollow.Position.DistanceSquaredTo(kvp.Key) <= 30 && kvp.Value == false)
             {
-                FireWaypointReached?.Invoke(kvp.Key);
                 _firePositions[kvp.Key] = true;
+                FireWaypointReached?.Invoke(kvp.Key);
             }
         }
     }

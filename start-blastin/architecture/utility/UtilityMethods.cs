@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 using Godot;
 
 namespace Utility
@@ -13,6 +14,15 @@ namespace Utility
         public static float ConvertNegativeRotationDegrees(float degrees)
         {
             return (degrees % 360 + 360) % 360;
+        }
+
+        public static string SplitCamelCase(string str)
+        {
+            return Regex.Replace(
+                Regex.Replace(str, @"(\P{Ll})(\P{Ll}\p{Ll})", "$1 $2"),
+                @"(\p{Ll})(\P{Ll})",
+                "$1 $2"
+            );
         }
     }
 }

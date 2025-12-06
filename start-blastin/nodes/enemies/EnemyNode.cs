@@ -175,12 +175,6 @@ namespace Enemies
         public virtual void SetStat(StatType type, float value)
         {
             _stats.UpdateStat(type, value);
-            if (type == StatType.Speed)
-            {
-                DebugLogger.LogMessage(
-                    $"{Name} Speed set to {_stats.GetStat(type).CurrentValue}! _followSpeed is {_followSpeed}"
-                );
-            }
         }
 
         public virtual void OnStatUpdated(object source, StatUpdatedEventArgs args)

@@ -257,7 +257,6 @@ public partial class Salvo : EnemyNode
     {
         _flouncing = true;
 
-        DebugLogger.LogMessage($"{Name} beginning flounce! Speed: {_followSpeed}");
         _followTween.Pause();
         // Get the offset at the current progress ratio
         float pathRotation = _path
@@ -279,7 +278,6 @@ public partial class Salvo : EnemyNode
         await ToSignal(_flounceTween, Tween.SignalName.Finished);
         _path.PathFollow.Rotates = true;
         _followTween.Play();
-        DebugLogger.LogMessage($"{Name} ending flounce! Speed: {_followSpeed}");
     }
 
     public override void _ExitTree()

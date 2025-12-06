@@ -4,23 +4,32 @@
 [ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="1_w0waf"]
 [ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="2_rvks2"]
 
-[sub_resource type="Resource" id="Resource_wekqk"]
-script = ExtResource("1_w0waf")
-Type = 2
-Value = 0.2
-metadata/_custom_type_script = "uid://bmeda5w63vsw7"
-
-[sub_resource type="Resource" id="Resource_k7mjf"]
-script = ExtResource("1_w0waf")
-Type = 4
-Value = 2.0
-Operation = 1
-metadata/_custom_type_script = "uid://bmeda5w63vsw7"
-
 [sub_resource type="Resource" id="Resource_w0waf"]
 script = ExtResource("1_w0waf")
+Type = 2
+Value = 0.5
+Trigger = 1
+Stacking = true
+MaxStacks = 2
+Timed = true
+Time = 2.0
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[sub_resource type="Resource" id="Resource_rvks2"]
+script = ExtResource("1_w0waf")
 Type = 3
-Value = -0.2
+Value = -0.29999999999999716
+Trigger = 2
+Stacking = true
+MaxStacks = 5
+Timed = true
+Time = 1.0
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[sub_resource type="Resource" id="Resource_wekqk"]
+script = ExtResource("1_w0waf")
+Type = 4
+Value = 50.0
 metadata/_custom_type_script = "uid://bmeda5w63vsw7"
 
 [resource]
@@ -28,10 +37,10 @@ resource_name = "evasive-manuevers"
 script = ExtResource("1_r52ug")
 Upgradeable = true
 Name = &"Evasive Manuevers"
-Description = &"Dodge, dip, duck, dodge. Makes you faster, more nimble, and lighter than a feather. Zip, zoom, pew pew pew."
+Description = &"Dodge, dip, duck, dodge. Makes you faster, more nimble, and lighter than a feather."
 Icon = ExtResource("2_rvks2")
 Rarity = 4
 FluxCost = 200
 ByteCost = 600
-Effects = Array[Object]([SubResource("Resource_wekqk"), SubResource("Resource_k7mjf"), SubResource("Resource_w0waf")])
+Effects = Array[Object]([SubResource("Resource_w0waf"), SubResource("Resource_rvks2"), SubResource("Resource_wekqk")])
 metadata/_custom_type_script = "uid://b3qmdj461ykoi"

@@ -118,12 +118,14 @@ namespace Effects
                 if (_target != null)
                 {
                     // Remove the state timer from the state.
-                    EffectState state = _targetStates[_target];
-                    if (state.Timer != null)
+                    if (_targetStates.TryGetValue(_target, out EffectState state))
                     {
-                        state.Timer.Timeout -= OnEffectTimerTimeout;
+                        if (state.Timer != null)
+                        {
+                            state.Timer.Timeout -= OnEffectTimerTimeout;
+                        }
+                        _targetStates.Remove(_target);
                     }
-                    _targetStates.Remove(_target);
                     _target = null;
                 }
             });

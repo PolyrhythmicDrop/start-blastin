@@ -321,6 +321,11 @@ namespace Entities
             EventBus.Instance.EnemyKilled -= OnEnemyKilled;
         }
 
+        /// <summary>
+        /// Callback for special processing when a stat is updated.
+        /// </summary>
+        /// <param name="source">The entity's StatManager instance.</param>
+        /// <param name="args">Arguments from the event.</param>
         public void OnStatUpdated(object source, StatUpdatedEventArgs args)
         {
             switch (args.StatType)
@@ -721,7 +726,6 @@ namespace Entities
         /// <param name="value">The new value for the stat type.</param>
         public void SetStat(StatType type, float value)
         {
-            DebugLogger.LogMessage($"Setting player stat {type} to {value}", true);
             try
             {
                 switch (type)
@@ -761,6 +765,10 @@ namespace Entities
                             $"The passed StatType {type} does not have a corresponding variable!"
                         );
                 }
+                // DebugLogger.LogMessage(
+                //     $"{Name} {type} current value set: {_stats.GetStat(type).CurrentValue}",
+                //     true
+                // );
             }
             catch (Exception e)
             {

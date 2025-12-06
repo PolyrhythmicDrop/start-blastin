@@ -26,6 +26,7 @@ namespace Effects
     {
         Equip,
         EnemyKilled,
+        EnemyHit,
     }
 
     [GlobalClass]
@@ -33,11 +34,15 @@ namespace Effects
     {
         protected GodotObject _target;
 
+        protected bool _active;
+
         [Export]
         public TargetType Target { get; set; }
 
         [Export]
         public Trigger Trigger { get; set; }
+
+        public bool Active => _active;
 
         /// <summary>
         /// Set a target for the effect by passing in an object.

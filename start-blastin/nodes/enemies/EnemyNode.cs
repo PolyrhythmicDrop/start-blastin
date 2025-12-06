@@ -172,7 +172,6 @@ namespace Enemies
         /// <param name="value">The new value for the stat type.</param>
         public virtual void SetStat(StatType type, float value)
         {
-            DebugLogger.LogMessage($"Setting {Name} {type} to {value}!", true);
             _stats.UpdateStat(type, value);
         }
 

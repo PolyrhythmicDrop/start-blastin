@@ -23,27 +23,42 @@ namespace Effects
 
         public override void ApplyEffect(object source, EventArgs args)
         {
-            StatManager statManager;
-            // If the current target is a player...
-            if (_target is Player player)
+            if (_active)
             {
-                statManager = player.GetStatManager();
-                float currentVal = statManager.GetStat(Type).CurrentValue;
-                float newVal = CalcNewStatValue(currentVal, true);
-                player.SetStat(Type, newVal);
+                return;
             }
-            // If the target type is not self, then it's something other than a player
-            else if (Target != TargetType.Self)
+
+            StatManager statMan;
+            // If the _target is not already set to the Player, set the _target based on the passed args.
+            if (_target is not Player || _target == null)
             {
-                // Set the target based on the event type passed
                 SetTarget(args);
-                if (_target is EnemyNode enemy)
-                {
-                    statManager = enemy.GetStatManager();
-                    float currentVal = statManager.GetStat(Type).CurrentValue;
-                    float newVal = CalcNewStatValue(currentVal, true);
-                    enemy.SetStat(Type, newVal);
-                }
+            }
+
+            if (_target is IStats statful)
+            {
+                statMan = statful.GetStatManager();
+                float currentVal = statMan.GetStat(Type).CurrentValue;
+                float newVal = CalcNewStatValue(currentVal, true);
+                statful.SetStat(Type, newVal);
+                _active = true;
+            }
+        }
+
+        public override void RemoveEffect()
+        {
+            if (!_active)
+            {
+                return;
+            }
+
+            if (_target is IStats statful)
+            {
+                StatManager statMan = statful.GetStatManager();
+                float currentVal = statMan.GetStat(Type).CurrentValue;
+                float newVal = CalcNewStatValue(currentVal, false);
+                statful.SetStat(Type, newVal);
+                _active = false;
             }
         }
 

@@ -546,14 +546,20 @@ namespace Entities
 
             // Remove the item from the player's equipment.
 
-            if (item is WeaponPlugin)
+            if (item is WeaponPlugin weaponPlugin)
             {
                 // Revert to the basic bullet if you sell a weapon plugin.
+                DisconnectPluginEffectTriggers(weaponPlugin);
                 ResetWeaponPlugin();
             }
             else if (item is Plugin plugin && _plugins.Contains(plugin))
             {
                 _plugins.Remove(plugin);
+                foreach (Effect effect in plugin.GetEffectList())
+                {
+                    effect.RemoveEffect();
+                }
+                DisconnectPluginEffectTriggers(plugin);
                 EventBus.Instance.RaisePlayerItemRemoved(_playerId, plugin);
             }
 
@@ -573,11 +579,13 @@ namespace Entities
         {
             foreach (Plugin newPlugin in plugins)
             {
+                // Add the plugin to the plugins list and raise the PlayerPluginEquipped event for this particular plugin
                 if (_plugins.Count <= _pluginSlots && newPlugin is not Items.WeaponPlugin)
                 {
                     _plugins.Add(newPlugin);
                     EventBus.Instance.RaisePlayerPluginEquipped(_playerId, newPlugin);
                 }
+                // Swap out any weapon plugins
                 else if (newPlugin is WeaponPlugin weaponPlugin)
                 {
                     SwapWeaponPlugin(weaponPlugin);
@@ -595,8 +603,55 @@ namespace Entities
             // Set all targets for "Self" effects to this player
             SetSelfEffectTargets(plugins);
 
+            // Connect all triggers to the appropriate events
+            ConnectPluginEffectTriggers(plugins);
+
             // Apply equip effects
             ApplyEquipStatEffects();
+        }
+
+        /// <summary>
+        /// Connects plugin effects to events based on the effect's selected trigger.
+        /// TODO: Add new events for each addition to the Trigger enum.
+        /// </summary>
+        /// <param name="plugin">The plugin to connect.</param>
+        public void ConnectPluginEffectTriggers(params Plugin[] plugins)
+        {
+            for (int i = 0; i < plugins.Count(); i++)
+            {
+                foreach (Effect effect in plugins[i].GetEffectList())
+                {
+                    switch (effect.Trigger)
+                    {
+                        case Trigger.EnemyHit:
+                            EventBus.Instance.EnemyHit += effect.ApplyEffect;
+                            break;
+                        case Trigger.EnemyKilled:
+                            EventBus.Instance.EnemyKilled += effect.ApplyEffect;
+                            break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Disconnects plugin effects to events. Call when a plugin is unequipped.
+        /// </summary>
+        /// <param name="plugin"></param>
+        public void DisconnectPluginEffectTriggers(Plugin plugin)
+        {
+            foreach (Effect effect in plugin.GetEffectList())
+            {
+                switch (effect.Trigger)
+                {
+                    case Trigger.EnemyHit:
+                        EventBus.Instance.EnemyHit -= effect.ApplyEffect;
+                        break;
+                    case Trigger.EnemyKilled:
+                        EventBus.Instance.EnemyKilled -= effect.ApplyEffect;
+                        break;
+                }
+            }
         }
 
         private void SetSelfEffectTargets(params Plugin[] plugins)
@@ -606,7 +661,7 @@ namespace Entities
             // Get all the effects that target Self and add them to the selfEffects list.
             for (int i = 0; i < plugins.Count(); i++)
             {
-                selfEffects.Concat(
+                selfEffects.AddRange(
                     plugins[i].GetEffectList().FindAll(effect => effect.Target == TargetType.Self)
                 );
             }
@@ -659,6 +714,7 @@ namespace Entities
         /// <param name="value">The new value for the stat type.</param>
         public void SetStat(StatType type, float value)
         {
+            DebugLogger.LogMessage($"Setting player stat {type} to {value}", true);
             try
             {
                 switch (type)

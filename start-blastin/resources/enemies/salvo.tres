@@ -14,7 +14,7 @@ metadata/_custom_type_script = "uid://de8iusxhs0qem"
 [sub_resource type="Resource" id="Resource_m4qc2"]
 script = ExtResource("2_eisoc")
 ProjectileType = 1
-Damage = 2.0
+Damage = 0.1
 FireRate = 1.0
 metadata/_custom_type_script = "uid://bytfm61mpkr5u"
 

@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using Autoloads;
 using Components;
@@ -182,7 +183,7 @@ namespace Enemies
             }
         }
 
-        public void OnStatUpdated(object source, StatUpdatedEventArgs args)
+        public virtual void OnStatUpdated(object source, StatUpdatedEventArgs args)
         {
             switch (args.StatType)
             {
@@ -192,10 +193,48 @@ namespace Enemies
                     Weapon.UpdateWeaponStats(args.StatType, args.Stat);
                     break;
                 case StatType.Speed:
-                    FollowPath(_path, _followSpeed);
+                    if (_followTween != null && _followTween.IsValid())
+                    {
+                        AdjustFollowSpeed();
+                    }
+                    else
+                    {
+                        FollowPath(_path, _followSpeed);
+                    }
                     break;
                 default:
                     return;
+            }
+        }
+
+        protected virtual void AdjustFollowSpeed()
+        {
+            if (_path?.PathFollow == null || _followTween == null)
+            {
+                return;
+            }
+
+            // Get the current progress and calculate the remaining distance
+            float currentProgress = _path.PathFollow.ProgressRatio;
+            float pathLength = _path.Curve.GetBakedLength();
+            float remainingDistance = pathLength * (1.0f - currentProgress);
+
+            // Calculate the new duration based on the current _followSpeed.
+            float duration = Math.Max(remainingDistance / _followSpeed, 0.1f);
+
+            // Store whether the current tween was paused so we can re-pause it after creating the new one.
+            bool wasPaused = !_followTween.IsRunning();
+
+            // Kill and recreate the existing tween
+            _followTween.Kill();
+
+            _followTween = CreateTween();
+            _followTween.TweenProperty(_path.PathFollow, "progress_ratio", 1.0, duration);
+
+            // Pause the new tween if the original tween was paused.
+            if (wasPaused)
+            {
+                _followTween.Pause();
             }
         }
 

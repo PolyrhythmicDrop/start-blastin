@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Enemies;
+using Events;
 using Godot;
+using Stats;
 using Utility;
 
 [GlobalClass]
@@ -18,8 +20,10 @@ public partial class Salvo : EnemyNode
     // Waypointing and path following
     private Dictionary<Vector2, bool> _firePositions = new();
     private bool _firingBegun = false;
+    private bool _flouncing = false;
 
     private Tween _spinTween;
+    private Tween _flounceTween;
 
     private event Action InitialFirePosReached;
     private event Action<Vector2> FireWaypointReached;
@@ -164,6 +168,11 @@ public partial class Salvo : EnemyNode
         float pathLength = path.Curve.GetBakedLength();
         float duration = Mathf.Max(pathLength / speed, 0.1f);
 
+        if (_followTween != null)
+        {
+            _followTween.Kill();
+        }
+
         // Start the tween
         _followTween = CreateTween();
         _followTween.TweenProperty(path.PathFollow, "progress_ratio", 1.0, duration);
@@ -211,7 +220,7 @@ public partial class Salvo : EnemyNode
         {
             FireComplete?.Invoke();
         }
-        else
+        else if (!_flouncing)
         {
             FinalFireComplete?.Invoke();
         }
@@ -224,6 +233,11 @@ public partial class Salvo : EnemyNode
 
     private void OnFinalFireComplete()
     {
+        if (_flouncing)
+        {
+            return;
+        }
+
         Flounce();
     }
 
@@ -241,6 +255,9 @@ public partial class Salvo : EnemyNode
 
     private async void Flounce()
     {
+        _flouncing = true;
+
+        DebugLogger.LogMessage($"{Name} beginning flounce! Speed: {_followSpeed}");
         _followTween.Pause();
         // Get the offset at the current progress ratio
         float pathRotation = _path
@@ -250,14 +267,19 @@ public partial class Salvo : EnemyNode
             .Rotation;
 
         // Tween the spin
-        Tween flounceTween = CreateTween();
-        flounceTween.TweenInterval(0.4f);
-        flounceTween.TweenProperty(_path.PathFollow, "rotation", pathRotation, 0.4f);
+        if (_flounceTween != null)
+        {
+            _flounceTween.Kill();
+        }
+        _flounceTween = CreateTween();
+        _flounceTween.TweenInterval(0.4f);
+        _flounceTween.TweenProperty(_path.PathFollow, "rotation", pathRotation, 0.4f);
 
         // Resume following when the spin is complete
-        await ToSignal(flounceTween, Tween.SignalName.Finished);
+        await ToSignal(_flounceTween, Tween.SignalName.Finished);
         _path.PathFollow.Rotates = true;
         _followTween.Play();
+        DebugLogger.LogMessage($"{Name} ending flounce! Speed: {_followSpeed}");
     }
 
     public override void _ExitTree()

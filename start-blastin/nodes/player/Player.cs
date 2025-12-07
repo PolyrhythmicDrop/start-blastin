@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using Autoloads;
 using Effects;
 using Enemies;
@@ -94,7 +92,7 @@ namespace Entities
             get => _currentHealth;
             private set
             {
-                _currentHealth = Mathf.Min(value, _maxHealth);
+                _currentHealth = MathF.Round(value, 2);
                 EventBus.Instance.RaisePlayerCurrentHealthChanged(_playerId, _currentHealth);
             }
         }
@@ -434,7 +432,13 @@ namespace Entities
 
         public void Heal(float healAmount)
         {
-            CurrentHealth = Mathf.Min(_currentHealth + healAmount, _maxHealth);
+            // Don't do anything if current health is greater than max health
+            if (_currentHealth >= _maxHealth)
+            {
+                return;
+            }
+
+            CurrentHealth = MathF.Min(_currentHealth + healAmount, _maxHealth);
         }
 
         public void Die(int? playerId = null)

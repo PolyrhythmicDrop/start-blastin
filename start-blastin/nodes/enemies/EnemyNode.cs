@@ -305,6 +305,11 @@ namespace Enemies
 
         public void Heal(float healAmount)
         {
+            // Don't do anything if current health is greater than max health
+            if (_currentHealth >= _maxHealth)
+            {
+                return;
+            }
             _currentHealth = Mathf.Min(_currentHealth + healAmount, _maxHealth);
         }
 

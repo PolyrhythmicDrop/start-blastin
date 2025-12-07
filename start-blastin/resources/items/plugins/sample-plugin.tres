@@ -1,24 +1,24 @@
-[gd_resource type="Resource" script_class="Plugin" load_steps=6 format=3 uid="uid://bo57x7idkejky"]
+[gd_resource type="Resource" script_class="Plugin" load_steps=7 format=3 uid="uid://bo57x7idkejky"]
 
 [ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="1_jv5gu"]
 [ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="2_ad7uv"]
+[ext_resource type="Script" uid="uid://be7xbdxqx17t2" path="res://architecture/effects/chain-effects/CountChainEffect.cs" id="2_n8wk6"]
 [ext_resource type="Script" uid="uid://b3qmdj461ykoi" path="res://architecture/items/plugins/Plugin.cs" id="3_n8wk6"]
 
-[sub_resource type="Resource" id="Resource_jv5gu"]
-script = ExtResource("1_jv5gu")
-Type = 3
-Value = -0.5
-metadata/_custom_type_script = "uid://bmeda5w63vsw7"
-
-[sub_resource type="Resource" id="Resource_ad7uv"]
+[sub_resource type="Resource" id="Resource_7hrtu"]
 script = ExtResource("1_jv5gu")
 Value = 2.0
-Trigger = 3
+Trigger = 1
 Stacking = true
 MaxStacks = 3
-Timed = true
-Time = 2.0
 metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[sub_resource type="Resource" id="Resource_j6knl"]
+script = ExtResource("2_n8wk6")
+Threshold = 2
+Effects = Array[Object]([SubResource("Resource_7hrtu")])
+Trigger = 3
+metadata/_custom_type_script = "uid://be7xbdxqx17t2"
 
 [resource]
 resource_name = "sample-plugin"
@@ -28,5 +28,5 @@ Name = &"Sample Plugin"
 Description = &"It\'s a sample."
 Icon = ExtResource("2_ad7uv")
 FluxCost = 10
-Effects = Array[Object]([SubResource("Resource_jv5gu"), SubResource("Resource_ad7uv")])
+Effects = Array[Object]([SubResource("Resource_j6knl")])
 metadata/_custom_type_script = "uid://b3qmdj461ykoi"

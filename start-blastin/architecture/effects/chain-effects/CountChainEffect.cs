@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using Utility;
 
 namespace Effects
 {
@@ -20,15 +21,24 @@ namespace Effects
             ChainCondition = CountConditionMet;
         }
 
-        public override void ApplyEffect(object source, EventArgs args)
-        {
-            _count++;
-            base.ApplyEffect(source, args);
-        }
-
         private bool CountConditionMet()
         {
             return _count >= Threshold;
+        }
+
+        public override void ApplyEffect(object source, EventArgs args)
+        {
+            base.ApplyEffect(source, args);
+
+            _count++;
+
+            CheckChainCondition();
+        }
+
+        protected override void OnChainConditionMet()
+        {
+            base.OnChainConditionMet();
+            _count = 0;
         }
     }
 }

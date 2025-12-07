@@ -259,7 +259,7 @@ namespace Effects
 
         public virtual void ApplyEffect(GodotObject target)
         {
-            if (_target == null)
+            if (target != null)
             {
                 SetTarget(target);
             }

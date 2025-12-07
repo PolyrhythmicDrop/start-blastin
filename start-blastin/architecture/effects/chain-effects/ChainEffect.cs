@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Godot;
+using Utility;
 
 namespace Effects
 {
@@ -10,7 +11,7 @@ namespace Effects
     [GlobalClass]
     public abstract partial class ChainEffect : Effect
     {
-        protected List<Effect> _effects;
+        protected List<Effect> _effects = new();
 
         [Export]
         public Godot.Collections.Array<Effect> Effects
@@ -36,13 +37,22 @@ namespace Effects
             ChainConditionMet -= OnChainConditionMet;
         }
 
+        public virtual void CheckChainCondition()
+        {
+            if (ChainCondition())
+            {
+                ChainConditionMet?.Invoke();
+            }
+        }
+
         protected virtual void OnChainConditionMet()
         {
+            DebugLogger.LogMessage($"Chain conditon met! Applying effects to {_target}", true);
             List<Effect> chainedEffects = _effects.FindAll(fx => fx.Trigger == Trigger.Chain);
 
             foreach (Effect effect in chainedEffects)
             {
-                ApplyEffect(_target);
+                effect.ApplyEffect(_target);
             }
         }
     }

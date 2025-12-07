@@ -15,29 +15,21 @@ namespace Effects
         [Export(PropertyHint.Range, "1,50,1,greater_than")]
         public int Threshold { get; set; }
 
-        public CountChainEffect()
-            : base()
-        {
-            ChainCondition = CountConditionMet;
-        }
-
-        private bool CountConditionMet()
+        protected override bool IsChainConditionMet()
         {
             return _count >= Threshold;
         }
 
-        public override void ApplyEffect(object source, EventArgs args)
+        public override void ApplyEffect()
         {
-            base.ApplyEffect(source, args);
-
+            base.ApplyEffect();
             _count++;
-
             CheckChainCondition();
         }
 
-        protected override void OnChainConditionMet()
+        protected override void TriggerChainEffects()
         {
-            base.OnChainConditionMet();
+            base.TriggerChainEffects();
             _count = 0;
         }
     }

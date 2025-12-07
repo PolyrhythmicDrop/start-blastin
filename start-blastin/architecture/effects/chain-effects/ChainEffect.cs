@@ -13,6 +13,7 @@ namespace Effects
     {
         protected List<Effect> _effects = new();
 
+        [ExportGroup("Effects")]
         [Export]
         public Godot.Collections.Array<Effect> Effects
         {
@@ -20,34 +21,18 @@ namespace Effects
             set => _effects = [.. value];
         }
 
-        /// <summary>
-        /// Function that returns a bool. When true, the chain condition has been met and the attached effects are triggered.
-        /// </summary>
-        protected Func<bool> ChainCondition;
-
-        protected event Action ChainConditionMet;
-
-        public ChainEffect()
-        {
-            ChainConditionMet += OnChainConditionMet;
-        }
-
-        ~ChainEffect()
-        {
-            ChainConditionMet -= OnChainConditionMet;
-        }
+        protected abstract bool IsChainConditionMet();
 
         public virtual void CheckChainCondition()
         {
-            if (ChainCondition())
+            if (IsChainConditionMet())
             {
-                ChainConditionMet?.Invoke();
+                TriggerChainEffects();
             }
         }
 
-        protected virtual void OnChainConditionMet()
+        protected virtual void TriggerChainEffects()
         {
-            DebugLogger.LogMessage($"Chain conditon met! Applying effects to {_target}", true);
             List<Effect> chainedEffects = _effects.FindAll(fx => fx.Trigger == Trigger.Chain);
 
             foreach (Effect effect in chainedEffects)

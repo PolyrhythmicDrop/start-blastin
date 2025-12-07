@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DataStructures;
 using Entities;
 using Factories;
 using Godot;
@@ -15,7 +16,7 @@ namespace PlayerComponents
         private WeaponResource _initWeaponResource;
         private WeaponNode _weapon;
 
-        private List<Barrel> _barrels => _weapon?.Barrels;
+        private BarrelRack _barrels => _weapon?.Barrels;
 
         [Export]
         public WeaponResource InitWeaponResource
@@ -85,5 +86,23 @@ namespace PlayerComponents
             // Clear the projectile pool and reset it with the new projectile type.
             _weapon.ResetProjectilePool();
         }
+
+        // /// <summary>
+        // /// Activates or deactivates all barrels in a specific direction.
+        // /// </summary>
+        // /// <param name="dirs">The direction of the barrel to activate.</param>
+        // public void ToggleActivateBarrel(bool active, params Barrel.BarrelDirection[] dirs)
+        // {
+        //     foreach (Barrel barrel in _barrels)
+        //     {
+        //         foreach (Barrel.BarrelDirection direction in dirs)
+        //         {
+        //             if (barrel.Direction == direction)
+        //             {
+        //                 barrel.ToggleActive(active);
+        //             }
+        //         }
+        //     }
+        // }
     }
 }

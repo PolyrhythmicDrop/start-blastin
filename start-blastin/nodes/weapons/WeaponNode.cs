@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autoloads;
 using Components;
+using DataStructures;
 using Enemies;
 using Entities;
 using Events;
@@ -83,7 +84,7 @@ namespace Weapons
         /// </summary>
         public Node ProjectileParent;
 
-        public List<Barrel> Barrels = new();
+        public BarrelRack Barrels = new();
 
         /// <summary>
         /// Timer used to re-trigger firing of the weapon when the "fire" button is held down.

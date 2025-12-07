@@ -167,7 +167,6 @@ namespace Effects
             {
                 if (!node.IsConnected(Node.SignalName.TreeExited, _targetExitCallable))
                 {
-                    DebugLogger.LogMessage($"Connecting nullify signal on {node?.Name}", true);
                     node?.Connect(Node.SignalName.TreeExited, _targetExitCallable);
                 }
             }
@@ -223,7 +222,6 @@ namespace Effects
             {
                 if (!node.IsConnected(Node.SignalName.TreeExited, _targetExitCallable))
                 {
-                    DebugLogger.LogMessage($"Connecting nullify signal on {node.Name}", true);
                     node.Connect(Node.SignalName.TreeExited, _targetExitCallable);
                 }
             }

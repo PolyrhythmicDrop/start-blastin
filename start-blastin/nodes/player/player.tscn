@@ -68,12 +68,12 @@ Direction = 6
 [node name="BarrelE" parent="WeaponComponent" instance=ExtResource("9_xl06i")]
 position = Vector2(0, 12)
 rotation = 1.5707964
-Direction = 6
+Direction = 2
 
 [node name="BarrelS" parent="WeaponComponent" instance=ExtResource("9_xl06i")]
 position = Vector2(-18, -9.536743e-07)
 rotation = 3.1415927
-Direction = 6
+Direction = 4
 
 [node name="HitBox" type="CollisionShape2D" parent="."]
 unique_name_in_owner = true

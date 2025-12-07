@@ -57,10 +57,7 @@ public partial class Salvo : EnemyNode
 
     private void ReadyBarrels()
     {
-        foreach (Barrel barrel in _weapon?.Barrels)
-        {
-            barrel.ToggleActive(true);
-        }
+        _weapon.Barrels.ToggleActivateAllBarrels(true);
     }
 
     public override void ConnectSignals()

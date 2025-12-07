@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Autoloads;
 using Components;
 using Enemies;
 using Entities;
@@ -208,7 +209,7 @@ namespace Weapons
 
         public virtual void OnProjectileCollision(object source, CollisionEventArgs args)
         {
-            int? playerId = null;
+            int playerId = -1;
             if (_owner is Player player)
             {
                 playerId = player.PlayerId;
@@ -227,9 +228,10 @@ namespace Weapons
                         return;
                     }
                 }
-                else
+                else if (healthful is EnemyNode enemy)
                 {
-                    healthful.TakeDamage(_stats.Damage, playerId);
+                    enemy.TakeDamage(_stats.Damage, playerId);
+                    EventBus.Instance.RaiseEnemyHit(playerId, enemy);
                 }
             }
 

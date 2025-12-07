@@ -10,10 +10,9 @@ namespace UI.Loadout
         private VBoxContainer _vBox;
         private PricePanelContainer _pricePanel;
 
-        private new StyleBoxFlat _focusedStyleBox =>
-            ResourceLoader.Load<StyleBoxFlat>("uid://dx4qv4oioa55");
-
-        private StyleBoxFlat _currentStyleBox;
+        private StyleBoxFlat _focusedStyleBox = ResourceLoader.Load<StyleBoxFlat>(
+            "uid://dx4qv4oioa55"
+        );
 
         private Color _focusedBorderColor;
         private Color _defocusedBorderColor;

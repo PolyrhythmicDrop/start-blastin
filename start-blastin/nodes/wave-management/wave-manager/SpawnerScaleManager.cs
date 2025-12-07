@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Autoloads;
 using Enemies.Spawners;
 using Godot;
+using NanoidDotNet;
 using SafeResourcePicker;
 
 namespace WaveManagement
@@ -17,7 +18,9 @@ namespace WaveManagement
             "res://resources/wave-scalers/spawner-scalers/default-spawner-scaler.tres";
         private string _defaultFormation =
             "res://resources/wave-scalers/spawner-formations/default-spawner-formation.tres";
-        private PackedScene _spawnerScene;
+        private PackedScene _spawnerScene = GD.Load<PackedScene>(
+            "res://nodes/enemies/Spawners/EnemySpawner/enemy-spawner.tscn"
+        );
         private SpawnerScaler _currentSpawnerScaler;
         private SpawnerFormationScaler _currentFormationScaler;
         private List<SpawnerScaler> _spawnerScalerPool = new();
@@ -55,9 +58,6 @@ namespace WaveManagement
         public override void _Ready()
         {
             base._Ready();
-            _spawnerScene = GD.Load<PackedScene>(
-                "res://nodes/enemies/Spawners/EnemySpawner/enemy-spawner.tscn"
-            );
         }
 
         public override void Initialize(WaveManager waveManager)
@@ -217,6 +217,7 @@ namespace WaveManagement
             for (int i = 0; i < quantity; i++)
             {
                 EnemySpawner spawner = _spawnerScene.Instantiate<EnemySpawner>();
+                spawner.Name = $"{spawner.GetType().Name}-{Nanoid.Generate(size: 8)}";
                 spawner.Curve = curve;
                 spawner.Position = position;
                 spawner.RotationDegrees = rotationDegrees;

@@ -64,16 +64,16 @@ namespace Stats
         /// <param name="newValue">The new value of the stat.</param>
         public void UpdateStat(StatType type, float newValue)
         {
-            // DebugLogger.LogMessage($"newValue = {newValue}", true);
             Stat stat = GetStat(type);
+            float roundValue = MathF.Round(newValue, 4);
 
             if (stat != null)
             {
-                stat.CurrentValue = newValue;
+                stat.CurrentValue = roundValue;
             }
             else
             {
-                AddStat(type, newValue);
+                AddStat(type, roundValue);
             }
             StatUpdatedEventArgs args = new(type, GetStat(type));
             RaiseStatUpdated(args);

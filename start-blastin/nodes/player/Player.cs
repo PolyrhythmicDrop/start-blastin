@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using Autoloads;
 using Components;
 using Effects;
@@ -95,7 +96,6 @@ namespace Entities
             private set
             {
                 _currentHealth = Mathf.Min(value, _maxHealth);
-                // _service.UpdateCurrentHealth(_playerId, _currentHealth);
                 EventBus.Instance.RaisePlayerCurrentHealthChanged(_playerId, _currentHealth);
             }
         }
@@ -284,11 +284,11 @@ namespace Entities
             _movementComponent = GetNode<MovementComponent>("%MovementComponent");
             _controller = GetNode<PlayerController>("%PlayerController");
             _weaponComponent = GetNode<WeaponComponent>("%WeaponComponent");
-            _currentHealth = _maxHealth;
+            CurrentHealth = _maxHealth;
 
             InitializeComponents();
             ConnectSignals();
-            ApplyStatEffects();
+            ApplyEquipStatEffects();
         }
 
         private void InitializeComponents()
@@ -321,7 +321,12 @@ namespace Entities
             EventBus.Instance.EnemyKilled -= OnEnemyKilled;
         }
 
-        private void OnStatUpdated(object source, StatUpdatedEventArgs args)
+        /// <summary>
+        /// Callback for special processing when a stat is updated.
+        /// </summary>
+        /// <param name="source">The entity's StatManager instance.</param>
+        /// <param name="args">Arguments from the event.</param>
+        public void OnStatUpdated(object source, StatUpdatedEventArgs args)
         {
             switch (args.StatType)
             {
@@ -419,21 +424,18 @@ namespace Entities
         public void TakeDamage(float damage, int? playerId = null)
         {
             _animationComponent.PlayDamageAnimation();
-            _currentHealth -= damage;
-
-            EventBus.Instance.RaisePlayerCurrentHealthChanged(_playerId, _currentHealth);
+            CurrentHealth -= damage;
 
             if (_currentHealth <= 0)
             {
-                _currentHealth = 0;
+                CurrentHealth = 0;
                 Die();
             }
         }
 
         public void Heal(float healAmount)
         {
-            _currentHealth = Mathf.Min(_currentHealth + healAmount, _maxHealth);
-            EventBus.Instance.RaisePlayerCurrentHealthChanged(_playerId, _currentHealth);
+            CurrentHealth = Mathf.Min(_currentHealth + healAmount, _maxHealth);
         }
 
         public void Die(int? playerId = null)
@@ -461,7 +463,11 @@ namespace Entities
         public bool CanBuyItem(Item item)
         {
             bool canAfford = CanAffordItem(item);
-            bool noDupePlugins = _plugins.Contains(item) ? false : true;
+            // bool noDupePlugins = _plugins.Contains(item) ? false : true;
+            bool noDupePlugins =
+                _plugins.Find(plugin => plugin.ResourceName == item.ResourceName) == null
+                    ? true
+                    : false;
             bool noDupeWeapon = _weaponPlugin != item;
             bool freeSlot = (_plugins.Count + 1) <= _pluginSlots;
 
@@ -523,17 +529,10 @@ namespace Entities
                 case Modifier modifier:
                     AddModifier(modifier);
                     break;
-                case WeaponPlugin weaponPlugin:
-                    SwapWeaponPlugin(weaponPlugin);
-                    break;
                 case Plugin plugin:
-                    if (plugin is not Items.WeaponPlugin)
-                    {
-                        EquipPlugin(plugin);
-                    }
+                    EquipPlugin(plugin);
                     break;
             }
-            ApplyStatEffects();
         }
 
         #endregion
@@ -553,19 +552,25 @@ namespace Entities
 
             // Remove the item from the player's equipment.
 
-            if (item is WeaponPlugin)
+            if (item is WeaponPlugin weaponPlugin)
             {
                 // Revert to the basic bullet if you sell a weapon plugin.
+                DisconnectPluginEffectTriggers(weaponPlugin);
                 ResetWeaponPlugin();
             }
             else if (item is Plugin plugin && _plugins.Contains(plugin))
             {
                 _plugins.Remove(plugin);
+                foreach (Effect effect in plugin.GetEffectList())
+                {
+                    effect.RemoveAllEffectStacks();
+                }
+                DisconnectPluginEffectTriggers(plugin);
                 EventBus.Instance.RaisePlayerItemRemoved(_playerId, plugin);
             }
 
             // Apply stat effects based on the new loadout.
-            ApplyStatEffects();
+            ApplyEquipStatEffects();
         }
 
         public void AddModifier(params Modifier[] modifiers)
@@ -578,21 +583,102 @@ namespace Entities
 
         public void EquipPlugin(params Plugin[] plugins)
         {
-            foreach (Plugin newPlugin in plugins)
+            foreach (Plugin plugin in plugins)
             {
+                // Dupe the plugin so that it's a unique instance and won't retain values
+                Plugin newPlugin = (Plugin)plugin.Duplicate(true);
+
+                // Add the plugin to the plugins list and raise the PlayerPluginEquipped event for this particular plugin
                 if (_plugins.Count <= _pluginSlots && newPlugin is not Items.WeaponPlugin)
                 {
                     _plugins.Add(newPlugin);
                     EventBus.Instance.RaisePlayerPluginEquipped(_playerId, newPlugin);
                 }
+                // Swap out any weapon plugins
+                else if (newPlugin is WeaponPlugin weaponPlugin)
+                {
+                    SwapWeaponPlugin(weaponPlugin);
+                }
                 else
                 {
                     DebugLogger.LogMessage(
-                        $"Cannot add {newPlugin.Name} to plugin list! Equipped plugin count cannot exceed plugin slots. Slots: {_pluginSlots} | Current equipped plugins: {_plugins.Count}",
+                        $"Cannot add {newPlugin.ResourceName} to plugin list! Equipped plugin count cannot exceed plugin slots. Slots: {_pluginSlots} | Current equipped plugins: {_plugins.Count}",
                         true,
                         true
                     );
                 }
+            }
+
+            // Set all targets for "Self" effects to this player
+            SetSelfEffectTargets(plugins);
+
+            // Connect all triggers to the appropriate events
+            ConnectPluginEffectTriggers(plugins);
+
+            // Apply equip effects
+            ApplyEquipStatEffects();
+        }
+
+        /// <summary>
+        /// Connects plugin effects to events based on the effect's selected trigger.
+        /// TODO: Add new events for each addition to the Trigger enum.
+        /// </summary>
+        /// <param name="plugin">The plugin to connect.</param>
+        public void ConnectPluginEffectTriggers(params Plugin[] plugins)
+        {
+            for (int i = 0; i < plugins.Count(); i++)
+            {
+                foreach (Effect effect in plugins[i].GetEffectList())
+                {
+                    switch (effect.Trigger)
+                    {
+                        case Trigger.EnemyHit:
+                            EventBus.Instance.EnemyHit += effect.ApplyEffect;
+                            break;
+                        case Trigger.EnemyKilled:
+                            EventBus.Instance.EnemyKilled += effect.ApplyEffect;
+                            break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Disconnects plugin effects to events. Call when a plugin is unequipped.
+        /// </summary>
+        /// <param name="plugin"></param>
+        public void DisconnectPluginEffectTriggers(Plugin plugin)
+        {
+            foreach (Effect effect in plugin.GetEffectList())
+            {
+                switch (effect.Trigger)
+                {
+                    case Trigger.EnemyHit:
+                        EventBus.Instance.EnemyHit -= effect.ApplyEffect;
+                        break;
+                    case Trigger.EnemyKilled:
+                        EventBus.Instance.EnemyKilled -= effect.ApplyEffect;
+                        break;
+                }
+            }
+        }
+
+        private void SetSelfEffectTargets(params Plugin[] plugins)
+        {
+            List<Effect> selfEffects = new();
+
+            // Get all the effects that target Self and add them to the selfEffects list.
+            for (int i = 0; i < plugins.Count(); i++)
+            {
+                selfEffects.AddRange(
+                    plugins[i].GetEffectList().FindAll(effect => effect.Target == TargetType.Self)
+                );
+            }
+
+            // Set the target for each "self effect" to this Player.
+            foreach (Effect effect in selfEffects)
+            {
+                effect.SetTarget(this);
             }
         }
 
@@ -621,15 +707,80 @@ namespace Entities
         public bool HasPlugin(Plugin plugin)
         {
             bool hasWeapon = _weaponPlugin == plugin ? true : false;
-            bool hasPlugin = _plugins.Contains(plugin);
+            bool hasPlugin =
+                _plugins.Find(eqPlugin => eqPlugin.ResourceName == plugin.ResourceName) != null
+                    ? true
+                    : false;
             return hasWeapon || hasPlugin;
+        }
+
+        #endregion
+
+        #region Equipment Effects
+
+        /// <summary>
+        /// Sets a stat value based on a passed StatType.
+        /// Used for Effects and other objects so you can use the correct getters/setters instead of accessing the StatManager directly.
+        /// </summary>
+        /// <param name="type">The stat type to set.</param>
+        /// <param name="value">The new value for the stat type.</param>
+        public void SetStat(StatType type, float value)
+        {
+            try
+            {
+                switch (type)
+                {
+                    case StatType.CrashDamage:
+                        CrashDamage = value;
+                        break;
+                    case StatType.Damage:
+                        Damage = value;
+                        break;
+                    case StatType.FireRate:
+                        FireRate = value;
+                        break;
+                    case StatType.MaxHealth:
+                        MaxHealth = value;
+                        break;
+                    case StatType.PhaseCooldown:
+                        PhaseCooldown = value;
+                        break;
+                    case StatType.PhaseDuration:
+                        PhaseDuration = value;
+                        break;
+                    case StatType.PhaseSpeed:
+                        PhaseSpeed = value;
+                        break;
+                    case StatType.PluginSlots:
+                        PluginSlots = (int)value;
+                        break;
+                    case StatType.ProjectileSpeed:
+                        ProjectileSpeed = value;
+                        break;
+                    case StatType.Speed:
+                        Speed = value;
+                        break;
+                    default:
+                        throw new ArgumentException(
+                            $"The passed StatType {type} does not have a corresponding variable!"
+                        );
+                }
+                // DebugLogger.LogMessage(
+                //     $"{Name} {type} current value set: {_stats.GetStat(type).CurrentValue}",
+                //     true
+                // );
+            }
+            catch (Exception e)
+            {
+                DebugLogger.LogMessage(e.Message, true, true);
+            }
         }
 
         /// <summary>
         /// Applies StatEffects from all equipped items, starting with addition operations and ending with multiplicative operations.
         /// Starts with base values of all stats and applies the changes to each stat's current values.
         /// </summary>
-        private void ApplyStatEffects()
+        private void ApplyEquipStatEffects()
         {
             // Sort the StatEffects by operation
             List<StatEffect> addStatEffects = new();
@@ -642,11 +793,17 @@ namespace Entities
 
             foreach (Plugin plugin in _plugins)
             {
-                SortEffects(plugin.Effects, addStatEffects, multiplyStatEffects);
+                List<Effect> equipEffects = plugin
+                    .GetEffectList()
+                    .FindAll(effect => effect.Trigger == Trigger.Equip);
+                SortEffects(equipEffects, addStatEffects, multiplyStatEffects);
             }
 
             // Add the weapon plugin to the mix
-            SortEffects(_weaponPlugin.Effects, addStatEffects, multiplyStatEffects);
+            List<Effect> weapEffects = _weaponPlugin
+                .GetEffectList()
+                .FindAll(effect => effect.Trigger == Trigger.Equip);
+            SortEffects(weapEffects, addStatEffects, multiplyStatEffects);
 
             UpdateStatsWithEffects(addStatEffects, multiplyStatEffects);
         }

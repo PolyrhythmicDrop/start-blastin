@@ -166,11 +166,11 @@ namespace Enemies.Spawners
         /// </summary>
         private void SpawnEnemy()
         {
-            // Duplicate the enemy resource and create a new EnemyNody based on it.
+            // Duplicate the enemy resource and create a new EnemyNode based on it.
             EnemyResource enemyResource = (EnemyResource)
                 GetEnemyFromPool().DuplicateDeep(Resource.DeepDuplicateMode.Internal);
 
-            // Create an enemy from the factory and apply the current wave configuration.
+            // Create an enemy from the factory and apply the current wave scaling.
             EnemyNode enemy = EnemyFactory.CreateEnemy(enemyResource);
             enemy.ApplyWaveScaling(_enemyScaler, _currentWave);
 

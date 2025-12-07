@@ -43,8 +43,16 @@ namespace UI.Shop
 
         public bool Active { get; set; }
 
-        public void LoadItemPool() =>
+        public void LoadItemPool()
+        {
             PoolLoader.LoadResourcePool(_itemPool, "res://resources/items/", true);
+            // Cull all items that can't appear in the shop
+            var unsellable = _itemPool.FindAll(item => !item.AppearsInShop);
+            foreach (Item item in unsellable)
+            {
+                _itemPool.Remove(item);
+            }
+        }
 
         public override void _Ready()
         {

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Enemies;
+using Events;
 using Godot;
+using Stats;
 using Utility;
 
 [GlobalClass]
@@ -16,11 +18,12 @@ public partial class Salvo : EnemyNode
     private AnimatedSprite2D _destruction;
 
     // Waypointing and path following
-    // private List<Vector2> _firingPositions = new();
     private Dictionary<Vector2, bool> _firePositions = new();
     private bool _firingBegun = false;
-    private Tween _followTween;
+    private bool _flouncing = false;
+
     private Tween _spinTween;
+    private Tween _flounceTween;
 
     private event Action InitialFirePosReached;
     private event Action<Vector2> FireWaypointReached;
@@ -49,20 +52,22 @@ public partial class Salvo : EnemyNode
         FollowPath(_path, _followSpeed);
     }
 
-    public void ConnectSignals()
+    public override void ConnectSignals()
     {
         InitialFirePosReached += OnInitialFirePositionReached;
         FireWaypointReached += OnFireWaypointReached;
         FireComplete += OnFireComplete;
         FinalFireComplete += OnFinalFireComplete;
+        base.ConnectSignals();
     }
 
-    public void DisconnectSignals()
+    public override void DisconnectSignals()
     {
         InitialFirePosReached -= OnInitialFirePositionReached;
         FireWaypointReached -= OnFireWaypointReached;
         FireComplete -= OnFireComplete;
         FinalFireComplete -= OnFinalFireComplete;
+        base.DisconnectSignals();
     }
 
     public override void _Process(double delta)
@@ -163,12 +168,17 @@ public partial class Salvo : EnemyNode
         float pathLength = path.Curve.GetBakedLength();
         float duration = Mathf.Max(pathLength / speed, 0.1f);
 
+        if (_followTween != null)
+        {
+            _followTween.Kill();
+        }
+
         // Start the tween
         _followTween = CreateTween();
         _followTween.TweenProperty(path.PathFollow, "progress_ratio", 1.0, duration);
     }
 
-    private async void CheckWaypoints()
+    private void CheckWaypoints()
     {
         KeyValuePair<Vector2, bool> initFirePos = _firePositions.ElementAt(0);
         KeyValuePair<Vector2, bool> finalFirePos = _firePositions.ElementAt(2);
@@ -184,8 +194,8 @@ public partial class Salvo : EnemyNode
         {
             if (_path.PathFollow.Position.DistanceSquaredTo(kvp.Key) <= 30 && kvp.Value == false)
             {
-                FireWaypointReached?.Invoke(kvp.Key);
                 _firePositions[kvp.Key] = true;
+                FireWaypointReached?.Invoke(kvp.Key);
             }
         }
     }
@@ -210,7 +220,7 @@ public partial class Salvo : EnemyNode
         {
             FireComplete?.Invoke();
         }
-        else
+        else if (!_flouncing)
         {
             FinalFireComplete?.Invoke();
         }
@@ -223,6 +233,11 @@ public partial class Salvo : EnemyNode
 
     private void OnFinalFireComplete()
     {
+        if (_flouncing)
+        {
+            return;
+        }
+
         Flounce();
     }
 
@@ -240,6 +255,8 @@ public partial class Salvo : EnemyNode
 
     private async void Flounce()
     {
+        _flouncing = true;
+
         _followTween.Pause();
         // Get the offset at the current progress ratio
         float pathRotation = _path
@@ -249,12 +266,16 @@ public partial class Salvo : EnemyNode
             .Rotation;
 
         // Tween the spin
-        Tween flounceTween = CreateTween();
-        flounceTween.TweenInterval(0.4f);
-        flounceTween.TweenProperty(_path.PathFollow, "rotation", pathRotation, 0.4f);
+        if (_flounceTween != null)
+        {
+            _flounceTween.Kill();
+        }
+        _flounceTween = CreateTween();
+        _flounceTween.TweenInterval(0.4f);
+        _flounceTween.TweenProperty(_path.PathFollow, "rotation", pathRotation, 0.4f);
 
         // Resume following when the spin is complete
-        await ToSignal(flounceTween, Tween.SignalName.Finished);
+        await ToSignal(_flounceTween, Tween.SignalName.Finished);
         _path.PathFollow.Rotates = true;
         _followTween.Play();
     }

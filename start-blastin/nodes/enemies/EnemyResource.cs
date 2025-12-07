@@ -1,4 +1,3 @@
-using Components;
 using Godot;
 using Weapons;
 
@@ -8,7 +7,7 @@ namespace Enemies
     public partial class EnemyResource : Resource
     {
         protected string _scenePath;
-        protected HealthComponent _healthComponent;
+        protected float _maxHealth;
         protected WeaponResource _weaponResource;
         protected Curve2D _pathCurve;
         protected float _speed;
@@ -37,11 +36,11 @@ namespace Enemies
             set => _crashDamage = value;
         }
 
-        [Export]
-        public HealthComponent HealthComponent
+        [Export(PropertyHint.Range, "1,100,1,greater_than")]
+        public float MaxHealth
         {
-            get => _healthComponent;
-            set => _healthComponent = value;
+            get => _maxHealth;
+            set => _maxHealth = value;
         }
 
         [Export]
@@ -73,11 +72,11 @@ namespace Enemies
         }
 
         public EnemyResource()
-            : this(0, null, null, "", 0, null, 0, 0) { }
+            : this(0, 1, null, "", 0, null, 0, 0) { }
 
         public EnemyResource(
             int crashDamage,
-            HealthComponent health,
+            float maxHealth,
             Curve2D pathCurve,
             string scenePath,
             float speed,
@@ -87,7 +86,7 @@ namespace Enemies
         )
         {
             _crashDamage = crashDamage;
-            _healthComponent = health;
+            _maxHealth = maxHealth;
             _pathCurve = pathCurve;
             _scenePath = scenePath;
             _speed = speed;

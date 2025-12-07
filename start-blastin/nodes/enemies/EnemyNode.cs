@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using Autoloads;
-using Components;
 using Entities;
 using Events;
 using Factories;
@@ -119,7 +118,7 @@ namespace Enemies
         /// <param name="enemyResource">The resource used to create the enemy.</param>
         public virtual void Initialize(EnemyResource enemyResource)
         {
-            _baseMaxHealth = enemyResource.HealthComponent.MaxHealth;
+            _baseMaxHealth = enemyResource.MaxHealth;
             _currentHealth = _baseMaxHealth;
 
             _weapon = WeaponFactory.CreateWeapon(
@@ -291,6 +290,11 @@ namespace Enemies
         {
             PlayDamageAnimation();
             _currentHealth -= damage;
+
+            DebugLogger.LogMessage(
+                $"{Name} taking damage! Damage: {damage} | Current health: {_currentHealth}",
+                true
+            );
 
             if (_currentHealth <= 0)
             {

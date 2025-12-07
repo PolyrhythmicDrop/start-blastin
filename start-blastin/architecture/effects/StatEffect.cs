@@ -103,34 +103,6 @@ namespace Effects
             }
         }
 
-        /// <summary>
-        /// Remove all effect stacks from the current target.
-        /// </summary>
-        public override void RemoveAllEffectStacks()
-        {
-            // Return immediately if there's no target or if the target does not have any currently active effects.
-            if (_target == null || !_targetStates.ContainsKey(_target))
-            {
-                return;
-            }
-
-            // Get the current state
-            EffectState state = _targetStates[_target];
-
-            // If this effect doesn't stack, remove the singular effect and return
-            if (!_stacking)
-            {
-                RemoveEffectFromTarget(_target);
-                return;
-            }
-
-            // Remove all the effect stacks
-            for (int i = state.CurrentStacks; i > 0; i--)
-            {
-                RemoveEffectFromTarget(_target);
-            }
-        }
-
         private float CalcNewStatValue(float currentValue, bool positive)
         {
             switch (Operation)

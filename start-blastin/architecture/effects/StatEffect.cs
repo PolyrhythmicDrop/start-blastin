@@ -20,15 +20,8 @@ namespace Effects
         [Export(PropertyHint.Enum)]
         public Operation Operation { get; set; }
 
-        public override void ApplyEffect(object source, EventArgs args)
+        public override void ApplyEffect()
         {
-            // If the _target is not already set to the Player, set the _target based on the passed args.
-            if (_target is not Player || _target == null)
-            {
-                SetTarget(args);
-            }
-
-            // Final null check before proceeding
             if (_target == null)
             {
                 return;
@@ -45,18 +38,20 @@ namespace Effects
 
             if (_target is IStats statful)
             {
+                // Calculate the new value for the stat
                 StatManager statMan = statful.GetStatManager();
                 float currentVal = statMan.GetStat(Type).CurrentValue;
                 float newVal = CalcNewStatValue(currentVal, true);
+
+                // Set the stat on the target
                 statful.SetStat(Type, newVal);
 
+                // Adjust the EffectState
                 state.Active = true;
                 if (_stacking)
                 {
                     state.CurrentStacks++;
                 }
-
-                base.ApplyEffect(source, args);
 
                 // Start the timer for the target if necessary
                 if (_timed)

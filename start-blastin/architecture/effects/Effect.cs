@@ -17,6 +17,8 @@ namespace Effects
         Self,
         Ally,
         Enemy,
+        Chain,
+        None,
     }
 
     public enum Operation
@@ -28,6 +30,7 @@ namespace Effects
     public enum Trigger
     {
         Equip,
+        Chain,
         EnemyKilled,
         EnemyHit,
     }
@@ -252,12 +255,27 @@ namespace Effects
             }
         }
 
+        public virtual void ApplyEffect() { }
+
+        public virtual void ApplyEffect(GodotObject target)
+        {
+            if (_target == null)
+            {
+                SetTarget(target);
+            }
+
+            ApplyEffect();
+        }
+
         public virtual void ApplyEffect(object source, EventArgs args)
         {
-            if (!_timed || _target == null)
+            // If the _target is not already set to the Player, set the _target based on the passed args.
+            if (_target is not Player || _target == null)
             {
-                return;
+                SetTarget(args);
             }
+
+            ApplyEffect();
         }
 
         public virtual void RemoveEffect() { }

@@ -12,9 +12,8 @@ metadata/_custom_type_script = "uid://bmeda5w63vsw7"
 
 [sub_resource type="Resource" id="Resource_ad7uv"]
 script = ExtResource("1_jv5gu")
-Type = 2
 Value = 2.0
-Trigger = 2
+Trigger = 3
 Stacking = true
 MaxStacks = 3
 Timed = true

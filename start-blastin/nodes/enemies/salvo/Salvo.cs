@@ -7,6 +7,7 @@ using Events;
 using Godot;
 using Stats;
 using Utility;
+using Weapons;
 
 [GlobalClass]
 public partial class Salvo : EnemyNode
@@ -47,9 +48,19 @@ public partial class Salvo : EnemyNode
         _firePositions.Add(_path.Curve.GetPointPosition(2), false);
         _firePositions.Add(_path.Curve.GetPointPosition(3), false);
 
+        ReadyBarrels();
+
         ConnectSignals();
 
         FollowPath(_path, _followSpeed);
+    }
+
+    private void ReadyBarrels()
+    {
+        foreach (Barrel barrel in _weapon?.Barrels)
+        {
+            barrel.ToggleActive(true);
+        }
     }
 
     public override void ConnectSignals()

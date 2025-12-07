@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Autoloads;
 using Components;
@@ -82,11 +83,6 @@ namespace Weapons
         /// </summary>
         public Node ProjectileParent;
 
-        // /// <summary>
-        // /// The position where projectiles should spawn from this weapon, i.e. the barrel of the weapon.
-        // /// </summary>
-        // public virtual Vector2 ProjSpawnPoint => GlobalPosition;
-
         public List<Barrel> Barrels = new();
 
         /// <summary>
@@ -143,6 +139,9 @@ namespace Weapons
             {
                 Barrels.Add(barrel);
             }
+
+            // Activate the first barrel by default
+            Barrels.FirstOrDefault().ToggleActive(true);
         }
 
         /// <summary>
@@ -255,24 +254,27 @@ namespace Weapons
         /// </summary>
         public virtual void Fire()
         {
-            // Fire from all barrels.
+            // Fire from all active barrels.
             // TODO: Maybe add extra methods to fire from particular barrels?
 
             foreach (Barrel barrel in Barrels)
             {
-                Projectile projectile = _pool.RequestProjectile();
-                // projectile.Position = ProjSpawnPoint;
-                projectile.Position = barrel.GlobalPosition;
-                projectile.GlobalRotation = barrel.GlobalRotation;
-
-                if (_velocityProvider != null)
+                if (barrel.Active == true)
                 {
-                    projectile.AddSourceVelocity();
-                }
+                    Projectile projectile = _pool.RequestProjectile();
+                    // projectile.Position = ProjSpawnPoint;
+                    projectile.Position = barrel.GlobalPosition;
+                    projectile.GlobalRotation = barrel.GlobalRotation;
 
-                if (EnemyOwned && !FireTimer.IsStopped())
-                {
-                    FireTimer.Start(Stats.FireRate);
+                    if (_velocityProvider != null)
+                    {
+                        projectile.AddSourceVelocity();
+                    }
+
+                    if (EnemyOwned && !FireTimer.IsStopped())
+                    {
+                        FireTimer.Start(Stats.FireRate);
+                    }
                 }
             }
         }

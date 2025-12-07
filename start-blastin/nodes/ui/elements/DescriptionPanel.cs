@@ -21,9 +21,16 @@ public partial class DescriptionPanel : PanelContainer
         if (item != null)
         {
             string descString = item.Description + "\n";
-            foreach (StatEffect statEffect in item.GetEffectList())
+            foreach (Effect effect in item.GetEffectList())
             {
-                descString += statEffect.GetEffectText() + "\n";
+                if (effect is StatEffect statEffect)
+                {
+                    descString += statEffect.GetEffectText() + "\n";
+                }
+                else
+                {
+                    return;
+                }
             }
 
             descString.TrimEnd('\n');

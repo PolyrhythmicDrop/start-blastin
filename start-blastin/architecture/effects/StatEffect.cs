@@ -162,6 +162,7 @@ namespace Effects
         {
             string typeName = UtilityMethods.SplitCamelCase(Type.ToString());
             string valueColor = Value > 0 ? "#25bcc6" : "#ff5470";
+            string triggerString = $"On {UtilityMethods.SplitCamelCase(Trigger.ToString())}: ";
 
             string operation;
             if (Operation == Operation.Add)
@@ -174,7 +175,7 @@ namespace Effects
             }
 
             string displayValue = Math.Abs(Value).ToString();
-            return $"{typeName} => [color={valueColor}]{operation}{displayValue}[/color]";
+            return $"{triggerString}{typeName} => [color={valueColor}]{operation}{displayValue}[/color]";
         }
     }
 }

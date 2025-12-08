@@ -20,15 +20,15 @@ namespace Effects
         [Export(PropertyHint.Enum)]
         public Operation Operation { get; set; }
 
-        public override void ApplyEffect()
+        protected override void ApplyEffectToTarget(GodotObject target)
         {
-            if (_target == null)
+            if (target is not IStats statful)
             {
                 return;
             }
 
             // Get the current effect state for this target or create a new one
-            EffectState state = GetOrCreateEffectState(_target);
+            EffectState state = GetOrCreateEffectState(target);
 
             // Don't apply the effect if we're either active (if not stacking) or at max stacks (if stacking)
             if (!_stacking && state.Active || (_stacking && state.CurrentStacks >= _maxStacks))
@@ -36,40 +36,32 @@ namespace Effects
                 return;
             }
 
-            if (_target is IStats statful)
+            // Calculate the new value for the stat
+            StatManager statMan = statful.GetStatManager();
+            float currentVal = statMan.GetStat(Type).CurrentValue;
+            float newVal = CalcNewStatValue(currentVal, true);
+
+            // Set the stat on the target
+            statful.SetStat(Type, newVal);
+
+            // Adjust the EffectState
+            state.Active = true;
+            if (_stacking)
             {
-                // Calculate the new value for the stat
-                StatManager statMan = statful.GetStatManager();
-                float currentVal = statMan.GetStat(Type).CurrentValue;
-                float newVal = CalcNewStatValue(currentVal, true);
-
-                // Set the stat on the target
-                statful.SetStat(Type, newVal);
-
-                // Adjust the EffectState
-                state.Active = true;
-                if (_stacking)
-                {
-                    state.CurrentStacks++;
-                }
-
-                // Start the timer for the target if necessary
-                if (_timed)
-                {
-                    StartTimer(state);
-                }
+                state.CurrentStacks++;
             }
-        }
 
-        public override void RemoveEffect()
-        {
-            RemoveEffectFromTarget(_target);
+            // Start the timer for the target if necessary
+            if (_timed)
+            {
+                StartTimer(target, state);
+            }
         }
 
         protected override void RemoveEffectFromTarget(GodotObject target)
         {
-            // Return immediately if there's no target or no currently active effect on the target.
-            if (target == null || !_targetStates.ContainsKey(target))
+            // // Return immediately if there's no target or no currently active effect on the target.
+            if (target is not IStats statful || !_targetStates.ContainsKey(target))
             {
                 return;
             }
@@ -83,23 +75,22 @@ namespace Effects
                 return;
             }
 
-            // Remove the effect from the target.
-            if (_target is IStats statful)
+            DebugLogger.LogMessage($"Removing effect from {target}!", true);
+
+            // Calculate and apply new stat values
+            StatManager statMan = statful.GetStatManager();
+            float currentVal = statMan.GetStat(Type).CurrentValue;
+            float newVal = CalcNewStatValue(currentVal, false);
+            statful.SetStat(Type, newVal);
+
+            if (_stacking)
             {
-                StatManager statMan = statful.GetStatManager();
-                float currentVal = statMan.GetStat(Type).CurrentValue;
-                float newVal = CalcNewStatValue(currentVal, false);
-                statful.SetStat(Type, newVal);
+                state.CurrentStacks = Math.Max(0, state.CurrentStacks - 1);
+            }
 
-                if (_stacking)
-                {
-                    state.CurrentStacks = Math.Max(0, state.CurrentStacks - 1);
-                }
-
-                if (_stacking && state.CurrentStacks <= 0 || !_stacking)
-                {
-                    state.Active = false;
-                }
+            if (_stacking && state.CurrentStacks <= 0 || !_stacking)
+            {
+                state.Active = false;
             }
         }
 

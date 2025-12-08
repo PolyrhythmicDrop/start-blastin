@@ -558,22 +558,31 @@ namespace Entities
             if (item is WeaponPlugin weaponPlugin)
             {
                 // Revert to the basic bullet if you sell a weapon plugin.
+                RemovePluginEffects(weaponPlugin);
                 DisconnectPluginEffectTriggers(weaponPlugin);
                 ResetWeaponPlugin();
             }
             else if (item is Plugin plugin && _plugins.Contains(plugin))
             {
                 _plugins.Remove(plugin);
-                foreach (Effect effect in plugin.GetEffectList())
-                {
-                    effect.RemoveAllEffectStacks();
-                }
+                RemovePluginEffects(plugin);
                 DisconnectPluginEffectTriggers(plugin);
                 EventBus.Instance.RaisePlayerItemRemoved(_playerId, plugin);
             }
 
             // Apply stat effects based on the new loadout.
             ApplyEquipStatEffects();
+        }
+
+        private void RemovePluginEffects(Plugin plugin)
+        {
+            foreach (Effect effect in plugin.GetEffectList())
+            {
+                foreach (Effect nestedEffect in effect.GetAllEffects())
+                {
+                    nestedEffect.RemoveAllEffectStacks(this);
+                }
+            }
         }
 
         public void AddModifier(params Modifier[] modifiers)
@@ -589,23 +598,23 @@ namespace Entities
             foreach (Plugin plugin in plugins)
             {
                 // Dupe the plugin so that it's a unique instance and won't retain values
-                Plugin newPlugin = (Plugin)plugin.Duplicate(true);
+                // Plugin newPlugin = (Plugin)plugin.Duplicate(true);
 
                 // Add the plugin to the plugins list and raise the PlayerPluginEquipped event for this particular plugin
-                if (_plugins.Count <= _pluginSlots && newPlugin is not Items.WeaponPlugin)
+                if (_plugins.Count <= _pluginSlots && plugin is not Items.WeaponPlugin)
                 {
-                    _plugins.Add(newPlugin);
-                    EventBus.Instance.RaisePlayerPluginEquipped(_playerId, newPlugin);
+                    _plugins.Add(plugin);
+                    EventBus.Instance.RaisePlayerPluginEquipped(_playerId, plugin);
                 }
                 // Swap out any weapon plugins
-                else if (newPlugin is WeaponPlugin weaponPlugin)
+                else if (plugin is WeaponPlugin weaponPlugin)
                 {
                     SwapWeaponPlugin(weaponPlugin);
                 }
                 else
                 {
                     DebugLogger.LogMessage(
-                        $"Cannot add {newPlugin.ResourceName} to plugin list! Equipped plugin count cannot exceed plugin slots. Slots: {_pluginSlots} | Current equipped plugins: {_plugins.Count}",
+                        $"Cannot add {plugin.ResourceName} to plugin list! Equipped plugin count cannot exceed plugin slots. Slots: {_pluginSlots} | Current equipped plugins: {_plugins.Count}",
                         true,
                         true
                     );
@@ -613,7 +622,7 @@ namespace Entities
             }
 
             // Set all targets for "Self" effects to this player
-            SetSelfEffectTargets(plugins);
+            // SetSelfEffectTargets(plugins);
 
             // Connect all triggers to the appropriate events
             ConnectPluginEffectTriggers(plugins);
@@ -629,18 +638,26 @@ namespace Entities
         /// <param name="plugin">The plugin to connect.</param>
         public void ConnectPluginEffectTriggers(params Plugin[] plugins)
         {
-            for (int i = 0; i < plugins.Count(); i++)
+            foreach (Plugin plugin in plugins)
             {
-                foreach (Effect effect in plugins[i].GetEffectList())
+                foreach (Effect effect in plugin.GetEffectList())
                 {
-                    switch (effect.Trigger)
+                    // Get the effect and any nested effects
+                    foreach (Effect nestedEffect in effect.GetAllEffects())
                     {
-                        case Trigger.EnemyHit:
-                            EventBus.Instance.EnemyHit += effect.ApplyEffect;
-                            break;
-                        case Trigger.EnemyKilled:
-                            EventBus.Instance.EnemyKilled += effect.ApplyEffect;
-                            break;
+                        DebugLogger.LogMessage(
+                            $"Getting {nestedEffect} to connect triggers!",
+                            true
+                        );
+                        switch (nestedEffect.Trigger)
+                        {
+                            case Trigger.EnemyHit:
+                                EventBus.Instance.EnemyHit += nestedEffect.ApplyEffect;
+                                break;
+                            case Trigger.EnemyKilled:
+                                EventBus.Instance.EnemyKilled += nestedEffect.ApplyEffect;
+                                break;
+                        }
                     }
                 }
             }
@@ -654,36 +671,34 @@ namespace Entities
         {
             foreach (Effect effect in plugin.GetEffectList())
             {
-                switch (effect.Trigger)
+                foreach (Effect nestedEffect in effect.GetAllEffects())
                 {
-                    case Trigger.EnemyHit:
-                        EventBus.Instance.EnemyHit -= effect.ApplyEffect;
-                        break;
-                    case Trigger.EnemyKilled:
-                        EventBus.Instance.EnemyKilled -= effect.ApplyEffect;
-                        break;
+                    DebugLogger.LogMessage($"Getting {nestedEffect} to disconnect triggers!", true);
+                    switch (nestedEffect.Trigger)
+                    {
+                        case Trigger.EnemyHit:
+                            EventBus.Instance.EnemyHit -= nestedEffect.ApplyEffect;
+                            break;
+                        case Trigger.EnemyKilled:
+                            EventBus.Instance.EnemyKilled -= nestedEffect.ApplyEffect;
+                            break;
+                    }
                 }
             }
         }
 
-        private void SetSelfEffectTargets(params Plugin[] plugins)
-        {
-            List<Effect> selfEffects = new();
+        // private void SetSelfEffectTargets(params Plugin[] plugins)
+        // {
+        //     List<Effect> selfEffects = new();
 
-            // Get all the effects that target Self and add them to the selfEffects list.
-            for (int i = 0; i < plugins.Count(); i++)
-            {
-                selfEffects.AddRange(
-                    plugins[i].GetEffectList().FindAll(effect => effect.Target == TargetType.Self)
-                );
-            }
-
-            // Set the target for each "self effect" to this Player.
-            foreach (Effect effect in selfEffects)
-            {
-                effect.SetTarget(this);
-            }
-        }
+        //     // Get all the effects that target Self and add them to the selfEffects list.
+        //     for (int i = 0; i < plugins.Count(); i++)
+        //     {
+        //         selfEffects.AddRange(
+        //             plugins[i].GetEffectList().FindAll(effect => effect.Target == TargetType.Self)
+        //         );
+        //     }
+        // }
 
         public void SwapWeaponPlugin(WeaponPlugin weaponPlugin)
         {
@@ -709,11 +724,9 @@ namespace Entities
 
         public bool HasPlugin(Plugin plugin)
         {
-            bool hasWeapon = _weaponPlugin == plugin ? true : false;
+            bool hasWeapon = _weaponPlugin.Equals(plugin) ? true : false;
             bool hasPlugin =
-                _plugins.Find(eqPlugin => eqPlugin.ResourceName == plugin.ResourceName) != null
-                    ? true
-                    : false;
+                _plugins.Find(eqPlugin => eqPlugin.Equals(plugin)) != null ? true : false;
             return hasWeapon || hasPlugin;
         }
 
@@ -768,10 +781,6 @@ namespace Entities
                             $"The passed StatType {type} does not have a corresponding variable!"
                         );
                 }
-                // DebugLogger.LogMessage(
-                //     $"{Name} {type} current value set: {_stats.GetStat(type).CurrentValue}",
-                //     true
-                // );
             }
             catch (Exception e)
             {

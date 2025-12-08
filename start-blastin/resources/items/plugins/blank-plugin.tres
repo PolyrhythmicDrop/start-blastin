@@ -6,6 +6,7 @@
 script = ExtResource("1_p0api")
 Name = &"Empty"
 Description = &"This slot is empty. How sad..."
+Scrappable = false
 AppearsInShop = false
 Effects = null
 metadata/_custom_type_script = "uid://b3qmdj461ykoi"

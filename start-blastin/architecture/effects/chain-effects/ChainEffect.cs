@@ -7,6 +7,7 @@ namespace Effects
 {
     /// <summary>
     /// Effect that triggers attached effects when trigger conditions are met.
+    /// Derived classes should override IsChainConditionMet() to activate chains.
     /// </summary>
     [GlobalClass]
     public abstract partial class ChainEffect : Effect
@@ -21,23 +22,80 @@ namespace Effects
             set => _effects = [.. value];
         }
 
-        protected abstract bool IsChainConditionMet();
-
-        public virtual void CheckChainCondition()
+        /// <summary>
+        /// Recursively retrieve this effect and all nested effects, including triggered effects.
+        /// </summary>
+        /// <returns></returns>
+        public override IEnumerable<Effect> GetAllEffects()
         {
-            if (IsChainConditionMet())
+            yield return this;
+
+            foreach (Effect effect in _effects)
             {
-                TriggerChainEffects();
+                foreach (Effect nestedEffect in effect.GetAllEffects())
+                {
+                    yield return nestedEffect;
+                }
             }
         }
 
-        protected virtual void TriggerChainEffects()
-        {
-            List<Effect> chainedEffects = _effects.FindAll(fx => fx.Trigger == Trigger.Chain);
+        protected abstract bool IsChainConditionMet(GodotObject target);
 
-            foreach (Effect effect in chainedEffects)
+        protected override void ApplyEffectToTarget(GodotObject target)
+        {
+            // Get or create state of the effect
+            EffectState state = GetOrCreateEffectState(target);
+
+            // Update the state to track activation of the chain
+            state.Active = true;
+            if (_stacking)
             {
-                effect.ApplyEffect(_target);
+                state.CurrentStacks++;
+            }
+
+            // Check for chain trigger
+            if (IsChainConditionMet(target))
+            {
+                TriggerChainedEffects(target);
+            }
+        }
+
+        protected override void RemoveEffectFromTarget(GodotObject target)
+        {
+            if (!_targetStates.ContainsKey(target))
+            {
+                return;
+            }
+
+            EffectState state = _targetStates[target];
+
+            if (_stacking)
+            {
+                state.CurrentStacks = Math.Max(0, state.CurrentStacks - 1);
+                if (state.CurrentStacks == 0)
+                {
+                    state.Active = false;
+                }
+            }
+            else
+            {
+                state.Active = false;
+            }
+        }
+
+        protected virtual void TriggerChainedEffects(GodotObject target)
+        {
+            foreach (Effect effect in _effects)
+            {
+                // DebugLogger.LogMessage(
+                //     $"Attempting to trigger chained effects on {target}...",
+                //     true
+                // );
+                if (effect.Trigger == Trigger.Chain)
+                {
+                    DebugLogger.LogMessage($"Calling ApplyEffect() on {target}...", true);
+                    effect.ApplyEffect(target);
+                }
             }
         }
     }

@@ -291,11 +291,6 @@ namespace Enemies
             PlayDamageAnimation();
             _currentHealth -= damage;
 
-            DebugLogger.LogMessage(
-                $"{Name} taking damage! Damage: {damage} | Current health: {_currentHealth}",
-                true
-            );
-
             if (_currentHealth <= 0)
             {
                 _currentHealth = 0;

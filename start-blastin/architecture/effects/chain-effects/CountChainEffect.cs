@@ -10,26 +10,34 @@ namespace Effects
     [GlobalClass]
     public partial class CountChainEffect : ChainEffect
     {
-        private int _count = 0;
+        public int _count = 0;
 
         [Export(PropertyHint.Range, "1,50,1,greater_than")]
-        public int Threshold { get; set; }
+        public int Threshold { get; set; } = 1;
 
-        protected override bool IsChainConditionMet()
+        protected override bool IsChainConditionMet(GodotObject target)
         {
             return _count >= Threshold;
         }
 
-        public override void ApplyEffect()
+        protected override void ApplyEffectToTarget(GodotObject target)
         {
-            base.ApplyEffect();
+            // Increment the count since we're applying the effect.
             _count++;
-            CheckChainCondition();
+            base.ApplyEffectToTarget(target);
         }
 
-        protected override void TriggerChainEffects()
+        protected override void RemoveEffectFromTarget(GodotObject target)
         {
-            base.TriggerChainEffects();
+            base.RemoveEffectFromTarget(target);
+
+            // Decrement the count on effect removal
+            _count--;
+        }
+
+        protected override void TriggerChainedEffects(GodotObject target)
+        {
+            base.TriggerChainedEffects(target);
             _count = 0;
         }
     }

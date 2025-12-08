@@ -41,17 +41,17 @@ namespace Effects
 
         protected abstract bool IsChainConditionMet(GodotObject target);
 
-        protected override void ApplyEffectToTarget(GodotObject target)
+        protected override void OnApplyEffect(GodotObject target, EffectState effectState)
         {
-            // Get or create state of the effect
-            EffectState state = GetOrCreateEffectState(target);
+            // // Get or create state of the effect
+            // EffectState state = GetOrCreateEffectState(target);
 
-            // Update the state to track activation of the chain
-            state.Active = true;
-            if (_stacking)
-            {
-                state.CurrentStacks++;
-            }
+            // // Update the state to track activation of the chain
+            // state.Active = true;
+            // if (_stacking)
+            // {
+            //     state.CurrentStacks++;
+            // }
 
             // Check for chain trigger
             if (IsChainConditionMet(target))
@@ -60,37 +60,33 @@ namespace Effects
             }
         }
 
-        protected override void RemoveEffectFromTarget(GodotObject target)
+        protected override void OnRemoveEffect(GodotObject target, EffectState effectState)
         {
-            if (!_targetStates.ContainsKey(target))
-            {
-                return;
-            }
+            // if (!_targetStates.ContainsKey(target))
+            // {
+            //     return;
+            // }
 
-            EffectState state = _targetStates[target];
+            // EffectState state = _targetStates[target];
 
-            if (_stacking)
-            {
-                state.CurrentStacks = Math.Max(0, state.CurrentStacks - 1);
-                if (state.CurrentStacks == 0)
-                {
-                    state.Active = false;
-                }
-            }
-            else
-            {
-                state.Active = false;
-            }
+            // if (_stacking)
+            // {
+            //     state.CurrentStacks = Math.Max(0, state.CurrentStacks - 1);
+            //     if (state.CurrentStacks == 0)
+            //     {
+            //         state.Active = false;
+            //     }
+            // }
+            // else
+            // {
+            //     state.Active = false;
+            // }
         }
 
         protected virtual void TriggerChainedEffects(GodotObject target)
         {
             foreach (Effect effect in _effects)
             {
-                // DebugLogger.LogMessage(
-                //     $"Attempting to trigger chained effects on {target}...",
-                //     true
-                // );
                 if (effect.Trigger == Trigger.Chain)
                 {
                     DebugLogger.LogMessage($"Calling ApplyEffect() on {target}...", true);

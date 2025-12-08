@@ -20,16 +20,17 @@ namespace Effects
             return _count >= Threshold;
         }
 
-        protected override void ApplyEffectToTarget(GodotObject target)
+        protected override void OnApplyEffect(GodotObject target, EffectState effectState)
         {
             // Increment the count since we're applying the effect.
             _count++;
-            base.ApplyEffectToTarget(target);
+            // Check for the condition using the base method.
+            base.OnApplyEffect(target, effectState);
         }
 
-        protected override void RemoveEffectFromTarget(GodotObject target)
+        protected override void OnRemoveEffect(GodotObject target, EffectState effectState)
         {
-            base.RemoveEffectFromTarget(target);
+            base.OnRemoveEffect(target, effectState);
 
             // Decrement the count on effect removal
             _count--;

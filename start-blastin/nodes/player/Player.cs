@@ -201,17 +201,7 @@ namespace Entities
         /// The player's initial set of equipped plugins. Used for debugging.
         /// </summary>
         [Export]
-        public Godot.Collections.Array<Plugin> InitialPlugins
-        {
-            get => [.. _plugins];
-            set
-            {
-                foreach (Plugin plugin in value)
-                {
-                    EquipPlugin(plugin);
-                }
-            }
-        }
+        public Godot.Collections.Array<Plugin> InitialPlugins { get; set; } = new();
 
         [ExportGroup("Currency")]
         [Export(PropertyHint.Range, "0,10000,10,greater_than")]
@@ -285,7 +275,9 @@ namespace Entities
 
             InitializeComponents();
             ConnectSignals();
-            ApplyEquipStatEffects();
+
+            // Apply initial equipment
+            EquipPlugin([.. InitialPlugins]);
         }
 
         private void InitializeComponents()
@@ -597,18 +589,17 @@ namespace Entities
         {
             foreach (Plugin plugin in plugins)
             {
-                // Dupe the plugin so that it's a unique instance and won't retain values
-                // Plugin newPlugin = (Plugin)plugin.Duplicate(true);
-
                 // Add the plugin to the plugins list and raise the PlayerPluginEquipped event for this particular plugin
                 if (_plugins.Count <= _pluginSlots && plugin is not Items.WeaponPlugin)
                 {
                     _plugins.Add(plugin);
+                    ApplyEquipEffects(plugin);
                     EventBus.Instance.RaisePlayerPluginEquipped(_playerId, plugin);
                 }
                 // Swap out any weapon plugins
                 else if (plugin is WeaponPlugin weaponPlugin)
                 {
+                    ApplyEquipEffects(plugin);
                     SwapWeaponPlugin(weaponPlugin);
                 }
                 else
@@ -620,9 +611,6 @@ namespace Entities
                     );
                 }
             }
-
-            // Set all targets for "Self" effects to this player
-            // SetSelfEffectTargets(plugins);
 
             // Connect all triggers to the appropriate events
             ConnectPluginEffectTriggers(plugins);
@@ -686,19 +674,6 @@ namespace Entities
                 }
             }
         }
-
-        // private void SetSelfEffectTargets(params Plugin[] plugins)
-        // {
-        //     List<Effect> selfEffects = new();
-
-        //     // Get all the effects that target Self and add them to the selfEffects list.
-        //     for (int i = 0; i < plugins.Count(); i++)
-        //     {
-        //         selfEffects.AddRange(
-        //             plugins[i].GetEffectList().FindAll(effect => effect.Target == TargetType.Self)
-        //         );
-        //     }
-        // }
 
         public void SwapWeaponPlugin(WeaponPlugin weaponPlugin)
         {
@@ -785,6 +760,26 @@ namespace Entities
             catch (Exception e)
             {
                 DebugLogger.LogMessage(e.Message, true, true);
+            }
+        }
+
+        private void ApplyEquipEffects(Plugin plugin)
+        {
+            foreach (Effect effect in plugin.GetEffectList())
+            {
+                foreach (Effect nestedEffect in effect.GetAllEffects())
+                {
+                    // Don't apply equip effects if it's a StatEffect, since those are handled all together by ApplyEquipStatEffects
+                    // Otherwise apply effects from Equip + Self effects.
+                    if (
+                        nestedEffect is not StatEffect
+                        && nestedEffect.Trigger == Trigger.Equip
+                        && nestedEffect.Target == TargetType.Self
+                    )
+                    {
+                        nestedEffect.ApplyEffect(this);
+                    }
+                }
             }
         }
 

@@ -20,18 +20,9 @@ namespace Effects
         [Export(PropertyHint.Enum)]
         public Operation Operation { get; set; }
 
-        protected override void ApplyEffectToTarget(GodotObject target)
+        protected override void OnApplyEffect(GodotObject target, EffectState state)
         {
             if (target is not IStats statful)
-            {
-                return;
-            }
-
-            // Get the current effect state for this target or create a new one
-            EffectState state = GetOrCreateEffectState(target);
-
-            // Don't apply the effect if we're either active (if not stacking) or at max stacks (if stacking)
-            if (!_stacking && state.Active || (_stacking && state.CurrentStacks >= _maxStacks))
             {
                 return;
             }
@@ -43,55 +34,21 @@ namespace Effects
 
             // Set the stat on the target
             statful.SetStat(Type, newVal);
-
-            // Adjust the EffectState
-            state.Active = true;
-            if (_stacking)
-            {
-                state.CurrentStacks++;
-            }
-
-            // Start the timer for the target if necessary
-            if (_timed)
-            {
-                StartTimer(target, state);
-            }
         }
 
-        protected override void RemoveEffectFromTarget(GodotObject target)
+        protected override void OnRemoveEffect(GodotObject target, EffectState state)
         {
             // // Return immediately if there's no target or no currently active effect on the target.
-            if (target is not IStats statful || !_targetStates.ContainsKey(target))
+            if (target is not IStats statful)
             {
                 return;
             }
-
-            // Get the current effect state of the target
-            EffectState state = _targetStates[target];
-
-            // Don't remove the effect if it's not active (if not stacking) or if there are no current stacks.
-            if (!_stacking && !state.Active || _stacking && state.CurrentStacks == 0)
-            {
-                return;
-            }
-
-            DebugLogger.LogMessage($"Removing effect from {target}!", true);
 
             // Calculate and apply new stat values
             StatManager statMan = statful.GetStatManager();
             float currentVal = statMan.GetStat(Type).CurrentValue;
             float newVal = CalcNewStatValue(currentVal, false);
             statful.SetStat(Type, newVal);
-
-            if (_stacking)
-            {
-                state.CurrentStacks = Math.Max(0, state.CurrentStacks - 1);
-            }
-
-            if (_stacking && state.CurrentStacks <= 0 || !_stacking)
-            {
-                state.Active = false;
-            }
         }
 
         private float CalcNewStatValue(float currentValue, bool positive)

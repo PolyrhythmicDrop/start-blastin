@@ -25,6 +25,7 @@ namespace Effects
     {
         Add,
         Multiply,
+        Remove,
     }
 
     public enum Trigger
@@ -73,8 +74,6 @@ namespace Effects
         protected bool _timed = false;
         protected float _time = 0.0f;
 
-        protected Callable _targetExitCallable;
-
         [Export]
         public TargetType Target { get; set; }
 
@@ -111,16 +110,6 @@ namespace Effects
             set { _time = Math.Max(0.1f, value); }
         }
 
-        public Effect()
-        {
-            _targetExitCallable = Callable.From(
-                (GodotObject target) =>
-                {
-                    OnTargetExitTree(target);
-                }
-            );
-        }
-
         private void OnTargetExitTree(GodotObject target)
         {
             // Remove the target and effect state from the dictionary.
@@ -129,9 +118,20 @@ namespace Effects
                 // Remove the state timer from the state.
                 if (_targetStates.TryGetValue(target, out EffectState state))
                 {
-                    if (state.Timer != null)
+                    if (state?.Timer != null)
                     {
-                        state.Timer.Timeout -= () => OnEffectTimerTimeout(target);
+                        if (
+                            state.Timer.IsConnected(
+                                SceneTreeTimer.SignalName.Timeout,
+                                Callable.From(() => OnEffectTimerTimeout(target))
+                            )
+                        )
+                        {
+                            state.Timer.Disconnect(
+                                SceneTreeTimer.SignalName.Timeout,
+                                Callable.From(() => OnEffectTimerTimeout(target))
+                            );
+                        }
                     }
                     // Remove the target from the list of effect states
                     _targetStates.Remove(target);
@@ -156,9 +156,23 @@ namespace Effects
                 // Nullify the target if it leaves the scene
                 if (target is Node node)
                 {
-                    if (!node.IsConnected(Node.SignalName.TreeExited, _targetExitCallable))
+                    if (
+                        !node.IsConnected(
+                            Node.SignalName.TreeExiting,
+                            Callable.From(() =>
+                            {
+                                OnTargetExitTree(node);
+                            })
+                        )
+                    )
                     {
-                        node?.Connect(Node.SignalName.TreeExited, _targetExitCallable);
+                        node?.Connect(
+                            Node.SignalName.TreeExiting,
+                            Callable.From(() =>
+                            {
+                                OnTargetExitTree(node);
+                            })
+                        );
                     }
                 }
             }
@@ -213,7 +227,19 @@ namespace Effects
             if (target is Node node)
             {
                 state.Timer = node?.GetTree().CreateTimer(_time, processAlways: false);
-                state.Timer.Timeout += () => OnEffectTimerTimeout(target);
+                // state.Timer.Timeout += () => OnEffectTimerTimeout(target);
+                if (
+                    !state.Timer.IsConnected(
+                        SceneTreeTimer.SignalName.Timeout,
+                        Callable.From(() => OnEffectTimerTimeout(target))
+                    )
+                )
+                {
+                    state.Timer.Connect(
+                        SceneTreeTimer.SignalName.Timeout,
+                        Callable.From(() => OnEffectTimerTimeout(target))
+                    );
+                }
             }
         }
 
@@ -300,8 +326,65 @@ namespace Effects
             }
         }
 
-        protected abstract void ApplyEffectToTarget(GodotObject target);
+        protected void ApplyEffectToTarget(GodotObject target)
+        {
+            // Get the current effect state for this target or create a new one
+            EffectState state = GetOrCreateEffectState(target);
 
-        protected abstract void RemoveEffectFromTarget(GodotObject target);
+            // Don't apply the effect if we're either active (if not stacking) or at max stacks (if stacking)
+            if (!_stacking && state.Active || (_stacking && state.CurrentStacks >= _maxStacks))
+            {
+                return;
+            }
+
+            OnApplyEffect(target, state);
+
+            // Adjust the EffectState
+            state.Active = true;
+            if (_stacking)
+            {
+                state.CurrentStacks++;
+            }
+
+            // Start the timer for the target if necessary
+            if (_timed)
+            {
+                StartTimer(target, state);
+            }
+        }
+
+        protected abstract void OnApplyEffect(GodotObject target, EffectState state);
+
+        protected void RemoveEffectFromTarget(GodotObject target)
+        {
+            // Return immediately if there's no currently active effect on the target.
+            if (!_targetStates.ContainsKey(target))
+            {
+                return;
+            }
+
+            // Get the current effect state of the target
+            EffectState state = _targetStates[target];
+
+            // Don't remove the effect if it's not active (if not stacking) or if there are no current stacks.
+            if (!_stacking && !state.Active || _stacking && state.CurrentStacks == 0)
+            {
+                return;
+            }
+
+            OnRemoveEffect(target, state);
+
+            if (_stacking)
+            {
+                state.CurrentStacks = Math.Max(0, state.CurrentStacks - 1);
+            }
+
+            if (_stacking && state.CurrentStacks <= 0 || !_stacking)
+            {
+                state.Active = false;
+            }
+        }
+
+        protected abstract void OnRemoveEffect(GodotObject target, EffectState state);
     }
 }

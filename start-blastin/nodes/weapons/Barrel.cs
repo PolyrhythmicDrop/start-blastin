@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Godot;
 
 namespace Weapons
@@ -48,6 +49,23 @@ namespace Weapons
         public Barrel(float rotation)
         {
             Rotation = rotation;
+        }
+
+        public Barrel(BarrelDirection direction)
+        {
+            _direction = Direction;
+            RotationDegrees = direction switch
+            {
+                BarrelDirection.East => 0,
+                BarrelDirection.Northeast => 45,
+                BarrelDirection.North => 90,
+                BarrelDirection.Northwest => 135,
+                BarrelDirection.West => 180,
+                BarrelDirection.Southwest => 225,
+                BarrelDirection.South => 270,
+                BarrelDirection.Southeast => 315,
+                _ => 0,
+            };
         }
 
         public Barrel() { }

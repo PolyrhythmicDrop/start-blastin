@@ -44,8 +44,8 @@ namespace Effects
         /// </summary>
         protected class EffectState
         {
-            private Effect _parent;
-            private int _currentStacks = 0;
+            protected Effect _parent;
+            protected int _currentStacks = 0;
             public bool Active { get; set; } = false;
             public int CurrentStacks
             {
@@ -53,6 +53,7 @@ namespace Effects
                 set => _currentStacks = Math.Min(_parent._maxStacks, value);
             }
             public SceneTreeTimer Timer { get; set; }
+            internal Action _timerTimeout;
 
             internal EffectState(Effect parent)
             {
@@ -112,6 +113,7 @@ namespace Effects
 
         private void OnTargetExitTree(GodotObject target)
         {
+            DebugLogger.LogMessage($"Target {target} exiting tree!");
             // Remove the target and effect state from the dictionary.
             if (target != null)
             {
@@ -120,18 +122,7 @@ namespace Effects
                 {
                     if (state?.Timer != null)
                     {
-                        if (
-                            state.Timer.IsConnected(
-                                SceneTreeTimer.SignalName.Timeout,
-                                Callable.From(() => OnEffectTimerTimeout(target))
-                            )
-                        )
-                        {
-                            state.Timer.Disconnect(
-                                SceneTreeTimer.SignalName.Timeout,
-                                Callable.From(() => OnEffectTimerTimeout(target))
-                            );
-                        }
+                        state.Timer.Timeout -= state._timerTimeout;
                     }
                     // Remove the target from the list of effect states
                     _targetStates.Remove(target);
@@ -140,41 +131,37 @@ namespace Effects
         }
 
         /// <summary>
+        /// Connects the TreeExiting signal of the target to the OnTargetExitTree callback.
+        /// </summary>
+        /// <param name="target"></param>
+        protected void SetUpTargetExitHandler(GodotObject target)
+        {
+            if (target is Node node)
+            {
+                node.TreeExiting += () => OnTargetExitTree(node);
+            }
+        }
+
+        protected virtual EffectState CreateEffectState()
+        {
+            return new EffectState(this);
+        }
+
+        /// <summary>
         /// Retrieves the current state of the effect on a specified target.
         /// If the target doesn't have the effect active, adds a new EffectState to the <see cref="_targetStates"/> dictionary.
         /// </summary>
         /// <param name="target">The object whose effect state will be added or retrieved.</param>
         /// <returns>The current state of the effect on the <paramref name="target"/>.</returns>
-        protected EffectState GetOrCreateEffectState(GodotObject target)
+        protected virtual EffectState GetOrCreateEffectState(GodotObject target)
         {
-            DebugLogger.LogMessage($"target: {target}", true);
-            // If the targetStates dictionary doesn't contain the current target, add a new EffectState
+            // If the targetStates dictionary doesn't contain the current target, create and add a new EffectState
             if (!_targetStates.ContainsKey(target))
             {
-                _targetStates[target] = new EffectState(this);
+                _targetStates[target] = CreateEffectState();
 
-                // Nullify the target if it leaves the scene
-                if (target is Node node)
-                {
-                    if (
-                        !node.IsConnected(
-                            Node.SignalName.TreeExiting,
-                            Callable.From(() =>
-                            {
-                                OnTargetExitTree(node);
-                            })
-                        )
-                    )
-                    {
-                        node?.Connect(
-                            Node.SignalName.TreeExiting,
-                            Callable.From(() =>
-                            {
-                                OnTargetExitTree(node);
-                            })
-                        );
-                    }
-                }
+                // Set up the exit handler
+                SetUpTargetExitHandler(target);
             }
 
             // Return the current state of the effect on the target.
@@ -227,19 +214,8 @@ namespace Effects
             if (target is Node node)
             {
                 state.Timer = node?.GetTree().CreateTimer(_time, processAlways: false);
-                // state.Timer.Timeout += () => OnEffectTimerTimeout(target);
-                if (
-                    !state.Timer.IsConnected(
-                        SceneTreeTimer.SignalName.Timeout,
-                        Callable.From(() => OnEffectTimerTimeout(target))
-                    )
-                )
-                {
-                    state.Timer.Connect(
-                        SceneTreeTimer.SignalName.Timeout,
-                        Callable.From(() => OnEffectTimerTimeout(target))
-                    );
-                }
+                state._timerTimeout = () => OnEffectTimerTimeout(target);
+                state.Timer.Timeout += state._timerTimeout;
             }
         }
 

@@ -259,22 +259,26 @@ namespace Weapons
 
             foreach (Barrel barrel in Barrels)
             {
-                if (barrel.Active == true)
+                FireSingleBarrel(barrel);
+            }
+
+            if (EnemyOwned && !FireTimer.IsStopped())
+            {
+                FireTimer.Start(Stats.FireRate);
+            }
+        }
+
+        public virtual void FireSingleBarrel(Barrel barrel)
+        {
+            if (barrel.Active == true)
+            {
+                Projectile projectile = _pool.RequestProjectile();
+                projectile.Position = barrel.GlobalPosition;
+                projectile.GlobalRotation = barrel.GlobalRotation;
+
+                if (_velocityProvider != null)
                 {
-                    Projectile projectile = _pool.RequestProjectile();
-                    // projectile.Position = ProjSpawnPoint;
-                    projectile.Position = barrel.GlobalPosition;
-                    projectile.GlobalRotation = barrel.GlobalRotation;
-
-                    if (_velocityProvider != null)
-                    {
-                        projectile.AddSourceVelocity();
-                    }
-
-                    if (EnemyOwned && !FireTimer.IsStopped())
-                    {
-                        FireTimer.Start(Stats.FireRate);
-                    }
+                    projectile.AddSourceVelocity();
                 }
             }
         }

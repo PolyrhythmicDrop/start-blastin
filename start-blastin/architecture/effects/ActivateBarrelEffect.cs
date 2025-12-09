@@ -39,7 +39,7 @@ namespace Effects
                 {
                     case Operation.Add:
                     {
-                        // Activate the barrel if an inactive with this direction is found on the target.
+                        // Activate the barrel if an inactive barrel with this direction is found on the target.
                         barrels.ToggleActivateBarrel(true, Direction);
                         break;
                     }

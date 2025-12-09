@@ -89,11 +89,11 @@ namespace Effects
             set => _stacking = value;
         }
 
-        [Export(PropertyHint.Range, "1,10,1,greater_than")]
+        [Export(PropertyHint.Range, "-1,10,1,greater_than")]
         public int MaxStacks
         {
             get => _maxStacks;
-            set => _maxStacks = Math.Max(1, value);
+            set => _maxStacks = Math.Max(-1, value);
         }
 
         [ExportGroup("Timing")]
@@ -307,8 +307,15 @@ namespace Effects
             // Get the current effect state for this target or create a new one
             EffectState state = GetOrCreateEffectState(target);
 
-            // Don't apply the effect if we're either active (if not stacking) or at max stacks (if stacking)
-            if (!_stacking && state.Active || (_stacking && state.CurrentStacks >= _maxStacks))
+            // Don't apply the effect if the effect is not stacking and not active
+            if (!_stacking && state.Active)
+            {
+                return;
+            }
+
+            // Don't apply the effect if the effect is stacking but we're at max stacks.
+            // Also check if _maxStacks is greater than 0. You can set _maxStacks to -1 (or other negative number) for infinite stacking.
+            if (_stacking && state.CurrentStacks >= _maxStacks && _maxStacks > 0)
             {
                 return;
             }

@@ -65,12 +65,20 @@ namespace Effects
                 barrelState._barrel.ToggleActive(true);
             }
 
-            if (!_stacking)
+            if (!_stacking || _stacking && _maxStacks < 0)
             {
-                // Fire a round from the barrel
+                // Fire a single round from the barrel
                 weaponOwner.Weapon.FireSingleBarrel(barrelState._barrel);
-                // Clear the stack so you can fire it again next time the trigger is met
-                barrelState.Active = false;
+            }
+            else if (_stacking && _maxStacks > 0)
+            {
+                // Fire the shot for the number of max stacks.
+                for (int i = 0; i < _maxStacks; i++)
+                {
+                    weaponOwner.Weapon.FireSingleBarrel(barrelState._barrel);
+                }
+                // Reset CurrentStacks so we can keep firing without immediately returning.
+                state.CurrentStacks = 0;
             }
         }
 

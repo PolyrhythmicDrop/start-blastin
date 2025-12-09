@@ -268,6 +268,7 @@ namespace Effects
 
         public void RemoveAllEffectStacks(GodotObject target)
         {
+            DebugLogger.LogMessage($"Removing all effect stacks from {this}!", true);
             if (target == null || !_targetStates.ContainsKey(target))
             {
                 return;
@@ -276,16 +277,28 @@ namespace Effects
             // Get the current state
             EffectState state = _targetStates[target];
 
-            if (_stacking)
+            if (_stacking && _maxStacks > 0)
             {
+                DebugLogger.LogMessage($"Case 1:", true);
+
                 // Remove all stacks
                 for (int i = state.CurrentStacks; i > 0; i--)
                 {
                     RemoveEffectFromTarget(target);
                 }
             }
+            // If stacking is set to infinite, simply remove the effects from the dictionary.
+            else if (_stacking && _maxStacks < 0)
+            {
+                DebugLogger.LogMessage($"Case 2:", true);
+
+                // _targetStates.Remove(target);
+                RemoveEffectFromTarget(target);
+            }
             else
             {
+                DebugLogger.LogMessage($"Case 3:", true);
+
                 // Remove single effect
                 RemoveEffectFromTarget(target);
             }
@@ -294,13 +307,51 @@ namespace Effects
         public void RemoveFromAllTargets()
         {
             // Create a copy of keys to avoid modifying collection during iteration
-            List<GodotObject> targets = new(_targetStates.Keys);
+            List<GodotObject> targets = [.. _targetStates.Keys];
 
             foreach (GodotObject target in targets)
             {
                 RemoveAllEffectStacks(target);
             }
         }
+
+        protected void RemoveEffectFromTarget(GodotObject target)
+        {
+            DebugLogger.LogMessage($"Removing {this} from {target}", true);
+            // Return immediately if there's no currently active effect on the target.
+            if (!_targetStates.ContainsKey(target))
+            {
+                return;
+            }
+
+            // Get the current effect state of the target
+            EffectState state = _targetStates[target];
+
+            // Don't remove the effect if it's not active (if not stacking) or if there are no current stacks.
+            if (!_stacking && !state.Active)
+            {
+                return;
+            }
+
+            if (_stacking && state.CurrentStacks == 0)
+            {
+                return;
+            }
+
+            OnRemoveEffect(target, state);
+
+            if (_stacking)
+            {
+                state.CurrentStacks = Math.Max(0, state.CurrentStacks - 1);
+            }
+
+            if (_stacking && state.CurrentStacks <= 0 || !_stacking)
+            {
+                state.Active = false;
+            }
+        }
+
+        protected abstract void OnRemoveEffect(GodotObject target, EffectState state);
 
         protected void ApplyEffectToTarget(GodotObject target)
         {
@@ -337,37 +388,5 @@ namespace Effects
         }
 
         protected abstract void OnApplyEffect(GodotObject target, EffectState state);
-
-        protected void RemoveEffectFromTarget(GodotObject target)
-        {
-            // Return immediately if there's no currently active effect on the target.
-            if (!_targetStates.ContainsKey(target))
-            {
-                return;
-            }
-
-            // Get the current effect state of the target
-            EffectState state = _targetStates[target];
-
-            // Don't remove the effect if it's not active (if not stacking) or if there are no current stacks.
-            if (!_stacking && !state.Active || _stacking && state.CurrentStacks == 0)
-            {
-                return;
-            }
-
-            OnRemoveEffect(target, state);
-
-            if (_stacking)
-            {
-                state.CurrentStacks = Math.Max(0, state.CurrentStacks - 1);
-            }
-
-            if (_stacking && state.CurrentStacks <= 0 || !_stacking)
-            {
-                state.Active = false;
-            }
-        }
-
-        protected abstract void OnRemoveEffect(GodotObject target, EffectState state);
     }
 }

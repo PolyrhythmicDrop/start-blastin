@@ -550,15 +550,13 @@ namespace Entities
             if (item is WeaponPlugin weaponPlugin)
             {
                 // Revert to the basic bullet if you sell a weapon plugin.
-                RemovePluginEffects(weaponPlugin);
-                DisconnectPluginEffectTriggers(weaponPlugin);
+                UnequipPlugin(weaponPlugin);
                 ResetWeaponPlugin();
             }
             else if (item is Plugin plugin && _plugins.Contains(plugin))
             {
                 _plugins.Remove(plugin);
-                RemovePluginEffects(plugin);
-                DisconnectPluginEffectTriggers(plugin);
+                UnequipPlugin(plugin);
                 EventBus.Instance.RaisePlayerItemRemoved(_playerId, plugin);
             }
 
@@ -566,8 +564,16 @@ namespace Entities
             ApplyEquipStatEffects();
         }
 
+        public void UnequipPlugin(Plugin plugin)
+        {
+            DebugLogger.LogMessage($"Unequipping {plugin.ResourceName}!", true);
+            RemovePluginEffects(plugin);
+            DisconnectPluginEffectTriggers(plugin);
+        }
+
         private void RemovePluginEffects(Plugin plugin)
         {
+            DebugLogger.LogMessage($"Removing effects of {plugin.ResourceName}!", true);
             foreach (Effect effect in plugin.GetEffectList())
             {
                 foreach (Effect nestedEffect in effect.GetAllEffects())

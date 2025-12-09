@@ -9,7 +9,7 @@ using Weapons;
 namespace Effects
 {
     /// <summary>
-    /// Fires a shot in a static or dynamic direction.
+    /// Fires one or more shots in a static or dynamic direction.
     /// </summary>
     [GlobalClass]
     public partial class ShotEffect : Effect
@@ -55,16 +55,7 @@ namespace Effects
 
             if (barrelState._barrel == null)
             {
-                // Create a new barrel and add it to the state and the target.
-                barrelState._barrel = new Barrel(Direction);
-                weaponOwner.Weapon.AddChild(barrelState._barrel);
-                // Adjust the rotation if the target is a Player, since they're rotated -90 degrees always
-                if (weaponOwner is Player)
-                {
-                    barrelState._barrel.GlobalRotationDegrees += 90;
-                }
-
-                barrelState._barrel.ToggleActive(true);
+                CreateBarrel(weaponOwner, barrelState);
             }
 
             if (!_stacking || _stacking && _maxStacks < 0)
@@ -85,10 +76,54 @@ namespace Effects
                     );
                 }
                 // Reset CurrentStacks so we can keep firing without immediately returning.
-                state.CurrentStacks = 0;
+                state.CurrentStacks = 1;
+            }
+
+            // Print out the count
+            DebugLogger.LogMessage(
+                $"Target count after effect application: {_targetStates.Count} | Values/EffectState count: {_targetStates.Values.Count}"
+            );
+        }
+
+        protected override void OnRemoveEffect(GodotObject target, EffectState state)
+        {
+            DebugLogger.LogMessage($"On Remove Effect called!");
+            if (state is not BarrelEffectState barrelState)
+            {
+                return;
+            }
+
+            if (target is not IWeaponOwner weaponOwner)
+            {
+                return;
+            }
+
+            if (barrelState._barrel != null && !barrelState._barrel.IsQueuedForDeletion())
+            {
+                RemoveBarrel(weaponOwner, barrelState);
             }
         }
 
-        protected override void OnRemoveEffect(GodotObject target, EffectState state) { }
+        private void CreateBarrel(IWeaponOwner weaponOwner, BarrelEffectState barrelState)
+        {
+            // Create a new barrel and add it to the state and the target.
+            barrelState._barrel = new Barrel(Direction);
+            weaponOwner.Weapon.AddChild(barrelState._barrel);
+            // Adjust the rotation if the target is a Player, since they're rotated -90 degrees always
+            if (weaponOwner is Player)
+            {
+                barrelState._barrel.GlobalRotationDegrees += 90;
+            }
+
+            barrelState._barrel.ToggleActive(true);
+        }
+
+        private void RemoveBarrel(IWeaponOwner weaponOwner, BarrelEffectState barrelState)
+        {
+            DebugLogger.LogMessage($"Removing barrel...");
+            barrelState._barrel.ToggleActive(false);
+            weaponOwner.Weapon.RemoveChild(barrelState._barrel);
+            barrelState._barrel.QueueFree();
+        }
     }
 }

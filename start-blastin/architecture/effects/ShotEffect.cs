@@ -1,7 +1,9 @@
 using System;
+using System.Threading.Tasks;
 using Entities;
 using Godot;
 using Interfaces;
+using Utility;
 using Weapons;
 
 namespace Effects
@@ -39,7 +41,7 @@ namespace Effects
         /// </summary>
         /// <param name="target">The object that fires the projectile.</param>
         /// <param name="state">The state of the effect.</param>
-        protected override void OnApplyEffect(GodotObject target, EffectState state)
+        protected override async void OnApplyEffect(GodotObject target, EffectState state)
         {
             if (state is not BarrelEffectState barrelState)
             {
@@ -76,6 +78,11 @@ namespace Effects
                 for (int i = 0; i < _maxStacks; i++)
                 {
                     weaponOwner.Weapon.FireSingleBarrel(barrelState._barrel);
+                    // Add a slight delay between firings so the projectiles don't all spawn on top of each other.
+                    await ToSignal(
+                        weaponOwner.Weapon.GetTree().CreateTimer(0.1f),
+                        SceneTreeTimer.SignalName.Timeout
+                    );
                 }
                 // Reset CurrentStacks so we can keep firing without immediately returning.
                 state.CurrentStacks = 0;

@@ -7,10 +7,9 @@
 [sub_resource type="Resource" id="Resource_jv5gu"]
 script = ExtResource("1_jv5gu")
 Direction = 7
-Target = 2
 Trigger = 3
 Stacking = true
-MaxStacks = -1
+MaxStacks = 3
 metadata/_custom_type_script = "uid://cp6p50cffraw6"
 
 [resource]

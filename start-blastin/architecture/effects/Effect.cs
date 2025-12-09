@@ -44,7 +44,7 @@ namespace Effects
         /// </summary>
         protected class EffectState
         {
-            protected Effect _parent;
+            internal Effect _parent;
             protected int _currentStacks = 0;
             public bool Active { get; set; } = false;
             public int CurrentStacks

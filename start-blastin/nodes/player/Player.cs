@@ -555,8 +555,8 @@ namespace Entities
             }
             else if (item is Plugin plugin && _plugins.Contains(plugin))
             {
-                _plugins.Remove(plugin);
                 UnequipPlugin(plugin);
+                _plugins.Remove(plugin);
                 EventBus.Instance.RaisePlayerItemRemoved(_playerId, plugin);
             }
 
@@ -567,8 +567,8 @@ namespace Entities
         public void UnequipPlugin(Plugin plugin)
         {
             DebugLogger.LogMessage($"Unequipping {plugin.ResourceName}!", true);
-            RemovePluginEffects(plugin);
             DisconnectPluginEffectTriggers(plugin);
+            RemovePluginEffects(plugin);
         }
 
         private void RemovePluginEffects(Plugin plugin)
@@ -578,7 +578,11 @@ namespace Entities
             {
                 foreach (Effect nestedEffect in effect.GetAllEffects())
                 {
-                    nestedEffect.RemoveAllEffectStacks(this);
+                    // Remove all effect stacks that apply to the player.
+                    nestedEffect.RemoveAllEffectStacksFromTarget(this);
+
+                    // Remove all other targets and clear the states
+                    nestedEffect.CleanUpEffect();
                 }
             }
         }
@@ -705,9 +709,8 @@ namespace Entities
 
         public bool HasPlugin(Plugin plugin)
         {
-            bool hasWeapon = _weaponPlugin.Equals(plugin) ? true : false;
-            bool hasPlugin =
-                _plugins.Find(eqPlugin => eqPlugin.Equals(plugin)) != null ? true : false;
+            bool hasWeapon = _weaponPlugin?.Equals(plugin) ?? false;
+            bool hasPlugin = _plugins.Find(eqPlugin => eqPlugin.Equals(plugin)) != null;
             return hasWeapon || hasPlugin;
         }
 

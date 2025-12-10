@@ -1,63 +1,25 @@
-[gd_resource type="Resource" script_class="Plugin" load_steps=13 format=3 uid="uid://bo57x7idkejky"]
+[gd_resource type="Resource" script_class="Plugin" load_steps=7 format=3 uid="uid://bo57x7idkejky"]
 
-[ext_resource type="Script" uid="uid://cp6p50cffraw6" path="res://architecture/effects/ShotEffect.cs" id="1_jv5gu"]
+[ext_resource type="Script" uid="uid://cp6p50cffraw6" path="res://architecture/effects/ShotEffect.cs" id="1_ad7uv"]
 [ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="2_ad7uv"]
-[ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="2_n8wk6"]
 [ext_resource type="Script" uid="uid://be7xbdxqx17t2" path="res://architecture/effects/chain-effects/CountChainEffect.cs" id="3_7hrtu"]
 [ext_resource type="Script" uid="uid://b3qmdj461ykoi" path="res://architecture/items/plugins/Plugin.cs" id="3_n8wk6"]
-[ext_resource type="Script" uid="uid://bcnp2ikysl23o" path="res://architecture/effects/ActivateBarrelEffect.cs" id="4_7hrtu"]
 
-[sub_resource type="Resource" id="Resource_jv5gu"]
-script = ExtResource("1_jv5gu")
-Direction = 7
-Trigger = 3
-Stacking = true
-MaxStacks = -1
-metadata/_custom_type_script = "uid://cp6p50cffraw6"
-
-[sub_resource type="Resource" id="Resource_ad7uv"]
-script = ExtResource("1_jv5gu")
+[sub_resource type="Resource" id="Resource_n8wk6"]
+script = ExtResource("1_ad7uv")
 Target = 2
 Trigger = 3
-Stacking = true
-MaxStacks = 3
 metadata/_custom_type_script = "uid://cp6p50cffraw6"
 
-[sub_resource type="Resource" id="Resource_7hrtu"]
-script = ExtResource("2_n8wk6")
-Value = 10.0
-Trigger = 2
-Stacking = true
-MaxStacks = -1
-Timed = true
-Time = 3.0
-metadata/_custom_type_script = "uid://bmeda5w63vsw7"
-
-[sub_resource type="Resource" id="Resource_j6knl"]
-script = ExtResource("2_n8wk6")
-Type = 1
-Value = 200.0
-Trigger = 1
+[sub_resource type="Resource" id="Resource_jv5gu"]
+script = ExtResource("3_7hrtu")
+Threshold = 2
+Effects = Array[Object]([SubResource("Resource_n8wk6")])
+Trigger = 3
+MaxStacks = 2
 Timed = true
 Time = 2.0
-metadata/_custom_type_script = "uid://bmeda5w63vsw7"
-
-[sub_resource type="Resource" id="Resource_a2m2f"]
-script = ExtResource("3_7hrtu")
-Threshold = 3
-Effects = Array[Object]([SubResource("Resource_j6knl")])
-Trigger = 3
-Stacking = true
-MaxStacks = 3
 metadata/_custom_type_script = "uid://be7xbdxqx17t2"
-
-[sub_resource type="Resource" id="Resource_fqo8t"]
-script = ExtResource("4_7hrtu")
-Direction = 4
-Trigger = 2
-Timed = true
-Time = 5.0
-metadata/_custom_type_script = "uid://bcnp2ikysl23o"
 
 [resource]
 resource_name = "sample-plugin"
@@ -67,5 +29,5 @@ Name = &"Sample Plugin"
 Description = &"It\'s a sample."
 Icon = ExtResource("2_ad7uv")
 FluxCost = 10
-Effects = Array[Object]([SubResource("Resource_jv5gu"), SubResource("Resource_ad7uv"), SubResource("Resource_7hrtu"), SubResource("Resource_a2m2f"), SubResource("Resource_fqo8t")])
+Effects = Array[Object]([SubResource("Resource_jv5gu")])
 metadata/_custom_type_script = "uid://b3qmdj461ykoi"

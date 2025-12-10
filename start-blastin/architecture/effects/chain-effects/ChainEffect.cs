@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using Godot;
 using Utility;
 
@@ -46,29 +47,50 @@ namespace Effects
             // Check for chain trigger
             if (IsChainConditionMet(target))
             {
-                TriggerChainedEffects(target);
+                DebugLogger.LogMessage($"Chain condition met on {GetType().Name}!", true);
+                EnableChainedEffects(target);
             }
         }
 
         protected override void OnRemoveEffect(GodotObject target, EffectState effectState)
         {
+            DisableChainedEffects(target);
+        }
+
+        protected virtual void EnableChainedEffects(GodotObject target)
+        {
             foreach (Effect effect in _effects)
             {
-                if (effect.Trigger == Trigger.Chain)
+                DebugLogger.LogMessage($"Enabling {effect}...", true);
+                if (effect.Trigger == Trigger.Equip || effect.Trigger == Trigger.Chain)
                 {
-                    effect.RemoveAllEffectsFromTarget(target);
+                    effect.Enable(target);
+                }
+                else if (effect.Target == TargetType.Chain)
+                {
+                    // This could be an issue if you can't change it back to the original target
+                    effect.Target = Target;
+                    effect.Enable();
+                }
+                else
+                {
+                    effect.Enable();
                 }
             }
         }
 
-        protected virtual void TriggerChainedEffects(GodotObject target)
+        protected virtual void DisableChainedEffects(GodotObject target)
         {
             foreach (Effect effect in _effects)
             {
-                if (effect.Trigger == Trigger.Chain)
+                if (effect.Trigger == Trigger.Chain || effect.Trigger == Trigger.Equip)
                 {
-                    DebugLogger.LogMessage($"Calling ApplyEffect() on {target}...", true);
-                    effect.ApplyEffect(target);
+                    DebugLogger.LogMessage($"Calling Disable() on {target} for {effect}...", true);
+                    effect.Disable(target);
+                }
+                else
+                {
+                    effect.Disable();
                 }
             }
         }

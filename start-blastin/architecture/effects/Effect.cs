@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.Marshalling;
 using System.Runtime.InteropServices.Swift;
 using System.Threading.Tasks;
+using Autoloads;
 using Entities;
 using Events;
 using Godot;
@@ -129,6 +131,113 @@ namespace Effects
             set { _time = Math.Max(0.1f, value); }
         }
 
+        #region Enable / Disable
+
+        /// <summary>
+        /// Enables the effect based on the selected Target and Trigger.
+        /// </summary>
+        /// <remarks>
+        /// Does *not* apply the effect unless the Trigger is set to Equip. Application is still done via the selected Trigger.
+        /// </remarks>
+        public virtual void Enable(GodotObject target = null)
+        {
+            try
+            {
+                switch (Trigger)
+                {
+                    // Maybe work on this one, this doesn't feel quite right.
+                    case Trigger.Equip:
+                    {
+                        // Apply the effect immediately if we've supplied a target, and the target tyep is self.
+                        // Do not apply the effect if we're a StatEffect, since those are applied all together in the Player class.
+                        if (target != null && Target == TargetType.Self && this is not StatEffect)
+                        {
+                            ApplyEffect(target);
+                        }
+                        else
+                        {
+                            throw new ArgumentException(
+                                $"Cannot apply a Trigger.Equip effect without a target, or without TargetType set to Self! Target: {target} | Target: {Target}"
+                            );
+                        }
+                        break;
+                    }
+                    case Trigger.EnemyHit:
+                        EventBus.Instance.EnemyHit += ApplyEffect;
+                        break;
+                    case Trigger.EnemyKilled:
+                        EventBus.Instance.EnemyKilled += ApplyEffect;
+                        break;
+                    // Triggers immediately if its parent chain effect is triggered.
+                    case Trigger.Chain:
+                        if (target != null)
+                        {
+                            ApplyEffect(target);
+                        }
+                        else
+                        {
+                            throw new ArgumentException(
+                                $"Parent chain effect must supply a target to nested effects with Trigger set to Chain!"
+                            );
+                        }
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                DebugLogger.LogMessage(e.Message, true, true);
+            }
+        }
+
+        public virtual void Disable(GodotObject target = null)
+        {
+            try
+            {
+                switch (Trigger)
+                {
+                    case Trigger.Equip:
+                    {
+                        if (target != null && Target == TargetType.Self)
+                        {
+                            RemoveAllEffectsFromTarget(target);
+                        }
+                        else
+                        {
+                            throw new ArgumentException(
+                                $"Could not disable the Equip Effect! Did you forget to pass a target? Target: {target} | Target: {Target}"
+                            );
+                        }
+                        break;
+                    }
+                    case Trigger.EnemyHit:
+                        EventBus.Instance.EnemyHit -= ApplyEffect;
+                        RemoveEffectFromAllTargets();
+                        break;
+                    case Trigger.EnemyKilled:
+                        EventBus.Instance.EnemyKilled -= ApplyEffect;
+                        RemoveEffectFromAllTargets();
+                        break;
+                    case Trigger.Chain:
+                        if (target != null)
+                        {
+                            RemoveAllEffectsFromTarget(target);
+                        }
+                        else
+                        {
+                            throw new ArgumentException(
+                                $"Parent chain effect must supply a target to nested effects with Trigger set to Chain!"
+                            );
+                        }
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                DebugLogger.LogMessage(e.Message, true, true);
+            }
+        }
+
+        #endregion
         #region Targets and State
 
         /// <summary>
@@ -338,7 +447,7 @@ namespace Effects
         /// </summary>
         /// <param name="state">The state of the effect to check against.</param>
         /// <returns>True if the effect can be applied, false if not.</returns>
-        private bool CanApplyEffect(EffectState state)
+        protected virtual bool CanApplyEffect(EffectState state)
         {
             // If stacking is disabled, the effect is not active on the target.
             bool stateInactive = !_stacking && !state.Active;
@@ -446,7 +555,7 @@ namespace Effects
         /// </summary>
         /// <param name="state">The state of the effect to check against.</param>
         /// <returns>True if the effect can be removed, false if not.</returns>
-        private bool CanRemoveEffect(EffectState state)
+        protected virtual bool CanRemoveEffect(EffectState state)
         {
             // If stacking is disabled, the effect is active on the target.
             bool stateActive = !_stacking && state.Active;

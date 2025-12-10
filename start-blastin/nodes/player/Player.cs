@@ -567,7 +567,9 @@ namespace Entities
         public void UnequipPlugin(Plugin plugin)
         {
             DebugLogger.LogMessage($"Unequipping {plugin.ResourceName}!", true);
-            DisconnectPluginEffectTriggers(plugin);
+            // DisconnectPluginEffectTriggers(plugin);
+
+            DisablePluginEffects(plugin);
             RemovePluginEffects(plugin);
         }
 
@@ -603,13 +605,13 @@ namespace Entities
                 if (_plugins.Count <= _pluginSlots && plugin is not Items.WeaponPlugin)
                 {
                     _plugins.Add(plugin);
-                    ApplyEquipEffects(plugin);
+                    // ApplyEquipEffects(plugin);
                     EventBus.Instance.RaisePlayerPluginEquipped(_playerId, plugin);
                 }
                 // Swap out any weapon plugins
                 else if (plugin is WeaponPlugin weaponPlugin)
                 {
-                    ApplyEquipEffects(plugin);
+                    // ApplyEquipEffects(plugin);
                     SwapWeaponPlugin(weaponPlugin);
                 }
                 else
@@ -623,10 +625,38 @@ namespace Entities
             }
 
             // Connect all triggers to the appropriate events
-            ConnectPluginEffectTriggers(plugins);
+            // ConnectPluginEffectTriggers(plugins);
+
+            EnablePluginEffects(plugins);
 
             // Apply equip effects
             ApplyEquipStatEffects();
+        }
+
+        public void EnablePluginEffects(params Plugin[] plugins)
+        {
+            foreach (Plugin plugin in plugins)
+            {
+                // Only enable the top-level effects in the plugin.
+                // Nested effects are enabled by the parent ChainEffect.
+                foreach (Effect effect in plugin.GetEffectList())
+                {
+                    effect.Enable(this);
+                }
+            }
+        }
+
+        public void DisablePluginEffects(params Plugin[] plugins)
+        {
+            foreach (Plugin plugin in plugins)
+            {
+                // Only disable the top-level effects in the plugin.
+                // Nested effects are disabled by the parent ChainEffect.
+                foreach (Effect effect in plugin.GetEffectList())
+                {
+                    effect.Disable(this);
+                }
+            }
         }
 
         /// <summary>

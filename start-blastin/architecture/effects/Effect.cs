@@ -44,16 +44,33 @@ namespace Effects
         /// </summary>
         protected class EffectState
         {
+            // Parent effect
             internal Effect _parent;
             protected int _currentStacks = 0;
+
+            /// <summary>
+            /// Whether or not the effect is currently active on the target.
+            /// </summary>
             public bool Active { get; set; } = false;
+
+            /// <summary>
+            /// The amount of stacks of the effect currently active on the target.
+            /// </summary>
             public int CurrentStacks
             {
                 get => _currentStacks;
                 set => _currentStacks = Math.Min(_parent._maxStacks, value);
             }
             public SceneTreeTimer Timer { get; set; }
+
+            /// <summary>
+            /// Callback for the SceneTreeTimer timeout signal.
+            /// </summary>
             internal Action _onTimerTimeout;
+
+            /// <summary>
+            /// Callback for when the target exits the tree.
+            /// </summary>
             internal Action _onTreeExit;
 
             internal EffectState(Effect parent)
@@ -74,7 +91,7 @@ namespace Effects
         // ~~ Timing ~~
 
         protected bool _timed = false;
-        protected float _time = 0.0f;
+        protected float _time = 0.1f;
 
         [Export]
         public TargetType Target { get; set; }
@@ -123,39 +140,6 @@ namespace Effects
             yield return this;
         }
 
-        private void OnTargetExitTree(GodotObject target)
-        {
-            DebugLogger.LogMessage($"Target {target} exiting tree!");
-
-            // Remove the target and effect state from the dictionary, if it exists
-            if (target != null && _targetStates.TryGetValue(target, out EffectState state))
-            {
-                DisconnectStateSignals(target, state);
-
-                // Remove the effect state from the dictionary
-                _targetStates.Remove(target);
-            }
-        }
-
-        /// <summary>
-        /// Assigns the _onTreeExit callback and connects it to the node's TreeExiting signal.
-        /// </summary>
-        /// <param name="target"></param>
-        protected void SetUpTargetExitHandler(GodotObject target)
-        {
-            if (target is Node node && _targetStates.TryGetValue(target, out EffectState state))
-            {
-                // node.TreeExiting += () => OnTargetExitTree(node);
-                state._onTreeExit = () => OnTargetExitTree(node);
-                node.TreeExiting += state._onTreeExit;
-            }
-        }
-
-        protected virtual EffectState CreateEffectState()
-        {
-            return new EffectState(this);
-        }
-
         /// <summary>
         /// Retrieves the current state of the effect on a specified target.
         /// If the target doesn't have the effect active, adds a new EffectState to the <see cref="_targetStates"/> dictionary.
@@ -177,6 +161,155 @@ namespace Effects
             return _targetStates[target];
         }
 
+        /// <summary>
+        /// Creates a new effect state.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual EffectState CreateEffectState()
+        {
+            return new EffectState(this);
+        }
+
+        /// <summary>
+        /// Assigns the _onTreeExit callback and connects it to the node's TreeExiting signal.
+        /// </summary>
+        /// <param name="target"></param>
+        protected void SetUpTargetExitHandler(GodotObject target)
+        {
+            if (target is Node node && _targetStates.TryGetValue(target, out EffectState state))
+            {
+                // node.TreeExiting += () => OnTargetExitTree(node);
+                state._onTreeExit = () => OnTargetExitTree(node);
+                node.TreeExiting += state._onTreeExit;
+            }
+        }
+
+        /// <summary>
+        /// Callback that is called when the passed <see cref="target"/> exits the tree.
+        /// </summary>
+        /// <param name="target"></param>
+        private void OnTargetExitTree(GodotObject target)
+        {
+            DebugLogger.LogMessage($"Target {target} exiting tree!");
+
+            // Remove the target and effect state from the dictionary, if it exists
+            if (target != null && _targetStates.TryGetValue(target, out EffectState state))
+            {
+                // Disconnect all the signals
+                DisconnectStateSignals(target, state);
+
+                // Remove the effect state from the dictionary
+                _targetStates.Remove(target);
+            }
+        }
+
+        protected void DisconnectStateSignals(GodotObject target, EffectState state)
+        {
+            // Clean up the state's timer connection
+            if (state.Timer != null && state._onTimerTimeout != null)
+            {
+                state.Timer.Timeout -= state._onTimerTimeout;
+            }
+
+            // Clean up the tree exit callback
+            if (target is Node node && state._onTreeExit != null)
+            {
+                node.TreeExiting -= state._onTreeExit;
+            }
+        }
+
+        protected virtual void OnEffectTimerTimeout(GodotObject target)
+        {
+            if (target != null)
+            {
+                RemoveEffectFromTarget(target);
+            }
+        }
+
+        /// <summary>
+        /// Updates parameters of the event state post-application or post-removal.
+        /// </summary>
+        /// <param name="state">The EffectState to adjust.</param>
+        /// <param name="postApplication">True to perform post-application adjustment. False to perform post-removal adjustment.</param>
+        protected virtual void UpdateEffectState(
+            GodotObject target,
+            EffectState state,
+            bool postApplication
+        )
+        {
+            if (postApplication)
+            {
+                state.Active = true;
+                if (_stacking)
+                {
+                    state.CurrentStacks++;
+                }
+
+                // Start the timer for the target if necessary
+                if (_timed)
+                {
+                    StartTimer(target, state);
+                }
+            }
+            else
+            {
+                if (_stacking)
+                {
+                    state.CurrentStacks = Math.Max(0, state.CurrentStacks - 1);
+                    if (state.CurrentStacks == 0)
+                    {
+                        state.Active = false;
+                    }
+                }
+                else
+                {
+                    state.Active = false;
+                }
+            }
+        }
+
+        #endregion
+
+        #region Application
+
+
+        /// <summary>
+        /// Applies the effect to a specific target. Used for manual application or for ChainEffects.
+        /// Calls <see cref="ApplyEffectToTarget"/> with the passed target.
+        /// </summary>
+        /// <param name="target"></param>
+        public void ApplyEffect(GodotObject target)
+        {
+            DebugLogger.LogMessage($"Applying effect directly to {target}!", true);
+            if (target == null)
+            {
+                return;
+            }
+            ApplyEffectToTarget(target);
+        }
+
+        /// <summary>
+        /// Applies the effect to a target derived from event args. Used for event-based triggers.
+        /// Gets a target based on the passed EventArgs, then calls <see cref="ApplyEffectToTarget"/> with the new target.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="args"></param>
+        public void ApplyEffect(object source, EventArgs args)
+        {
+            DebugLogger.LogMessage($"Applying effect using {args}!", true);
+            GodotObject target = GetTargetFromArgs(args);
+            if (target == null)
+            {
+                return;
+            }
+            ApplyEffectToTarget(target);
+        }
+
+        /// <summary>
+        /// Gets a target from the passed <see cref="EventArgs"/>, based on the Effect's selected <see cref="TargetType"/> and <see cref="Trigger"/>
+        /// </summary>
+        /// <param name="args">EventArgs to select a target from.</param>
+        /// <returns>A target for the Effect.</returns>
         private GodotObject GetTargetFromArgs(EventArgs args)
         {
             PlayerService playerService = ServiceManager.Instance.GetService<PlayerService>();
@@ -200,16 +333,48 @@ namespace Effects
             };
         }
 
-        protected virtual void OnEffectTimerTimeout(GodotObject target)
+        /// <summary>
+        /// Checks to see if we can apply the effect based on the passed <see cref="state"/> and the Effect's parameters (timing, stacking, etc.)
+        /// </summary>
+        /// <param name="state">The state of the effect to check against.</param>
+        /// <returns>True if the effect can be applied, false if not.</returns>
+        private bool CanApplyEffect(EffectState state)
         {
-            if (target != null)
-            {
-                RemoveEffectFromTarget(target);
-            }
-        }
-        #endregion
+            // If stacking is disabled, the effect is not active on the target.
+            bool stateInactive = !_stacking && !state.Active;
 
-        #region Application
+            // If stacking is enabled, check that current stacks are less than max stacks.
+            bool stacksUnderThreshold =
+                _stacking && state.CurrentStacks < _maxStacks && _maxStacks > 0;
+
+            // If stacking is enabled and _maxStacks is set to less than 0, infinite stacks can be applied.
+            bool infStacking = _stacking && _maxStacks < 0;
+
+            // If any of the above are true, you can apply the effect.
+            return stateInactive || stacksUnderThreshold || infStacking;
+        }
+
+        /// <summary>
+        /// Applies the effect to a passed target. Conducts all checks, EffectState getting/creation, and post-application updates.
+        /// </summary>
+        /// <param name="target">The target to apply the effect to.</param>
+        protected void ApplyEffectToTarget(GodotObject target)
+        {
+            // Get the current effect state for this target or create a new one
+            EffectState state = GetOrCreateEffectState(target);
+
+            // Check if we can apply the effect based on the effect's parameters and the state of the target.
+            if (!CanApplyEffect(state))
+            {
+                return;
+            }
+
+            // Perform class-specific effect application logic
+            OnApplyEffect(target, state);
+
+            // Adjust the EffectState
+            UpdateEffectState(target, state, true);
+        }
 
         /// <summary>
         /// Connects the effect timer's signals and starts the effect timer.
@@ -231,177 +396,122 @@ namespace Effects
         }
 
         /// <summary>
-        /// Applies the effect to a specific target. Used for manual application or for ChainEffects.
+        /// Class-specific effect application logic. This method is overridden by derived classes to execute custom effects.
         /// </summary>
         /// <param name="target"></param>
-        public void ApplyEffect(GodotObject target)
-        {
-            if (target == null)
-            {
-                return;
-            }
-            ApplyEffectToTarget(target);
-        }
-
-        /// <summary>
-        /// Applies the effect to a target derived from event args. Used for event-based triggers.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="args"></param>
-        public void ApplyEffect(object source, EventArgs args)
-        {
-            DebugLogger.LogMessage($"Applying effect using {args}!", true);
-            GodotObject target = GetTargetFromArgs(args);
-            if (target == null)
-            {
-                return;
-            }
-            ApplyEffectToTarget(target);
-        }
-
-        protected void ApplyEffectToTarget(GodotObject target)
-        {
-            // Get the current effect state for this target or create a new one
-            EffectState state = GetOrCreateEffectState(target);
-
-            // Don't apply the effect if the effect is not stacking and not active
-            if (!_stacking && state.Active)
-            {
-                return;
-            }
-
-            // Don't apply the effect if the effect is stacking but we're at max stacks.
-            // Also check if _maxStacks is greater than 0. You can set _maxStacks to -1 (or other negative number) for infinite stacking.
-            if (_stacking && state.CurrentStacks >= _maxStacks && _maxStacks > 0)
-            {
-                return;
-            }
-
-            OnApplyEffect(target, state);
-
-            // Adjust the EffectState
-            state.Active = true;
-            if (_stacking)
-            {
-                state.CurrentStacks++;
-            }
-
-            // Start the timer for the target if necessary
-            if (_timed)
-            {
-                StartTimer(target, state);
-            }
-        }
-
+        /// <param name="state"></param>
         protected abstract void OnApplyEffect(GodotObject target, EffectState state);
+
         #endregion
 
         #region Removal
-        public void RemoveEffectStack(GodotObject target)
-        {
-            DebugLogger.LogMessage($"Removing effect stack from {target}!", true);
-            if (target == null || !_targetStates.ContainsKey(target))
-            {
-                return;
-            }
-            RemoveEffectFromTarget(target);
-        }
-
-        public void RemoveAllEffectStacksFromTarget(GodotObject target)
-        {
-            DebugLogger.LogMessage($"Removing all effect stacks from {this}!", true);
-            if (target == null || !_targetStates.ContainsKey(target))
-            {
-                return;
-            }
-
-            // Get the current state
-            EffectState state = _targetStates[target];
-
-            if (_stacking && _maxStacks > 0)
-            {
-                // Remove all stacks
-                for (int i = state.CurrentStacks; i > 0; i--)
-                {
-                    RemoveEffectFromTarget(target);
-                }
-            }
-            else
-            {
-                // Remove single effect
-                RemoveEffectFromTarget(target);
-            }
-
-            // Clean up signals
-            DisconnectStateSignals(target, state);
-
-            // Remove target and effect state from the dictionary
-            _targetStates.Remove(target);
-        }
-
-        public void RemoveFromAllTargets()
-        {
-            // Create a copy of keys to avoid modifying collection during iteration
-            List<GodotObject> targets = [.. _targetStates.Keys];
-
-            foreach (GodotObject target in targets)
-            {
-                RemoveAllEffectStacksFromTarget(target);
-            }
-        }
 
         protected void RemoveEffectFromTarget(GodotObject target)
         {
             DebugLogger.LogMessage($"Removing {this} from {target}", true);
-            // Return immediately if there's no currently active effect on the target.
-            if (!_targetStates.ContainsKey(target))
+
+            // Get the current EffectState, if any.
+            try
             {
-                return;
+                if (_targetStates.TryGetValue(target, out EffectState state))
+                {
+                    // Check if there's an active effect or stack to remove.
+                    if (!CanRemoveEffect(state))
+                    {
+                        return;
+                    }
+
+                    // Remove the effect using class-specific logic.
+                    OnRemoveEffect(target, state);
+
+                    // Update the EffectState as necessary.
+                    UpdateEffectState(target, state, false);
+                }
+                else
+                {
+                    throw new ArgumentException(
+                        $"{target} not found in target states dictionary! Cannot remove non-existent effect.",
+                        paramName: "target"
+                    );
+                }
             }
-
-            // Get the current effect state of the target
-            EffectState state = _targetStates[target];
-
-            // Don't remove the effect if it's not active (if not stacking) or if there are no current stacks.
-            if (!_stacking && !state.Active)
+            catch (Exception e)
             {
-                return;
-            }
-
-            if (_stacking && state.CurrentStacks == 0)
-            {
-                return;
-            }
-
-            OnRemoveEffect(target, state);
-
-            if (_stacking)
-            {
-                state.CurrentStacks = Math.Max(0, state.CurrentStacks - 1);
-            }
-
-            if (_stacking && state.CurrentStacks <= 0 || !_stacking)
-            {
-                state.Active = false;
+                DebugLogger.LogMessage(e.Message, true, true);
             }
         }
 
-        protected abstract void OnRemoveEffect(GodotObject target, EffectState state);
-
-        protected void DisconnectStateSignals(GodotObject target, EffectState state)
+        /// <summary>
+        /// Checks to see if we can remove the effect based on the passed <see cref="state"/> and the Effect's parameters (timing, stacking, etc.)
+        /// </summary>
+        /// <param name="state">The state of the effect to check against.</param>
+        /// <returns>True if the effect can be removed, false if not.</returns>
+        private bool CanRemoveEffect(EffectState state)
         {
-            // Clean up the state's timer connection
-            if (state.Timer != null && state._onTimerTimeout != null)
-            {
-                state.Timer.Timeout -= state._onTimerTimeout;
-            }
+            // If stacking is disabled, the effect is active on the target.
+            bool stateActive = !_stacking && state.Active;
 
-            // Clean up the tree exit callback
-            if (target is Node node && state._onTreeExit != null)
+            // If stacking is enabled, there is at least one stack on the target.
+            bool noStacks = _stacking && state.CurrentStacks > 0;
+
+            // If infinite stacking is enabled, the effect is active on the target.
+            bool infEffectActive =
+                _stacking && _maxStacks < 0 && (state.Active || state.CurrentStacks > 0);
+
+            return stateActive || noStacks || infEffectActive;
+        }
+
+        /// <summary>
+        /// Removes all the effect stacks, if any, for a passed target, then removes the target from the _targetStates dictionary.
+        /// </summary>
+        /// <param name="target">The target to remove all effects from.</param>
+        public void RemoveAllEffectsFromTarget(GodotObject target)
+        {
+            DebugLogger.LogMessage($"Removing all effect stacks from {this}!", true);
+
+            if (_targetStates.TryGetValue(target, out EffectState state))
             {
-                node.TreeExiting -= state._onTreeExit;
+                if (_stacking && state.CurrentStacks > 0)
+                {
+                    // Remove all stacks
+                    for (int i = state.CurrentStacks; i > 0; i--)
+                    {
+                        RemoveEffectFromTarget(target);
+                    }
+                }
+                else
+                {
+                    // Remove single effect
+                    RemoveEffectFromTarget(target);
+                }
+
+                // Clean up signals
+                DisconnectStateSignals(target, state);
+
+                // Remove target and effect state from the dictionary
+                _targetStates.Remove(target);
             }
         }
+
+        /// <summary>
+        /// Removes all effects from all targets.
+        /// </summary>
+        public void RemoveEffectFromAllTargets()
+        {
+            List<GodotObject> targets = [.. _targetStates.Keys];
+
+            foreach (GodotObject target in targets)
+            {
+                RemoveAllEffectsFromTarget(target);
+            }
+        }
+
+        /// <summary>
+        /// Class-specific effect removal logic. This method is overridden by derived classes to remove custom effects.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="state"></param>
+        protected abstract void OnRemoveEffect(GodotObject target, EffectState state);
 
         /// <summary>
         /// Disconnects signals from all existing targets and EffectStates, then clears the _targetStates dictionary.

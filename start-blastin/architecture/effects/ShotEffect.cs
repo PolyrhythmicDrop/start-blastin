@@ -78,16 +78,10 @@ namespace Effects
                 // Reset CurrentStacks so we can keep firing without immediately returning.
                 state.CurrentStacks = 1;
             }
-
-            // Print out the count
-            DebugLogger.LogMessage(
-                $"Target count after effect application: {_targetStates.Count} | Values/EffectState count: {_targetStates.Values.Count}"
-            );
         }
 
         protected override void OnRemoveEffect(GodotObject target, EffectState state)
         {
-            DebugLogger.LogMessage($"On Remove Effect called!");
             if (state is not BarrelEffectState barrelState)
             {
                 return;
@@ -120,7 +114,6 @@ namespace Effects
 
         private void RemoveBarrel(IWeaponOwner weaponOwner, BarrelEffectState barrelState)
         {
-            DebugLogger.LogMessage($"Removing barrel...");
             barrelState._barrel.ToggleActive(false);
             weaponOwner.Weapon.RemoveChild(barrelState._barrel);
             barrelState._barrel.QueueFree();

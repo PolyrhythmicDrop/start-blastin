@@ -56,7 +56,7 @@ namespace Effects
             {
                 if (effect.Trigger == Trigger.Chain)
                 {
-                    effect.RemoveAllEffectStacksFromTarget(target);
+                    effect.RemoveAllEffectsFromTarget(target);
                 }
             }
         }

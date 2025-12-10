@@ -579,7 +579,7 @@ namespace Entities
                 foreach (Effect nestedEffect in effect.GetAllEffects())
                 {
                     // Remove all effect stacks that apply to the player.
-                    nestedEffect.RemoveAllEffectStacksFromTarget(this);
+                    nestedEffect.RemoveAllEffectsFromTarget(this);
 
                     // Remove all other targets and clear the states
                     nestedEffect.CleanUpEffect();

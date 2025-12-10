@@ -103,12 +103,6 @@ namespace Effects
             // Create a new barrel and add it to the state and the target.
             barrelState._barrel = new Barrel(Direction);
             weaponOwner.Weapon.AddChild(barrelState._barrel);
-            // Adjust the rotation if the target is a Player, since they're rotated -90 degrees always
-            if (weaponOwner is Player)
-            {
-                barrelState._barrel.GlobalRotationDegrees += 90;
-            }
-
             barrelState._barrel.ToggleActive(true);
         }
 

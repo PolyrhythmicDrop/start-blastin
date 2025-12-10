@@ -11,7 +11,7 @@ namespace Weapons
     public partial class Barrel : Node2D
     {
         /// <summary>
-        /// The direction the barrel is located on the ship. Generally corresponds to the rotation of the barrel, but not necessarily!
+        /// The direction the barrel fires in, relative to the direction of the ship. For example, North is straight forward.
         /// </summary>
         public enum BarrelDirection
         {
@@ -54,16 +54,17 @@ namespace Weapons
         public Barrel(BarrelDirection direction)
         {
             _direction = Direction;
+            // Change the rotation based on the barrel direction
             RotationDegrees = direction switch
             {
-                BarrelDirection.East => 0,
+                BarrelDirection.North => 0,
                 BarrelDirection.Northeast => 45,
-                BarrelDirection.North => 90,
-                BarrelDirection.Northwest => 135,
-                BarrelDirection.West => 180,
+                BarrelDirection.East => 90,
+                BarrelDirection.Southeast => 135,
+                BarrelDirection.South => 180,
                 BarrelDirection.Southwest => 225,
-                BarrelDirection.South => 270,
-                BarrelDirection.Southeast => 315,
+                BarrelDirection.West => 270,
+                BarrelDirection.Northwest => 315,
                 _ => 0,
             };
         }

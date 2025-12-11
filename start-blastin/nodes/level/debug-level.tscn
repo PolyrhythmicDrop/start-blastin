@@ -28,7 +28,7 @@ stretch_mode = 5
 [node name="PlayAreaBorder" parent="." instance=ExtResource("2_hxhdr")]
 
 [node name="Player" parent="." instance=ExtResource("3_gl8ah")]
-position = Vector2(960, 768)
+position = Vector2(961, 768)
 WeaponPlugin = ExtResource("4_axssk")
 InitialPlugins = Array[ExtResource("5_1iju8")]([ExtResource("5_jmnrl")])
 

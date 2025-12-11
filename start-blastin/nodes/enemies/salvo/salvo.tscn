@@ -329,12 +329,14 @@ frame_progress = 1.0
 [node name="Barrel1" type="Node2D" parent="."]
 position = Vector2(31, 0)
 script = ExtResource("5_3pyoe")
+Base = true
 metadata/_custom_type_script = "uid://bekbgunrmk3ad"
 
 [node name="Barrel2" type="Node2D" parent="."]
 position = Vector2(27.999996, 26)
 rotation = 0.6981317
 script = ExtResource("5_3pyoe")
+Base = true
 Direction = 1
 metadata/_custom_type_script = "uid://bekbgunrmk3ad"
 
@@ -342,6 +344,7 @@ metadata/_custom_type_script = "uid://bekbgunrmk3ad"
 position = Vector2(27.999998, -25)
 rotation = 5.5850534
 script = ExtResource("5_3pyoe")
+Base = true
 Direction = 7
 metadata/_custom_type_script = "uid://bekbgunrmk3ad"
 

@@ -10,7 +10,7 @@ namespace DataStructures
         /// Activates or deactivates all barrels in a specific direction.
         /// </summary>
         /// <param name="dirs">The direction of the barrel to activate.</param>
-        public void ToggleActivateBarrel(bool active, params Barrel.BarrelDirection[] dirs)
+        public void ToggleActivateBarrelsByDir(bool active, params Barrel.BarrelDirection[] dirs)
         {
             foreach (Barrel barrel in this)
             {
@@ -34,6 +34,17 @@ namespace DataStructures
             foreach (Barrel barrel in this)
             {
                 barrel.ToggleActive(active);
+            }
+        }
+
+        public IEnumerable<Barrel> GetBarrelsByDir(Barrel.BarrelDirection direction)
+        {
+            foreach (Barrel barrel in this)
+            {
+                if (barrel.Direction == direction)
+                {
+                    yield return barrel;
+                }
             }
         }
     }

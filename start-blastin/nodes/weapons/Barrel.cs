@@ -30,6 +30,13 @@ namespace Weapons
         private BarrelDirection _direction;
         public bool Active => _active;
 
+        /// <summary>
+        /// Is the barrel a base part of the entity?
+        /// If you use the <see cref="Effects.ActivateBarrelEffect"/>, non-base barrels are freed when the effect is deactivated. Base barrels remain.
+        /// </summary>
+        [Export]
+        public bool Base { get; set; }
+
         [Export]
         public BarrelDirection Direction
         {

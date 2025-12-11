@@ -79,6 +79,8 @@ namespace Effects
             {
                 _parent = parent;
             }
+
+            public virtual void CleanUpState(GodotObject target) { }
         }
 
         /// <summary>
@@ -197,15 +199,13 @@ namespace Effects
                 {
                     case Trigger.Equip:
                     {
-                        if (target != null && Target == TargetType.Self)
+                        if (target != null)
                         {
                             RemoveAllEffectsFromTarget(target);
                         }
                         else
                         {
-                            throw new ArgumentException(
-                                $"Could not disable the Equip Effect! Did you forget to pass a target? Target: {target} | Target: {Target}"
-                            );
+                            RemoveEffectFromAllTargets();
                         }
                         break;
                     }
@@ -224,9 +224,7 @@ namespace Effects
                         }
                         else
                         {
-                            throw new ArgumentException(
-                                $"Parent chain effect must supply a target to nested effects with Trigger set to Chain!"
-                            );
+                            RemoveEffectFromAllTargets();
                         }
                         break;
                 }
@@ -597,6 +595,9 @@ namespace Effects
                 // Clean up signals
                 DisconnectStateSignals(target, state);
 
+                // Free anything that needs freeing from the state.
+                state?.CleanUpState(target);
+
                 // Remove target and effect state from the dictionary
                 _targetStates.Remove(target);
             }
@@ -634,10 +635,13 @@ namespace Effects
             {
                 if (_targetStates.TryGetValue(target, out EffectState state))
                 {
+                    DebugLogger.LogMessage(
+                        $"Cleaning up {GetType().Name} on {target} using state {state}",
+                        true
+                    );
                     DisconnectStateSignals(target, state);
                 }
             }
-
             _targetStates.Clear();
         }
         #endregion

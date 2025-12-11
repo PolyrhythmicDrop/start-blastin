@@ -1,9 +1,6 @@
-using System;
-using System.Threading.Tasks;
-using Entities;
+using Factories;
 using Godot;
 using Interfaces;
-using Utility;
 using Weapons;
 
 namespace Effects
@@ -14,15 +11,13 @@ namespace Effects
     [GlobalClass]
     public partial class ShotEffect : Effect
     {
-        protected class BarrelEffectState : EffectState
+        protected class ShotEffectState : EffectState
         {
             internal Barrel _barrel;
 
-            internal BarrelEffectState(Effect parent)
+            internal ShotEffectState(Effect parent)
                 : base(parent) { }
         }
-
-        private PackedScene _barrelScene = GD.Load<PackedScene>("uid://bajml0u2freln");
 
         [Export]
         public Barrel.BarrelDirection Direction { get; set; }
@@ -30,10 +25,10 @@ namespace Effects
         /// <summary>
         /// Creates a new BarrelEffectState.
         /// </summary>
-        /// <returns>A <see cref="BarrelEffectState"/> with the ShotEffect as the parent. </returns>
+        /// <returns>A <see cref="ShotEffectState"/> with the ShotEffect as the parent. </returns>
         protected override EffectState CreateEffectState()
         {
-            return new BarrelEffectState(this);
+            return new ShotEffectState(this);
         }
 
         /// <summary>
@@ -43,7 +38,7 @@ namespace Effects
         /// <param name="state">The state of the effect.</param>
         protected override async void OnApplyEffect(GodotObject target, EffectState state)
         {
-            if (state is not BarrelEffectState barrelState)
+            if (state is not ShotEffectState barrelState)
             {
                 return;
             }
@@ -55,7 +50,7 @@ namespace Effects
 
             if (barrelState._barrel == null)
             {
-                CreateBarrel(weaponOwner, barrelState);
+                AddBarrel(weaponOwner, barrelState);
             }
 
             if (!_stacking || _stacking && _maxStacks < 0)
@@ -82,7 +77,7 @@ namespace Effects
 
         protected override void OnRemoveEffect(GodotObject target, EffectState state)
         {
-            if (state is not BarrelEffectState barrelState)
+            if (state is not ShotEffectState barrelState)
             {
                 return;
             }
@@ -98,15 +93,17 @@ namespace Effects
             }
         }
 
-        private void CreateBarrel(IWeaponOwner weaponOwner, BarrelEffectState barrelState)
+        private void AddBarrel(IWeaponOwner weaponOwner, ShotEffectState barrelState)
         {
             // Create a new barrel and add it to the state and the target.
-            barrelState._barrel = new Barrel(Direction);
-            weaponOwner.Weapon.AddChild(barrelState._barrel);
-            barrelState._barrel.ToggleActive(true);
+            barrelState._barrel = WeaponFactory.CreateBarrel(
+                weaponOwner,
+                Direction,
+                activate: true
+            );
         }
 
-        private void RemoveBarrel(IWeaponOwner weaponOwner, BarrelEffectState barrelState)
+        private void RemoveBarrel(IWeaponOwner weaponOwner, ShotEffectState barrelState)
         {
             barrelState._barrel.ToggleActive(false);
             weaponOwner.Weapon.RemoveChild(barrelState._barrel);

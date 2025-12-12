@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Linq;
 using DataStructures;
 using Factories;
 using Godot;
@@ -21,33 +22,37 @@ namespace Effects
     {
         protected class BarrelEffectState : EffectState
         {
-            internal Barrel _barrel;
+            internal BarrelRack _barrelRack;
 
             internal BarrelEffectState(Effect parent)
                 : base(parent) { }
 
             public override void CleanUpState(GodotObject target)
             {
-                DebugLogger.LogMessage($"Attemping to clean up {_barrel.Name}...", true);
+                DebugLogger.LogMessage($"Attemping to clean up {GetType().Name}...", true);
 
-                if (_barrel != null && !_barrel.IsQueuedForDeletion())
+                foreach (Barrel barrel in _barrelRack)
                 {
-                    DebugLogger.LogMessage($"{_barrel.Name} is being cleaned up!", true);
-                    if (target is IWeaponOwner weaponOwner)
+                    if (barrel != null && !barrel.IsQueuedForDeletion())
                     {
-                        // Remove the barrel from the BarrelRack, scene tree, and memory if it's not one of the default Barrels.
-                        if (weaponOwner.Weapon.IsAncestorOf(_barrel) && !_barrel.Base)
+                        DebugLogger.LogMessage($"{barrel.Name} is being cleaned up!", true);
+                        if (target is IWeaponOwner weaponOwner)
                         {
-                            weaponOwner.Weapon.Barrels.Remove(_barrel);
-                            weaponOwner.Weapon.RemoveChild(_barrel);
-                            _barrel.QueueFree();
-                        }
-                        else
-                        {
-                            _barrel = null;
+                            // Remove the barrel from the BarrelRack, scene tree, and memory if it's not one of the default Barrels.
+                            if (weaponOwner.Weapon.IsAncestorOf(barrel) && !barrel.Base)
+                            {
+                                weaponOwner.Weapon.Barrels.Remove(barrel);
+                                weaponOwner.Weapon.RemoveChild(barrel);
+                                barrel.QueueFree();
+                            }
+                            else
+                            {
+                                // _barrelRack.Remove(barrel);
+                            }
                         }
                     }
                 }
+                _barrelRack.Clear();
             }
         }
 
@@ -86,36 +91,49 @@ namespace Effects
                 {
                     case Operation.Add:
                     {
-                        // Activate the barrel if an inactive barrel with this direction is found on the target.
-                        // barrels.ToggleActivateBarrel(true, Direction);
-
-                        // If there's already a barrel as part of the state, activate it.
-                        if (barrelState._barrel != null)
+                        // If the state does not have a barrel rack, initialize it.
+                        if (barrelState._barrelRack == null)
                         {
-                            barrelState._barrel.ToggleActive(true);
+                            barrelState._barrelRack = new();
                         }
+
+                        // If the state has a barrel rack with an inactive barrel in it, simply activate the inactive barrel.
+                        // If it already exists in the state, it's already been added to the weaponOwner's barrel rack and we're fine.
+                        if (barrelState._barrelRack != null && barrelState._barrelRack.Count > 0)
+                        {
+                            Barrel inactiveBarrel = barrelState
+                                ._barrelRack.GetBarrelsByActive(false)
+                                .FirstOrDefault();
+                            if (inactiveBarrel != null)
+                            {
+                                inactiveBarrel.ToggleActive(true);
+                            }
+                        }
+                        // If there are no inactive barrels in the existing rack, hunt for an inactive barrel in the weaponOwner's barrel rack.
                         else
                         {
-                            // Get the first inactive barrel in the barrel rack facing the correct direction and activate it
+                            // Get the first inactive barrel in the weaponOwner's barrel rack facing the correct direction
                             foreach (Barrel barrel in barrels.GetBarrelsByDir(Direction))
                             {
                                 if (!barrel.Active)
                                 {
-                                    barrelState._barrel = barrel;
+                                    // Add the barrel to the state's barrel rack, activate it, and return.
+                                    barrelState._barrelRack.Add(barrel);
                                     barrel.ToggleActive(true);
                                     return;
                                 }
                             }
 
-                            // If no inactive barrels are found, create a new one and activate it.
+                            // If no inactive barrels are found in the weaponOwner's weapon rack, create a new barrel, add it to the weaponOwner's rack, and activate it.
+                            // All this is done with the CreateBarrel() call.
                             Barrel newBarrel = WeaponFactory.CreateBarrel(
                                 weaponOwner,
                                 Direction,
                                 true,
                                 true
                             );
-                            // Add the new barrel to the state
-                            barrelState._barrel = newBarrel;
+                            // Add the new barrel to the state's weapon rack.
+                            barrelState._barrelRack.Add(newBarrel);
                         }
                         break;
                     }
@@ -157,18 +175,17 @@ namespace Effects
             {
                 case Operation.Add:
                 {
-                    // if (
-                    //     barrels.Find(bar =>
-                    //         (bar.Direction == this.Direction) && (bar.Active == true)
-                    //     ) != null
-                    // )
-                    // {
-                    //     // Deactivate the barrel in this direction.
-                    //     barrels.ToggleActivateBarrelsByDir(false, Direction);
-                    // }
+                    // Find the first active barrel in the state's barrel rack and deactivate it.
+                    Barrel activeBarrel = barrelState
+                        ._barrelRack?.GetBarrelsByActive(true)
+                        .FirstOrDefault();
+                    if (activeBarrel != null)
+                    {
+                        DebugLogger.LogMessage($"Active barrel found! Deactivating...", true);
+                        activeBarrel.ToggleActive(false);
+                    }
 
-                    // Get the barrel from the state and deactivate it.
-                    barrelState._barrel?.ToggleActive(false);
+                    // barrelState._barrelRack?.ToggleActive(false);
                     break;
                 }
                 case Operation.Remove:

@@ -33,7 +33,10 @@ namespace DataStructures
         {
             foreach (Barrel barrel in this)
             {
-                barrel.ToggleActive(active);
+                if (barrel.Active != active)
+                {
+                    barrel.ToggleActive(active);
+                }
             }
         }
 
@@ -42,6 +45,17 @@ namespace DataStructures
             foreach (Barrel barrel in this)
             {
                 if (barrel.Direction == direction)
+                {
+                    yield return barrel;
+                }
+            }
+        }
+
+        public IEnumerable<Barrel> GetBarrelsByActive(bool active)
+        {
+            foreach (Barrel barrel in this)
+            {
+                if (barrel.Active == active)
                 {
                     yield return barrel;
                 }

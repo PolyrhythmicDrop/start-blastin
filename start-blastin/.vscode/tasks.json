@@ -13,6 +13,16 @@
                 "-q"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "type": "dotnet",
+            "task": "build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "label": "godot: build"
         }
     ]
 }

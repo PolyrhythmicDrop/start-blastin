@@ -42,13 +42,13 @@
             "type": "godot-mono",
             "request": "attach",
             "address": "localhost",
-            "port": 23685
+            "port": 6007
         },
         {
             "name": "Run Godot Run",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "godot: build",
             "program":"C:\\Program Files\\Godot\\Godot_v4.5-stable_mono_win64\\Godot_v4.5-stable_mono_win64.exe",
             "cwd":"${workspaceFolder}",
             "console": "internalConsole",

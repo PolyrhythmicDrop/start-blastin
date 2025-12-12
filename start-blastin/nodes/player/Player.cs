@@ -546,18 +546,9 @@ namespace Entities
             Bytes += item.ScrapValue;
 
             // Remove the item from the player's equipment.
-
-            if (item is WeaponPlugin weaponPlugin)
-            {
-                // Revert to the basic bullet if you sell a weapon plugin.
-                UnequipPlugin(weaponPlugin);
-                ResetWeaponPlugin();
-            }
-            else if (item is Plugin plugin && _plugins.Contains(plugin))
+            if (item is Plugin plugin)
             {
                 UnequipPlugin(plugin);
-                _plugins.Remove(plugin);
-                EventBus.Instance.RaisePlayerItemRemoved(_playerId, plugin);
             }
 
             // Apply stat effects based on the new loadout.
@@ -567,25 +558,34 @@ namespace Entities
         public void UnequipPlugin(Plugin plugin)
         {
             DebugLogger.LogMessage($"Unequipping {plugin.ResourceName}!", true);
-            // DisconnectPluginEffectTriggers(plugin);
 
             DisablePluginEffects(plugin);
-            RemovePluginEffects(plugin);
+
+            if (plugin is WeaponPlugin)
+            {
+                // Revert to the basic bullet if you sell a weapon plugin.
+                ResetWeaponPlugin();
+            }
+            else if (_plugins.Contains(plugin))
+            {
+                _plugins.Remove(plugin);
+                EventBus.Instance.RaisePlayerItemRemoved(_playerId, plugin);
+            }
         }
 
-        private void RemovePluginEffects(Plugin plugin)
+        private void DisablePluginEffects(Plugin plugin)
         {
             DebugLogger.LogMessage($"Removing effects of {plugin.ResourceName}!", true);
             foreach (Effect effect in plugin.GetEffectList())
             {
-                foreach (Effect nestedEffect in effect.GetAllEffects())
+                if (effect is ChainEffect chainEffect)
                 {
-                    // Remove all effect stacks that apply to the player.
-                    nestedEffect.RemoveAllEffectsFromTarget(this);
-
-                    // Remove all other targets and clear the states
-                    nestedEffect.CleanUpEffect();
+                    foreach (Effect nestedEffect in chainEffect.GetAllEffects())
+                    {
+                        nestedEffect.Disable(this);
+                    }
                 }
+                effect.Disable(this);
             }
         }
 
@@ -642,75 +642,6 @@ namespace Entities
                 foreach (Effect effect in plugin.GetEffectList())
                 {
                     effect.Enable(this);
-                }
-            }
-        }
-
-        public void DisablePluginEffects(params Plugin[] plugins)
-        {
-            foreach (Plugin plugin in plugins)
-            {
-                // Only disable the top-level effects in the plugin.
-                // Nested effects are disabled by the parent ChainEffect.
-                foreach (Effect effect in plugin.GetEffectList())
-                {
-                    effect.Disable(this);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Connects plugin effects to events based on the effect's selected trigger.
-        /// TODO: Add new events for each addition to the Trigger enum.
-        /// </summary>
-        /// <param name="plugin">The plugin to connect.</param>
-        public void ConnectPluginEffectTriggers(params Plugin[] plugins)
-        {
-            foreach (Plugin plugin in plugins)
-            {
-                foreach (Effect effect in plugin.GetEffectList())
-                {
-                    // Get the effect and any nested effects
-                    foreach (Effect nestedEffect in effect.GetAllEffects())
-                    {
-                        DebugLogger.LogMessage(
-                            $"Getting {nestedEffect} to connect triggers!",
-                            true
-                        );
-                        switch (nestedEffect.Trigger)
-                        {
-                            case Trigger.EnemyHit:
-                                EventBus.Instance.EnemyHit += nestedEffect.ApplyEffect;
-                                break;
-                            case Trigger.EnemyKilled:
-                                EventBus.Instance.EnemyKilled += nestedEffect.ApplyEffect;
-                                break;
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Disconnects plugin effects to events. Call when a plugin is unequipped.
-        /// </summary>
-        /// <param name="plugin"></param>
-        public void DisconnectPluginEffectTriggers(Plugin plugin)
-        {
-            foreach (Effect effect in plugin.GetEffectList())
-            {
-                foreach (Effect nestedEffect in effect.GetAllEffects())
-                {
-                    DebugLogger.LogMessage($"Getting {nestedEffect} to disconnect triggers!", true);
-                    switch (nestedEffect.Trigger)
-                    {
-                        case Trigger.EnemyHit:
-                            EventBus.Instance.EnemyHit -= nestedEffect.ApplyEffect;
-                            break;
-                        case Trigger.EnemyKilled:
-                            EventBus.Instance.EnemyKilled -= nestedEffect.ApplyEffect;
-                            break;
-                    }
                 }
             }
         }

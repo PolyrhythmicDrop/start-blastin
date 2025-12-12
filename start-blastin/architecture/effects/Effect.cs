@@ -80,6 +80,10 @@ namespace Effects
                 _parent = parent;
             }
 
+            /// <summary>
+            /// Class-specific cleanup methods. Performs any extra freeing or garbage collection required by the specific effect state.
+            /// </summary>
+            /// <param name="target">The target whose state to clean up.</param>
             public virtual void CleanUpState(GodotObject target) { }
         }
 
@@ -193,6 +197,7 @@ namespace Effects
 
         public virtual void Disable(GodotObject target = null)
         {
+            DebugLogger.LogMessage($"Calling Disable() on {target}...", true);
             try
             {
                 switch (Trigger)
@@ -201,30 +206,30 @@ namespace Effects
                     {
                         if (target != null)
                         {
-                            RemoveAllEffectsFromTarget(target);
+                            ClearTargetEffectState(target);
                         }
                         else
                         {
-                            RemoveEffectFromAllTargets();
+                            ClearEffectStatesFromAllTargets();
                         }
                         break;
                     }
                     case Trigger.EnemyHit:
                         EventBus.Instance.EnemyHit -= ApplyEffect;
-                        RemoveEffectFromAllTargets();
+                        ClearEffectStatesFromAllTargets();
                         break;
                     case Trigger.EnemyKilled:
                         EventBus.Instance.EnemyKilled -= ApplyEffect;
-                        RemoveEffectFromAllTargets();
+                        ClearEffectStatesFromAllTargets();
                         break;
                     case Trigger.Chain:
                         if (target != null)
                         {
-                            RemoveAllEffectsFromTarget(target);
+                            ClearTargetEffectState(target);
                         }
                         else
                         {
-                            RemoveEffectFromAllTargets();
+                            ClearEffectStatesFromAllTargets();
                         }
                         break;
                 }
@@ -304,19 +309,19 @@ namespace Effects
             {
                 // Disconnect all the signals
                 DisconnectStateSignals(target, state);
-
-                // Remove the effect state from the dictionary
-                _targetStates.Remove(target);
             }
+            _targetStates.Remove(target);
         }
 
-        protected void DisconnectStateSignals(GodotObject target, EffectState state)
+        protected virtual void DisconnectStateSignals(GodotObject target, EffectState state)
         {
             // Clean up the state's timer connection
             if (state.Timer != null && state._onTimerTimeout != null)
             {
                 state.Timer.Timeout -= state._onTimerTimeout;
             }
+
+            state.Timer = null;
 
             // Clean up the tree exit callback
             if (target is Node node && state._onTreeExit != null)
@@ -515,7 +520,7 @@ namespace Effects
 
         protected void RemoveEffectFromTarget(GodotObject target)
         {
-            DebugLogger.LogMessage($"Removing {this} from {target}", true);
+            DebugLogger.LogMessage($"Removing {this.ResourceName} from {target}", true);
 
             // Get the current EffectState, if any.
             try
@@ -569,12 +574,23 @@ namespace Effects
         }
 
         /// <summary>
-        /// Removes all the effect stacks, if any, for a passed target, then removes the target from the _targetStates dictionary.
+        /// Class-specific effect removal logic. This method is overridden by derived classes to remove custom effects.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="state"></param>
+        protected abstract void OnRemoveEffect(GodotObject target, EffectState state);
+
+        #endregion
+
+        #region Freeing and Cleanup
+        /// <summary>
+        /// Clears the effect state, if any, for a passed target. Disconnects all state signals, then calls <see cref="EffectState.CleanUpState(GodotObject)"/> for any state-specific cleanup.
+        /// Removes the target from the _targetStates dictionary.
         /// </summary>
         /// <param name="target">The target to remove all effects from.</param>
-        public void RemoveAllEffectsFromTarget(GodotObject target)
+        public void ClearTargetEffectState(GodotObject target)
         {
-            DebugLogger.LogMessage($"Removing all effect stacks from {this}!", true);
+            DebugLogger.LogMessage($"Removing all effect stacks from {this.ResourceName}!", true);
 
             if (_targetStates.TryGetValue(target, out EffectState state))
             {
@@ -597,53 +613,24 @@ namespace Effects
 
                 // Free anything that needs freeing from the state.
                 state?.CleanUpState(target);
-
-                // Remove target and effect state from the dictionary
-                _targetStates.Remove(target);
             }
+            // Remove target and effect state from the dictionary
+            _targetStates.Remove(target);
         }
 
         /// <summary>
-        /// Removes all effects from all targets.
+        /// Clears all effect states from all targets.
         /// </summary>
-        public void RemoveEffectFromAllTargets()
+        public void ClearEffectStatesFromAllTargets()
         {
             List<GodotObject> targets = [.. _targetStates.Keys];
 
             foreach (GodotObject target in targets)
             {
-                RemoveAllEffectsFromTarget(target);
+                ClearTargetEffectState(target);
             }
         }
 
-        /// <summary>
-        /// Class-specific effect removal logic. This method is overridden by derived classes to remove custom effects.
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="state"></param>
-        protected abstract void OnRemoveEffect(GodotObject target, EffectState state);
-
-        /// <summary>
-        /// Disconnects signals from all existing targets and EffectStates, then clears the _targetStates dictionary.
-        /// </summary>
-        public void CleanUpEffect()
-        {
-            // Get all targets for this effect
-            List<GodotObject> targets = [.. _targetStates.Keys];
-
-            foreach (GodotObject target in targets)
-            {
-                if (_targetStates.TryGetValue(target, out EffectState state))
-                {
-                    DebugLogger.LogMessage(
-                        $"Cleaning up {GetType().Name} on {target} using state {state}",
-                        true
-                    );
-                    DisconnectStateSignals(target, state);
-                }
-            }
-            _targetStates.Clear();
-        }
         #endregion
     }
 }

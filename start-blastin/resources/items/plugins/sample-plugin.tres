@@ -5,13 +5,19 @@
 [ext_resource type="Script" uid="uid://bcnp2ikysl23o" path="res://architecture/effects/ActivateBarrelEffect.cs" id="4_7hrtu"]
 
 [sub_resource type="Resource" id="Resource_jv5gu"]
+resource_name = "barrel-west-effect"
 script = ExtResource("4_7hrtu")
 Direction = 6
+Target = 2
+Trigger = 3
+Stacking = true
+MaxStacks = 3
 metadata/_custom_type_script = "uid://bcnp2ikysl23o"
 
 [sub_resource type="Resource" id="Resource_ad7uv"]
+resource_name = "barrel-northeast-effect"
 script = ExtResource("4_7hrtu")
-Direction = 1
+Target = 2
 Trigger = 3
 Timed = true
 Time = 5.0

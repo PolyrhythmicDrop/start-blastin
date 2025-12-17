@@ -605,14 +605,13 @@ namespace Entities
                 if (_plugins.Count <= _pluginSlots && plugin is not Items.WeaponPlugin)
                 {
                     _plugins.Add(plugin);
-                    // ApplyEquipEffects(plugin);
                     EventBus.Instance.RaisePlayerPluginEquipped(_playerId, plugin);
                 }
                 // Swap out any weapon plugins
                 else if (plugin is WeaponPlugin weaponPlugin)
                 {
-                    // ApplyEquipEffects(plugin);
                     SwapWeaponPlugin(weaponPlugin);
+                    EventBus.Instance.RaisePlayerWeaponChanged(_playerId, _weaponPlugin);
                 }
                 else
                 {
@@ -623,9 +622,6 @@ namespace Entities
                     );
                 }
             }
-
-            // Connect all triggers to the appropriate events
-            // ConnectPluginEffectTriggers(plugins);
 
             EnablePluginEffects(plugins);
 
@@ -660,7 +656,7 @@ namespace Entities
         {
             _weaponPlugin = ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
             _weaponComponent.SetWeaponProjectile(_weaponPlugin.ProjectileType);
-            EventBus.Instance.RaisePlayerWeaponChanged(_playerId, _weaponPlugin);
+            // EventBus.Instance.RaisePlayerWeaponChanged(_playerId, _weaponPlugin);
         }
 
         public IReadOnlyList<Plugin> GetPlugins()

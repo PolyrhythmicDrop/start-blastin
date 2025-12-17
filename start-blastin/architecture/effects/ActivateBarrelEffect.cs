@@ -98,15 +98,16 @@ namespace Effects
                         }
 
                         // If the state has a barrel rack with an inactive barrel in it, simply activate the inactive barrel.
-                        // If it already exists in the state, it's already been added to the weaponOwner's barrel rack and we're fine.
                         if (barrelState._barrelRack != null && barrelState._barrelRack.Count > 0)
                         {
                             Barrel inactiveBarrel = barrelState
                                 ._barrelRack.GetBarrelsByActive(false)
                                 .FirstOrDefault();
+                            // If you find an inactive barrel, make it active.
                             if (inactiveBarrel != null)
                             {
                                 inactiveBarrel.ToggleActive(true);
+                                return;
                             }
                         }
                         // If there are no inactive barrels in the existing rack, hunt for an inactive barrel in the weaponOwner's barrel rack.
@@ -123,18 +124,17 @@ namespace Effects
                                     return;
                                 }
                             }
-
-                            // If no inactive barrels are found in the weaponOwner's weapon rack, create a new barrel, add it to the weaponOwner's rack, and activate it.
-                            // All this is done with the CreateBarrel() call.
-                            Barrel newBarrel = WeaponFactory.CreateBarrel(
-                                weaponOwner,
-                                Direction,
-                                true,
-                                true
-                            );
-                            // Add the new barrel to the state's weapon rack.
-                            barrelState._barrelRack.Add(newBarrel);
                         }
+                        // If no inactive barrels are found in either barrel rack, create a new barrel, add it to the weaponOwner's rack, and activate it.
+                        // All this is done with the CreateBarrel() call.
+                        Barrel newBarrel = WeaponFactory.CreateBarrel(
+                            weaponOwner,
+                            Direction,
+                            true,
+                            true
+                        );
+                        // Add the new barrel to the state's weapon rack.
+                        barrelState._barrelRack.Add(newBarrel);
                         break;
                     }
 

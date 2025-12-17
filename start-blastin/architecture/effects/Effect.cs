@@ -154,11 +154,22 @@ namespace Effects
                     // Maybe work on this one, this doesn't feel quite right.
                     case Trigger.Equip:
                     {
-                        // Apply the effect immediately if we've supplied a target, and the target tyep is self.
+                        // Apply the effect immediately if we've supplied a target, and the target type is self.
                         // Do not apply the effect if we're a StatEffect, since those are applied all together in the Player class.
                         if (target != null && Target == TargetType.Self && this is not StatEffect)
                         {
-                            ApplyEffect(target);
+                            // Apply all stacks if stacking.
+                            if (_stacking)
+                            {
+                                for (int i = 0; i < MaxStacks; i++)
+                                {
+                                    ApplyEffect(target);
+                                }
+                            }
+                            else
+                            {
+                                ApplyEffect(target);
+                            }
                         }
                         else
                         {
@@ -290,7 +301,6 @@ namespace Effects
         {
             if (target is Node node && _targetStates.TryGetValue(target, out EffectState state))
             {
-                // node.TreeExiting += () => OnTargetExitTree(node);
                 state._onTreeExit = () => OnTargetExitTree(node);
                 node.TreeExiting += state._onTreeExit;
             }
@@ -332,7 +342,7 @@ namespace Effects
 
         protected virtual void OnEffectTimerTimeout(GodotObject target)
         {
-            if (target != null)
+            if (target != null && IsInstanceValid(target))
             {
                 RemoveEffectFromTarget(target);
             }

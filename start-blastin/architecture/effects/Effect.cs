@@ -63,7 +63,7 @@ namespace Effects
                 get => _currentStacks;
                 set => _currentStacks = Math.Min(_parent._maxStacks, value);
             }
-            public SceneTreeTimer Timer { get; set; }
+            public Timer Timer { get; set; }
 
             /// <summary>
             /// Callback for the SceneTreeTimer timeout signal.
@@ -317,7 +317,7 @@ namespace Effects
             // Remove the target and effect state from the dictionary, if it exists
             if (target != null && _targetStates.TryGetValue(target, out EffectState state))
             {
-                // Disconnect all the signals
+                // Disconnect all the signals and free the timer
                 DisconnectStateSignals(target, state);
             }
             _targetStates.Remove(target);
@@ -325,18 +325,39 @@ namespace Effects
 
         protected virtual void DisconnectStateSignals(GodotObject target, EffectState state)
         {
-            // Clean up the state's timer connection
-            if (state.Timer != null && state._onTimerTimeout != null)
-            {
-                state.Timer.Timeout -= state._onTimerTimeout;
-            }
-
-            state.Timer = null;
-
             // Clean up the tree exit callback
             if (target is Node node && state._onTreeExit != null)
             {
                 node.TreeExiting -= state._onTreeExit;
+            }
+
+            // Clean up the state's timer connection
+            if (state.Timer != null && state._onTimerTimeout != null)
+            {
+                DisconnectEffectTimer(target, state.Timer, state._onTimerTimeout);
+                state.Timer = null;
+            }
+        }
+
+        protected virtual void DisconnectEffectTimer(
+            GodotObject target,
+            Timer timer,
+            Action callback
+        )
+        {
+            if (timer != null && callback != null)
+            {
+                timer.Timeout -= callback;
+            }
+
+            // Remove and free the timer
+            if (IsInstanceValid(timer))
+            {
+                if (target is Node parent && parent.IsAncestorOf(timer))
+                {
+                    parent.RemoveChild(timer);
+                }
+                timer.QueueFree();
             }
         }
 
@@ -511,9 +532,18 @@ namespace Effects
             }
             if (target is Node node)
             {
-                state.Timer = node?.GetTree().CreateTimer(_time, processAlways: false);
-                state._onTimerTimeout = () => OnEffectTimerTimeout(target);
-                state.Timer.Timeout += state._onTimerTimeout;
+                // Create a new timer on the state if one doesn't exist already.
+                if (state.Timer == null)
+                {
+                    state.Timer = new();
+                    state.Timer.OneShot = true;
+                    state.Timer.Name = $"Timer{GetType().Name}{node.Name}";
+                    state._onTimerTimeout = () => OnEffectTimerTimeout(target);
+                    state.Timer.Timeout += state._onTimerTimeout;
+                    node.AddChild(state.Timer);
+                }
+                // Start the timer
+                state.Timer.Start(state._parent.Time);
             }
         }
 
@@ -552,7 +582,7 @@ namespace Effects
                 else
                 {
                     throw new ArgumentException(
-                        $"{target} not found in target states dictionary! Cannot remove non-existent effect.",
+                        $"{target} not found in target states dictionary for {ResourceName}! Cannot remove non-existent effect.",
                         paramName: "target"
                     );
                 }

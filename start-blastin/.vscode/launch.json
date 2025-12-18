@@ -4,8 +4,6 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
-
         {
             "name": "Play in Editor",
             "type": "godot-mono",
@@ -38,11 +36,10 @@
             ]
         },
         {
-            "name": "Attach",
-            "type": "godot-mono",
+            "name": "AttachGodot",
+            "type": "coreclr",
             "request": "attach",
-            "address": "127.0.0.1",
-            "port": 6007
+            "processId": "${input:findGodotScene}"
         },
         {
             "name": "Run Godot Run",
@@ -54,6 +51,16 @@
             "console": "internalConsole",
             "stopAtEntry": false,
             "args": ["--path","${workspaceRoot}"],
+        },
+    ],
+    "inputs": [
+        {
+            "id": "findGodotScene",
+            "type": "command",
+            "command": "shellCommand.execute",
+            "args": {
+                "command": "powershell -Command \"Get-CimInstance Win32_Process | Where-Object {$_.CommandLine -like '*godot*--scene*'} | Select-Object -ExpandProperty ProcessId\"",
+            }
         }
     ]
 }

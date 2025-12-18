@@ -41,7 +41,7 @@
             "name": "Attach",
             "type": "godot-mono",
             "request": "attach",
-            "address": "localhost",
+            "address": "127.0.0.1",
             "port": 6007
         },
         {
@@ -53,7 +53,7 @@
             "cwd":"${workspaceFolder}",
             "console": "internalConsole",
             "stopAtEntry": false,
-            "args": ["--path","${workspaceRoot}"]
+            "args": ["--path","${workspaceRoot}"],
         }
     ]
 }

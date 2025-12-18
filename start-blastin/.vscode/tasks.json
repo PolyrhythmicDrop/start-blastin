@@ -10,7 +10,8 @@
                 "--path",
                 "${workspaceRoot}",
                 "--no-window",
-                "-q"
+                "-q",
+                "--remote-debug tcp://127.0.0.1:6007"
             ],
             "problemMatcher": "$msCompile"
         },

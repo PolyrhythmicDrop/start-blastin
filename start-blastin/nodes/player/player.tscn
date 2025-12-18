@@ -59,6 +59,7 @@ InitWeaponResource = ExtResource("6_1fmtd")
 [node name="BarrelN" parent="WeaponComponent" instance=ExtResource("9_xl06i")]
 position = Vector2(14, 6.119594e-07)
 Base = true
+DefaultActive = true
 
 [node name="BarrelW" parent="WeaponComponent" instance=ExtResource("9_xl06i")]
 position = Vector2(3.45703e-07, -12)

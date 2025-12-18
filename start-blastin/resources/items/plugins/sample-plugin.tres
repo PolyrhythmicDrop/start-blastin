@@ -13,9 +13,10 @@ MaxStacks = 3
 metadata/_custom_type_script = "uid://bcnp2ikysl23o"
 
 [sub_resource type="Resource" id="Resource_ad7uv"]
-resource_name = "barrel-northeast-effect"
+resource_name = "barrel-west-remove-effect"
 script = ExtResource("4_7hrtu")
-Target = 2
+Direction = 6
+Operation = 2
 Trigger = 3
 Stacking = true
 MaxStacks = 3

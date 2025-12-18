@@ -27,6 +27,10 @@ namespace Weapons
 
         private bool _active = false;
 
+        // Whether or not the barrel is active by default.
+        // Used to determine what effects should be removed/added when a plugin that affects barrels is unequipped.
+        private bool _defaultActive = false;
+
         private BarrelDirection _direction;
         public bool Active => _active;
 
@@ -36,6 +40,13 @@ namespace Weapons
         /// </summary>
         [Export]
         public bool Base { get; set; }
+
+        [Export]
+        public bool DefaultActive
+        {
+            get => _defaultActive;
+            set => _defaultActive = value;
+        }
 
         [Export]
         public BarrelDirection Direction
@@ -60,7 +71,7 @@ namespace Weapons
 
         public Barrel(BarrelDirection direction)
         {
-            _direction = Direction;
+            _direction = direction;
             // Change the rotation based on the barrel direction
             RotationDegrees = direction switch
             {

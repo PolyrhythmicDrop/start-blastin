@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using DataStructures;
 using Effects;
 using Factories;
@@ -40,7 +41,33 @@ namespace Effects
             internal TurretEffectState(Effect parent)
                 : base(parent) { }
 
-            public override void CleanUpState(GodotObject target) { }
+            public override void CleanUpState(GodotObject target)
+            {
+                if (target is not IWeaponOwner weaponOwner)
+                {
+                    return;
+                }
+                // Clean up any rotational timers
+                if (_rotateTimer != null && IsInstanceValid(_rotateTimer))
+                {
+                    _rotateTimer.QueueFree();
+                }
+
+                // Clean up any existing turrets in the rack.
+                foreach (TurretBarrel turretBarrel in _turrets)
+                {
+                    if (turretBarrel != null && IsInstanceValid(turretBarrel))
+                    {
+                        turretBarrel.ToggleActive(turretBarrel.DefaultActive);
+                        if (weaponOwner.Weapon.IsAncestorOf(turretBarrel) && !turretBarrel.Base)
+                        {
+                            weaponOwner.Weapon.Barrels.Remove(turretBarrel);
+                            weaponOwner.Weapon.RemoveChild(turretBarrel);
+                            turretBarrel.QueueFree();
+                        }
+                    }
+                }
+            }
         }
 
         private DynamicDirection _focusDirection;
@@ -139,7 +166,20 @@ namespace Effects
                 turretState._turrets = new();
             }
 
-            // Create a new turret.
+            // Try to find an inactive turret in state to activate.
+            if (turretState._turrets.Count > 0)
+            {
+                var inactive = turretState._turrets.GetBarrelsByActive(false).FirstOrDefault();
+                // If you find one, activate the turret and return
+                if (inactive is TurretBarrel inactiveTurret)
+                {
+                    inactiveTurret.ToggleActive(true);
+                    return;
+                }
+            }
+
+            // If there's nothing in the _turrets rack or you couldn't activate an inactive turret,
+            // create a new one and add it to the rack.
             TurretBarrel turret = WeaponFactory.CreateTurretBarrel(
                 weaponOwner,
                 addToRack: true,
@@ -151,6 +191,24 @@ namespace Effects
             turret.ToggleActive(true);
         }
 
-        protected override void OnRemoveEffect(GodotObject target, EffectState state) { }
+        protected override void OnRemoveEffect(GodotObject target, EffectState state)
+        {
+            if (state is not TurretEffectState turretState)
+            {
+                return;
+            }
+
+            // Deactivate a turret from the state.
+            if (turretState._turrets != null && turretState._turrets.Count > 0)
+            {
+                // Try to find an active barrel in the state. If we're removing the effect, at least one should be active.
+                var active = turretState._turrets.GetBarrelsByActive(true).FirstOrDefault();
+                if (active is TurretBarrel activeTurret)
+                {
+                    activeTurret.ToggleActive(false);
+                    return;
+                }
+            }
+        }
     }
 }

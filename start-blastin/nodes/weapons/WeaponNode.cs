@@ -187,6 +187,7 @@ namespace Weapons
                 FireTimer.WaitTime = _stats.FireRate;
             }
             AddChild(FireTimer);
+            FireTimer.Name = $"{Name}-FireTimer";
         }
 
         /// <summary>

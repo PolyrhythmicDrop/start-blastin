@@ -96,7 +96,7 @@ namespace Effects
         private void AddBarrel(IWeaponOwner weaponOwner, ShotEffectState barrelState)
         {
             // Create a new barrel and add it to the state and the target.
-            barrelState._barrel = WeaponFactory.CreateBarrel(
+            barrelState._barrel = WeaponFactory.CreateBarrel<Barrel>(
                 weaponOwner,
                 Direction,
                 activate: true

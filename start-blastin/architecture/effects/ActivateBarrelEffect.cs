@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using DataStructures;
 using Factories;
 using Godot;
@@ -124,7 +123,7 @@ namespace Effects
                         }
                         // If no inactive barrels are found in either barrel rack, create a new barrel, add it to the weaponOwner's rack, and activate it.
                         // All this is done with the CreateBarrel() call.
-                        Barrel newBarrel = WeaponFactory.CreateBarrel(
+                        Barrel newBarrel = WeaponFactory.CreateBarrel<Barrel>(
                             weaponOwner,
                             Direction,
                             true,
@@ -197,8 +196,6 @@ namespace Effects
             {
                 return;
             }
-
-            // BarrelRack barrels = weaponOwner.Weapon?.Barrels;
 
             switch (this.Operation)
             {

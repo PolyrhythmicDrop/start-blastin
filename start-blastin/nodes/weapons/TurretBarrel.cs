@@ -43,6 +43,10 @@ namespace Weapons
                 TurretEffect.DynamicDirection.Movement => _weaponOwner is IVelocityProvider velocity
                     ? velocity.GetCurrentVelocity()
                     : Vector2.Zero,
+                TurretEffect.DynamicDirection.MovementOpposite => _weaponOwner
+                    is IVelocityProvider velocity
+                    ? velocity.GetCurrentVelocity() * -1
+                    : Vector2.Zero,
                 _ => Vector2.Zero,
             };
         }

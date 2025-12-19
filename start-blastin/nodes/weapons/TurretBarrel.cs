@@ -1,8 +1,6 @@
-using System;
 using Effects;
 using Godot;
 using Interfaces;
-using Utility;
 
 namespace Weapons
 {
@@ -20,10 +18,6 @@ namespace Weapons
         public void SetDynamicDirection(TurretEffect.DynamicDirection dir)
         {
             _dynamicDir = dir;
-            // if (_dynamicDir != TurretEffect.DynamicDirection.None)
-            // {
-            //     GlobalRotation = 0;
-            // }
         }
 
         public void SetWeaponOwner(IWeaponOwner owner)

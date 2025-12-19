@@ -63,7 +63,13 @@ namespace Effects
                 get => _currentStacks;
                 set => _currentStacks = Math.Min(_parent._maxStacks, value);
             }
-            public Timer Timer { get; set; }
+
+            // public Timer Timer { get; set; }
+
+            /// <summary>
+            /// List of Timers for each stack of the effect. Each stack is timed independently.
+            /// </summary>
+            public List<Timer> Timers { get; set; }
 
             /// <summary>
             /// Callback for the SceneTreeTimer timeout signal.
@@ -331,11 +337,18 @@ namespace Effects
                 node.TreeExiting -= state._onTreeExit;
             }
 
-            // Clean up the state's timer connection
-            if (state.Timer != null && state._onTimerTimeout != null)
+            // Clean up the state's timer connections
+            // if (state.Timer != null && state._onTimerTimeout != null)
+            if (state.Timers != null)
             {
-                DisconnectEffectTimer(target, state.Timer, state._onTimerTimeout);
-                state.Timer = null;
+                foreach (Timer fxTimer in state.Timers)
+                {
+                    if (state._onTimerTimeout != null)
+                    {
+                        DisconnectEffectTimer(target, fxTimer, state._onTimerTimeout);
+                    }
+                }
+                state.Timers.Clear();
             }
         }
 
@@ -363,6 +376,7 @@ namespace Effects
 
         protected virtual void OnEffectTimerTimeout(GodotObject target)
         {
+            DebugLogger.LogMessage($"Effect timer timed out!");
             if (target != null && IsInstanceValid(target))
             {
                 RemoveEffectFromTarget(target);
@@ -388,9 +402,19 @@ namespace Effects
                     state.CurrentStacks++;
                 }
 
-                // Start the timer for the target if necessary
+                // Create and start the timer(s) for the target if necessary
                 if (_timed)
                 {
+                    // Create a new Timers list if one doesn't currently exist on the state.
+                    if (state.Timers == null)
+                    {
+                        state.Timers = new();
+                        if (_stacking)
+                        {
+                            state.Timers.Capacity = _maxStacks;
+                        }
+                    }
+                    // Start the timer(s)
                     StartTimer(target, state);
                 }
             }
@@ -423,7 +447,6 @@ namespace Effects
         /// <param name="target"></param>
         public void ApplyEffect(GodotObject target)
         {
-            DebugLogger.LogMessage($"Applying effect directly to {target}!", true);
             if (target == null)
             {
                 return;
@@ -439,7 +462,6 @@ namespace Effects
         /// <param name="args"></param>
         public void ApplyEffect(object source, EventArgs args)
         {
-            DebugLogger.LogMessage($"Applying effect using {args}!", true);
             GodotObject target = GetTargetFromArgs(args);
             if (target == null)
             {
@@ -532,18 +554,42 @@ namespace Effects
             }
             if (target is Node node)
             {
-                // Create a new timer on the state if one doesn't exist already.
-                if (state.Timer == null)
+                // Add a new timer to the list if we need to and start it
+                if (state.Timers.Count == 0 || state.Timers.Count < state.CurrentStacks)
                 {
-                    state.Timer = new();
-                    state.Timer.OneShot = true;
-                    state.Timer.Name = $"Timer{GetType().Name}{node.Name}";
+                    Timer fxTimer = new();
+                    state.Timers.Add(fxTimer);
+                    fxTimer.OneShot = true;
+                    fxTimer.Name = $"Timer{GetType().Name}{node.Name}-{state.Timers.Count}";
                     state._onTimerTimeout = () => OnEffectTimerTimeout(target);
-                    state.Timer.Timeout += state._onTimerTimeout;
-                    node.AddChild(state.Timer);
+                    fxTimer.Timeout += state._onTimerTimeout;
+                    node.AddChild(fxTimer);
+                    fxTimer.Start(state._parent.Time);
                 }
-                // Start the timer
-                state.Timer.Start(state._parent.Time);
+                else
+                {
+                    // Sort the timers by time remaining.
+                    state.Timers.Sort(
+                        delegate(Timer x, Timer y)
+                        {
+                            if (x.TimeLeft == y.TimeLeft)
+                            {
+                                return 0;
+                            }
+                            else if (x.TimeLeft > y.TimeLeft)
+                            {
+                                return 1;
+                            }
+                            else
+                            {
+                                return -1;
+                            }
+                        }
+                    );
+
+                    // Start the timer with the least time remaining (the one at the top of the newly-sorted list)
+                    state.Timers[0].Start(state._parent.Time);
+                }
             }
         }
 

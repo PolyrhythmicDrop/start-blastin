@@ -199,7 +199,6 @@ namespace Weapons
         public async Task<bool> WaitForAllProjectilesDisabled()
         {
             // Find any active projectiles in the pool. If you find any, wait for the next frame. Else, return true.
-            // while (_pool.Find(proj => proj.Active) != null)
             while (_activeProjectileCount != 0)
             {
                 await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Autoloads;
 using DataStructures;
 using Effects;
 using Factories;
@@ -187,6 +188,12 @@ namespace Effects
                 dynamicDirection: FocusDirection
             );
 
+            // Set a random offset for each turret so they're not all stacked on top of one another.
+            int offsetX = RNG.GetRandomInt(-10, 10);
+            int offsetY = RNG.GetRandomInt(-10, 10);
+            turret.Position = new Vector2(offsetX, offsetY);
+
+            // Add the turret to the turret rack and activate it.
             turretState._turrets.Add(turret);
             turret.ToggleActive(true);
         }

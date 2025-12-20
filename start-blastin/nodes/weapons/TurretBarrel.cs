@@ -1,6 +1,8 @@
+using System;
 using Effects;
 using Godot;
 using Interfaces;
+using Utility;
 
 namespace Weapons
 {
@@ -8,9 +10,12 @@ namespace Weapons
     public partial class TurretBarrel : Barrel
     {
         private TurretEffect.DynamicDirection _dynamicDir;
+        private TurretEffect.TargetObject _targetObjectType;
         private IWeaponOwner _weaponOwner;
 
-        public Vector2 TargetPosition { get; set; }
+        public Vector2 TargetDirection { get; set; }
+
+        public Node2D TargetObject { get; set; } = null;
 
         public TurretBarrel(BarrelDirection direction)
             : base(direction) { }
@@ -25,6 +30,30 @@ namespace Weapons
             _weaponOwner = owner;
         }
 
+        public void SetTargetObjectType(
+            TurretEffect.TargetObject targetType = TurretEffect.TargetObject.None
+        )
+        {
+            _targetObjectType = targetType;
+        }
+
+        public void SetTargetObject(Node2D target = null)
+        {
+            if (target != null)
+            {
+                TargetObject = target;
+            }
+            else
+            {
+                TargetObject = _targetObjectType switch
+                {
+                    TurretEffect.TargetObject.Nearest => EnemyFinder.GetClosestEnemy(GlobalPosition)
+                        ?? null,
+                    _ => null,
+                };
+            }
+        }
+
         public override void _Process(double delta)
         {
             if (_dynamicDir == TurretEffect.DynamicDirection.None || Active == false)
@@ -32,20 +61,28 @@ namespace Weapons
                 return;
             }
 
-            SetTargetPosition();
-            RotateTurret(TargetPosition);
+            if (_dynamicDir == TurretEffect.DynamicDirection.TargetObject)
+            {
+                SetTargetObject();
+            }
+
+            SetTargetDirection();
+            RotateTurret(TargetDirection);
         }
 
-        private void SetTargetPosition()
+        private void SetTargetDirection()
         {
-            TargetPosition = _dynamicDir switch
+            TargetDirection = _dynamicDir switch
             {
                 TurretEffect.DynamicDirection.Movement => _weaponOwner is IVelocityProvider velocity
-                    ? velocity.GetCurrentVelocity()
+                    ? velocity.GetCurrentVelocity().Normalized()
                     : Vector2.Zero,
                 TurretEffect.DynamicDirection.MovementOpposite => _weaponOwner
                     is IVelocityProvider velocity
-                    ? velocity.GetCurrentVelocity() * -1
+                    ? velocity.GetCurrentVelocity().Normalized() * -1
+                    : Vector2.Zero,
+                TurretEffect.DynamicDirection.TargetObject => TargetObject != null
+                    ? (TargetObject.GlobalPosition - GlobalPosition).Normalized()
                     : Vector2.Zero,
                 _ => Vector2.Zero,
             };
@@ -62,6 +99,7 @@ namespace Weapons
             {
                 // Get the angle to the target in global space
                 float targetAngle = targetPos.Angle();
+
                 // Set global rotation directly
                 GlobalRotation = targetAngle;
             }

@@ -34,6 +34,17 @@ namespace Effects
             TimedRotate,
         }
 
+        /// <summary>
+        /// The target object to point the turret at if the selected <see cref="DynamicDirection"/> is TargetObject.
+        /// </summary>
+        public enum TargetObject
+        {
+            None,
+            Nearest,
+            LeastHealthy,
+            StrongestAttack,
+        }
+
         protected class TurretEffectState : EffectState
         {
             internal BarrelRack _turrets = new();
@@ -74,8 +85,9 @@ namespace Effects
         private DynamicDirection _focusDirection;
 
         private bool _timedRotation = false;
-
         private float _rotateTime = 1.0f;
+
+        private bool _objectTargeting = false;
 
         [Export]
         public DynamicDirection FocusDirection
@@ -107,6 +119,21 @@ namespace Effects
             set => _rotateTime = value;
         }
 
+        [ExportGroup("Object Targeting")]
+        [Export(PropertyHint.GroupEnable)]
+        public bool ObjectTargeting
+        {
+            get => _objectTargeting;
+            set
+            {
+                _objectTargeting = value;
+                OnObjectTargetingChanged();
+            }
+        }
+
+        [Export]
+        public TargetObject ObjectToTarget { get; set; }
+
         /// <summary>
         /// Automatically changes the TimedRotation boolean in the editor based on the new value of FocusDirection.
         /// </summary>
@@ -117,10 +144,27 @@ namespace Effects
                 if (FocusDirection == DynamicDirection.TimedRotate && TimedRotation == false)
                 {
                     _timedRotation = true;
+                    if (_objectTargeting)
+                    {
+                        _objectTargeting = false;
+                    }
                 }
                 else if (FocusDirection != DynamicDirection.TimedRotate && TimedRotation == true)
                 {
                     _timedRotation = false;
+                }
+
+                if (FocusDirection == DynamicDirection.TargetObject && ObjectTargeting == false)
+                {
+                    _objectTargeting = true;
+                    if (_timedRotation)
+                    {
+                        _timedRotation = false;
+                    }
+                }
+                else if (FocusDirection != DynamicDirection.TargetObject && ObjectTargeting == true)
+                {
+                    _objectTargeting = false;
                 }
             }
         }
@@ -132,14 +176,31 @@ namespace Effects
         {
             if (Engine.IsEditorHint())
             {
-                DebugLogger.LogMessage($"Timed rotation changed to {_timedRotation}", true);
                 if (_timedRotation == true && FocusDirection != DynamicDirection.TimedRotate)
                 {
-                    _focusDirection = DynamicDirection.TimedRotate;
+                    FocusDirection = DynamicDirection.TimedRotate;
                 }
                 else if (_timedRotation == false && FocusDirection == DynamicDirection.TimedRotate)
                 {
-                    _focusDirection = DynamicDirection.None;
+                    FocusDirection = DynamicDirection.None;
+                }
+            }
+        }
+
+        private void OnObjectTargetingChanged()
+        {
+            if (Engine.IsEditorHint())
+            {
+                if (_objectTargeting == true && FocusDirection != DynamicDirection.TargetObject)
+                {
+                    FocusDirection = DynamicDirection.TargetObject;
+                }
+                else if (
+                    _objectTargeting == false
+                    && FocusDirection == DynamicDirection.TargetObject
+                )
+                {
+                    FocusDirection = DynamicDirection.None;
                 }
             }
         }
@@ -187,6 +248,11 @@ namespace Effects
                 activate: false,
                 dynamicDirection: FocusDirection
             );
+
+            if (_objectTargeting)
+            {
+                turret.SetTargetObjectType(ObjectToTarget);
+            }
 
             // Set a random offset for each turret so they're not all stacked on top of one another.
             int offsetX = RNG.GetRandomInt(-10, 10);

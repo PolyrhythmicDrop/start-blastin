@@ -1,9 +1,8 @@
-using System;
-using System.Reflection;
 using Autoloads;
 using Events;
 using Factories;
 using Godot;
+using Utility;
 using WaveManagement;
 
 namespace Enemies.Spawners
@@ -205,6 +204,9 @@ namespace Enemies.Spawners
 
             // Free the path after its associated enemy has left the tree/been despawned.
             enemy.TreeExited += entityPath.QueueFree;
+
+            // Add the enemy to the enemy finder list
+            EnemyFinder.AddEnemy(enemy);
         }
 
         /// <summary>

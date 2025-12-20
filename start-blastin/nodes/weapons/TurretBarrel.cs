@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.Design;
 using Effects;
 using Godot;
 using Interfaces;
@@ -12,6 +13,8 @@ namespace Weapons
         private TurretEffect.DynamicDirection _dynamicDir;
         private TurretEffect.TargetObject _targetObjectType;
         private IWeaponOwner _weaponOwner;
+        private float _rotateDuration;
+        private bool _rotationStarted;
 
         public Vector2 TargetDirection { get; set; }
 
@@ -35,6 +38,11 @@ namespace Weapons
         )
         {
             _targetObjectType = targetType;
+        }
+
+        public void SetRotateDuration(float duration)
+        {
+            _rotateDuration = duration;
         }
 
         public void SetTargetObject(Node2D target = null)
@@ -70,8 +78,15 @@ namespace Weapons
                 SetTargetObject();
             }
 
-            SetTargetDirection();
-            RotateTurret(TargetDirection);
+            if (_dynamicDir != TurretEffect.DynamicDirection.TimedRotate)
+            {
+                SetTargetDirection();
+                RotateTurret(TargetDirection);
+            }
+            else if (!_rotationStarted)
+            {
+                StartTimedRotation(_rotateDuration);
+            }
         }
 
         private void SetTargetDirection()
@@ -107,6 +122,16 @@ namespace Weapons
                 // Set global rotation directly
                 GlobalRotation = targetAngle;
             }
+        }
+
+        private void StartTimedRotation(float duration)
+        {
+            _rotationStarted = true;
+
+            Tween tween = CreateTween();
+
+            tween.TweenProperty(this, "global_rotation_degrees", 360, duration);
+            tween.SetLoops(0);
         }
     }
 }

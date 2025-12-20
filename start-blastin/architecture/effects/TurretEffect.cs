@@ -253,6 +253,10 @@ namespace Effects
             {
                 turret.SetTargetObjectType(ObjectToTarget);
             }
+            else if (_focusDirection == DynamicDirection.TimedRotate)
+            {
+                turret.SetRotateDuration(_rotateTime);
+            }
 
             // Set a random offset for each turret so they're not all stacked on top of one another.
             int offsetX = RNG.GetRandomInt(-10, 10);

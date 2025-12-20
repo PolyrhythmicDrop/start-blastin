@@ -75,6 +75,8 @@ namespace Enemies
             private set => _currentHealth = value;
         }
 
+        public float MaxHealth => _maxHealth;
+
         #region Init
         public override void _Ready()
         {

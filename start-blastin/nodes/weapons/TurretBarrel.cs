@@ -49,6 +49,10 @@ namespace Weapons
                 {
                     TurretEffect.TargetObject.Nearest => EnemyFinder.GetClosestEnemy(GlobalPosition)
                         ?? null,
+                    TurretEffect.TargetObject.LeastHealthy => EnemyFinder.GetLeastHealthyEnemy()
+                        ?? null,
+                    TurretEffect.TargetObject.StrongestAttack => EnemyFinder.GetStrongestEnemy()
+                        ?? null,
                     _ => null,
                 };
             }

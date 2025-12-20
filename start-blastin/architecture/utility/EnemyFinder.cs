@@ -100,5 +100,64 @@ namespace Utility
 
             return closest;
         }
+
+        public static EnemyNode GetLeastHealthyEnemy()
+        {
+            EnemyNode leastHealthy = null;
+            float leastHealthPercent = float.MaxValue;
+
+            foreach (EnemyNode enemy in _enemies)
+            {
+                // If the enemy is not a valid object (i.e. it's queued for deletion or otherwise inactive)
+                // continue on to the next one.
+                if (!GodotObject.IsInstanceValid(enemy))
+                {
+                    continue;
+                }
+
+                // Get the enemy's current health.
+                float health = enemy.CurrentHealth;
+
+                // Get the percentage of max health
+                float healthPercent = health / enemy.MaxHealth;
+
+                if (healthPercent < leastHealthPercent)
+                {
+                    leastHealthy = enemy;
+                    leastHealthPercent = healthPercent;
+                }
+            }
+
+            return leastHealthy;
+        }
+
+        public static EnemyNode GetStrongestEnemy()
+        {
+            EnemyNode strongest = null;
+            float strongestValue = 0;
+
+            foreach (EnemyNode enemy in _enemies)
+            {
+                // If the enemy is not a valid object (i.e. it's queued for deletion or otherwise inactive)
+                // continue on to the next one.
+                if (!GodotObject.IsInstanceValid(enemy))
+                {
+                    continue;
+                }
+
+                // Get the enemy's current health.
+                float damage = enemy.Weapon.Stats.Damage;
+
+                // Get the percentage of max health
+
+                if (damage > strongestValue)
+                {
+                    strongest = enemy;
+                    strongestValue = damage;
+                }
+            }
+
+            return strongest;
+        }
     }
 }

@@ -8,7 +8,7 @@
 script = ExtResource("1_jv5gu")
 FocusDirection = 3
 ObjectTargeting = true
-ObjectToTarget = 1
+ObjectToTarget = 3
 metadata/_custom_type_script = "uid://dm0gvemkpk22g"
 
 [resource]

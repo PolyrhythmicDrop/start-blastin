@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using Autoloads;
-using Components;
 using Entities;
 using Events;
 using Factories;
@@ -76,6 +75,8 @@ namespace Enemies
             private set => _currentHealth = value;
         }
 
+        public float MaxHealth => _maxHealth;
+
         #region Init
         public override void _Ready()
         {
@@ -119,7 +120,7 @@ namespace Enemies
         /// <param name="enemyResource">The resource used to create the enemy.</param>
         public virtual void Initialize(EnemyResource enemyResource)
         {
-            _baseMaxHealth = enemyResource.HealthComponent.MaxHealth;
+            _baseMaxHealth = enemyResource.MaxHealth;
             _currentHealth = _baseMaxHealth;
 
             _weapon = WeaponFactory.CreateWeapon(
@@ -301,6 +302,11 @@ namespace Enemies
 
         public void Heal(float healAmount)
         {
+            // Don't do anything if current health is greater than max health
+            if (_currentHealth >= _maxHealth)
+            {
+                return;
+            }
             _currentHealth = Mathf.Min(_currentHealth + healAmount, _maxHealth);
         }
 

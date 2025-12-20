@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Godot;
 
 namespace Weapons
@@ -9,6 +10,51 @@ namespace Weapons
     [GlobalClass]
     public partial class Barrel : Node2D
     {
+        /// <summary>
+        /// The direction the barrel fires in, relative to the direction of the ship. For example, North is straight forward.
+        /// </summary>
+        public enum BarrelDirection
+        {
+            North,
+            Northeast,
+            East,
+            Southeast,
+            South,
+            Southwest,
+            West,
+            Northwest,
+        }
+
+        private bool _active = false;
+
+        // Whether or not the barrel is active by default.
+        // Used to determine what effects should be removed/added when a plugin that affects barrels is unequipped.
+        private bool _defaultActive = false;
+
+        private BarrelDirection _direction;
+        public bool Active => _active;
+
+        /// <summary>
+        /// Is the barrel a base part of the entity?
+        /// If you use the <see cref="Effects.ActivateBarrelEffect"/>, non-base barrels are freed when the effect is deactivated. Base barrels remain.
+        /// </summary>
+        [Export]
+        public bool Base { get; set; }
+
+        [Export]
+        public bool DefaultActive
+        {
+            get => _defaultActive;
+            set => _defaultActive = value;
+        }
+
+        [Export]
+        public BarrelDirection Direction
+        {
+            get => _direction;
+            set => _direction = value;
+        }
+
         /// <summary>
         /// Creates a new Barrel. The passed "rotation" value is used to set the firing direction.
         /// </summary>
@@ -23,6 +69,34 @@ namespace Weapons
             Rotation = rotation;
         }
 
+        public Barrel(BarrelDirection direction)
+        {
+            _direction = direction;
+            // Change the rotation based on the barrel direction
+            RotationDegrees = direction switch
+            {
+                BarrelDirection.North => 0,
+                BarrelDirection.Northeast => 45,
+                BarrelDirection.East => 90,
+                BarrelDirection.Southeast => 135,
+                BarrelDirection.South => 180,
+                BarrelDirection.Southwest => 225,
+                BarrelDirection.West => 270,
+                BarrelDirection.Northwest => 315,
+                _ => 0,
+            };
+        }
+
         public Barrel() { }
+
+        public void ToggleActive(bool active)
+        {
+            _active = active;
+        }
+
+        public void RotateBarrel(float rads)
+        {
+            Rotate(rads);
+        }
     }
 }

@@ -39,7 +39,6 @@ Damage = 0.1
 FireRate = 0.5
 ProjectileSpeed = 100.0
 PluginSlots = 3
-InitialPlugins = Array[Object]([])
 
 [node name="AnimationComponent" parent="." instance=ExtResource("2_hs1md")]
 unique_name_in_owner = true
@@ -57,8 +56,28 @@ unique_name_in_owner = true
 script = ExtResource("5_5h4ma")
 InitWeaponResource = ExtResource("6_1fmtd")
 
-[node name="Barrel" parent="WeaponComponent" instance=ExtResource("9_xl06i")]
+[node name="BarrelN" parent="WeaponComponent" instance=ExtResource("9_xl06i")]
 position = Vector2(14, 6.119594e-07)
+Base = true
+DefaultActive = true
+
+[node name="BarrelW" parent="WeaponComponent" instance=ExtResource("9_xl06i")]
+position = Vector2(3.45703e-07, -12)
+rotation = 4.712389
+Base = true
+Direction = 6
+
+[node name="BarrelE" parent="WeaponComponent" instance=ExtResource("9_xl06i")]
+position = Vector2(0, 12)
+rotation = 1.5707964
+Base = true
+Direction = 2
+
+[node name="BarrelS" parent="WeaponComponent" instance=ExtResource("9_xl06i")]
+position = Vector2(-18, -9.536743e-07)
+rotation = 3.1415927
+Base = true
+Direction = 4
 
 [node name="HitBox" type="CollisionShape2D" parent="."]
 unique_name_in_owner = true

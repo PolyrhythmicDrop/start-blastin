@@ -1,7 +1,9 @@
 using System;
+using Effects;
 using Enemies;
 using Godot;
 using Interfaces;
+using NanoidDotNet;
 using Utility;
 using WaveManagement;
 using Weapons;
@@ -48,6 +50,71 @@ namespace Factories
             }
 
             return builtWeapon;
+        }
+
+        /// <summary>
+        /// Creates a new barrel.
+        /// </summary>
+        /// <param name="weaponOwner">The owner of the barrel. The barrel is added as a child of the <paramref name="weaponOwner"/> if one is passed.</param>
+        /// <param name="direction">The direction the barrel will shoot in, relative to the parent.</param>
+        /// <param name="addToRack">Whether to add the barrel to the <paramref name="weaponOwner"/>'s rack. Only works if <paramref name="weaponOwner"/> is not false.</param>
+        /// <param name="activate">Whether to activate the barrel before returning.</param>
+        /// <returns>A new barrel object.</returns>
+        public static T CreateBarrel<T>(
+            IWeaponOwner weaponOwner = null,
+            Barrel.BarrelDirection direction = Barrel.BarrelDirection.North,
+            bool addToRack = false,
+            bool activate = false
+        )
+            where T : Barrel
+        {
+            T barrel = (T)Activator.CreateInstance(typeof(T), direction);
+
+            if (weaponOwner != null)
+            {
+                weaponOwner.Weapon?.AddChild(barrel);
+                if (addToRack)
+                {
+                    weaponOwner.Weapon?.Barrels.Add(barrel);
+                }
+            }
+
+            barrel.ToggleActive(activate);
+            string dirChar = direction switch
+            {
+                Barrel.BarrelDirection.East => "E",
+                Barrel.BarrelDirection.North => "N",
+                Barrel.BarrelDirection.Northeast => "NE",
+                Barrel.BarrelDirection.Northwest => "NW",
+                Barrel.BarrelDirection.South => "S",
+                Barrel.BarrelDirection.Southwest => "SW",
+                Barrel.BarrelDirection.West => "W",
+                _ => "",
+            };
+            barrel.Name = $"{barrel.GetType().Name}{dirChar}-{Nanoid.Generate(size: 3)}";
+
+            return barrel;
+        }
+
+        public static TurretBarrel CreateTurretBarrel(
+            IWeaponOwner weaponOwner = null,
+            Barrel.BarrelDirection direction = Barrel.BarrelDirection.North,
+            bool addToRack = false,
+            bool activate = false,
+            TurretEffect.DynamicDirection dynamicDirection = TurretEffect.DynamicDirection.None
+        )
+        {
+            TurretBarrel turretBarrel = CreateBarrel<TurretBarrel>(
+                weaponOwner,
+                direction,
+                addToRack,
+                activate
+            );
+
+            turretBarrel.SetWeaponOwner(weaponOwner);
+            turretBarrel.SetDynamicDirection(dynamicDirection);
+
+            return turretBarrel;
         }
     }
 }

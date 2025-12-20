@@ -62,6 +62,7 @@ namespace Autoloads
             // SetMinWindowSize();
             InitializeServices();
             InitializeRNG();
+            InitializeEnemyFinder();
 
             bool success;
             if (_shouldOverrideScene)
@@ -96,6 +97,17 @@ namespace Autoloads
             RNG.InitializeRNG();
         }
 
+        private void InitializeServices()
+        {
+            // Add PlayerService
+            ServiceManager.Instance.RegisterService(new PlayerService());
+        }
+
+        private void InitializeEnemyFinder()
+        {
+            EnemyFinder.Initialize();
+        }
+
         private void SetMinWindowSize()
         {
             DebugLogger.LogMessage("Setting minimum window size...", true);
@@ -111,12 +123,6 @@ namespace Autoloads
                 $"Window minimum size set! New minimum size: {GetWindow().MinSize}",
                 true
             );
-        }
-
-        private void InitializeServices()
-        {
-            // Add PlayerService
-            ServiceManager.Instance.RegisterService(new PlayerService());
         }
 
         private bool LoadScene(string scenePath)

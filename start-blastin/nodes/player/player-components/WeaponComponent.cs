@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using DataStructures;
 using Entities;
 using Factories;
 using Godot;
@@ -12,7 +14,9 @@ namespace PlayerComponents
     {
         private Player _player;
         private WeaponResource _initWeaponResource;
-        private WeaponNode _equippedWeapon;
+        private WeaponNode _weapon;
+
+        public BarrelRack Barrels => _weapon?.Barrels;
 
         [Export]
         public WeaponResource InitWeaponResource
@@ -21,7 +25,7 @@ namespace PlayerComponents
             set => _initWeaponResource = value;
         }
 
-        public WeaponNode Weapon => _equippedWeapon;
+        public WeaponNode Weapon => _weapon;
 
         public void Initialize(Player player)
         {
@@ -31,57 +35,56 @@ namespace PlayerComponents
 
         public void EquipWeapon(WeaponResource weaponResource)
         {
-            if (_equippedWeapon != null)
+            if (_weapon != null)
             {
-                RemoveChild(_equippedWeapon);
+                RemoveChild(_weapon);
             }
             else
             {
-                _equippedWeapon = WeaponFactory.CreateWeapon(
+                _weapon = WeaponFactory.CreateWeapon(
                     weaponResource,
                     velocityProvider: _player,
                     owner: _player
                 );
                 // Initialize stats
-                _equippedWeapon.Stats.FireRate = _player.FireRate;
-                _equippedWeapon.Stats.Damage = _player.Damage;
-                _equippedWeapon.Stats.ProjectileSpeed = _player.ProjectileSpeed;
+                _weapon.Stats.FireRate = _player.FireRate;
+                _weapon.Stats.Damage = _player.Damage;
+                _weapon.Stats.ProjectileSpeed = _player.ProjectileSpeed;
 
-                AddChild(_equippedWeapon);
+                AddChild(_weapon);
                 ConnectFireTimerSignals();
             }
         }
 
         private void ConnectFireTimerSignals()
         {
-            if (_equippedWeapon != null)
+            if (_weapon != null)
             {
-                _equippedWeapon.FireTimer.Timeout += _equippedWeapon.Fire;
+                _weapon.FireTimer.Timeout += _weapon.Fire;
             }
         }
 
         public void FireWeapon()
         {
-            Timer fireTimer = _equippedWeapon.FireTimer;
+            Timer fireTimer = _weapon.FireTimer;
 
             if (fireTimer.IsStopped())
             {
-                _equippedWeapon.Fire();
-                fireTimer.Start(_equippedWeapon.Stats.FireRate);
+                _weapon.Fire();
+                fireTimer.Start(_weapon.Stats.FireRate);
             }
         }
 
         public void StopWeapon()
         {
-            _equippedWeapon.FireTimer.Stop();
+            _weapon.FireTimer.Stop();
         }
 
         public void SetWeaponProjectile(ProjectileType type)
         {
-            _equippedWeapon.Stats.ProjectileType = type;
+            _weapon.Stats.ProjectileType = type;
             // Clear the projectile pool and reset it with the new projectile type.
-            // _equippedWeapon.InitializeProjectilePool();
-            _equippedWeapon.ResetProjectilePool();
+            _weapon.ResetProjectilePool();
         }
     }
 }

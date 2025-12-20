@@ -1,16 +1,9 @@
-[gd_resource type="Resource" script_class="EnemyResource" load_steps=9 format=3 uid="uid://vfsjsr1mvlk1"]
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=7 format=3 uid="uid://vfsjsr1mvlk1"]
 
-[ext_resource type="Script" uid="uid://de8iusxhs0qem" path="res://nodes/components/HealthComponent.cs" id="1_gfeuq"]
 [ext_resource type="Script" uid="uid://cf7pn6qd7aa15" path="res://nodes/enemies/EnemyResource.cs" id="1_oggcu"]
 [ext_resource type="Curve2D" uid="uid://bnvfjkrio8lfp" path="res://resources/curves/straight-down.tres" id="2_64nox"]
 [ext_resource type="Script" uid="uid://bytfm61mpkr5u" path="res://nodes/weapons/WeaponStats.cs" id="3_0bm52"]
 [ext_resource type="Script" uid="uid://boyq442k65gay" path="res://nodes/weapons/WeaponResource.cs" id="4_mj1k6"]
-
-[sub_resource type="Resource" id="Resource_0bm52"]
-resource_local_to_scene = true
-script = ExtResource("1_gfeuq")
-MaxHealth = 2.0
-metadata/_custom_type_script = "uid://de8iusxhs0qem"
 
 [sub_resource type="Resource" id="Resource_mj1k6"]
 script = ExtResource("3_0bm52")
@@ -31,7 +24,7 @@ script = ExtResource("1_oggcu")
 ScenePath = "res://nodes/enemies/Drone/drone.tscn"
 Speed = 100.0
 CrashDamage = 2
-HealthComponent = SubResource("Resource_0bm52")
+MaxHealth = 2.0
 WeaponResource = SubResource("Resource_m7x0c")
 PathCurve = ExtResource("2_64nox")
 FluxReward = 10

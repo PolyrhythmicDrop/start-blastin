@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Autoloads;
-using Components;
+using DataStructures;
 using Enemies;
 using Entities;
 using Events;
@@ -82,12 +83,7 @@ namespace Weapons
         /// </summary>
         public Node ProjectileParent;
 
-        // /// <summary>
-        // /// The position where projectiles should spawn from this weapon, i.e. the barrel of the weapon.
-        // /// </summary>
-        // public virtual Vector2 ProjSpawnPoint => GlobalPosition;
-
-        public List<Barrel> Barrels = new();
+        public BarrelRack Barrels = new();
 
         /// <summary>
         /// Timer used to re-trigger firing of the weapon when the "fire" button is held down.
@@ -143,6 +139,9 @@ namespace Weapons
             {
                 Barrels.Add(barrel);
             }
+
+            // Activate the first barrel by default
+            Barrels.FirstOrDefault().ToggleActive(true);
         }
 
         /// <summary>
@@ -188,6 +187,7 @@ namespace Weapons
                 FireTimer.WaitTime = _stats.FireRate;
             }
             AddChild(FireTimer);
+            FireTimer.Name = $"{Name}-FireTimer";
         }
 
         /// <summary>
@@ -199,7 +199,6 @@ namespace Weapons
         public async Task<bool> WaitForAllProjectilesDisabled()
         {
             // Find any active projectiles in the pool. If you find any, wait for the next frame. Else, return true.
-            // while (_pool.Find(proj => proj.Active) != null)
             while (_activeProjectileCount != 0)
             {
                 await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
@@ -255,24 +254,31 @@ namespace Weapons
         /// </summary>
         public virtual void Fire()
         {
-            // Fire from all barrels.
+            // Fire from all active barrels.
             // TODO: Maybe add extra methods to fire from particular barrels?
 
             foreach (Barrel barrel in Barrels)
             {
+                FireSingleBarrel(barrel);
+            }
+
+            if (EnemyOwned && !FireTimer.IsStopped())
+            {
+                FireTimer.Start(Stats.FireRate);
+            }
+        }
+
+        public virtual void FireSingleBarrel(Barrel barrel)
+        {
+            if (barrel.Active == true)
+            {
                 Projectile projectile = _pool.RequestProjectile();
-                // projectile.Position = ProjSpawnPoint;
                 projectile.Position = barrel.GlobalPosition;
                 projectile.GlobalRotation = barrel.GlobalRotation;
 
                 if (_velocityProvider != null)
                 {
                     projectile.AddSourceVelocity();
-                }
-
-                if (EnemyOwned && !FireTimer.IsStopped())
-                {
-                    FireTimer.Start(Stats.FireRate);
                 }
             }
         }

@@ -10,9 +10,20 @@
                 "--path",
                 "${workspaceRoot}",
                 "--no-window",
-                "-q"
+                "-q",
+                "--remote-debug tcp://127.0.0.1:6007"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "type": "dotnet",
+            "task": "build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "label": "godot: build"
         }
     ]
 }

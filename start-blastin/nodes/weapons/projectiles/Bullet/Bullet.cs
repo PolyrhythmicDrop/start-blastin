@@ -1,5 +1,4 @@
 using System.Reflection;
-using Components;
 using Godot;
 
 namespace Projectiles

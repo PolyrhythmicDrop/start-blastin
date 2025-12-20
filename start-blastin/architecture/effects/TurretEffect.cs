@@ -48,7 +48,6 @@ namespace Effects
         protected class TurretEffectState : EffectState
         {
             internal BarrelRack _turrets = new();
-            internal Timer _rotateTimer;
 
             internal TurretEffectState(Effect parent)
                 : base(parent) { }
@@ -58,11 +57,6 @@ namespace Effects
                 if (target is not IWeaponOwner weaponOwner)
                 {
                     return;
-                }
-                // Clean up any rotational timers
-                if (_rotateTimer != null && IsInstanceValid(_rotateTimer))
-                {
-                    _rotateTimer.QueueFree();
                 }
 
                 // Clean up any existing turrets in the rack.

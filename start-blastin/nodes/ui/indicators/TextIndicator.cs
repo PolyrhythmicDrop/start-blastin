@@ -47,8 +47,6 @@ public partial class TextIndicator : Node2D
     public void SetLabelColor(Color color)
     {
         _label.AddThemeColorOverride("default_color", color);
-        // Color outline = color.Lightened(0.8f);
-        // _label.AddThemeColorOverride("font_shadow_color", outline);
     }
 
     private void SetLabelFontSize()
@@ -74,7 +72,6 @@ public partial class TextIndicator : Node2D
             }
         }
         _label.Text = $"{output}";
-        DebugLogger.LogMessage($"Indicator set to {output}!", true);
     }
 
     private bool ExtractAndFormatNumberString(string inputStr, out string outputStr)

@@ -338,7 +338,6 @@ namespace Effects
             }
 
             // Clean up the state's timer connections
-            // if (state.Timer != null && state._onTimerTimeout != null)
             if (state.Timers != null)
             {
                 foreach (Timer fxTimer in state.Timers)
@@ -358,7 +357,11 @@ namespace Effects
             Action callback
         )
         {
-            if (timer != null && callback != null)
+            if (
+                timer != null
+                && callback != null
+                && timer.IsConnected(Timer.SignalName.Timeout, Callable.From(callback))
+            )
             {
                 timer.Timeout -= callback;
             }

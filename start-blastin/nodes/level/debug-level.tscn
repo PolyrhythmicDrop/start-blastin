@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://cca75d2re7isj"]
+[gd_scene load_steps=14 format=3 uid="uid://cca75d2re7isj"]
 
 [ext_resource type="Texture2D" uid="uid://cilgl08og1qhy" path="res://nodes/backgrounds/background-purple-nebulae-stars.png" id="1_1iju8"]
 [ext_resource type="Script" uid="uid://bpw7egf87stew" path="res://architecture/utility/Debugger.cs" id="1_hxhdr"]
@@ -18,12 +18,6 @@ Type = 8
 Value = 600.0
 metadata/_custom_type_script = "uid://bmeda5w63vsw7"
 
-[sub_resource type="Resource" id="Resource_m6jy5"]
-script = ExtResource("4_gl8ah")
-Type = 6
-Value = 1.0
-metadata/_custom_type_script = "uid://bmeda5w63vsw7"
-
 [sub_resource type="Resource" id="Resource_ald07"]
 resource_local_to_scene = true
 resource_name = "bullet-plugin"
@@ -33,7 +27,7 @@ Description = &"Regular \'ol bullet"
 Icon = ExtResource("5_4imkk")
 Scrappable = false
 AppearsInShop = false
-Effects = Array[Object]([SubResource("Resource_c7qc0"), SubResource("Resource_m6jy5")])
+Effects = Array[Object]([SubResource("Resource_c7qc0")])
 metadata/_custom_type_script = "uid://e8ufr3v1a1f"
 
 [node name="DebugLevel" type="Node" groups=["level"]]

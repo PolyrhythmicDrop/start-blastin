@@ -57,14 +57,14 @@ namespace Effects
         private float _damagePerTick;
         private float _frequency;
 
-        [Export(PropertyHint.Range, "0.5,10,0.5,greater_than")]
+        [Export(PropertyHint.Range, "0.1,10,0.5,greater_than")]
         public float DamagePerTick
         {
             get => _damagePerTick;
             set => _damagePerTick = value;
         }
 
-        [Export(PropertyHint.Range, "0.1,5,0.1,greater_than")]
+        [Export(PropertyHint.Range, "0.05,5,0.1,greater_than")]
         public float Frequency
         {
             get => _frequency;

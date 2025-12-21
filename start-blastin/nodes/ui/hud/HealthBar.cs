@@ -67,9 +67,13 @@ namespace UI.HUD
         /// <param name="currentHealth"></param>
         public void SetCurrentHealth(double currentHealth, float diff)
         {
-            currentHealth = Math.Max(0, currentHealth);
+            currentHealth = Math.Ceiling(currentHealth);
             Vector2 indPos = _bar.GlobalPosition + (_bar.GetGlobalRect().Size / 3);
-            IndicatorFactory.CreateTextIndicator(diff.ToString(), indPos, parent: _bar);
+            IndicatorFactory.CreateTextIndicator(
+                MathF.Round(diff, 1).ToString(),
+                indPos,
+                parent: _bar
+            );
             TweenCurrentHealth(currentHealth, _bar.MaxValue);
         }
 

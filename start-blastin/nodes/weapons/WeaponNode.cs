@@ -208,6 +208,11 @@ namespace Weapons
 
         public virtual void OnProjectileCollision(object source, CollisionEventArgs args)
         {
+            if (source is not Projectile sourceProj)
+            {
+                return;
+            }
+
             int playerId = -1;
             if (_owner is Player player)
             {
@@ -220,7 +225,11 @@ namespace Weapons
                 {
                     if (!healthfulPlayer.Dodging)
                     {
-                        healthfulPlayer.TakeDamage(_stats.Damage, playerId);
+                        healthfulPlayer.TakeDamage(_stats.Damage);
+                        EventBus.Instance.RaisePlayerHitByProjectile(
+                            healthfulPlayer.PlayerId,
+                            sourceProj
+                        );
                     }
                     else
                     {
@@ -242,10 +251,7 @@ namespace Weapons
             }
 
             // Deactivate the source projectile on collision.
-            if (source is Projectile sourceProj)
-            {
-                sourceProj.ToggleActive(false);
-            }
+            sourceProj.ToggleActive(false);
         }
 
         /// <summary>

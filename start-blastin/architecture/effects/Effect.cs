@@ -4,6 +4,7 @@ using System.Runtime.InteropServices.Marshalling;
 using System.Runtime.InteropServices.Swift;
 using System.Threading.Tasks;
 using Autoloads;
+using Enemies;
 using Entities;
 using Events;
 using Godot;
@@ -36,6 +37,7 @@ namespace Effects
         Chain,
         EnemyKilled,
         EnemyHit,
+        PlayerHitByProjectile,
     }
 
     [GlobalClass]
@@ -185,12 +187,6 @@ namespace Effects
                         }
                         break;
                     }
-                    case Trigger.EnemyHit:
-                        EventBus.Instance.EnemyHit += ApplyEffect;
-                        break;
-                    case Trigger.EnemyKilled:
-                        EventBus.Instance.EnemyKilled += ApplyEffect;
-                        break;
                     // Triggers immediately if its parent chain effect is triggered.
                     case Trigger.Chain:
                         if (target != null)
@@ -203,6 +199,15 @@ namespace Effects
                                 $"Parent chain effect must supply a target to nested effects with Trigger set to Chain!"
                             );
                         }
+                        break;
+                    case Trigger.EnemyKilled:
+                        EventBus.Instance.EnemyKilled += ApplyEffect;
+                        break;
+                    case Trigger.EnemyHit:
+                        EventBus.Instance.EnemyHit += ApplyEffect;
+                        break;
+                    case Trigger.PlayerHitByProjectile:
+                        EventBus.Instance.PlayerHitByProjectile += ApplyEffect;
                         break;
                 }
             }
@@ -231,14 +236,6 @@ namespace Effects
                         }
                         break;
                     }
-                    case Trigger.EnemyHit:
-                        EventBus.Instance.EnemyHit -= ApplyEffect;
-                        ClearEffectStatesFromAllTargets();
-                        break;
-                    case Trigger.EnemyKilled:
-                        EventBus.Instance.EnemyKilled -= ApplyEffect;
-                        ClearEffectStatesFromAllTargets();
-                        break;
                     case Trigger.Chain:
                         if (target != null)
                         {
@@ -248,6 +245,18 @@ namespace Effects
                         {
                             ClearEffectStatesFromAllTargets();
                         }
+                        break;
+                    case Trigger.EnemyKilled:
+                        EventBus.Instance.EnemyKilled -= ApplyEffect;
+                        ClearEffectStatesFromAllTargets();
+                        break;
+                    case Trigger.EnemyHit:
+                        EventBus.Instance.EnemyHit -= ApplyEffect;
+                        ClearEffectStatesFromAllTargets();
+                        break;
+                    case Trigger.PlayerHitByProjectile:
+                        EventBus.Instance.PlayerHitByProjectile -= ApplyEffect;
+                        ClearEffectStatesFromAllTargets();
                         break;
                 }
             }
@@ -489,12 +498,25 @@ namespace Effects
                     EnemyKilledEventArgs enemyKilled => playerService.GetPlayer(
                         enemyKilled.PlayerId
                     ),
+                    PlayerHitByProjectileEventArgs playerHitByProj => playerService.GetPlayer(
+                        playerHitByProj.PlayerId
+                    ),
                     _ => null,
                 },
 
                 TargetType.Enemy => args switch
                 {
+                    // Target the enemy you hit.
                     EnemyHitEventArgs enemyHit => enemyHit.Enemy,
+                    // Target the enemy that shot you. If the projectile was not owned by an enemy, set target to the nearest enemy to the player.
+                    PlayerHitByProjectileEventArgs playerHitByProj => playerHitByProj
+                        .Projectile
+                        .SourceWeapon
+                        .EnemyOwned
+                        ? (EnemyNode)playerHitByProj.Projectile.SourceWeapon.WeaponOwner
+                        : EnemyFinder.GetClosestEnemy(
+                            playerService.GetPlayer(playerHitByProj.PlayerId).GlobalPosition
+                        ),
                     _ => null,
                 },
                 _ => null,

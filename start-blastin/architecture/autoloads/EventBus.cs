@@ -4,6 +4,7 @@ using Enemies;
 using Events;
 using Godot;
 using Items;
+using Projectiles;
 using UI.HUD;
 
 namespace Autoloads
@@ -66,6 +67,12 @@ namespace Autoloads
         public event EventHandler<PlayerPluginEquippedEventArgs> PlayerPluginEquipped;
 
         public event EventHandler<PlayerItemRemovedEventArgs> PlayerItemRemoved;
+
+        #endregion
+
+        #region Player Actions
+
+        public event EventHandler<PlayerHitByProjectileEventArgs> PlayerHitByProjectile;
 
         #endregion
 
@@ -218,6 +225,12 @@ namespace Autoloads
         {
             PlayerItemRemovedEventArgs args = new(playerId, item);
             PlayerItemRemoved?.Invoke(this, args);
+        }
+
+        public void RaisePlayerHitByProjectile(int playerId, Projectile projectile)
+        {
+            PlayerHitByProjectileEventArgs args = new(playerId, projectile);
+            PlayerHitByProjectile?.Invoke(this, args);
         }
 
         public void RaiseEnemyKilled(EnemyKilledEventArgs args)

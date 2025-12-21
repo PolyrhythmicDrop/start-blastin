@@ -60,6 +60,7 @@ namespace Enemies
 
         public override void Die(int? playerId = null)
         {
+            _alive = false;
             _weapon.FireTimer.Stop();
             _shape.Disabled = true;
 

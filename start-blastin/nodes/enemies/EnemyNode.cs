@@ -293,6 +293,11 @@ namespace Enemies
             if (_alive)
             {
                 PlayDamageAnimation();
+                IndicatorFactory.CreateTextIndicator(
+                    (MathF.Round(damage, 1) * -1).ToString(),
+                    GlobalPosition,
+                    parent: this
+                );
                 _currentHealth -= damage;
 
                 if (_currentHealth <= 0)

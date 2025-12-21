@@ -159,9 +159,9 @@ namespace Autoloads
             PlayerMaxHealthChanged?.Invoke(this, args);
         }
 
-        public void RaisePlayerCurrentHealthChanged(int playerId, float currentHealth)
+        public void RaisePlayerCurrentHealthChanged(int playerId, float currentHealth, float diff)
         {
-            PlayerCurrentHealthChangedEventArgs args = new(playerId, currentHealth);
+            PlayerCurrentHealthChangedEventArgs args = new(playerId, currentHealth, diff);
             PlayerCurrentHealthChanged?.Invoke(this, args);
         }
 

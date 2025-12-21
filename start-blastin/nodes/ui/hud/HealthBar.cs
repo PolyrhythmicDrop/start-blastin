@@ -1,5 +1,6 @@
 using System;
 using DataStructures;
+using Factories;
 using Godot;
 using Utility;
 
@@ -64,9 +65,11 @@ namespace UI.HUD
         /// Sets the current value of the health bar.
         /// </summary>
         /// <param name="currentHealth"></param>
-        public void SetCurrentHealth(double currentHealth)
+        public void SetCurrentHealth(double currentHealth, float diff)
         {
             currentHealth = Math.Max(0, currentHealth);
+            Vector2 indPos = _bar.GlobalPosition + (_bar.GetGlobalRect().Size / 3);
+            IndicatorFactory.CreateTextIndicator(diff.ToString(), indPos, parent: _bar);
             TweenCurrentHealth(currentHealth, _bar.MaxValue);
         }
 
@@ -132,10 +135,6 @@ namespace UI.HUD
 
             Vector2 currentHealthVector = new Vector2((float)currentValue, (float)currentMaxValue);
             Vector2 newHealthVector = new Vector2((float)newHealth, (float)newMaxHealth);
-
-            // DebugLogger.LogMessage(
-            //     $"Tweening new health values! Current Health Vector: {currentHealthVector} | New Health Vector: {newHealthVector}"
-            // );
 
             // Kill any existing tween
             if (_tween != null)

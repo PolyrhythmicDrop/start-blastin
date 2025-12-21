@@ -261,8 +261,6 @@ namespace Weapons
         public virtual void Fire()
         {
             // Fire from all active barrels.
-            // TODO: Maybe add extra methods to fire from particular barrels?
-
             foreach (Barrel barrel in Barrels)
             {
                 FireSingleBarrel(barrel);

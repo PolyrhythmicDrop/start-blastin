@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://t6wcme7sc7j7"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_kah3p"]
+
+[node name="AuraEffect" type="Area2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_kah3p")
+debug_color = Color(0.74331015, 0.3527475, 0.77270067, 0.41960785)

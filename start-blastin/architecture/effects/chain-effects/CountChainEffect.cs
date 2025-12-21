@@ -59,11 +59,6 @@ namespace Effects
             }
 
             countState._count++;
-            DebugLogger.LogMessage($"Applying {GetType().Name}! Count: {countState._count}", true);
-
-            // Check for the condition using the base method.
-            // Moved this to UpdateEffectState override
-            // base.OnApplyEffect(target, countState);
         }
 
         /// <summary>
@@ -82,11 +77,6 @@ namespace Effects
             {
                 return;
             }
-
-            DebugLogger.LogMessage(
-                $"Updating effect state on {GetType().Name} for {target} & {countState}",
-                true
-            );
 
             if (postApplication)
             {
@@ -135,7 +125,6 @@ namespace Effects
             }
             // Reset the count on effect removal
             ResetCount(target, countState);
-            DebugLogger.LogMessage($"Removing {GetType().Name}! Count: {countState._count}", true);
         }
 
         protected override void EnableChainedEffects(GodotObject target)

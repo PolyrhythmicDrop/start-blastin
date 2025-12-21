@@ -290,13 +290,16 @@ namespace Enemies
         /// <param name="playerId">If a player caused the damage, the <see cref="Player.PlayerId"/> of the damaging player.</param>
         public void TakeDamage(float damage, int? playerId = null)
         {
-            PlayDamageAnimation();
-            _currentHealth -= damage;
-
-            if (_currentHealth <= 0)
+            if (_alive)
             {
-                _currentHealth = 0;
-                Die(playerId);
+                PlayDamageAnimation();
+                _currentHealth -= damage;
+
+                if (_currentHealth <= 0)
+                {
+                    _currentHealth = 0;
+                    Die(playerId);
+                }
             }
         }
 
@@ -317,6 +320,7 @@ namespace Enemies
 
         public virtual async void Die(int? playerId = null)
         {
+            _alive = false;
             if (playerId != null)
             {
                 EnemyKilledEventArgs args = new((int)playerId, _fluxReward, _byteReward);

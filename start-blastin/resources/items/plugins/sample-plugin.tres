@@ -6,13 +6,9 @@
 
 [sub_resource type="Resource" id="Resource_jv5gu"]
 script = ExtResource("1_jv5gu")
-DamagePerTick = 0.1
+DamagePerTick = -0.5
 Frequency = 0.45
-Target = 2
-Trigger = 3
-Stacking = true
 MaxStacks = 3
-Timed = true
 Time = 1.0
 metadata/_custom_type_script = "uid://ccsyqmp61ikky"
 

@@ -54,10 +54,16 @@ namespace Effects
             }
         }
 
-        private float _damagePerTick;
-        private float _frequency;
+        private float _damagePerTick = 0.1f;
+        private float _frequency = 1;
 
-        [Export(PropertyHint.Range, "0.1,10,0.5,greater_than")]
+        /// <summary>
+        /// The amount of damage or healing to do per tick.
+        /// </summary>
+        /// <remarks>
+        /// Set this value to negative to heal over time.
+        /// </remarks>
+        [Export(PropertyHint.Range, "-10,10,0.1,or_greater,or_less")]
         public float DamagePerTick
         {
             get => _damagePerTick;
@@ -149,7 +155,14 @@ namespace Effects
         {
             if (healthful is Node node && !node.IsQueuedForDeletion())
             {
-                healthful.TakeDamage(_damagePerTick);
+                if (_damagePerTick > 0)
+                {
+                    healthful.TakeDamage(_damagePerTick);
+                }
+                else
+                {
+                    healthful.Heal(Math.Abs(_damagePerTick));
+                }
             }
         }
     }

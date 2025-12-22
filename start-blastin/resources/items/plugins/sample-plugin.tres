@@ -5,9 +5,9 @@
 [ext_resource type="Script" uid="uid://dy0dpmasmnsdj" path="res://architecture/effects/chain-effects/AuraChainEffect.cs" id="2_n8wk6"]
 [ext_resource type="Script" uid="uid://b3qmdj461ykoi" path="res://architecture/items/plugins/Plugin.cs" id="3_n8wk6"]
 
-[sub_resource type="Resource" id="Resource_7hrtu"]
+[sub_resource type="Resource" id="Resource_n8wk6"]
 script = ExtResource("1_jv5gu")
-DamagePerTick = 0.3
+DamagePerTick = 0.5
 Frequency = 0.55
 Target = 2
 Trigger = 1
@@ -15,8 +15,8 @@ metadata/_custom_type_script = "uid://ccsyqmp61ikky"
 
 [sub_resource type="Resource" id="Resource_ad7uv"]
 script = ExtResource("2_n8wk6")
-AuraRadius = 201.0
-Effects = Array[Object]([SubResource("Resource_7hrtu")])
+AuraRadius = 190.0
+Effects = Array[Object]([SubResource("Resource_n8wk6")])
 Target = 2
 Trigger = 4
 Timed = true

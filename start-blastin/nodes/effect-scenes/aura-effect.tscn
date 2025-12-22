@@ -1,17 +1,45 @@
-[gd_scene load_steps=3 format=3 uid="uid://t6wcme7sc7j7"]
+[gd_scene load_steps=4 format=3 uid="uid://t6wcme7sc7j7"]
 
 [ext_resource type="Script" uid="uid://ciptsppogeh1r" path="res://nodes/effect-scenes/EffectAura.cs" id="1_oh0aw"]
+[ext_resource type="Texture2D" uid="uid://bcywkhn65g528" path="res://assets/auras/test-aura.png" id="2_0ipaf"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_kah3p"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_0ipaf"]
+resource_local_to_scene = true
+resource_name = "aura-shape"
+radius = 128.0
 
-[node name="EffectAura" type="Area2D"]
+[node name="EffectAura" type="Area2D" node_paths=PackedStringArray("AuraTexture", "CollisionShapeNode")]
 process_mode = 4
 collision_layer = 32
 collision_mask = 61
 input_pickable = false
 script = ExtResource("1_oh0aw")
+AuraTexture = NodePath("AuraShape/AuraTexture")
+CollisionShapeNode = NodePath("AuraShape")
+CircleShape = SubResource("CircleShape2D_0ipaf")
+AuraRadius = 128.0
 
 [node name="AuraShape" type="CollisionShape2D" parent="."]
 unique_name_in_owner = true
-shape = SubResource("CircleShape2D_kah3p")
+shape = SubResource("CircleShape2D_0ipaf")
 debug_color = Color(0.74331015, 0.3527475, 0.77270067, 0.41960785)
+
+[node name="AuraTexture" type="TextureRect" parent="AuraShape"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(256, 256)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -6.0
+offset_top = -6.0
+offset_right = 6.0
+offset_bottom = 6.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+texture = ExtResource("2_0ipaf")
+expand_mode = 1
+stretch_mode = 5

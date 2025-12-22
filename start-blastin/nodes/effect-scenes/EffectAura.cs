@@ -1,26 +1,62 @@
 using System;
-using Effects;
 using Godot;
 using Interfaces;
 
+[Tool]
 [GlobalClass]
 public partial class EffectAura : Area2D, IListener
 {
-    private CollisionShape2D _colShapeNode;
-    private CircleShape2D _circleShape;
+    [Export]
+    public TextureRect AuraTexture { get; set; }
 
-    public CollisionShape2D CollisionShapeNode => _colShapeNode;
+    [Export]
+    public CollisionShape2D CollisionShapeNode { get; set; }
 
-    public CircleShape2D CircleShape => _circleShape;
+    [Export]
+    public CircleShape2D CircleShape
+    {
+        get
+        {
+            if (CollisionShapeNode != null)
+            {
+                return (CircleShape2D)CollisionShapeNode.Shape;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        set
+        {
+            if (CollisionShapeNode != null)
+            {
+                CollisionShapeNode.Shape = value;
+            }
+        }
+    }
 
     public Action<GodotObject> EffectEnableCallback;
     public Action<GodotObject> EffectDisableCallback;
 
+    [Export]
+    public float AuraRadius
+    {
+        get
+        {
+            if (CircleShape != null)
+            {
+                return CircleShape.Radius;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        set => ChangeAuraShape(radius: value);
+    }
+
     public override void _Ready()
     {
-        _colShapeNode = GetNode<CollisionShape2D>("%AuraShape");
-        _circleShape = (CircleShape2D)_colShapeNode.Shape;
-
         ConnectSignals();
     }
 
@@ -34,6 +70,32 @@ public partial class EffectAura : Area2D, IListener
     {
         BodyEntered -= OnBodyEntered;
         BodyExited -= OnBodyExited;
+    }
+
+    public void ChangeAuraShape(float? radius = null, Vector2? minSize = null)
+    {
+        if (radius != null)
+        {
+            if (CircleShape != null)
+            {
+                CircleShape.Radius = (float)radius;
+                // Convert the radius to Vector2
+                AuraTexture.CustomMinimumSize = new Vector2(
+                    (float)(radius * 2),
+                    (float)(radius * 2)
+                );
+            }
+        }
+        else if (minSize != null)
+        {
+            if (CircleShape != null)
+            {
+                Vector2 minVect = (Vector2)minSize;
+                AuraTexture.CustomMinimumSize = minVect;
+                // Convert the radius into the min vect
+                CircleShape.Radius = minVect.X / 2;
+            }
+        }
     }
 
     private void OnBodyEntered(Node2D body)

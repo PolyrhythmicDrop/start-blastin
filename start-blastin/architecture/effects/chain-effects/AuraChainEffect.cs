@@ -34,7 +34,7 @@ namespace Effects
 
         private PackedScene _auraScene = GD.Load<PackedScene>("uid://t6wcme7sc7j7");
 
-        [Export(PropertyHint.Range, "1,1000,10,or_greater")]
+        [Export(PropertyHint.Range, "1,1000,1,or_greater")]
         public float AuraRadius { get; set; }
 
         protected override EffectState CreateEffectState()
@@ -91,7 +91,7 @@ namespace Effects
                 target.AddChild(aura);
                 aura.Visible = false;
                 aura.Name = $"{aura.GetParent().Name}-EffectAura{i}";
-                aura.CircleShape.Radius = AuraRadius;
+                aura.AuraRadius = AuraRadius;
                 auraState._auras.Add(aura);
             }
         }

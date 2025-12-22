@@ -66,8 +66,6 @@ namespace Effects
                 set => _currentStacks = Math.Min(_parent._maxStacks, value);
             }
 
-            // public Timer Timer { get; set; }
-
             /// <summary>
             /// List of Timers for each stack of the effect. Each stack is timed independently.
             /// </summary>
@@ -151,7 +149,8 @@ namespace Effects
         /// Enables the effect based on the selected Target and Trigger.
         /// </summary>
         /// <remarks>
-        /// Does *not* apply the effect unless the Trigger is set to Equip. Application is still done via the selected Trigger.
+        /// Does *not* apply the effect unless the Trigger is set to Equip or Chain.
+        /// Otherwise, application is still done via the selected Trigger.
         /// </remarks>
         public virtual void Enable(GodotObject target = null)
         {

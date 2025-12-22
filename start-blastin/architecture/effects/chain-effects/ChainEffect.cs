@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using Enemies;
+using Entities;
 using Godot;
 using Utility;
 
@@ -62,7 +65,22 @@ namespace Effects
                 DebugLogger.LogMessage($"Enabling {effect}...", true);
                 if (effect.Trigger == Trigger.Equip || effect.Trigger == Trigger.Chain)
                 {
-                    effect.Enable(target);
+                    // Make sure the selected target type matches the passed target.
+                    switch (effect.Target)
+                    {
+                        case TargetType.Self:
+                            if (target is Player)
+                            {
+                                effect.Enable(target);
+                            }
+                            break;
+                        case TargetType.Enemy:
+                            if (target is EnemyNode)
+                            {
+                                effect.Enable(target);
+                            }
+                            break;
+                    }
                 }
                 else if (effect.Target == TargetType.Chain)
                 {

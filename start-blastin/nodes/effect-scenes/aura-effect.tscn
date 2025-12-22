@@ -1,9 +1,17 @@
-[gd_scene load_steps=2 format=3 uid="uid://t6wcme7sc7j7"]
+[gd_scene load_steps=3 format=3 uid="uid://t6wcme7sc7j7"]
+
+[ext_resource type="Script" uid="uid://ciptsppogeh1r" path="res://nodes/effect-scenes/EffectAura.cs" id="1_oh0aw"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_kah3p"]
 
-[node name="AuraEffect" type="Area2D"]
+[node name="EffectAura" type="Area2D"]
+process_mode = 4
+collision_layer = 32
+collision_mask = 61
+input_pickable = false
+script = ExtResource("1_oh0aw")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="AuraShape" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
 shape = SubResource("CircleShape2D_kah3p")
 debug_color = Color(0.74331015, 0.3527475, 0.77270067, 0.41960785)

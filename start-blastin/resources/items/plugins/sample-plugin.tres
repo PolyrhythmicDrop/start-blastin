@@ -1,18 +1,27 @@
-[gd_resource type="Resource" script_class="Plugin" load_steps=5 format=3 uid="uid://bo57x7idkejky"]
+[gd_resource type="Resource" script_class="Plugin" load_steps=7 format=3 uid="uid://bo57x7idkejky"]
 
 [ext_resource type="Script" uid="uid://ccsyqmp61ikky" path="res://architecture/effects/DamageOverTimeEffect.cs" id="1_jv5gu"]
 [ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="2_ad7uv"]
+[ext_resource type="Script" uid="uid://dy0dpmasmnsdj" path="res://architecture/effects/chain-effects/AuraChainEffect.cs" id="2_n8wk6"]
 [ext_resource type="Script" uid="uid://b3qmdj461ykoi" path="res://architecture/items/plugins/Plugin.cs" id="3_n8wk6"]
 
-[sub_resource type="Resource" id="Resource_jv5gu"]
+[sub_resource type="Resource" id="Resource_7hrtu"]
 script = ExtResource("1_jv5gu")
-DamagePerTick = -0.5
-Frequency = 0.95
-Trigger = 4
-MaxStacks = 3
-Timed = true
-Time = 2.0
+DamagePerTick = 0.3
+Frequency = 0.55
+Target = 2
+Trigger = 1
 metadata/_custom_type_script = "uid://ccsyqmp61ikky"
+
+[sub_resource type="Resource" id="Resource_ad7uv"]
+script = ExtResource("2_n8wk6")
+AuraRadius = 201.0
+Effects = Array[Object]([SubResource("Resource_7hrtu")])
+Target = 2
+Trigger = 4
+Timed = true
+Time = 5.0
+metadata/_custom_type_script = "uid://dy0dpmasmnsdj"
 
 [resource]
 resource_name = "sample-plugin"
@@ -22,5 +31,5 @@ Name = &"Sample Plugin"
 Description = &"It\'s a sample."
 Icon = ExtResource("2_ad7uv")
 FluxCost = 10
-Effects = Array[Object]([SubResource("Resource_jv5gu")])
+Effects = Array[Object]([SubResource("Resource_ad7uv")])
 metadata/_custom_type_script = "uid://b3qmdj461ykoi"

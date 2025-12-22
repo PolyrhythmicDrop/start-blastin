@@ -89,6 +89,7 @@ namespace Effects
                 aura.EffectEnableCallback = EnableChainedEffects;
                 aura.EffectDisableCallback = DisableChainedEffects;
                 target.AddChild(aura);
+                aura.Visible = false;
                 aura.Name = $"{aura.GetParent().Name}-EffectAura{i}";
                 aura.CircleShape.Radius = AuraRadius;
                 auraState._auras.Add(aura);

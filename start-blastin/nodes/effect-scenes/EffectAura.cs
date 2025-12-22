@@ -58,6 +58,10 @@ public partial class EffectAura : Area2D, IListener
     public override void _Ready()
     {
         ConnectSignals();
+        if (AuraTexture != null)
+        {
+            AuraTexture.Play();
+        }
     }
 
     public void ConnectSignals()
@@ -81,9 +85,12 @@ public partial class EffectAura : Area2D, IListener
                 CircleShape.Radius = (float)radius;
 
                 // Get size of original texture's rect
-                Vector2 textureSize = AuraTexture
-                    .SpriteFrames.GetFrameTexture("default", 0)
-                    .GetSize();
+                SpriteFrames sprite = AuraTexture.SpriteFrames ?? null;
+                Vector2 textureSize = Vector2.One;
+                if (sprite != null)
+                {
+                    textureSize = sprite.GetFrameTexture("default", 0).GetSize();
+                }
 
                 // Find the scale ratio based on the circle shape's radius.
                 float scaleRatio = (float)(radius * 2) / textureSize.X;

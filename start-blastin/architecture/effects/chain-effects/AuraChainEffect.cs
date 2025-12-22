@@ -37,6 +37,9 @@ namespace Effects
         [Export(PropertyHint.Range, "1,1000,1,or_greater")]
         public float AuraRadius { get; set; }
 
+        [Export]
+        public SpriteFrames AuraSprite { get; set; }
+
         protected override EffectState CreateEffectState()
         {
             return new AuraChainEffectState(this);
@@ -88,10 +91,11 @@ namespace Effects
                 EffectAura aura = _auraScene.Instantiate<EffectAura>();
                 aura.EffectEnableCallback = EnableChainedEffects;
                 aura.EffectDisableCallback = DisableChainedEffects;
+                aura.AuraTexture.SpriteFrames = AuraSprite;
+                aura.AuraRadius = AuraRadius;
                 target.AddChild(aura);
                 aura.Visible = false;
                 aura.Name = $"{aura.GetParent().Name}-EffectAura{i}";
-                aura.AuraRadius = AuraRadius;
                 auraState._auras.Add(aura);
             }
         }

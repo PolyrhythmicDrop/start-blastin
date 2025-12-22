@@ -7,7 +7,7 @@ using Interfaces;
 public partial class EffectAura : Area2D, IListener
 {
     [Export]
-    public TextureRect AuraTexture { get; set; }
+    public AnimatedSprite2D AuraTexture { get; set; }
 
     [Export]
     public CollisionShape2D CollisionShapeNode { get; set; }
@@ -72,28 +72,24 @@ public partial class EffectAura : Area2D, IListener
         BodyExited -= OnBodyExited;
     }
 
-    public void ChangeAuraShape(float? radius = null, Vector2? minSize = null)
+    public void ChangeAuraShape(float? radius = null)
     {
         if (radius != null)
         {
             if (CircleShape != null)
             {
                 CircleShape.Radius = (float)radius;
-                // Convert the radius to Vector2
-                AuraTexture.CustomMinimumSize = new Vector2(
-                    (float)(radius * 2),
-                    (float)(radius * 2)
-                );
-            }
-        }
-        else if (minSize != null)
-        {
-            if (CircleShape != null)
-            {
-                Vector2 minVect = (Vector2)minSize;
-                AuraTexture.CustomMinimumSize = minVect;
-                // Convert the radius into the min vect
-                CircleShape.Radius = minVect.X / 2;
+
+                // Get size of original texture's rect
+                Vector2 textureSize = AuraTexture
+                    .SpriteFrames.GetFrameTexture("default", 0)
+                    .GetSize();
+
+                // Find the scale ratio based on the circle shape's radius.
+                float scaleRatio = (float)(radius * 2) / textureSize.X;
+
+                // Set the size of the sprite using the scale ratio
+                AuraTexture.Scale = new Vector2(scaleRatio, scaleRatio);
             }
         }
     }

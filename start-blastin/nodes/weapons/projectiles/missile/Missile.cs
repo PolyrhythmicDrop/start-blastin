@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Enemies;
 using Entities;
 using Godot;
+using Interfaces;
 using Projectiles;
 
 [GlobalClass]
@@ -185,6 +186,12 @@ public partial class Missile : Projectile
             GlobalRotation = _sourceWeapon.GlobalRotation;
         }
         base.ToggleActive(active);
+    }
+
+    public override void Deflect(IDeflect deflector)
+    {
+        base.Deflect(deflector);
+        RemoveCurrentTarget();
     }
 
     public override void _ExitTree()

@@ -223,7 +223,7 @@ namespace Weapons
             if (args.Collider is IDeflect deflector && deflector.DeflectEnabled)
             {
                 // Deflect and then return (since the projectile should still be active and it also shouldn't do any damage or count as a hit.)
-                deflector.Deflect(sourceProj, args);
+                sourceProj.Deflect(deflector);
                 return;
             }
 

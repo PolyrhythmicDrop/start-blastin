@@ -387,15 +387,15 @@ namespace Enemies
             _followTween.TweenProperty(path.PathFollow, "progress_ratio", 1.0, duration);
         }
 
-        public void Deflect(object source, CollisionEventArgs args)
+        public void Deflect(IDeflect deflector)
         {
-            if (source is not Projectile projectile)
-            {
-                return;
-            }
+            // if (source is not Projectile projectile)
+            // {
+            //     return;
+            // }
 
-            projectile.GlobalRotation += MathF.PI;
-            ProjectileFactory.ConvertProjectileOwner(projectile, true);
+            // projectile.GlobalRotation += MathF.PI;
+            // ProjectileFactory.ConvertProjectileOwner(projectile, true);
         }
 
         public override void _ExitTree()

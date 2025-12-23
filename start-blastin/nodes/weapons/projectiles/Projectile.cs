@@ -1,6 +1,8 @@
 using System;
+using Entities;
 using Events;
 using Godot;
+using Interfaces;
 using Utility;
 using Weapons;
 
@@ -85,6 +87,8 @@ namespace Projectiles
             _deactivateCallable = Callable.From(() => ToggleActive(false));
         }
 
+        #region Initialization
+
         /// <summary>
         /// Calls <see cref="InitializeStats"/>. Sets the rotation for the projectile based on the source weapon's rotation.
         /// </summary>
@@ -159,6 +163,9 @@ namespace Projectiles
             _currentSpeed = _baseSpeed;
         }
 
+        #endregion
+
+        #region Processing
         public override void _PhysicsProcess(double delta)
         {
             if (_active)
@@ -239,6 +246,9 @@ namespace Projectiles
             ToggleDeactivationTimer(active);
             ToggleCollisionSignalConnection(active);
         }
+        #endregion
+
+        #region Physics
 
         /// <summary>
         /// Adds a fraction of the firing object's velocity to the projectile if the projectile is going in the same direction as the firing object.
@@ -291,6 +301,85 @@ namespace Projectiles
             return _currentSpeed * (float)delta * fireVector;
         }
 
+        #endregion
+
+        #region Collision
+
+        public void SetProjectileCollisionLayers(bool enemy)
+        {
+            if (enemy)
+            {
+                // Set the collision layer 5 (Projectiles-Enemy) to true.
+                SetCollisionLayerValue(5, true);
+                // Set collision layer 4 (Projectiles-Player) to false.
+                SetCollisionLayerValue(4, false);
+                // Set the mask so the projectile hits players.
+                SetCollisionMaskValue(1, true);
+                // Set the mask so that the projectile does not hit fellow enemies.
+                SetCollisionMaskValue(3, false);
+                // Set the mask so the projectile does not hit other enemy projectiles.
+                SetCollisionMaskValue(5, false);
+                // Set the mask so the projectile hits player projectiles.
+                SetCollisionMaskValue(4, true);
+            }
+            else
+            {
+                // Set the collision layer to 4 (Projectiles-Player).
+                SetCollisionLayerValue(4, true);
+                // Set collision layer 5 (Projectiles-Enemy) to false.
+                SetCollisionLayerValue(5, false);
+                // Set the mask so the projectile does not hit players.
+                SetCollisionMaskValue(1, false);
+                // Set the mask so that the projectile hits enemies.
+                SetCollisionMaskValue(3, true);
+                // Set the mask so the projectile does not hit other player projectiles.
+                SetCollisionMaskValue(4, false);
+                // Set the mask so the projectile hits enemy projectiles.
+                SetCollisionMaskValue(5, true);
+            }
+        }
+
+        /// <summary>
+        /// Converts the projectile to a new owner, either the player or an enemy.
+        /// Affects the shader material and the collision layers.
+        /// </summary>
+        /// <param name="projectile">The projectile to convert.</param>
+        /// <param name="enemy">True if you want to turn the projectile into a enemy projectile, false to turn it into an player projectile.</param>
+        public virtual void ConvertToNewOwner(bool enemy)
+        {
+            // Set the collision layers for the projectile and its RayCast
+            SetProjectileCollisionLayers(enemy);
+            SetRayMask(enemy);
+
+            // Set the shader material
+            // SetProjectileShaderMaterial(projectile, enemy);
+
+            // Remove the projectile from the enemy pool so it doesn't get re-used.
+            SourceWeapon.Pool.Remove(this);
+
+            // If the projectile is a Missile, remove the current target
+            // if (projectile is Missile missile)
+            // {
+            //     missile.RemoveCurrentTarget();
+            // }
+        }
+
+        public virtual void Deflect(IDeflect deflector)
+        {
+            GlobalRotation += MathF.PI;
+            if (deflector is Player)
+            {
+                ConvertToNewOwner(false);
+            }
+            else
+            {
+                ConvertToNewOwner(true);
+            }
+        }
+
+        #endregion
+
+        #region Cleanup
         /// <summary>
         /// Called when the node exits the scene tree. Disconnects signals and disables the ray.
         /// </summary>
@@ -302,5 +391,6 @@ namespace Projectiles
             }
             base._ExitTree();
         }
+        #endregion
     }
 }

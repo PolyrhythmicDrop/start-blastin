@@ -898,15 +898,15 @@ namespace Entities
             base._ExitTree();
         }
 
-        public void Deflect(object source, CollisionEventArgs args)
+        public void Deflect(IDeflect deflector)
         {
-            if (source is not Projectile projectile)
-            {
-                return;
-            }
+            // if (source is not Projectile projectile)
+            // {
+            //     return;
+            // }
 
-            projectile.GlobalRotation += MathF.PI;
-            ProjectileFactory.ConvertProjectileOwner(projectile, false);
+            // projectile.GlobalRotation += MathF.PI;
+            // ProjectileFactory.ConvertProjectileOwner(projectile, false);
         }
     }
 }

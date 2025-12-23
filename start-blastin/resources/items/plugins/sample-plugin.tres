@@ -4,10 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="2_ad7uv"]
 [ext_resource type="Script" uid="uid://b3qmdj461ykoi" path="res://architecture/items/plugins/Plugin.cs" id="3_n8wk6"]
 
-[sub_resource type="Resource" id="Resource_ad7uv"]
+[sub_resource type="Resource" id="Resource_jv5gu"]
 script = ExtResource("1_jv5gu")
-Target = 2
-Trigger = 3
 metadata/_custom_type_script = "uid://cw0apv8svo4i"
 
 [resource]
@@ -18,5 +16,5 @@ Name = &"Sample Plugin"
 Description = &"It\'s a sample."
 Icon = ExtResource("2_ad7uv")
 FluxCost = 10
-Effects = Array[Object]([SubResource("Resource_ad7uv")])
+Effects = Array[Object]([SubResource("Resource_jv5gu")])
 metadata/_custom_type_script = "uid://b3qmdj461ykoi"

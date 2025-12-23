@@ -8,6 +8,6 @@ namespace Interfaces
     public interface IDeflect
     {
         bool DeflectEnabled { get; set; }
-        void Deflect(object source, CollisionEventArgs args);
+        void Deflect(IDeflect deflector);
     }
 }

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Enemies;
+using Entities;
 using Godot;
 
 namespace Effects
@@ -115,6 +117,40 @@ namespace Effects
             {
                 enabled.Visible = false;
                 enabled.ProcessMode = Node.ProcessModeEnum.Disabled;
+            }
+        }
+
+        protected override void EnableChainedEffects(GodotObject target)
+        {
+            foreach (Effect effect in _effects)
+            {
+                if (effect.Trigger == Trigger.Equip || effect.Trigger == Trigger.Chain)
+                {
+                    // Make sure the selected target type matches the passed target.
+                    switch (effect.Target)
+                    {
+                        case TargetType.Self:
+                            if (target is Player)
+                            {
+                                effect.Enable(target);
+                            }
+                            break;
+                        case TargetType.Enemy:
+                            if (target is EnemyNode)
+                            {
+                                effect.Enable(target);
+                            }
+                            break;
+                    }
+                }
+                else if (effect.Target == TargetType.Chain)
+                {
+                    effect.Enable();
+                }
+                else
+                {
+                    effect.Enable();
+                }
             }
         }
     }

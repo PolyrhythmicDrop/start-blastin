@@ -16,7 +16,7 @@ func _ready():
 
 
 func try_edit_value(value, type, property_hint) -> bool:
-	if !sheet.column_hint_strings[sheet.get_selected_column()][0].begins_with("2/2:"):
+	if type != TYPE_ARRAY || !sheet.column_hint_strings[sheet.get_selected_column()][0].begins_with("2/2:"):
 		return false
 
 	_stored_value = value.duplicate()  # Generic arrays are passed by reference

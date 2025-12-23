@@ -25,10 +25,7 @@ public partial class Missile : Projectile
         base._Ready();
         _sprite = GetNode<AnimatedSprite2D>("%Sprite");
         _targetingArea = GetNode<Area2D>("%TargetingArea");
-        _nullTargetCallable = Callable.From(() =>
-        {
-            _currentTarget = null;
-        });
+        _nullTargetCallable = Callable.From(RemoveCurrentTarget);
 
         ConnectSignals();
     }
@@ -97,7 +94,9 @@ public partial class Missile : Projectile
     {
         if (_currentTarget == null)
         {
-            if (_sourceWeapon.EnemyOwned)
+            // if (_sourceWeapon.EnemyOwned)
+            // If this is an enemy projectile...
+            if (GetCollisionLayerValue(5) && !GetCollisionLayerValue(4))
             {
                 if (body is Player player && _currentTarget != player)
                 {
@@ -126,6 +125,42 @@ public partial class Missile : Projectile
         _currentTarget = target;
     }
 
+    public void RemoveCurrentTarget()
+    {
+        _currentTarget = null;
+        FindNewTarget();
+    }
+
+    public void FindNewTarget()
+    {
+        // Find if there are other overlapping bodies in the area.
+        if (_targetingArea.HasOverlappingBodies())
+        {
+            // Compile the bodies into a searchable list
+            List<Node2D> bodies = [.. _targetingArea.GetOverlappingBodies()];
+
+            // If the missile was fired from an enemy, see if any of the bodies are a player, then track that player.
+            // if (_sourceWeapon.EnemyOwned)
+            if (GetCollisionLayerValue(5) && !GetCollisionLayerValue(4))
+            {
+                Node2D found = bodies.Find(body => body is Player);
+                if (found != null)
+                {
+                    SetCurrentTarget((Player)found);
+                }
+            }
+            // If the missile is the player's, search for other enemies in the area.
+            else
+            {
+                Node2D found = bodies.Find(body => body is EnemyNode);
+                if (found != null)
+                {
+                    SetCurrentTarget((EnemyNode)found);
+                }
+            }
+        }
+    }
+
     public void OnTargetAreaExited(Node2D body)
     {
         if (body != _currentTarget)
@@ -137,31 +172,8 @@ public partial class Missile : Projectile
             // If the current target left the area, reset the current target
             _currentTarget = null;
 
-            // Find if there are other overlapping bodies in the area.
-            if (_targetingArea.HasOverlappingBodies())
-            {
-                // Compile the bodies into a searchable list
-                List<Node2D> bodies = [.. _targetingArea.GetOverlappingBodies()];
-
-                // If the missile was fired from an enemy, see if any of the bodies are a player, then track that player.
-                if (_sourceWeapon.EnemyOwned)
-                {
-                    Node2D found = bodies.Find(body => body is Player);
-                    if (found != null)
-                    {
-                        SetCurrentTarget((Player)found);
-                    }
-                }
-                // If the missile is the player's, search for other enemies in the area.
-                else
-                {
-                    Node2D found = bodies.Find(body => body is EnemyNode);
-                    if (found != null)
-                    {
-                        SetCurrentTarget((EnemyNode)found);
-                    }
-                }
-            }
+            // Find a new target
+            FindNewTarget();
         }
     }
 

@@ -10,6 +10,7 @@ using Godot;
 using Interfaces;
 using Items;
 using PlayerComponents;
+using Projectiles;
 using Services;
 using Stats;
 using Utility;
@@ -24,7 +25,8 @@ namespace Entities
             IHealthful,
             IVelocityProvider,
             IStats,
-            IWeaponOwner
+            IWeaponOwner,
+            IDeflect
     {
         private int _playerId = 1;
 
@@ -76,6 +78,9 @@ namespace Entities
         private bool _isPhasing = false;
         private bool _phaseReady => _movementComponent.PhaseReady;
         private bool _isDying = false;
+        private bool _deflectEnabled;
+
+        public bool DeflectEnabled { get; set; }
 
         #endregion
 
@@ -891,6 +896,17 @@ namespace Entities
         {
             DisconnectSignals();
             base._ExitTree();
+        }
+
+        public void Deflect(object source, CollisionEventArgs args)
+        {
+            if (source is not Projectile projectile)
+            {
+                return;
+            }
+
+            projectile.GlobalRotation += MathF.PI;
+            ProjectileFactory.ConvertProjectileOwner(projectile, false);
         }
     }
 }

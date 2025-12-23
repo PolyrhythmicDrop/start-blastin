@@ -112,16 +112,36 @@ namespace Projectiles
         {
             if (SourceWeapon.EnemyOwned)
             {
+                SetRayMask(true);
+            }
+            else
+            {
+                SetRayMask(false);
+            }
+
+            _rayInitialized = true;
+        }
+
+        /// <summary>
+        /// Sets the collision masks for the targeting ray.
+        /// </summary>
+        /// <param name="enemy">True if the projectile is an enemy projectile, false if it's a player projectile.</param>
+        public void SetRayMask(bool enemy)
+        {
+            if (enemy)
+            {
                 _ray.SetCollisionMaskValue(1, true);
                 _ray.SetCollisionMaskValue(4, true);
+                _ray.SetCollisionMaskValue(3, false);
+                _ray.SetCollisionMaskValue(5, false);
             }
             else
             {
                 _ray.SetCollisionMaskValue(3, true);
                 _ray.SetCollisionMaskValue(5, true);
+                _ray.SetCollisionMaskValue(1, false);
+                _ray.SetCollisionMaskValue(4, false);
             }
-
-            _rayInitialized = true;
         }
 
         /// <summary>

@@ -7,6 +7,7 @@ using Factories;
 using Godot;
 using Interfaces;
 using Microsoft.VisualBasic;
+using Projectiles;
 using Stats;
 using Utility;
 using WaveManagement;
@@ -22,7 +23,8 @@ namespace Enemies
             IVelocityProvider,
             IWeaponOwner,
             IStats,
-            IListener
+            IListener,
+            IDeflect
     {
         protected StatManager _stats;
 
@@ -64,7 +66,12 @@ namespace Enemies
 
         #endregion
 
+        #region State
         protected bool _alive = true;
+
+        public bool DeflectEnabled { get; set; }
+
+        #endregion
 
         public WeaponNode Weapon => _weapon;
         public EntityPath Path => _path;
@@ -380,11 +387,23 @@ namespace Enemies
             _followTween.TweenProperty(path.PathFollow, "progress_ratio", 1.0, duration);
         }
 
+        public void Deflect(object source, CollisionEventArgs args)
+        {
+            if (source is not Projectile projectile)
+            {
+                return;
+            }
+
+            projectile.GlobalRotation += MathF.PI;
+            ProjectileFactory.ConvertProjectileOwner(projectile, true);
+        }
+
         public override void _ExitTree()
         {
             DisconnectSignals();
             base._ExitTree();
         }
+
         #endregion
     }
 }

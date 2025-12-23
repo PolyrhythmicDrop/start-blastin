@@ -20,6 +20,7 @@ AuraRadius = 128.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 unique_name_in_owner = true
+scale = Vector2(256, 256)
 autoplay = "default"
 
 [node name="AuraShape" type="CollisionShape2D" parent="."]

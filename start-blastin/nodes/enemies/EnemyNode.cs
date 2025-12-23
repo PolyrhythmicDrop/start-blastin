@@ -24,7 +24,7 @@ namespace Enemies
             IWeaponOwner,
             IStats,
             IListener,
-            IDeflect
+            IDeflector
     {
         protected StatManager _stats;
 
@@ -69,7 +69,7 @@ namespace Enemies
         #region State
         protected bool _alive = true;
 
-        public bool DeflectEnabled { get; set; }
+        public bool DeflectActive { get; set; }
 
         #endregion
 
@@ -385,17 +385,6 @@ namespace Enemies
 
             _followTween = CreateTween();
             _followTween.TweenProperty(path.PathFollow, "progress_ratio", 1.0, duration);
-        }
-
-        public void Deflect(IDeflect deflector)
-        {
-            // if (source is not Projectile projectile)
-            // {
-            //     return;
-            // }
-
-            // projectile.GlobalRotation += MathF.PI;
-            // ProjectileFactory.ConvertProjectileOwner(projectile, true);
         }
 
         public override void _ExitTree()

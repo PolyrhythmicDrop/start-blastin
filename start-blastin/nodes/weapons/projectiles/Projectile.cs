@@ -351,20 +351,11 @@ namespace Projectiles
             SetProjectileCollisionLayers(enemy);
             SetRayMask(enemy);
 
-            // Set the shader material
-            // SetProjectileShaderMaterial(projectile, enemy);
-
             // Remove the projectile from the enemy pool so it doesn't get re-used.
             SourceWeapon.Pool.Remove(this);
-
-            // If the projectile is a Missile, remove the current target
-            // if (projectile is Missile missile)
-            // {
-            //     missile.RemoveCurrentTarget();
-            // }
         }
 
-        public virtual void Deflect(IDeflect deflector)
+        public virtual void Deflect(IDeflector deflector)
         {
             GlobalRotation += MathF.PI;
             if (deflector is Player)

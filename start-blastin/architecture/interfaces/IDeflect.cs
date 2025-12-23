@@ -5,9 +5,8 @@ namespace Interfaces
     /// <summary>
     /// Interface for entities and objects that can deflect projectiles.
     /// </summary>
-    public interface IDeflect
+    public interface IDeflector
     {
-        bool DeflectEnabled { get; set; }
-        void Deflect(IDeflect deflector);
+        bool DeflectActive { get; set; }
     }
 }

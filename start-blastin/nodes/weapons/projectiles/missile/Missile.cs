@@ -126,6 +126,18 @@ public partial class Missile : Projectile
         _currentTarget = target;
     }
 
+    public void OnTargetAreaExited(Node2D body)
+    {
+        if (body != _currentTarget)
+        {
+            return;
+        }
+        else
+        {
+            RemoveCurrentTarget();
+        }
+    }
+
     public void RemoveCurrentTarget()
     {
         _currentTarget = null;
@@ -162,22 +174,6 @@ public partial class Missile : Projectile
         }
     }
 
-    public void OnTargetAreaExited(Node2D body)
-    {
-        if (body != _currentTarget)
-        {
-            return;
-        }
-        else
-        {
-            // If the current target left the area, reset the current target
-            _currentTarget = null;
-
-            // Find a new target
-            FindNewTarget();
-        }
-    }
-
     public override void ToggleActive(bool active)
     {
         if (!active)
@@ -188,7 +184,7 @@ public partial class Missile : Projectile
         base.ToggleActive(active);
     }
 
-    public override void Deflect(IDeflect deflector)
+    public override void Deflect(IDeflector deflector)
     {
         base.Deflect(deflector);
         RemoveCurrentTarget();

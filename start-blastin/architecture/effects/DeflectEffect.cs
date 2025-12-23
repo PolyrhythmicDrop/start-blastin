@@ -9,22 +9,22 @@ namespace Effects
     {
         protected override void OnApplyEffect(GodotObject target, EffectState state)
         {
-            if (target is not IDeflect deflector)
+            if (target is not IDeflector deflector)
             {
                 return;
             }
 
-            deflector.DeflectEnabled = true;
+            deflector.DeflectActive = true;
         }
 
         protected override void OnRemoveEffect(GodotObject target, EffectState state)
         {
-            if (target is not IDeflect deflector)
+            if (target is not IDeflector deflector)
             {
                 return;
             }
 
-            deflector.DeflectEnabled = false;
+            deflector.DeflectActive = false;
         }
     }
 }

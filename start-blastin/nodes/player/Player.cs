@@ -26,7 +26,7 @@ namespace Entities
             IVelocityProvider,
             IStats,
             IWeaponOwner,
-            IDeflect
+            IDeflector
     {
         private int _playerId = 1;
 
@@ -80,7 +80,7 @@ namespace Entities
         private bool _isDying = false;
         private bool _deflectEnabled;
 
-        public bool DeflectEnabled { get; set; }
+        public bool DeflectActive { get; set; }
 
         #endregion
 
@@ -896,17 +896,6 @@ namespace Entities
         {
             DisconnectSignals();
             base._ExitTree();
-        }
-
-        public void Deflect(IDeflect deflector)
-        {
-            // if (source is not Projectile projectile)
-            // {
-            //     return;
-            // }
-
-            // projectile.GlobalRotation += MathF.PI;
-            // ProjectileFactory.ConvertProjectileOwner(projectile, false);
         }
     }
 }

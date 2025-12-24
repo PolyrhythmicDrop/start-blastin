@@ -43,44 +43,13 @@ namespace Factories
             ammo.SourceWeapon = weapon;
 
             SetProjectileShaderMaterial(ammo, ammo.SourceWeapon.EnemyOwned);
-            ammo.SetProjectileCollisionLayers(ammo.SourceWeapon.EnemyOwned);
+            // ammo.SetProjectileCollisionLayers(ammo.SourceWeapon.EnemyOwned);
+            ammo.CurrentFaction = ammo.SourceWeapon.EnemyOwned
+                ? Projectile.Faction.Enemies
+                : Projectile.Faction.Players;
             ammo.Name = $"{ammo.GetType()}-{Nanoid.Generate(size: 8)}";
             return ammo;
         }
-
-        // private static void SetProjectileCollisionLayers(Projectile projectile, bool enemy)
-        // {
-        //     if (enemy)
-        //     {
-        //         // Set the collision layer 5 (Projectiles-Enemy) to true.
-        //         projectile.SetCollisionLayerValue(5, true);
-        //         // Set collision layer 4 (Projectiles-Player) to false.
-        //         projectile.SetCollisionLayerValue(4, false);
-        //         // Set the mask so the projectile hits players.
-        //         projectile.SetCollisionMaskValue(1, true);
-        //         // Set the mask so that the projectile does not hit fellow enemies.
-        //         projectile.SetCollisionMaskValue(3, false);
-        //         // Set the mask so the projectile does not hit other enemy projectiles.
-        //         projectile.SetCollisionMaskValue(5, false);
-        //         // Set the mask so the projectile hits player projectiles.
-        //         projectile.SetCollisionMaskValue(4, true);
-        //     }
-        //     else
-        //     {
-        //         // Set the collision layer to 4 (Projectiles-Player).
-        //         projectile.SetCollisionLayerValue(4, true);
-        //         // Set collision layer 5 (Projectiles-Enemy) to false.
-        //         projectile.SetCollisionLayerValue(5, false);
-        //         // Set the mask so the projectile does not hit players.
-        //         projectile.SetCollisionMaskValue(1, false);
-        //         // Set the mask so that the projectile hits enemies.
-        //         projectile.SetCollisionMaskValue(3, true);
-        //         // Set the mask so the projectile does not hit other player projectiles.
-        //         projectile.SetCollisionMaskValue(4, false);
-        //         // Set the mask so the projectile hits enemy projectiles.
-        //         projectile.SetCollisionMaskValue(5, true);
-        //     }
-        // }
 
         private static void SetProjectileShaderMaterial(Projectile projectile, bool enemy)
         {

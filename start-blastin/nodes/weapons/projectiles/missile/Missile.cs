@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Enemies;
 using Entities;
+using Events;
 using Godot;
 using Interfaces;
 using Projectiles;
@@ -45,7 +46,7 @@ public partial class Missile : Projectile
 
     public override void _Process(double delta) { }
 
-    protected override Vector2 SetTrajectory(double delta)
+    protected override Vector2 GetTrajectory(double delta)
     {
         if (_currentTarget != null)
         {
@@ -184,9 +185,9 @@ public partial class Missile : Projectile
         base.ToggleActive(active);
     }
 
-    public override void Deflect(IDeflector deflector)
+    public override void Deflect(IDeflector deflector, CollisionEventArgs args = null)
     {
-        base.Deflect(deflector);
+        base.Deflect(deflector, args);
         RemoveCurrentTarget();
     }
 

@@ -1,10 +1,12 @@
 using System;
+using Events;
 using Godot;
 using Interfaces;
+using Projectiles;
 
 [Tool]
 [GlobalClass]
-public partial class EffectAura : Area2D, IListener
+public partial class EffectAura : Area2D, IListener, IDeflector
 {
     [Export]
     public AnimatedSprite2D AuraTexture { get; set; }
@@ -55,6 +57,8 @@ public partial class EffectAura : Area2D, IListener
         set => ChangeAuraShape(radius: value);
     }
 
+    public bool DeflectActive { get; set; } = true;
+
     public override void _Ready()
     {
         ConnectSignals();
@@ -68,12 +72,16 @@ public partial class EffectAura : Area2D, IListener
     {
         BodyEntered += OnBodyEntered;
         BodyExited += OnBodyExited;
+        AreaEntered += OnAreaEntered;
+        AreaExited += OnAreaExited;
     }
 
     public void DisconnectSignals()
     {
         BodyEntered -= OnBodyEntered;
         BodyExited -= OnBodyExited;
+        AreaEntered -= OnAreaEntered;
+        AreaExited -= OnAreaExited;
     }
 
     public void ChangeAuraShape(float? radius = null)
@@ -98,6 +106,41 @@ public partial class EffectAura : Area2D, IListener
                 // Set the size of the sprite using the scale ratio
                 AuraTexture.Scale = new Vector2(scaleRatio, scaleRatio);
             }
+        }
+    }
+
+    private static int hitCount = 0;
+
+    private void OnAreaEntered(Area2D area)
+    {
+        if (area is Projectile projectile)
+        {
+            projectile.SetProjectileAuraDetection(false);
+            // if (DeflectActive)
+            // {
+            //     // Generate a collision normal and collision point with the aura
+            //     Vector2 collisionNormalDir = (
+            //         projectile.GlobalPosition - GlobalPosition
+            //     ).Normalized();
+            //     Vector2 collisionPoint = GlobalPosition + (collisionNormalDir * AuraRadius);
+
+            //     CollisionEventArgs args = new(this, collisionPoint, collisionNormalDir);
+
+            //     hitCount++;
+            //     projectile.Deflect(this, args);
+            // }
+        }
+
+        EffectDisableCallback(area);
+    }
+
+    private async void OnAreaExited(Area2D area)
+    {
+        EffectDisableCallback(area);
+        if (area is Projectile projectile)
+        {
+            await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);
+            projectile.SetProjectileAuraDetection(true);
         }
     }
 

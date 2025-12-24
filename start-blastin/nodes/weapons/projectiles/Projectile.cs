@@ -1,4 +1,5 @@
 using System;
+using Enemies;
 using Entities;
 using Events;
 using Godot;
@@ -10,7 +11,21 @@ namespace Projectiles
 {
     public abstract partial class Projectile : Area2D
     {
+        /// <summary>
+        /// The group this projectile "belongs" to.
+        /// </summary>
+        public enum Faction
+        {
+            All,
+            Players,
+            Enemies,
+            None,
+        }
+
+        private Faction _faction;
+
         private bool _sourceInitialized;
+        private bool _factionInitialized;
         private Callable _deactivateCallable;
         protected bool _active;
         protected Timer _deactivationTimer;
@@ -23,6 +38,22 @@ namespace Projectiles
         protected bool _rayInitialized = false;
 
         public RayCast2D Ray => _ray;
+
+        public Faction CurrentFaction
+        {
+            get => _faction;
+            set
+            {
+                if (!_factionInitialized)
+                {
+                    InitializeFaction(value);
+                }
+                else
+                {
+                    ConvertToNewFaction(value);
+                }
+            }
+        }
 
         /// <summary>
         /// Whether or not the projectile is currently active.
@@ -114,13 +145,12 @@ namespace Projectiles
 
         protected virtual void InitializeRay()
         {
-            if (SourceWeapon.EnemyOwned)
+            _ray.SetCollisionMaskValue(6, true);
+            _ray.CollideWithAreas = true;
+
+            if (_factionInitialized)
             {
-                SetRayMask(true);
-            }
-            else
-            {
-                SetRayMask(false);
+                SetRayMask(_faction);
             }
 
             _rayInitialized = true;
@@ -129,22 +159,35 @@ namespace Projectiles
         /// <summary>
         /// Sets the collision masks for the targeting ray.
         /// </summary>
-        /// <param name="enemy">True if the projectile is an enemy projectile, false if it's a player projectile.</param>
-        public void SetRayMask(bool enemy)
+        /// <param name="faction">The Faction this projectile belongs to.</param>
+        public void SetRayMask(Faction faction)
         {
-            if (enemy)
+            switch (faction)
             {
-                _ray.SetCollisionMaskValue(1, true);
-                _ray.SetCollisionMaskValue(4, true);
-                _ray.SetCollisionMaskValue(3, false);
-                _ray.SetCollisionMaskValue(5, false);
-            }
-            else
-            {
-                _ray.SetCollisionMaskValue(3, true);
-                _ray.SetCollisionMaskValue(5, true);
-                _ray.SetCollisionMaskValue(1, false);
-                _ray.SetCollisionMaskValue(4, false);
+                case Faction.Enemies:
+                {
+                    _ray?.SetCollisionMaskValue(1, true);
+                    _ray?.SetCollisionMaskValue(3, false);
+                    _ray?.SetCollisionMaskValue(4, true);
+                    _ray?.SetCollisionMaskValue(5, false);
+                    break;
+                }
+                case Faction.Players:
+                {
+                    _ray?.SetCollisionMaskValue(1, false);
+                    _ray?.SetCollisionMaskValue(3, true);
+                    _ray?.SetCollisionMaskValue(4, false);
+                    _ray?.SetCollisionMaskValue(5, true);
+                    break;
+                }
+                case Faction.All:
+                {
+                    _ray?.SetCollisionMaskValue(1, true);
+                    _ray?.SetCollisionMaskValue(4, true);
+                    _ray?.SetCollisionMaskValue(3, true);
+                    _ray?.SetCollisionMaskValue(5, true);
+                    break;
+                }
             }
         }
 
@@ -163,6 +206,13 @@ namespace Projectiles
             _currentSpeed = _baseSpeed;
         }
 
+        private void InitializeFaction(Faction faction)
+        {
+            _faction = faction;
+            SetProjectileCollisionLayers(faction);
+            _factionInitialized = true;
+        }
+
         #endregion
 
         #region Processing
@@ -171,7 +221,7 @@ namespace Projectiles
             if (_active)
             {
                 CastRay(delta);
-                Position += SetTrajectory(delta);
+                Position += GetTrajectory(delta);
             }
         }
 
@@ -232,7 +282,6 @@ namespace Projectiles
             if (active)
             {
                 _sourceWeapon.ProjectileParent.AddChild(this);
-
                 _sourceWeapon.ActiveProjectileCount++;
             }
             else
@@ -270,7 +319,7 @@ namespace Projectiles
         /// <param name="delta">The physics frame delta time.</param>
         protected virtual void CastRay(double delta)
         {
-            Vector2 nextPos = Position + SetTrajectory(delta);
+            Vector2 nextPos = Position + GetTrajectory(delta);
             Ray.TargetPosition = ToLocal(nextPos);
 
             if (Ray.Enabled == false)
@@ -291,7 +340,7 @@ namespace Projectiles
             }
         }
 
-        protected virtual Vector2 SetTrajectory(double delta)
+        protected virtual Vector2 GetTrajectory(double delta)
         {
             if (Mathf.Sign(GlobalRotation) == -1)
             {
@@ -305,37 +354,56 @@ namespace Projectiles
 
         #region Collision
 
-        public void SetProjectileCollisionLayers(bool enemy)
+        public void SetProjectileCollisionLayers(Faction faction)
         {
-            if (enemy)
+            // Enable aura detection (Layer 6) for both types
+            SetCollisionMaskValue(6, true);
+
+            switch (faction)
             {
-                // Set the collision layer 5 (Projectiles-Enemy) to true.
-                SetCollisionLayerValue(5, true);
-                // Set collision layer 4 (Projectiles-Player) to false.
-                SetCollisionLayerValue(4, false);
-                // Set the mask so the projectile hits players.
-                SetCollisionMaskValue(1, true);
-                // Set the mask so that the projectile does not hit fellow enemies.
-                SetCollisionMaskValue(3, false);
-                // Set the mask so the projectile does not hit other enemy projectiles.
-                SetCollisionMaskValue(5, false);
-                // Set the mask so the projectile hits player projectiles.
-                SetCollisionMaskValue(4, true);
-            }
-            else
-            {
-                // Set the collision layer to 4 (Projectiles-Player).
-                SetCollisionLayerValue(4, true);
-                // Set collision layer 5 (Projectiles-Enemy) to false.
-                SetCollisionLayerValue(5, false);
-                // Set the mask so the projectile does not hit players.
-                SetCollisionMaskValue(1, false);
-                // Set the mask so that the projectile hits enemies.
-                SetCollisionMaskValue(3, true);
-                // Set the mask so the projectile does not hit other player projectiles.
-                SetCollisionMaskValue(4, false);
-                // Set the mask so the projectile hits enemy projectiles.
-                SetCollisionMaskValue(5, true);
+                case Faction.Enemies:
+                {
+                    // Set the mask so the projectile hits players.
+                    SetCollisionMaskValue(1, true);
+                    // Set the mask so that the projectile does not hit fellow enemies.
+                    SetCollisionMaskValue(3, false);
+                    // Set collision layer 4 (Projectiles-Player) to false.
+                    SetCollisionLayerValue(4, false);
+                    // Set the mask so the projectile hits player projectiles.
+                    SetCollisionMaskValue(4, true);
+                    // Set the collision layer 5 (Projectiles-Enemy) to true.
+                    SetCollisionLayerValue(5, true);
+                    // Set the mask so the projectile does not hit other enemy projectiles.
+                    SetCollisionMaskValue(5, false);
+                    break;
+                }
+                case Faction.Players:
+                {
+                    // Set the mask so the projectile hits players.
+                    SetCollisionMaskValue(1, true);
+                    // Set the mask so that the projectile does not hit fellow enemies.
+                    SetCollisionMaskValue(3, false);
+                    // Set collision layer 4 (Projectiles-Player) to false.
+                    SetCollisionLayerValue(4, false);
+                    // Set the mask so the projectile hits player projectiles.
+                    SetCollisionMaskValue(4, true);
+                    // Set the collision layer 5 (Projectiles-Enemy) to true.
+                    SetCollisionLayerValue(5, true);
+                    // Set the mask so the projectile does not hit other enemy projectiles.
+                    SetCollisionMaskValue(5, false);
+                    break;
+                }
+                case Faction.All:
+                {
+                    // Set all relevant masks and layers to true.
+                    SetCollisionMaskValue(1, true);
+                    SetCollisionMaskValue(3, true);
+                    SetCollisionLayerValue(4, true);
+                    SetCollisionMaskValue(4, true);
+                    SetCollisionLayerValue(5, true);
+                    SetCollisionMaskValue(5, true);
+                    break;
+                }
             }
         }
 
@@ -343,28 +411,76 @@ namespace Projectiles
         /// Converts the projectile to a new owner, either the player or an enemy.
         /// Affects the shader material and the collision layers.
         /// </summary>
-        /// <param name="projectile">The projectile to convert.</param>
-        /// <param name="enemy">True if you want to turn the projectile into a enemy projectile, false to turn it into an player projectile.</param>
-        public virtual void ConvertToNewOwner(bool enemy)
+        public virtual void ConvertToNewFaction(Faction? faction = null)
         {
-            // Set the collision layers for the projectile and its RayCast
-            SetProjectileCollisionLayers(enemy);
-            SetRayMask(enemy);
+            Faction newFaction;
 
-            // Remove the projectile from the enemy pool so it doesn't get re-used.
-            SourceWeapon.Pool.Remove(this);
-        }
-
-        public virtual void Deflect(IDeflector deflector)
-        {
-            GlobalRotation += MathF.PI;
-            if (deflector is Player)
+            // If no Faction value is passed, swap the Faction to the opposite
+            if (faction.HasValue)
             {
-                ConvertToNewOwner(false);
+                newFaction = faction.Value;
             }
             else
             {
-                ConvertToNewOwner(true);
+                newFaction = _faction switch
+                {
+                    Faction.Players => Faction.Enemies,
+                    Faction.Enemies => Faction.Players,
+                    Faction.All => Faction.None,
+                    Faction.None => Faction.All,
+                    _ => Faction.All,
+                };
+            }
+
+            // Set the collision layers for the projectile and its RayCast
+            SetProjectileCollisionLayers(newFaction);
+            SetRayMask(newFaction);
+
+            // If this new faction is different from the initially-set faction...
+            if (_factionInitialized)
+            {
+                // Remove the projectile from the pool so it doesn't get re-used in its new role.
+                SourceWeapon.Pool.Remove(this);
+            }
+        }
+
+        public virtual void Deflect(IDeflector deflector, CollisionEventArgs args = null)
+        {
+            // Default naive deflection, 180deg from current rotation.
+            if (args == null)
+            {
+                GlobalRotation += MathF.PI;
+            }
+            // If we get a normal and some more advanced args, perform a bounce
+            else
+            {
+                // Get the current direction vector based on rotation
+                Vector2 currentDir = Vector2.Right.Rotated(GlobalRotation).Normalized();
+
+                // Bounce the direction vector off the collision's normal
+                Vector2 bounceDir = currentDir.Bounce(args.CollisionNormal);
+
+                // Convert the bounced direction to rotation.
+                GlobalRotation = bounceDir.Angle();
+            }
+
+            // Convert to the opposite faction of the current faction.
+            ConvertToNewFaction();
+        }
+
+        public void SetProjectileAuraDetection(bool areaDetect)
+        {
+            if (areaDetect)
+            {
+                _ray.SetCollisionMaskValue(6, true);
+                _ray.CollideWithAreas = true;
+                SetCollisionMaskValue(6, true);
+            }
+            else
+            {
+                _ray.SetCollisionMaskValue(6, false);
+                _ray.CollideWithAreas = false;
+                SetCollisionMaskValue(6, false);
             }
         }
 

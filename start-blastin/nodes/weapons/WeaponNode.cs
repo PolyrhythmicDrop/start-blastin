@@ -223,7 +223,7 @@ namespace Weapons
             if (args.Collider is IDeflector deflector && deflector.DeflectActive)
             {
                 // Deflect and then return.
-                sourceProj.Deflect(deflector);
+                sourceProj.Deflect(deflector, args);
                 return;
             }
 

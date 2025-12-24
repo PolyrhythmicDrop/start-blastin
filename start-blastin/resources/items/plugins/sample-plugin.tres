@@ -1,12 +1,16 @@
-[gd_resource type="Resource" script_class="Plugin" load_steps=5 format=3 uid="uid://bo57x7idkejky"]
+[gd_resource type="Resource" script_class="Plugin" load_steps=6 format=3 uid="uid://bo57x7idkejky"]
 
-[ext_resource type="Script" uid="uid://cw0apv8svo4i" path="res://architecture/effects/DeflectEffect.cs" id="1_jv5gu"]
+[ext_resource type="SpriteFrames" uid="uid://ddv33pvnjqd81" path="res://assets/auras/test-aura-sprite-frames.tres" id="1_ad7uv"]
 [ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="2_ad7uv"]
+[ext_resource type="Script" uid="uid://dy0dpmasmnsdj" path="res://architecture/effects/chain-effects/AuraChainEffect.cs" id="2_n8wk6"]
 [ext_resource type="Script" uid="uid://b3qmdj461ykoi" path="res://architecture/items/plugins/Plugin.cs" id="3_n8wk6"]
 
-[sub_resource type="Resource" id="Resource_jv5gu"]
-script = ExtResource("1_jv5gu")
-metadata/_custom_type_script = "uid://cw0apv8svo4i"
+[sub_resource type="Resource" id="Resource_7hrtu"]
+script = ExtResource("2_n8wk6")
+AuraRadius = 200.0
+AuraSprite = ExtResource("1_ad7uv")
+Effects = Array[Object]([])
+metadata/_custom_type_script = "uid://dy0dpmasmnsdj"
 
 [resource]
 resource_name = "sample-plugin"
@@ -16,5 +20,5 @@ Name = &"Sample Plugin"
 Description = &"It\'s a sample."
 Icon = ExtResource("2_ad7uv")
 FluxCost = 10
-Effects = Array[Object]([SubResource("Resource_jv5gu")])
+Effects = Array[Object]([SubResource("Resource_7hrtu")])
 metadata/_custom_type_script = "uid://b3qmdj461ykoi"

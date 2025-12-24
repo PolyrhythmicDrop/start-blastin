@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Enemies;
 using Entities;
 using Events;
@@ -313,13 +314,33 @@ namespace Projectiles
             _currentSpeed = _baseSpeed + extraVelocity;
         }
 
+        public virtual void AddSourceVelocity(Vector2 velocity)
+        {
+            // Add speed in projectile's firing direction only
+            float projectionMagnitude = velocity.Dot(Vector2.Right.Rotated(GlobalRotation));
+
+            // Only add a fraction of the movement speed to projectile speed.
+            float extraVelocity = Mathf.Max(0, projectionMagnitude) * 0.6f;
+
+            _currentSpeed = _baseSpeed + extraVelocity;
+        }
+
+        public virtual void AddDeflectionVelocity(Vector2 velocity)
+        {
+            float magnitude = velocity.Dot(Vector2.Right.Rotated(GlobalRotation));
+
+            float extraVelocity = Mathf.Max(0, magnitude);
+
+            _currentSpeed += extraVelocity;
+        }
+
         /// <summary>
         /// Casts a ray in the direction of movement to detect collisions and emit impact signals.
         /// </summary>
         /// <param name="delta">The physics frame delta time.</param>
         protected virtual void CastRay(double delta)
         {
-            Vector2 nextPos = Position + GetTrajectory(delta);
+            Vector2 nextPos = GlobalPosition + GetTrajectory(delta);
             Ray.TargetPosition = ToLocal(nextPos);
 
             if (Ray.Enabled == false)
@@ -331,13 +352,45 @@ namespace Projectiles
 
             if (Ray.IsColliding())
             {
-                CollisionEventArgs collision = new(
-                    Ray.GetCollider(),
-                    Ray.GetCollisionPoint(),
-                    Ray.GetCollisionNormal() * -1
-                );
-                Collision?.Invoke(this, collision);
+                // Vector2 collisionNormal = Ray.GetCollisionNormal();
+                // CollisionEventArgs collision = new(
+                //     Ray.GetCollider(),
+                //     Ray.GetCollisionPoint(),
+                //     collisionNormal == Vector2.Zero ? Vector2.Zero : collisionNormal * -1
+                // );
+
+                Collision?.Invoke(this, CalculateCollisionData(delta));
             }
+        }
+
+        protected virtual CollisionEventArgs CalculateCollisionData(double delta)
+        {
+            Vector2 collNormal = Ray.GetCollisionNormal();
+            Vector2 collPoint = Ray.GetCollisionPoint();
+            GodotObject collider = Ray.GetCollider();
+
+            // If we get a 0 normal (likely because the ray started inside the collider), calculate the normal manually.
+            if (collNormal == Vector2.Zero)
+            {
+                // Calculate normal from relative position for a Node2D
+                if (collider is Node2D collNode)
+                {
+                    // Get the direction from the center of the collider to the Projectile.
+                    Vector2 collDir = (GlobalPosition - collNode.GlobalPosition).Normalized();
+                    collNormal = collDir;
+                }
+                else
+                {
+                    // Otherwise, just use the opposite direction of the projectile
+                    collNormal = Vector2.Right.Rotated(GlobalRotation).Normalized() * -1;
+                }
+            }
+            else
+            {
+                collNormal *= -1;
+            }
+
+            return new CollisionEventArgs(collider, collPoint, collNormal);
         }
 
         protected virtual Vector2 GetTrajectory(double delta)
@@ -436,6 +489,8 @@ namespace Projectiles
             SetProjectileCollisionLayers(newFaction);
             SetRayMask(newFaction);
 
+            _faction = newFaction;
+
             // If this new faction is different from the initially-set faction...
             if (_factionInitialized)
             {
@@ -446,6 +501,9 @@ namespace Projectiles
 
         public virtual void Deflect(IDeflector deflector, CollisionEventArgs args = null)
         {
+            // Convert to the opposite faction of the current faction.
+            ConvertToNewFaction();
+
             // Default naive deflection, 180deg from current rotation.
             if (args == null)
             {
@@ -464,8 +522,10 @@ namespace Projectiles
                 GlobalRotation = bounceDir.Angle();
             }
 
-            // Convert to the opposite faction of the current faction.
-            ConvertToNewFaction();
+            if (deflector is IVelocityProvider velocitySource)
+            {
+                AddDeflectionVelocity(velocitySource.GetCurrentVelocity());
+            }
         }
 
         public void SetProjectileAuraDetection(bool areaDetect)
@@ -473,13 +533,13 @@ namespace Projectiles
             if (areaDetect)
             {
                 _ray.SetCollisionMaskValue(6, true);
-                _ray.CollideWithAreas = true;
+                // _ray.CollideWithAreas = true;
                 SetCollisionMaskValue(6, true);
             }
             else
             {
                 _ray.SetCollisionMaskValue(6, false);
-                _ray.CollideWithAreas = false;
+                // _ray.CollideWithAreas = false;
                 SetCollisionMaskValue(6, false);
             }
         }

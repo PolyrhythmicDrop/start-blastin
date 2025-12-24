@@ -1,16 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.Marshalling;
-using System.Runtime.InteropServices.Swift;
-using System.Threading.Tasks;
 using Autoloads;
 using Enemies;
-using Entities;
 using Events;
 using Godot;
-using Interfaces;
 using Services;
-using Stats;
 using Utility;
 
 namespace Effects

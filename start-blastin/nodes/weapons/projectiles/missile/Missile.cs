@@ -187,8 +187,8 @@ public partial class Missile : Projectile
 
     public override void Deflect(IDeflector deflector, CollisionEventArgs args = null)
     {
-        base.Deflect(deflector, args);
         RemoveCurrentTarget();
+        base.Deflect(deflector, args);
     }
 
     public override void _ExitTree()

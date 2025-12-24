@@ -23,7 +23,6 @@ namespace Effects
             {
                 return;
             }
-
             deflector.DeflectActive = false;
         }
     }

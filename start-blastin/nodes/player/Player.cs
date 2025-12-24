@@ -356,7 +356,7 @@ namespace Entities
         #endregion
 
         #region Movement
-        public override void _Process(double delta)
+        public override void _PhysicsProcess(double delta)
         {
             Move();
         }

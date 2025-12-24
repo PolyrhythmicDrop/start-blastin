@@ -291,7 +291,7 @@ namespace Weapons
 
                 if (_velocityProvider != null)
                 {
-                    projectile.AddSourceVelocity();
+                    projectile.AddSourceVelocity(_velocityProvider.GetCurrentVelocity());
                 }
             }
         }

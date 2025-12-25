@@ -23,12 +23,11 @@ namespace Projectiles
             None,
         }
 
-        private Faction _faction;
-
         private bool _sourceInitialized;
         private bool _factionInitialized;
         private Callable _deactivateCallable;
         protected bool _active;
+        protected Faction _faction;
         protected Timer _deactivationTimer;
         protected float _baseSpeed;
         protected float _currentSpeed;

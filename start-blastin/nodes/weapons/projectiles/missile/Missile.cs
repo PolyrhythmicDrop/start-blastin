@@ -155,7 +155,7 @@ public partial class Missile : Projectile
 
             // If the missile was fired from an enemy, see if any of the bodies are a player, then track that player.
             // if (_sourceWeapon.EnemyOwned)
-            if (GetCollisionLayerValue(5) && !GetCollisionLayerValue(4))
+            if (_faction == Faction.Enemies || _faction == Faction.All)
             {
                 Node2D found = bodies.Find(body => body is Player);
                 if (found != null)
@@ -164,7 +164,7 @@ public partial class Missile : Projectile
                 }
             }
             // If the missile is the player's, search for other enemies in the area.
-            else
+            else if (_faction == Faction.Players || _faction == Faction.All)
             {
                 Node2D found = bodies.Find(body => body is EnemyNode);
                 if (found != null)
@@ -187,8 +187,8 @@ public partial class Missile : Projectile
 
     public override void Deflect(IDeflector deflector, CollisionEventArgs args = null)
     {
-        RemoveCurrentTarget();
         base.Deflect(deflector, args);
+        RemoveCurrentTarget();
     }
 
     public override void _ExitTree()

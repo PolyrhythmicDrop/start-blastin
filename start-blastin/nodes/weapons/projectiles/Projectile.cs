@@ -188,6 +188,14 @@ namespace Projectiles
                     _ray?.SetCollisionMaskValue(5, true);
                     break;
                 }
+                case Faction.None:
+                {
+                    _ray?.SetCollisionMaskValue(1, false);
+                    _ray?.SetCollisionMaskValue(4, false);
+                    _ray?.SetCollisionMaskValue(3, false);
+                    _ray?.SetCollisionMaskValue(5, false);
+                    break;
+                }
             }
         }
 
@@ -351,13 +359,6 @@ namespace Projectiles
 
             if (Ray.IsColliding())
             {
-                // Vector2 collisionNormal = Ray.GetCollisionNormal();
-                // CollisionEventArgs collision = new(
-                //     Ray.GetCollider(),
-                //     Ray.GetCollisionPoint(),
-                //     collisionNormal == Vector2.Zero ? Vector2.Zero : collisionNormal * -1
-                // );
-
                 Collision?.Invoke(this, CalculateCollisionData(delta));
             }
         }
@@ -484,11 +485,11 @@ namespace Projectiles
                 };
             }
 
+            _faction = newFaction;
+
             // Set the collision layers for the projectile and its RayCast
             SetProjectileCollisionLayers(newFaction);
             SetRayMask(newFaction);
-
-            _faction = newFaction;
 
             // If this new faction is different from the initially-set faction...
             if (_factionInitialized)
@@ -504,7 +505,7 @@ namespace Projectiles
             ConvertToNewFaction();
 
             // Default naive deflection, 180deg from current rotation.
-            if (args == null)
+            if (args == null || args?.CollisionNormal == Vector2.Zero)
             {
                 GlobalRotation += MathF.PI;
             }
@@ -532,13 +533,11 @@ namespace Projectiles
             if (areaDetect)
             {
                 _ray.SetCollisionMaskValue(6, true);
-                // _ray.CollideWithAreas = true;
                 SetCollisionMaskValue(6, true);
             }
             else
             {
                 _ray.SetCollisionMaskValue(6, false);
-                // _ray.CollideWithAreas = false;
                 SetCollisionMaskValue(6, false);
             }
         }

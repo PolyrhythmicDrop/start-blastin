@@ -1,4 +1,6 @@
 using System;
+using Enemies;
+using Entities;
 using Events;
 using Godot;
 using Interfaces;
@@ -6,7 +8,7 @@ using Projectiles;
 
 [Tool]
 [GlobalClass]
-public partial class EffectAura : Area2D, IListener, IDeflector
+public partial class EffectAura : Area2D, IListener
 {
     [Export]
     public AnimatedSprite2D AuraTexture { get; set; }
@@ -56,8 +58,6 @@ public partial class EffectAura : Area2D, IListener, IDeflector
         }
         set => ChangeAuraShape(radius: value);
     }
-
-    public bool DeflectActive { get; set; } = true;
 
     public override void _Ready()
     {
@@ -109,39 +109,14 @@ public partial class EffectAura : Area2D, IListener, IDeflector
         }
     }
 
-    private static int hitCount = 0;
-
     private void OnAreaEntered(Area2D area)
     {
-        if (area is Projectile projectile)
-        {
-            projectile.SetProjectileAuraDetection(false);
-            // if (DeflectActive)
-            // {
-            //     // Generate a collision normal and collision point with the aura
-            //     Vector2 collisionNormalDir = (
-            //         projectile.GlobalPosition - GlobalPosition
-            //     ).Normalized();
-            //     Vector2 collisionPoint = GlobalPosition + (collisionNormalDir * AuraRadius);
-
-            //     CollisionEventArgs args = new(this, collisionPoint, collisionNormalDir);
-
-            //     hitCount++;
-            //     projectile.Deflect(this, args);
-            // }
-        }
-
         EffectDisableCallback(area);
     }
 
     private async void OnAreaExited(Area2D area)
     {
         EffectDisableCallback(area);
-        if (area is Projectile projectile)
-        {
-            await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);
-            projectile.SetProjectileAuraDetection(true);
-        }
     }
 
     private void OnBodyEntered(Node2D body)

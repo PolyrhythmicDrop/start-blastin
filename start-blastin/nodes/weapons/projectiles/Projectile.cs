@@ -359,11 +359,11 @@ namespace Projectiles
 
             if (Ray.IsColliding())
             {
-                Collision?.Invoke(this, CalculateCollisionData(delta));
+                Collision?.Invoke(this, CalculateRayCollisionData(delta));
             }
         }
 
-        protected virtual CollisionEventArgs CalculateCollisionData(double delta)
+        protected virtual CollisionEventArgs CalculateRayCollisionData(double delta)
         {
             Vector2 collNormal = Ray.GetCollisionNormal();
             Vector2 collPoint = Ray.GetCollisionPoint();

@@ -52,6 +52,10 @@ namespace Autoloads
 
         public event EventHandler<PlayerCurrentHealthChangedEventArgs> PlayerCurrentHealthChanged;
 
+        public event EventHandler<PlayerIdEventArgs> PhaseStarted;
+
+        public event EventHandler<PlayerIdEventArgs> PhaseEnded;
+
         public event EventHandler<PlayerPhaseTimeLeftEventArgs> PlayerPhaseTimeLeft;
 
         private PlayerPhaseTimeLeftEventArgs _phaseTimeLeftArgs = new();
@@ -170,6 +174,18 @@ namespace Autoloads
         {
             PlayerCurrentHealthChangedEventArgs args = new(playerId, currentHealth, diff);
             PlayerCurrentHealthChanged?.Invoke(this, args);
+        }
+
+        public void RaisePhaseStarted(int playerId)
+        {
+            PlayerIdEventArgs args = new(playerId);
+            PhaseStarted?.Invoke(this, args);
+        }
+
+        public void RaisePhaseEnded(int playerId)
+        {
+            PlayerIdEventArgs args = new(playerId);
+            PhaseEnded?.Invoke(this, args);
         }
 
         public void RaisePlayerPhaseTimeLeft(int playerId, double timeLeft)

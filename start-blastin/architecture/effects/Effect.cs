@@ -32,6 +32,7 @@ namespace Effects
         EnemyKilled,
         EnemyHit,
         PlayerHitByProjectile,
+        WhilePhasing,
     }
 
     [GlobalClass]
@@ -202,6 +203,9 @@ namespace Effects
                     case Trigger.PlayerHitByProjectile:
                         EventBus.Instance.PlayerHitByProjectile += ApplyEffect;
                         break;
+                    case Trigger.WhilePhasing:
+                        EventBus.Instance.PhaseStarted += ApplyEffect;
+                        break;
                 }
             }
             catch (Exception e)
@@ -249,6 +253,10 @@ namespace Effects
                         break;
                     case Trigger.PlayerHitByProjectile:
                         EventBus.Instance.PlayerHitByProjectile -= ApplyEffect;
+                        ClearEffectStatesFromAllTargets();
+                        break;
+                    case Trigger.WhilePhasing:
+                        EventBus.Instance.PhaseStarted -= ApplyEffect;
                         ClearEffectStatesFromAllTargets();
                         break;
                 }
@@ -472,6 +480,7 @@ namespace Effects
             {
                 return;
             }
+
             ApplyEffectToTarget(target);
         }
 
@@ -494,6 +503,9 @@ namespace Effects
                     PlayerHitByProjectileEventArgs playerHitByProj => playerService.GetPlayer(
                         playerHitByProj.PlayerId
                     ),
+                    PlayerIdEventArgs playerIdArgs => playerService.GetPlayer(
+                        playerIdArgs.PlayerId
+                    ),
                     _ => null,
                 },
 
@@ -501,15 +513,26 @@ namespace Effects
                 {
                     // Target the enemy you hit.
                     EnemyHitEventArgs enemyHit => enemyHit.Enemy,
-                    // Target the enemy that shot you. If the projectile was not owned by an enemy, set target to the nearest enemy to the player.
+                    // Target the nearest enemy to the enemy killed
+                    EnemyKilledEventArgs enemyKilled => EnemyFinder.GetClosestEnemy(
+                        enemyKilled.KillPosition
+                    ),
+                    // Target the enemy that shot you. If the projectile was not owned by an enemy, set target to the nearest enemy to the player. If the enemy that shot the player is dead (and thus null), target the closest enemy to the player.
                     PlayerHitByProjectileEventArgs playerHitByProj => playerHitByProj
                         .Projectile
                         .SourceWeapon
                         .EnemyOwned
                         ? (EnemyNode)playerHitByProj.Projectile.SourceWeapon.WeaponOwner
+                            ?? EnemyFinder.GetClosestEnemy(
+                                playerService.GetPlayer(playerHitByProj.PlayerId).GlobalPosition
+                            )
                         : EnemyFinder.GetClosestEnemy(
                             playerService.GetPlayer(playerHitByProj.PlayerId).GlobalPosition
                         ),
+                    // Target the nearest enemy to the player
+                    PlayerIdEventArgs playerIdArgs => EnemyFinder.GetClosestEnemy(
+                        playerService.GetPlayer(playerIdArgs.PlayerId).GlobalPosition
+                    ),
                     _ => null,
                 },
                 _ => null,
@@ -550,6 +573,15 @@ namespace Effects
             if (!CanApplyEffect(state))
             {
                 return;
+            }
+
+            // If the effect uses the WhilePhasing trigger, also connect to the PhaseEnded event
+            if (Trigger == Trigger.WhilePhasing)
+            {
+                EventBus.Instance.PhaseEnded += (source, args) =>
+                {
+                    RemoveEffectFromTarget(target);
+                };
             }
 
             // Perform class-specific effect application logic
@@ -647,7 +679,7 @@ namespace Effects
                 {
                     throw new ArgumentException(
                         $"{target} not found in target states dictionary for {ResourceName}! Cannot remove non-existent effect.",
-                        paramName: "target"
+                        paramName: nameof(target)
                     );
                 }
             }

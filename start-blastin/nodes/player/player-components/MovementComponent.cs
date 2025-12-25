@@ -58,12 +58,14 @@ namespace PlayerComponents
         {
             PhaseReady = false;
             _phaseTimer.Start(_player.PhaseDuration);
+            EventBus.Instance.RaisePhaseStarted(_player.PlayerId);
             EventBus.Instance.RaisePlayerPhaseTimeLeft(_player.PlayerId, _player.PhaseCooldown);
         }
 
         public void EndPhase()
         {
             _phaseCooldownTimer.Start(_player.PhaseCooldown);
+            EventBus.Instance.RaisePhaseEnded(_player.PlayerId);
         }
     }
 }

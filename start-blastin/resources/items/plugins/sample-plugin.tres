@@ -1,13 +1,13 @@
 [gd_resource type="Resource" script_class="Plugin" load_steps=5 format=3 uid="uid://bo57x7idkejky"]
 
-[ext_resource type="Script" uid="uid://cw0apv8svo4i" path="res://architecture/effects/DeflectEffect.cs" id="1_jv5gu"]
+[ext_resource type="Script" uid="uid://cp6p50cffraw6" path="res://architecture/effects/ShotEffect.cs" id="1_jv5gu"]
 [ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="2_ad7uv"]
 [ext_resource type="Script" uid="uid://b3qmdj461ykoi" path="res://architecture/items/plugins/Plugin.cs" id="3_n8wk6"]
 
 [sub_resource type="Resource" id="Resource_ad7uv"]
 script = ExtResource("1_jv5gu")
-Trigger = 5
-metadata/_custom_type_script = "uid://cw0apv8svo4i"
+Target = 2
+metadata/_custom_type_script = "uid://cp6p50cffraw6"
 
 [resource]
 resource_name = "sample-plugin"

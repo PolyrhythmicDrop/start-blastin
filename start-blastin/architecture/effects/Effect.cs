@@ -18,6 +18,15 @@ namespace Effects
         None,
     }
 
+    public enum EnemyTargetSubType
+    {
+        SingleEnemy,
+        AllEnemies,
+        ClosestEnemy,
+        LeastHealthEnemy,
+        StrongestEnemy,
+    }
+
     public enum Operation
     {
         Add,
@@ -33,8 +42,11 @@ namespace Effects
         EnemyHit,
         PlayerHitByProjectile,
         WhilePhasing,
+        PhaseStart,
+        PhaseEnd,
     }
 
+    [Tool]
     [GlobalClass]
     public abstract partial class Effect : Resource
     {
@@ -102,11 +114,47 @@ namespace Effects
         protected bool _timed = false;
         protected float _time = 0.1f;
 
-        [Export]
-        public TargetType Target { get; set; }
+        // ~~ Targeting ~~
+
+        protected TargetType _targetType;
+        protected bool _enemyTargeting = false;
 
         [Export]
         public Trigger Trigger { get; set; }
+
+        [ExportGroup("Targeting")]
+        [Export]
+        public TargetType Target
+        {
+            get => _targetType;
+            set
+            {
+                _targetType = value;
+                OnTargetChanged();
+            }
+        }
+
+        [ExportSubgroup("Enemy Targeting")]
+        [Export(PropertyHint.GroupEnable)]
+        public bool EnemyTargeting
+        {
+            get => _enemyTargeting;
+            set
+            {
+                if (value == true && Target != TargetType.Enemy)
+                {
+                    Target = TargetType.Enemy;
+                }
+                else if (value == false && Target == TargetType.Enemy)
+                {
+                    Target = TargetType.None;
+                }
+                _enemyTargeting = value;
+            }
+        }
+
+        [Export]
+        public EnemyTargetSubType EnemyTarget { get; set; } = EnemyTargetSubType.SingleEnemy;
 
         [ExportGroup("Stacking")]
         [Export(PropertyHint.GroupEnable)]
@@ -137,6 +185,23 @@ namespace Effects
             get => _time;
             set { _time = Math.Max(0.1f, value); }
         }
+
+        #region Tool Methods
+
+        protected void OnTargetChanged()
+        {
+            DebugLogger.LogMessage($"Target changed!");
+            if (Target == TargetType.Enemy)
+            {
+                _enemyTargeting = true;
+            }
+            else
+            {
+                _enemyTargeting = false;
+            }
+        }
+
+        #endregion
 
         #region Enable / Disable
 
@@ -204,7 +269,11 @@ namespace Effects
                         EventBus.Instance.PlayerHitByProjectile += ApplyEffect;
                         break;
                     case Trigger.WhilePhasing:
+                    case Trigger.PhaseStart:
                         EventBus.Instance.PhaseStarted += ApplyEffect;
+                        break;
+                    case Trigger.PhaseEnd:
+                        EventBus.Instance.PhaseEnded += ApplyEffect;
                         break;
                 }
             }
@@ -256,7 +325,12 @@ namespace Effects
                         ClearEffectStatesFromAllTargets();
                         break;
                     case Trigger.WhilePhasing:
+                    case Trigger.PhaseStart:
                         EventBus.Instance.PhaseStarted -= ApplyEffect;
+                        ClearEffectStatesFromAllTargets();
+                        break;
+                    case Trigger.PhaseEnd:
+                        EventBus.Instance.PhaseEnded -= ApplyEffect;
                         ClearEffectStatesFromAllTargets();
                         break;
                 }

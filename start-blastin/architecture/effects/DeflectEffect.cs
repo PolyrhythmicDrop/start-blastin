@@ -5,6 +5,7 @@ using Interfaces;
 namespace Effects
 {
     [GlobalClass]
+    [Tool]
     public partial class DeflectEffect : Effect
     {
         protected override void OnApplyEffect(GodotObject target, EffectState state)

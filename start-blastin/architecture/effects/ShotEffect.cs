@@ -9,6 +9,7 @@ namespace Effects
     /// Fires one or more shots in a static or dynamic direction.
     /// </summary>
     [GlobalClass]
+    [Tool]
     public partial class ShotEffect : Effect
     {
         protected class ShotEffectState : EffectState

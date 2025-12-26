@@ -153,7 +153,7 @@ namespace Effects
 
         protected void TriggerDamage(IHealthful healthful)
         {
-            if (healthful is Node node && !node.IsQueuedForDeletion())
+            if (healthful is Node node && IsInstanceValid(node))
             {
                 if (_damagePerTick > 0)
                 {

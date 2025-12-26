@@ -18,7 +18,7 @@ metadata/_custom_type_script = "uid://bmeda5w63vsw7"
 [sub_resource type="Resource" id="Resource_rvks2"]
 script = ExtResource("1_w0waf")
 Type = 3
-Value = -0.29999999999999716
+Value = -0.3
 Trigger = 2
 Stacking = true
 MaxStacks = 5

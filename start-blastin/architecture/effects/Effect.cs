@@ -142,15 +142,8 @@ namespace Effects
             get => _enemyTargeting;
             set
             {
-                if (value == true && Target != TargetType.Enemy)
-                {
-                    Target = TargetType.Enemy;
-                }
-                else if (value == false && Target == TargetType.Enemy)
-                {
-                    Target = TargetType.None;
-                }
                 _enemyTargeting = value;
+                OnEnemyTargetingChanged();
             }
         }
 
@@ -189,9 +182,8 @@ namespace Effects
 
         #region Tool Methods
 
-        protected void OnTargetChanged()
+        protected virtual void OnTargetChanged()
         {
-            DebugLogger.LogMessage($"Target changed!");
             if (Target == TargetType.Enemy)
             {
                 _enemyTargeting = true;
@@ -199,6 +191,18 @@ namespace Effects
             else
             {
                 _enemyTargeting = false;
+            }
+        }
+
+        protected virtual void OnEnemyTargetingChanged()
+        {
+            if (EnemyTargeting == true && Target != TargetType.Enemy)
+            {
+                Target = TargetType.Enemy;
+            }
+            else if (EnemyTargeting == false && Target == TargetType.Enemy)
+            {
+                Target = TargetType.None;
             }
         }
 

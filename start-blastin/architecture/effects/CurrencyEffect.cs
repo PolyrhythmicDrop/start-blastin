@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using Entities;
 using Godot;
+using Utility;
 
 namespace Effects
 {
@@ -21,13 +23,37 @@ namespace Effects
         [Export(PropertyHint.Range, "-1000,1000,1,or_greater,or_lesser")]
         public int Flux { get; set; }
 
+        protected override void OnTargetChanged()
+        {
+            if (Target != TargetType.Self && Target != TargetType.Ally)
+            {
+                DebugLogger.LogMessage(
+                    $"Cannot set target for CurrencyEffect to anything other than a Player object!",
+                    true,
+                    true
+                );
+                Target = TargetType.Self;
+            }
+        }
+
+        protected override void OnEnemyTargetingChanged()
+        {
+            if (EnemyTargeting == true)
+            {
+                DebugLogger.LogMessage($"Cannot target enemies with a CurrencyEffect!", true, true);
+                EnemyTargeting = false;
+            }
+        }
+
         protected override void OnApplyEffect(GodotObject target, EffectState state)
         {
-            if (target is Player player)
+            if (target is not Player player)
             {
-                player.Bytes += Bytes;
-                player.Flux += Flux;
+                return;
             }
+
+            player.Bytes += Bytes;
+            player.Flux += Flux;
         }
 
         /// <summary>

@@ -73,7 +73,9 @@ namespace Utility
         /// Get the closest enemy to the <paramref name="origin"/> point.
         /// </summary>
         /// <param name="origin">The point (in global coordinates) to search from.</param>
-        public static EnemyNode GetClosestEnemy(Vector2 origin)
+        /// <param name="inclusive">Whether the search should include the enemy with the same GlobalPosition as the <paramref name="origin"/> position.
+        /// This allows you to search for the closest enemy to another enemy.</param>
+        public static EnemyNode GetClosestEnemy(Vector2 origin, bool inclusive = true)
         {
             EnemyNode closest = null;
             float closestDistance = float.MaxValue;
@@ -89,6 +91,11 @@ namespace Utility
 
                 // Get the distance from the enemy to the origin point.
                 float distanceTo = origin.DistanceSquaredTo(enemy.GlobalPosition);
+
+                if (!inclusive && distanceTo >= 0 && distanceTo <= 10)
+                {
+                    continue;
+                }
 
                 // If the distance to the enemy is less than the current closest distance, set that enemy and distance as the closest.
                 if (distanceTo < closestDistance)

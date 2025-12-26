@@ -6,7 +6,13 @@
 
 [sub_resource type="Resource" id="Resource_ad7uv"]
 script = ExtResource("1_jv5gu")
+Direction = 4
+Trigger = 4
 Target = 2
+EnemyTargeting = true
+EnemyTarget = 3
+Stacking = true
+MaxStacks = -1
 metadata/_custom_type_script = "uid://cp6p50cffraw6"
 
 [resource]

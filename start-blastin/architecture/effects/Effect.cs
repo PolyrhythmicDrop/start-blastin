@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Autoloads;
 using Enemies;
 using Events;
@@ -549,6 +550,12 @@ namespace Effects
         /// <param name="args"></param>
         public void ApplyEffect(object source, EventArgs args)
         {
+            if (_enemyTargeting && EnemyTarget == EnemyTargetSubType.AllEnemies)
+            {
+                ApplyEffectToAllEnemies();
+                return;
+            }
+
             GodotObject target = GetTargetFromArgs(args);
             if (target == null)
             {
@@ -556,6 +563,14 @@ namespace Effects
             }
 
             ApplyEffectToTarget(target);
+        }
+
+        protected void ApplyEffectToAllEnemies()
+        {
+            foreach (EnemyNode enemy in EnemyFinder.GetAllEnemies())
+            {
+                ApplyEffectToTarget(enemy);
+            }
         }
 
         /// <summary>
@@ -583,31 +598,44 @@ namespace Effects
                     _ => null,
                 },
 
-                TargetType.Enemy => args switch
+                TargetType.Enemy => EnemyTarget switch
                 {
-                    // Target the enemy you hit.
-                    EnemyHitEventArgs enemyHit => enemyHit.Enemy,
-                    // Target the nearest enemy to the enemy killed
-                    EnemyKilledEventArgs enemyKilled => EnemyFinder.GetClosestEnemy(
-                        enemyKilled.KillPosition
-                    ),
-                    // Target the enemy that shot you. If the projectile was not owned by an enemy, set target to the nearest enemy to the player. If the enemy that shot the player is dead (and thus null), target the closest enemy to the player.
-                    PlayerHitByProjectileEventArgs playerHitByProj => playerHitByProj
-                        .Projectile
-                        .SourceWeapon
-                        .EnemyOwned
-                        ? (EnemyNode)playerHitByProj.Projectile.SourceWeapon.WeaponOwner
-                            ?? EnemyFinder.GetClosestEnemy(
-                                playerService.GetPlayer(playerHitByProj.PlayerId).GlobalPosition
-                            )
-                        : EnemyFinder.GetClosestEnemy(
-                            playerService.GetPlayer(playerHitByProj.PlayerId).GlobalPosition
+                    EnemyTargetSubType.SingleEnemy or EnemyTargetSubType.ClosestEnemy => args switch
+                    {
+                        // Target the enemy you hit.
+                        EnemyHitEventArgs enemyHit
+                            when EnemyTarget == EnemyTargetSubType.SingleEnemy => enemyHit.Enemy,
+                        // Target the closest enemy to the enemy you hit. If there is no other enemy, return the enemy you hit.
+                        EnemyHitEventArgs enemyHit
+                            when EnemyTarget == EnemyTargetSubType.ClosestEnemy =>
+                            EnemyFinder.GetClosestEnemy(enemyHit.Enemy.GlobalPosition, false)
+                                ?? enemyHit.Enemy,
+                        // Target the nearest enemy to the enemy killed
+                        EnemyKilledEventArgs enemyKilled => EnemyFinder.GetClosestEnemy(
+                            enemyKilled.KillPosition
                         ),
-                    // Target the nearest enemy to the player
-                    PlayerIdEventArgs playerIdArgs => EnemyFinder.GetClosestEnemy(
-                        playerService.GetPlayer(playerIdArgs.PlayerId).GlobalPosition
-                    ),
-                    _ => null,
+                        // Target the enemy that shot you. If the projectile was not owned by an enemy, set target to the nearest enemy to the player. If the enemy that shot the player is dead (and thus null), target the closest enemy to the player.
+                        PlayerHitByProjectileEventArgs playerHitByProj => playerHitByProj
+                            .Projectile
+                            .SourceWeapon
+                            .EnemyOwned
+                            ? (EnemyNode)playerHitByProj.Projectile.SourceWeapon.WeaponOwner
+                                ?? EnemyFinder.GetClosestEnemy(
+                                    playerService.GetPlayer(playerHitByProj.PlayerId).GlobalPosition
+                                )
+                            : EnemyFinder.GetClosestEnemy(
+                                playerService.GetPlayer(playerHitByProj.PlayerId).GlobalPosition
+                            ),
+                        // Target the nearest enemy to the player
+                        PlayerIdEventArgs playerIdArgs => EnemyFinder.GetClosestEnemy(
+                            playerService.GetPlayer(playerIdArgs.PlayerId).GlobalPosition
+                        ),
+                        _ => null,
+                    },
+                    // EnemyTargetSubType.AllEnemies => EnemyFinder.GetAllEnemies().FirstOrDefault(),
+                    EnemyTargetSubType.LeastHealthEnemy => EnemyFinder.GetLeastHealthyEnemy(),
+                    EnemyTargetSubType.StrongestEnemy => EnemyFinder.GetStrongestEnemy(),
+                    _ => EnemyFinder.GetAllEnemies().FirstOrDefault(),
                 },
                 _ => null,
             };

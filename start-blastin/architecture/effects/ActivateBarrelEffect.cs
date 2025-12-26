@@ -17,6 +17,7 @@ namespace Effects
     /// The entity to barrel-ify must have barrels pre-configured in its scene.
     /// To add extra barrels to a weapon or to fire extra shots from the same barrel, use other effects.
     /// </remarks>
+    [Tool]
     [GlobalClass]
     public partial class ActivateBarrelEffect : Effect
     {

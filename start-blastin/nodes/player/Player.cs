@@ -5,10 +5,12 @@ using Autoloads;
 using Effects;
 using Enemies;
 using Events;
+using Factories;
 using Godot;
 using Interfaces;
 using Items;
 using PlayerComponents;
+using Projectiles;
 using Services;
 using Stats;
 using Utility;
@@ -23,7 +25,8 @@ namespace Entities
             IHealthful,
             IVelocityProvider,
             IStats,
-            IWeaponOwner
+            IWeaponOwner,
+            IDeflector
     {
         private int _playerId = 1;
 
@@ -75,6 +78,9 @@ namespace Entities
         private bool _isPhasing = false;
         private bool _phaseReady => _movementComponent.PhaseReady;
         private bool _isDying = false;
+        private bool _deflectEnabled;
+
+        public bool DeflectActive { get; set; }
 
         #endregion
 
@@ -92,8 +98,16 @@ namespace Entities
             get => _currentHealth;
             private set
             {
-                _currentHealth = MathF.Round(value, 2);
-                EventBus.Instance.RaisePlayerCurrentHealthChanged(_playerId, _currentHealth);
+                if (_currentHealth != value)
+                {
+                    float diff = value - _currentHealth;
+                    _currentHealth = MathF.Round(value, 2);
+                    EventBus.Instance.RaisePlayerCurrentHealthChanged(
+                        _playerId,
+                        _currentHealth,
+                        diff
+                    );
+                }
             }
         }
 
@@ -415,6 +429,12 @@ namespace Entities
             _animationComponent.PlayDamageAnimation();
             CurrentHealth -= damage;
 
+            IndicatorFactory.CreateTextIndicator(
+                (MathF.Round(damage, 1) * -1).ToString(),
+                new Vector2(GlobalPosition.X + 15, GlobalPosition.Y),
+                parent: this
+            );
+
             if (_currentHealth <= 0)
             {
                 CurrentHealth = 0;
@@ -429,7 +449,11 @@ namespace Entities
             {
                 return;
             }
-
+            IndicatorFactory.CreateTextIndicator(
+                MathF.Round(healAmount, 1).ToString(),
+                new Vector2(GlobalPosition.X + 15, GlobalPosition.Y),
+                parent: this
+            );
             CurrentHealth = MathF.Min(_currentHealth + healAmount, _maxHealth);
         }
 
@@ -594,6 +618,7 @@ namespace Entities
             if (_modifiers != null)
             {
                 _modifiers.AddRange(modifiers);
+                ApplyEquipStatEffects();
             }
         }
 

@@ -67,7 +67,7 @@ public partial class CurrencyPanel : PanelContainer, IListener
             // Spawn an indicator
             Vector2 centerPos = _fluxLabel.GlobalPosition + (_fluxLabel.Size / 2);
             TextIndicator indicator = IndicatorFactory.CreateTextIndicator(
-                fluxChange,
+                fluxChange.ToString(),
                 globalPosition: centerPos
             );
             UiLayer ui = UiLayer.GetUiLayer(_playerId);
@@ -105,7 +105,10 @@ public partial class CurrencyPanel : PanelContainer, IListener
         {
             // Spawn an indicator
             Vector2 centerPos = _bytesLabel.GlobalPosition + (_bytesLabel.Size / 2);
-            TextIndicator indicator = IndicatorFactory.CreateTextIndicator(bytesChange, centerPos);
+            TextIndicator indicator = IndicatorFactory.CreateTextIndicator(
+                bytesChange.ToString(),
+                centerPos
+            );
             UiLayer ui = UiLayer.GetUiLayer(_playerId);
             ui.AddChild(indicator);
             // Set the label text

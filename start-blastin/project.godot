@@ -208,6 +208,7 @@ debug-heal-player={
 2d_physics/layer_3="Enemies"
 2d_physics/layer_4="Projectiles-Player"
 2d_physics/layer_5="Projectiles-Enemy"
+2d_physics/layer_6="Auras"
 
 [rendering]
 

@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using Enemies;
 using Entities;
+using Events;
 using Godot;
+using Interfaces;
 using Projectiles;
 
 [GlobalClass]
@@ -25,10 +27,7 @@ public partial class Missile : Projectile
         base._Ready();
         _sprite = GetNode<AnimatedSprite2D>("%Sprite");
         _targetingArea = GetNode<Area2D>("%TargetingArea");
-        _nullTargetCallable = Callable.From(() =>
-        {
-            _currentTarget = null;
-        });
+        _nullTargetCallable = Callable.From(RemoveCurrentTarget);
 
         ConnectSignals();
     }
@@ -47,7 +46,7 @@ public partial class Missile : Projectile
 
     public override void _Process(double delta) { }
 
-    protected override Vector2 SetTrajectory(double delta)
+    protected override Vector2 GetTrajectory(double delta)
     {
         if (_currentTarget != null)
         {
@@ -97,7 +96,9 @@ public partial class Missile : Projectile
     {
         if (_currentTarget == null)
         {
-            if (_sourceWeapon.EnemyOwned)
+            // if (_sourceWeapon.EnemyOwned)
+            // If this is an enemy projectile...
+            if (GetCollisionLayerValue(5) && !GetCollisionLayerValue(4))
             {
                 if (body is Player player && _currentTarget != player)
                 {
@@ -134,32 +135,41 @@ public partial class Missile : Projectile
         }
         else
         {
-            // If the current target left the area, reset the current target
-            _currentTarget = null;
+            RemoveCurrentTarget();
+        }
+    }
 
-            // Find if there are other overlapping bodies in the area.
-            if (_targetingArea.HasOverlappingBodies())
+    public void RemoveCurrentTarget()
+    {
+        _currentTarget = null;
+        FindNewTarget();
+    }
+
+    public void FindNewTarget()
+    {
+        // Find if there are other overlapping bodies in the area.
+        if (_targetingArea.HasOverlappingBodies())
+        {
+            // Compile the bodies into a searchable list
+            List<Node2D> bodies = [.. _targetingArea.GetOverlappingBodies()];
+
+            // If the missile was fired from an enemy, see if any of the bodies are a player, then track that player.
+            // if (_sourceWeapon.EnemyOwned)
+            if (_faction == Faction.Enemies || _faction == Faction.All)
             {
-                // Compile the bodies into a searchable list
-                List<Node2D> bodies = [.. _targetingArea.GetOverlappingBodies()];
-
-                // If the missile was fired from an enemy, see if any of the bodies are a player, then track that player.
-                if (_sourceWeapon.EnemyOwned)
+                Node2D found = bodies.Find(body => body is Player);
+                if (found != null)
                 {
-                    Node2D found = bodies.Find(body => body is Player);
-                    if (found != null)
-                    {
-                        SetCurrentTarget((Player)found);
-                    }
+                    SetCurrentTarget((Player)found);
                 }
-                // If the missile is the player's, search for other enemies in the area.
-                else
+            }
+            // If the missile is the player's, search for other enemies in the area.
+            else if (_faction == Faction.Players || _faction == Faction.All)
+            {
+                Node2D found = bodies.Find(body => body is EnemyNode);
+                if (found != null)
                 {
-                    Node2D found = bodies.Find(body => body is EnemyNode);
-                    if (found != null)
-                    {
-                        SetCurrentTarget((EnemyNode)found);
-                    }
+                    SetCurrentTarget((EnemyNode)found);
                 }
             }
         }
@@ -173,6 +183,12 @@ public partial class Missile : Projectile
             GlobalRotation = _sourceWeapon.GlobalRotation;
         }
         base.ToggleActive(active);
+    }
+
+    public override void Deflect(IDeflector deflector, CollisionEventArgs args = null)
+    {
+        base.Deflect(deflector, args);
+        RemoveCurrentTarget();
     }
 
     public override void _ExitTree()

@@ -9,6 +9,7 @@ using Utility;
 namespace Effects
 {
     [GlobalClass]
+    [Tool]
     public partial class StatEffect : Effect
     {
         [Export]

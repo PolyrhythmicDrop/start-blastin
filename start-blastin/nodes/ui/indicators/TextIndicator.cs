@@ -1,13 +1,16 @@
 using System;
+using System.Text;
+using System.Text.RegularExpressions;
 using Autoloads;
 using DataStructures;
 using Godot;
+using Utility;
 
 [GlobalClass]
 public partial class TextIndicator : Node2D
 {
     private RichTextLabel _label;
-    private float _value;
+    private string _value;
     private ColorRange _colors;
     private Tween _tween;
     private int _fontSize;
@@ -20,7 +23,7 @@ public partial class TextIndicator : Node2D
     }
 
     [Export]
-    public float Value
+    public string Value
     {
         get => _value;
         set => _value = value;
@@ -53,23 +56,51 @@ public partial class TextIndicator : Node2D
 
     private void SetLabel()
     {
-        char sign;
-        if (_value >= 0)
+        if (ExtractAndFormatNumberString(_value, out string output))
         {
-            sign = '+';
-            SetLabelColor(_colors.Full);
+            if (output.Contains('-'))
+            {
+                SetLabelColor(_colors.Low);
+            }
+            else if (output.Contains('+'))
+            {
+                SetLabelColor(_colors.Full);
+            }
+            else
+            {
+                SetLabelColor(_colors.Mid);
+            }
+        }
+        _label.Text = $"{output}";
+    }
+
+    private bool ExtractAndFormatNumberString(string inputStr, out string outputStr)
+    {
+        Match match = Regex.Match(inputStr, @"-?\d+\.?\d*");
+        if (match.Success && float.TryParse(match.Value, out float value))
+        {
+            char sign;
+            if (value >= 0)
+            {
+                sign = '+';
+            }
+            else
+            {
+                sign = '-';
+            }
+
+            outputStr = inputStr.Replace(match.Value, $"{sign}{Math.Abs(value)}");
+            return true;
         }
         else
         {
-            sign = '-';
-            SetLabelColor(_colors.Low);
+            outputStr = inputStr;
+            return false;
         }
-        _label.Text = $"{sign}{Math.Abs(_value)}";
     }
 
     private void Animate()
     {
-        // float finalYPos = GlobalPosition.Y - GD.RandRange(20, 40);
         float finalYPos = GlobalPosition.Y - (float)RNG.GetRandomDouble(20, 40);
         _tween = CreateTween();
         _tween

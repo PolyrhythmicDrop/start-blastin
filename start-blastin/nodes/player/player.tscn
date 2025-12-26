@@ -18,9 +18,8 @@ shader_parameter/current_frame = 0
 shader_parameter/mix_ratio = 0.0
 shader_parameter/color_array = PackedColorArray(1, 0.60784316, 0.7137255, 1, 1, 0.32941177, 0.4392157, 1, 0.74509805, 0.60784316, 1, 1, 0.34509805, 0.29803923, 0.5176471, 1, 0.14509805, 0.49019608, 0.60784316, 1, 0.14509805, 0.7372549, 0.7764706, 1)
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fn53c"]
-radius = 25.0
-height = 52.0
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_xl06i"]
+points = PackedVector2Array(29, -5.9999986, 29, 6.0000014, -10, 30, -25.000002, 29.999998, -25, 0, -24.999998, -30.000002, -10, -30)
 
 [node name="Player" type="CharacterBody2D" groups=["players"]]
 rotation = -1.5707964
@@ -81,4 +80,4 @@ Direction = 4
 
 [node name="HitBox" type="CollisionShape2D" parent="."]
 unique_name_in_owner = true
-shape = SubResource("CapsuleShape2D_fn53c")
+shape = SubResource("ConvexPolygonShape2D_xl06i")

@@ -6,6 +6,7 @@ using Godot;
 using Interfaces;
 using Services;
 using Utility;
+using WaveManagement;
 
 namespace UI.HUD
 {
@@ -66,7 +67,7 @@ namespace UI.HUD
         private void OnPlayerCurrentHealthChanged(
             object source,
             PlayerCurrentHealthChangedEventArgs args
-        ) => UpdateCurrentHealth(args.PlayerId, args.CurrentHealth);
+        ) => UpdateCurrentHealth(args.PlayerId, args.CurrentHealth, args.Difference);
 
         private void OnPlayerPhaseCooldownChanged(
             object source,
@@ -94,11 +95,11 @@ namespace UI.HUD
         /// </summary>
         /// <param name="playerId">The ID of the player, matched against this panel's PlayerID.</param>
         /// <param name="currentHealth">The new current health value for the player.</param>
-        private void UpdateCurrentHealth(int playerId, float currentHealth)
+        private void UpdateCurrentHealth(int playerId, float currentHealth, float difference)
         {
             if (playerId == _playerId)
             {
-                _healthBar.SetCurrentHealth(currentHealth);
+                _healthBar.SetCurrentHealth(currentHealth, difference);
             }
         }
 

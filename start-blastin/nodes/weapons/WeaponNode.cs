@@ -208,11 +208,25 @@ namespace Weapons
 
         public virtual void OnProjectileCollision(object source, CollisionEventArgs args)
         {
+            if (source is not Projectile sourceProj)
+            {
+                return;
+            }
+
             int playerId = -1;
             if (_owner is Player player)
             {
                 playerId = player.PlayerId;
             }
+
+            // If the collidor has deflection active, deflect the projectile and return
+            if (args.Collider is IDeflector deflector && deflector.DeflectActive)
+            {
+                // Deflect and then return.
+                sourceProj.Deflect(deflector, args);
+                return;
+            }
+
             // IHealthful objects take damage.
             if (args.Collider is IHealthful healthful)
             {
@@ -220,7 +234,11 @@ namespace Weapons
                 {
                     if (!healthfulPlayer.Dodging)
                     {
-                        healthfulPlayer.TakeDamage(_stats.Damage, playerId);
+                        healthfulPlayer.TakeDamage(_stats.Damage);
+                        EventBus.Instance.RaisePlayerHitByProjectile(
+                            healthfulPlayer.PlayerId,
+                            sourceProj
+                        );
                     }
                     else
                     {
@@ -242,10 +260,7 @@ namespace Weapons
             }
 
             // Deactivate the source projectile on collision.
-            if (source is Projectile sourceProj)
-            {
-                sourceProj.ToggleActive(false);
-            }
+            sourceProj.ToggleActive(false);
         }
 
         /// <summary>
@@ -255,8 +270,6 @@ namespace Weapons
         public virtual void Fire()
         {
             // Fire from all active barrels.
-            // TODO: Maybe add extra methods to fire from particular barrels?
-
             foreach (Barrel barrel in Barrels)
             {
                 FireSingleBarrel(barrel);
@@ -278,7 +291,7 @@ namespace Weapons
 
                 if (_velocityProvider != null)
                 {
-                    projectile.AddSourceVelocity();
+                    projectile.AddSourceVelocity(_velocityProvider.GetCurrentVelocity());
                 }
             }
         }

@@ -7,6 +7,7 @@ using Factories;
 using Godot;
 using Interfaces;
 using Microsoft.VisualBasic;
+using Projectiles;
 using Stats;
 using Utility;
 using WaveManagement;
@@ -22,7 +23,8 @@ namespace Enemies
             IVelocityProvider,
             IWeaponOwner,
             IStats,
-            IListener
+            IListener,
+            IDeflector
     {
         protected StatManager _stats;
 
@@ -64,7 +66,12 @@ namespace Enemies
 
         #endregion
 
+        #region State
         protected bool _alive = true;
+
+        public bool DeflectActive { get; set; }
+
+        #endregion
 
         public WeaponNode Weapon => _weapon;
         public EntityPath Path => _path;
@@ -290,13 +297,21 @@ namespace Enemies
         /// <param name="playerId">If a player caused the damage, the <see cref="Player.PlayerId"/> of the damaging player.</param>
         public void TakeDamage(float damage, int? playerId = null)
         {
-            PlayDamageAnimation();
-            _currentHealth -= damage;
-
-            if (_currentHealth <= 0)
+            if (_alive)
             {
-                _currentHealth = 0;
-                Die(playerId);
+                PlayDamageAnimation();
+                IndicatorFactory.CreateTextIndicator(
+                    (MathF.Round(damage, 1) * -1).ToString(),
+                    GlobalPosition,
+                    parent: this
+                );
+                _currentHealth -= damage;
+
+                if (_currentHealth <= 0)
+                {
+                    _currentHealth = 0;
+                    Die(playerId);
+                }
             }
         }
 
@@ -317,9 +332,15 @@ namespace Enemies
 
         public virtual async void Die(int? playerId = null)
         {
+            _alive = false;
             if (playerId != null)
             {
-                EnemyKilledEventArgs args = new((int)playerId, _fluxReward, _byteReward);
+                EnemyKilledEventArgs args = new(
+                    (int)playerId,
+                    _fluxReward,
+                    _byteReward,
+                    GlobalPosition
+                );
                 EventBus.Instance.RaiseEnemyKilled(args);
             }
             // Queue free after all child projectiles die
@@ -376,6 +397,7 @@ namespace Enemies
             DisconnectSignals();
             base._ExitTree();
         }
+
         #endregion
     }
 }

@@ -1,15 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.Marshalling;
-using System.Runtime.InteropServices.Swift;
-using System.Threading.Tasks;
+using System.Linq;
 using Autoloads;
-using Entities;
+using Enemies;
 using Events;
 using Godot;
-using Interfaces;
 using Services;
-using Stats;
 using Utility;
 
 namespace Effects
@@ -21,6 +17,15 @@ namespace Effects
         Enemy,
         Chain,
         None,
+    }
+
+    public enum EnemyTargetSubType
+    {
+        SingleEnemy,
+        AllEnemies,
+        ClosestEnemy,
+        LeastHealthEnemy,
+        StrongestEnemy,
     }
 
     public enum Operation
@@ -36,8 +41,13 @@ namespace Effects
         Chain,
         EnemyKilled,
         EnemyHit,
+        PlayerHitByProjectile,
+        WhilePhasing,
+        PhaseStart,
+        PhaseEnd,
     }
 
+    [Tool]
     [GlobalClass]
     public abstract partial class Effect : Resource
     {
@@ -63,8 +73,6 @@ namespace Effects
                 get => _currentStacks;
                 set => _currentStacks = Math.Min(_parent._maxStacks, value);
             }
-
-            // public Timer Timer { get; set; }
 
             /// <summary>
             /// List of Timers for each stack of the effect. Each stack is timed independently.
@@ -107,11 +115,40 @@ namespace Effects
         protected bool _timed = false;
         protected float _time = 0.1f;
 
-        [Export]
-        public TargetType Target { get; set; }
+        // ~~ Targeting ~~
+
+        protected TargetType _targetType;
+        protected bool _enemyTargeting = false;
 
         [Export]
         public Trigger Trigger { get; set; }
+
+        [ExportGroup("Targeting")]
+        [Export]
+        public TargetType Target
+        {
+            get => _targetType;
+            set
+            {
+                _targetType = value;
+                OnTargetChanged();
+            }
+        }
+
+        [ExportSubgroup("Enemy Targeting")]
+        [Export(PropertyHint.GroupEnable)]
+        public bool EnemyTargeting
+        {
+            get => _enemyTargeting;
+            set
+            {
+                _enemyTargeting = value;
+                OnEnemyTargetingChanged();
+            }
+        }
+
+        [Export]
+        public EnemyTargetSubType EnemyTarget { get; set; } = EnemyTargetSubType.SingleEnemy;
 
         [ExportGroup("Stacking")]
         [Export(PropertyHint.GroupEnable)]
@@ -143,13 +180,42 @@ namespace Effects
             set { _time = Math.Max(0.1f, value); }
         }
 
+        #region Tool Methods
+
+        protected virtual void OnTargetChanged()
+        {
+            if (Target == TargetType.Enemy)
+            {
+                _enemyTargeting = true;
+            }
+            else
+            {
+                _enemyTargeting = false;
+            }
+        }
+
+        protected virtual void OnEnemyTargetingChanged()
+        {
+            if (EnemyTargeting == true && Target != TargetType.Enemy)
+            {
+                Target = TargetType.Enemy;
+            }
+            else if (EnemyTargeting == false && Target == TargetType.Enemy)
+            {
+                Target = TargetType.None;
+            }
+        }
+
+        #endregion
+
         #region Enable / Disable
 
         /// <summary>
         /// Enables the effect based on the selected Target and Trigger.
         /// </summary>
         /// <remarks>
-        /// Does *not* apply the effect unless the Trigger is set to Equip. Application is still done via the selected Trigger.
+        /// Does *not* apply the effect unless the Trigger is set to Equip or Chain.
+        /// Otherwise, application is still done via the selected Trigger.
         /// </remarks>
         public virtual void Enable(GodotObject target = null)
         {
@@ -185,12 +251,6 @@ namespace Effects
                         }
                         break;
                     }
-                    case Trigger.EnemyHit:
-                        EventBus.Instance.EnemyHit += ApplyEffect;
-                        break;
-                    case Trigger.EnemyKilled:
-                        EventBus.Instance.EnemyKilled += ApplyEffect;
-                        break;
                     // Triggers immediately if its parent chain effect is triggered.
                     case Trigger.Chain:
                         if (target != null)
@@ -203,6 +263,22 @@ namespace Effects
                                 $"Parent chain effect must supply a target to nested effects with Trigger set to Chain!"
                             );
                         }
+                        break;
+                    case Trigger.EnemyKilled:
+                        EventBus.Instance.EnemyKilled += ApplyEffect;
+                        break;
+                    case Trigger.EnemyHit:
+                        EventBus.Instance.EnemyHit += ApplyEffect;
+                        break;
+                    case Trigger.PlayerHitByProjectile:
+                        EventBus.Instance.PlayerHitByProjectile += ApplyEffect;
+                        break;
+                    case Trigger.WhilePhasing:
+                    case Trigger.PhaseStart:
+                        EventBus.Instance.PhaseStarted += ApplyEffect;
+                        break;
+                    case Trigger.PhaseEnd:
+                        EventBus.Instance.PhaseEnded += ApplyEffect;
                         break;
                 }
             }
@@ -231,14 +307,6 @@ namespace Effects
                         }
                         break;
                     }
-                    case Trigger.EnemyHit:
-                        EventBus.Instance.EnemyHit -= ApplyEffect;
-                        ClearEffectStatesFromAllTargets();
-                        break;
-                    case Trigger.EnemyKilled:
-                        EventBus.Instance.EnemyKilled -= ApplyEffect;
-                        ClearEffectStatesFromAllTargets();
-                        break;
                     case Trigger.Chain:
                         if (target != null)
                         {
@@ -248,6 +316,27 @@ namespace Effects
                         {
                             ClearEffectStatesFromAllTargets();
                         }
+                        break;
+                    case Trigger.EnemyKilled:
+                        EventBus.Instance.EnemyKilled -= ApplyEffect;
+                        ClearEffectStatesFromAllTargets();
+                        break;
+                    case Trigger.EnemyHit:
+                        EventBus.Instance.EnemyHit -= ApplyEffect;
+                        ClearEffectStatesFromAllTargets();
+                        break;
+                    case Trigger.PlayerHitByProjectile:
+                        EventBus.Instance.PlayerHitByProjectile -= ApplyEffect;
+                        ClearEffectStatesFromAllTargets();
+                        break;
+                    case Trigger.WhilePhasing:
+                    case Trigger.PhaseStart:
+                        EventBus.Instance.PhaseStarted -= ApplyEffect;
+                        ClearEffectStatesFromAllTargets();
+                        break;
+                    case Trigger.PhaseEnd:
+                        EventBus.Instance.PhaseEnded -= ApplyEffect;
+                        ClearEffectStatesFromAllTargets();
                         break;
                 }
             }
@@ -338,7 +427,6 @@ namespace Effects
             }
 
             // Clean up the state's timer connections
-            // if (state.Timer != null && state._onTimerTimeout != null)
             if (state.Timers != null)
             {
                 foreach (Timer fxTimer in state.Timers)
@@ -358,7 +446,11 @@ namespace Effects
             Action callback
         )
         {
-            if (timer != null && callback != null)
+            if (
+                timer != null
+                && callback != null
+                && timer.IsConnected(Timer.SignalName.Timeout, Callable.From(callback))
+            )
             {
                 timer.Timeout -= callback;
             }
@@ -462,12 +554,27 @@ namespace Effects
         /// <param name="args"></param>
         public void ApplyEffect(object source, EventArgs args)
         {
+            if (_enemyTargeting && EnemyTarget == EnemyTargetSubType.AllEnemies)
+            {
+                ApplyEffectToAllEnemies();
+                return;
+            }
+
             GodotObject target = GetTargetFromArgs(args);
             if (target == null)
             {
                 return;
             }
+
             ApplyEffectToTarget(target);
+        }
+
+        protected void ApplyEffectToAllEnemies()
+        {
+            foreach (EnemyNode enemy in EnemyFinder.GetAllEnemies())
+            {
+                ApplyEffectToTarget(enemy);
+            }
         }
 
         /// <summary>
@@ -486,13 +593,53 @@ namespace Effects
                     EnemyKilledEventArgs enemyKilled => playerService.GetPlayer(
                         enemyKilled.PlayerId
                     ),
+                    PlayerHitByProjectileEventArgs playerHitByProj => playerService.GetPlayer(
+                        playerHitByProj.PlayerId
+                    ),
+                    PlayerIdEventArgs playerIdArgs => playerService.GetPlayer(
+                        playerIdArgs.PlayerId
+                    ),
                     _ => null,
                 },
 
-                TargetType.Enemy => args switch
+                TargetType.Enemy => EnemyTarget switch
                 {
-                    EnemyHitEventArgs enemyHit => enemyHit.Enemy,
-                    _ => null,
+                    EnemyTargetSubType.SingleEnemy or EnemyTargetSubType.ClosestEnemy => args switch
+                    {
+                        // Target the enemy you hit.
+                        EnemyHitEventArgs enemyHit
+                            when EnemyTarget == EnemyTargetSubType.SingleEnemy => enemyHit.Enemy,
+                        // Target the closest enemy to the enemy you hit. If there is no other enemy, return the enemy you hit.
+                        EnemyHitEventArgs enemyHit
+                            when EnemyTarget == EnemyTargetSubType.ClosestEnemy =>
+                            EnemyFinder.GetClosestEnemy(enemyHit.Enemy.GlobalPosition, false)
+                                ?? enemyHit.Enemy,
+                        // Target the nearest enemy to the enemy killed
+                        EnemyKilledEventArgs enemyKilled => EnemyFinder.GetClosestEnemy(
+                            enemyKilled.KillPosition
+                        ),
+                        // Target the enemy that shot you. If the projectile was not owned by an enemy, set target to the nearest enemy to the player. If the enemy that shot the player is dead (and thus null), target the closest enemy to the player.
+                        PlayerHitByProjectileEventArgs playerHitByProj => playerHitByProj
+                            .Projectile
+                            .SourceWeapon
+                            .EnemyOwned
+                            ? (EnemyNode)playerHitByProj.Projectile.SourceWeapon.WeaponOwner
+                                ?? EnemyFinder.GetClosestEnemy(
+                                    playerService.GetPlayer(playerHitByProj.PlayerId).GlobalPosition
+                                )
+                            : EnemyFinder.GetClosestEnemy(
+                                playerService.GetPlayer(playerHitByProj.PlayerId).GlobalPosition
+                            ),
+                        // Target the nearest enemy to the player
+                        PlayerIdEventArgs playerIdArgs => EnemyFinder.GetClosestEnemy(
+                            playerService.GetPlayer(playerIdArgs.PlayerId).GlobalPosition
+                        ),
+                        _ => null,
+                    },
+                    // EnemyTargetSubType.AllEnemies => EnemyFinder.GetAllEnemies().FirstOrDefault(),
+                    EnemyTargetSubType.LeastHealthEnemy => EnemyFinder.GetLeastHealthyEnemy(),
+                    EnemyTargetSubType.StrongestEnemy => EnemyFinder.GetStrongestEnemy(),
+                    _ => EnemyFinder.GetAllEnemies().FirstOrDefault(),
                 },
                 _ => null,
             };
@@ -532,6 +679,15 @@ namespace Effects
             if (!CanApplyEffect(state))
             {
                 return;
+            }
+
+            // If the effect uses the WhilePhasing trigger, also connect to the PhaseEnded event
+            if (Trigger == Trigger.WhilePhasing)
+            {
+                EventBus.Instance.PhaseEnded += (source, args) =>
+                {
+                    RemoveEffectFromTarget(target);
+                };
             }
 
             // Perform class-specific effect application logic
@@ -629,7 +785,7 @@ namespace Effects
                 {
                     throw new ArgumentException(
                         $"{target} not found in target states dictionary for {ResourceName}! Cannot remove non-existent effect.",
-                        paramName: "target"
+                        paramName: nameof(target)
                     );
                 }
             }

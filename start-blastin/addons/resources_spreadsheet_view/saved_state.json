@@ -11,7 +11,32 @@
         "visibility": 0.0
       }
     },
-    "res://resources/curves/": {
+    "res://resources/colors/": {
+      "metadata/_custom_type_script": {
+        "visibility": 0.0
+      },
+      "resource_local_to_scene": {
+        "visibility": 0.0
+      },
+      "resource_name": {
+        "visibility": 0.0
+      }
+    },
+    "res://resources/items/": {
+      "metadata/_custom_type_script": {
+        "visibility": 0.0
+      },
+      "resource_local_to_scene": {
+        "visibility": 0.0
+      },
+      "resource_name": {
+        "visibility": 1.0
+      },
+      "resource_path": {
+        "visibility": 0.0
+      }
+    },
+    "res://resources/items/modifiers/": {
       "metadata/_custom_type_script": {
         "visibility": 0.0
       },
@@ -24,8 +49,10 @@
     }
   },
   "recent_paths": [
-    "res://resources/curves/",
-    "res://resources/"
+    "res://resources/colors/",
+    "res://resources/",
+    "res://resources/items/modifiers/",
+    "res://resources/items/"
   ],
   "table_functions": {
     "filter": [

@@ -149,7 +149,7 @@ region = Rect2(128, 256, 128, 128)
 atlas = ExtResource("4_k5dt5")
 region = Rect2(256, 256, 128, 128)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_tff5w"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_eyaxp"]
 animations = [{
 "frames": [{
 "duration": 1.0,
@@ -267,14 +267,14 @@ metadata/_aseprite_wizard_source_file_hash_ = "552ca6811f507bf31ca8961fec08bd78"
 unique_name_in_owner = true
 visible = false
 texture_filter = 1
-sprite_frames = SubResource("SpriteFrames_tff5w")
-frame = 2
-frame_progress = 0.9902605
+sprite_frames = SubResource("SpriteFrames_eyaxp")
 metadata/_aseprite_wizard_interface_config_ = {
 "animation_section": true,
 "layer_section": true,
 "output_section": true,
-"pending_changes": {}
+"pending_changes": {
+"source": "res://assets/enemies/drone/drone-destruction.aseprite"
+}
 }
 metadata/_aseprite_wizard_config_ = {
 "embed_tex": false,

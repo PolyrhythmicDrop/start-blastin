@@ -4,6 +4,7 @@ using Enemies;
 using Events;
 using Godot;
 using Items;
+using Projectiles;
 using UI.HUD;
 
 namespace Autoloads
@@ -51,6 +52,10 @@ namespace Autoloads
 
         public event EventHandler<PlayerCurrentHealthChangedEventArgs> PlayerCurrentHealthChanged;
 
+        public event EventHandler<PlayerIdEventArgs> PhaseStarted;
+
+        public event EventHandler<PlayerIdEventArgs> PhaseEnded;
+
         public event EventHandler<PlayerPhaseTimeLeftEventArgs> PlayerPhaseTimeLeft;
 
         private PlayerPhaseTimeLeftEventArgs _phaseTimeLeftArgs = new();
@@ -66,6 +71,12 @@ namespace Autoloads
         public event EventHandler<PlayerPluginEquippedEventArgs> PlayerPluginEquipped;
 
         public event EventHandler<PlayerItemRemovedEventArgs> PlayerItemRemoved;
+
+        #endregion
+
+        #region Player Actions
+
+        public event EventHandler<PlayerHitByProjectileEventArgs> PlayerHitByProjectile;
 
         #endregion
 
@@ -159,10 +170,22 @@ namespace Autoloads
             PlayerMaxHealthChanged?.Invoke(this, args);
         }
 
-        public void RaisePlayerCurrentHealthChanged(int playerId, float currentHealth)
+        public void RaisePlayerCurrentHealthChanged(int playerId, float currentHealth, float diff)
         {
-            PlayerCurrentHealthChangedEventArgs args = new(playerId, currentHealth);
+            PlayerCurrentHealthChangedEventArgs args = new(playerId, currentHealth, diff);
             PlayerCurrentHealthChanged?.Invoke(this, args);
+        }
+
+        public void RaisePhaseStarted(int playerId)
+        {
+            PlayerIdEventArgs args = new(playerId);
+            PhaseStarted?.Invoke(this, args);
+        }
+
+        public void RaisePhaseEnded(int playerId)
+        {
+            PlayerIdEventArgs args = new(playerId);
+            PhaseEnded?.Invoke(this, args);
         }
 
         public void RaisePlayerPhaseTimeLeft(int playerId, double timeLeft)
@@ -218,6 +241,12 @@ namespace Autoloads
         {
             PlayerItemRemovedEventArgs args = new(playerId, item);
             PlayerItemRemoved?.Invoke(this, args);
+        }
+
+        public void RaisePlayerHitByProjectile(int playerId, Projectile projectile)
+        {
+            PlayerHitByProjectileEventArgs args = new(playerId, projectile);
+            PlayerHitByProjectile?.Invoke(this, args);
         }
 
         public void RaiseEnemyKilled(EnemyKilledEventArgs args)

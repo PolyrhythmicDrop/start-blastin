@@ -1,12 +1,17 @@
-[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=2 format=3 uid="uid://dlqifjude3djo"]
+[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=5 format=3 uid="uid://dlqifjude3djo"]
 
+[ext_resource type="Resource" uid="uid://chgedvgubdd22" path="res://resources/wave-scalers/spawner-scalers/default-spawner-scaler.tres" id="1_4v8v2"]
 [ext_resource type="Script" uid="uid://b40t8najievo0" path="res://nodes/wave-management/wave-scalers/SpawnerFormationScaler.cs" id="1_8grec"]
+[ext_resource type="Script" uid="uid://c2ao0simwvpmt" path="res://nodes/wave-management/wave-scalers/SpawnerConfig.cs" id="2_rnipl"]
+
+[sub_resource type="Resource" id="Resource_dbncf"]
+script = ExtResource("2_rnipl")
+ScalersGD = Array[Object]([ExtResource("1_4v8v2")])
+metadata/_custom_type_script = "uid://c2ao0simwvpmt"
 
 [resource]
 resource_name = "default-spawner-formation"
 script = ExtResource("1_8grec")
-Formation = Dictionary[int, int]({
-0: 1
-})
+FormationGD = Array[Object]([SubResource("Resource_dbncf")])
 MaxWave = 1
 metadata/_custom_type_script = "uid://b40t8najievo0"

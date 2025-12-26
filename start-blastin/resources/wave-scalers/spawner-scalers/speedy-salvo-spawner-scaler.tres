@@ -1,17 +1,9 @@
-[gd_resource type="Resource" script_class="SpawnerScaler" load_steps=5 format=3 uid="uid://cgirk1a2y4424"]
+[gd_resource type="Resource" script_class="SpawnerScaler" load_steps=2 format=3 uid="uid://cgirk1a2y4424"]
 
-[ext_resource type="Resource" uid="uid://lv3xojj0ktlw" path="res://resources/enemies/salvo.tres" id="1_jkawd"]
-[ext_resource type="Script" uid="uid://dyer2c2n8y1v4" path="res://nodes/enemies/Spawners/SpawnData.cs" id="2_tssst"]
 [ext_resource type="Script" uid="uid://b2dathygef0kk" path="res://nodes/wave-management/wave-scalers/SpawnerScaler.cs" id="4_lmb3a"]
-
-[sub_resource type="Resource" id="Resource_hjptu"]
-script = ExtResource("2_tssst")
-EnemyResource = ExtResource("1_jkawd")
-Weight = 5
-metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
 
 [resource]
 script = ExtResource("4_lmb3a")
-SpawnPool = Array[Object]([SubResource("Resource_hjptu")])
+SpawnPool = Array[Object]([])
 SpawnIntervalModifier = 3.0
 metadata/_custom_type_script = "uid://b2dathygef0kk"

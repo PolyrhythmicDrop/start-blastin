@@ -1,8 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://dxdlpe5yuamuy"]
+[gd_scene load_steps=3 format=3 uid="uid://dxdlpe5yuamuy"]
 
 [ext_resource type="Script" uid="uid://fgb4t1vv8rw6" path="res://nodes/wave-management/wave-manager/WaveManager.cs" id="1_qioyi"]
-[ext_resource type="Script" uid="uid://dg4vu6iqxyj5p" path="res://nodes/wave-management/wave-manager/EnemyScaleManager.cs" id="2_2lj5f"]
-[ext_resource type="Script" uid="uid://m8au20mfn0x2" path="res://nodes/wave-management/wave-manager/SpawnerScaleManager.cs" id="3_22e4w"]
+[ext_resource type="Script" uid="uid://d0dqgm5onjrth" path="res://nodes/wave-management/wave-manager/ScaleManager.cs" id="2_2lj5f"]
 
 [node name="WaveManager" type="Node" groups=["wave-manager"]]
 process_mode = 1
@@ -16,11 +15,8 @@ process_mode = 1
 wait_time = 60.0
 one_shot = true
 
-[node name="EnemyScaleManager" type="Node" parent="."]
+[node name="ScaleManager" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("2_2lj5f")
 DefaultEnemyScaler = "uid://clpli5o3gobm6"
-
-[node name="SpawnerScaleManager" type="Node" parent="."]
-unique_name_in_owner = true
-script = ExtResource("3_22e4w")
+metadata/_custom_type_script = "uid://d0dqgm5onjrth"

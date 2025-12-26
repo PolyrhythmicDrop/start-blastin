@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Entities;
 using Godot;
 using Interfaces;
 using Utility;
@@ -9,19 +10,19 @@ namespace Effects
 {
     [GlobalClass]
     [Tool]
-    public partial class DamageOverTimeEffect : Effect
+    public partial class CurrencyOverTimeEffect : Effect
     {
-        protected class DoTEffectState : EffectState
+        protected class CoTEffectState : EffectState
         {
-            internal List<Timer> _dmgTimers;
+            internal List<Timer> _cashTimers;
             internal bool _timersInitialized;
-            internal Action _dmgCallback;
+            internal Action _cashCallback;
 
-            internal DoTEffectState(DamageOverTimeEffect parent, int maxTimers)
+            internal CoTEffectState(CurrencyOverTimeEffect parent, int maxTimers)
                 : base(parent)
             {
                 // Set up timers.
-                _dmgTimers = new() { Capacity = maxTimers };
+                _cashTimers = new() { Capacity = maxTimers };
 
                 for (int i = 0; i < maxTimers; i++)
                 {
@@ -31,7 +32,7 @@ namespace Effects
                         OneShot = false,
                         Autostart = false,
                     };
-                    _dmgTimers.Add(timer);
+                    _cashTimers.Add(timer);
                 }
             }
 
@@ -42,35 +43,44 @@ namespace Effects
                     return;
                 }
 
-                foreach (Timer t in _dmgTimers)
+                foreach (Timer t in _cashTimers)
                 {
                     if (IsInstanceValid(node) && node.IsAncestorOf(t))
                     {
                         t.Stop();
                         node.RemoveChild(t);
                     }
+                    t.QueueFree();
                 }
-                _dmgTimers.Clear();
+                _cashTimers.Clear();
             }
         }
 
-        private float _damagePerTick = 0.1f;
+        private int _bytesPerTick = 0;
+        private int _fluxPerTick = 0;
         private float _frequency = 1;
 
         /// <summary>
-        /// The amount of damage or healing to do per tick.
+        /// The amount of bytes to add or remove per tick.
         /// </summary>
-        /// <remarks>
-        /// Set this value to negative to heal over time.
-        /// </remarks>
-        [Export(PropertyHint.Range, "-10,10,or_greater,or_less")]
-        public float DamagePerTick
+        [Export(PropertyHint.Range, "-100,100,1,or_greater,or_less")]
+        public int BytesPerTick
         {
-            get => _damagePerTick;
-            set => _damagePerTick = value;
+            get => _bytesPerTick;
+            set => _bytesPerTick = value;
         }
 
-        [Export(PropertyHint.Range, "0.05,5,0.1,greater_than")]
+        /// <summary>
+        /// The amount of bytes to add or remove per tick.
+        /// </summary>
+        [Export(PropertyHint.Range, "-100,100,1,or_greater,or_less")]
+        public int FluxPerTick
+        {
+            get => _fluxPerTick;
+            set => _fluxPerTick = value;
+        }
+
+        [Export(PropertyHint.Range, "0.05,5,greater_than")]
         public float Frequency
         {
             get => _frequency;
@@ -80,16 +90,16 @@ namespace Effects
         protected override EffectState CreateEffectState()
         {
             int maxTimers = _stacking ? _maxStacks : 1;
-            return new DoTEffectState(this, maxTimers);
+            return new CoTEffectState(this, maxTimers);
         }
 
         protected override void DisconnectStateSignals(GodotObject target, EffectState state)
         {
-            if (state is DoTEffectState dotState)
+            if (state is CoTEffectState dotState)
             {
-                foreach (Timer t in dotState._dmgTimers)
+                foreach (Timer t in dotState._cashTimers)
                 {
-                    t.Timeout -= dotState._dmgCallback;
+                    t.Timeout -= dotState._cashCallback;
                 }
             }
             base.DisconnectStateSignals(target, state);
@@ -97,34 +107,33 @@ namespace Effects
 
         protected override void OnApplyEffect(GodotObject target, EffectState state)
         {
-            if (state is not DoTEffectState dotState)
+            if (state is not CoTEffectState cotState)
             {
                 return;
             }
 
-            if (target is not IHealthful healthful)
+            if (target is not Player player)
             {
                 return;
             }
 
             // Initialize the state timers if they're not already initialized
-            if (!dotState._timersInitialized)
+            if (!cotState._timersInitialized)
             {
-                DebugLogger.LogMessage($"Initializing timers for DoTEffect!");
-                dotState._timersInitialized = true;
-                dotState._dmgCallback = () => TriggerDamage(healthful);
-                foreach (Timer t in dotState._dmgTimers)
+                cotState._timersInitialized = true;
+                cotState._cashCallback = () => TriggerCurrencyOperation(player);
+                foreach (Timer t in cotState._cashTimers)
                 {
-                    t.Timeout += dotState._dmgCallback;
-                    if (healthful is Node node && !node.IsAncestorOf(t))
+                    t.Timeout += cotState._cashCallback;
+                    if (!player.IsAncestorOf(t))
                     {
-                        node.AddChild(t);
+                        player.AddChild(t);
                     }
                 }
             }
 
             // See if there are any timers currently stopped and start the first one you find.
-            Timer stopped = dotState._dmgTimers.FirstOrDefault(t => t.IsStopped());
+            Timer stopped = cotState._cashTimers.FirstOrDefault(t => t.IsStopped());
             if (stopped != null)
             {
                 stopped.Start();
@@ -133,36 +142,30 @@ namespace Effects
 
         protected override void OnRemoveEffect(GodotObject target, EffectState state)
         {
-            if (state is not DoTEffectState dotState)
+            if (state is not CoTEffectState cotState)
             {
                 return;
             }
 
-            if (target is not IHealthful healthful)
+            if (target is not Player player)
             {
                 return;
             }
 
             // Stop the first timer that's currently active.
-            Timer running = dotState._dmgTimers.FirstOrDefault(t => !t.IsStopped());
+            Timer running = cotState._cashTimers.FirstOrDefault(t => !t.IsStopped());
             if (running != null)
             {
                 running.Stop();
             }
         }
 
-        protected void TriggerDamage(IHealthful healthful)
+        protected void TriggerCurrencyOperation(Player player)
         {
-            if (healthful is Node node && IsInstanceValid(node))
+            if (IsInstanceValid(player))
             {
-                if (_damagePerTick > 0)
-                {
-                    healthful.TakeDamage(_damagePerTick);
-                }
-                else
-                {
-                    healthful.Heal(Math.Abs(_damagePerTick));
-                }
+                player.Bytes += _bytesPerTick;
+                player.Flux += _fluxPerTick;
             }
         }
     }

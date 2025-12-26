@@ -87,6 +87,32 @@ namespace Effects
             set => _frequency = value;
         }
 
+        protected override void OnTargetChanged()
+        {
+            if (Target != TargetType.Self && Target != TargetType.Ally)
+            {
+                DebugLogger.LogMessage(
+                    $"Cannot set target for {GetType().Name} to anything other than a {typeof(Player)} object!",
+                    true,
+                    true
+                );
+                Target = TargetType.Self;
+            }
+        }
+
+        protected override void OnEnemyTargetingChanged()
+        {
+            if (EnemyTargeting == true)
+            {
+                DebugLogger.LogMessage(
+                    $"Cannot target enemies with a {GetType().Name}!",
+                    true,
+                    true
+                );
+                EnemyTargeting = false;
+            }
+        }
+
         protected override EffectState CreateEffectState()
         {
             int maxTimers = _stacking ? _maxStacks : 1;

@@ -48,12 +48,7 @@ namespace Enemies.Spawners
         /// <summary>
         /// The seconds that elapse before a new enemy is spawned from the spawner.
         /// </summary>
-        [Export]
-        public float SpawnInterval
-        {
-            get => _spawnInterval;
-            set => _spawnInterval = value;
-        }
+        public float SpawnInterval => _spawnInterval;
 
         /// <summary>
         /// The time it takes for the spawn point to move to the end of the Path2D curve.
@@ -62,22 +57,12 @@ namespace Enemies.Spawners
         /// <remarks>
         /// Used to set the duration parameter of the spawn point move Tween.
         /// </remarks>
-        [Export]
-        public float SpawnPointMoveDuration
-        {
-            get => _pointMoveDuration;
-            set => _pointMoveDuration = value;
-        }
+        public float SpawnPointMoveDuration => _pointMoveDuration;
 
         /// <summary>
         /// Weighted pool of enemies that the spawn point can spawn. The key is the type of enemy, the value is the weighted value of that enemy.
         /// </summary>
-        [Export]
-        public Godot.Collections.Array<SpawnData> SpawnPool
-        {
-            get => _spawnPool.ConvertToGodotArray();
-            set => _spawnPool = new SpawnPool(value);
-        }
+        public SpawnPool SpawnPool => _spawnPool;
 
         /// <summary>
         /// The location of the spawner. Used to affect the spawner's path and spawned enemy paths.
@@ -104,7 +89,6 @@ namespace Enemies.Spawners
 
             ConnectSignals();
 
-            // ToggleSpawning(true);
             MoveSpawnPoint();
         }
 
@@ -118,11 +102,6 @@ namespace Enemies.Spawners
         {
             EventBus.Instance.WaveStarted -= OnWaveStarted;
             EventBus.Instance.WaveTimerEnded -= OnWaveTimerEnded;
-        }
-
-        public override void _Process(double delta)
-        {
-            base._Process(delta);
         }
 
         /// <summary>
@@ -141,7 +120,6 @@ namespace Enemies.Spawners
             }
 
             // Generate random number within total weight
-            // int randomValue = GD.RandRange(0, totalWeight - 1);
             int randomValue = RNG.GetRandomInt(0, totalWeight - 1);
 
             // Find the enemy that corresponds to this weight
@@ -230,10 +208,15 @@ namespace Enemies.Spawners
         /// </summary>
         /// <param name="spawnerScaler">The scaler to use to scale this spawner's properties.</param>
         /// <param name="wave">The current wave. Used to adjust the wave multiplier of the scaling.</param>
-        public void ApplySpawnerScaler(SpawnerScaler spawnerScaler, int wave)
+        public void ApplySpawnerScaling(
+            int wave,
+            SpawnPool spawnPool,
+            float spawnIntervalMod,
+            float moveDurationMod
+        )
         {
             float waveMultiplier = Mathf.Log(1 + wave);
-            _spawnPool = new SpawnPool(spawnerScaler.SpawnPool);
+            _spawnPool = spawnPool;
 
             // Don't apply scaling on the first wave.
             if (wave == 1)
@@ -243,12 +226,10 @@ namespace Enemies.Spawners
                 return;
             }
             // Percentage application
-            float spawnPercentReduction =
-                (spawnerScaler.SpawnIntervalModifier / 100f) * waveMultiplier;
+            float spawnPercentReduction = (spawnIntervalMod / 100f) * waveMultiplier;
             _spawnInterval = Mathf.Max(0.1f, _baseSpawnInterval * (1 - spawnPercentReduction));
 
-            float movePercentReduction =
-                (spawnerScaler.MoveDurationModifier / 100f) * waveMultiplier;
+            float movePercentReduction = (moveDurationMod / 100f) * waveMultiplier;
             _pointMoveDuration = Mathf.Max(0.2f, _baseMoveDuration * (1 - movePercentReduction));
         }
 

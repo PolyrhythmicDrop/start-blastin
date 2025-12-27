@@ -1,9 +1,0 @@
-[gd_resource type="Resource" script_class="SpawnerScaler" load_steps=2 format=3 uid="uid://cgirk1a2y4424"]
-
-[ext_resource type="Script" uid="uid://b2dathygef0kk" path="res://nodes/wave-management/wave-scalers/SpawnerScaler.cs" id="4_lmb3a"]
-
-[resource]
-script = ExtResource("4_lmb3a")
-SpawnPool = Array[Object]([])
-SpawnIntervalModifier = 3.0
-metadata/_custom_type_script = "uid://b2dathygef0kk"

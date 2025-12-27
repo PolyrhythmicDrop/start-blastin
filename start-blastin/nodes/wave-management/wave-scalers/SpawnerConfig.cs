@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Enemies;
+using Enemies.Spawners;
 using Godot;
 
 namespace WaveManagement
@@ -12,16 +14,18 @@ namespace WaveManagement
         Bottom,
     }
 
+    /// <summary>
+    /// Configuration for an EnemySpawner object, including the spawner's location and <see cref="SpawnPool"/>,
+    /// Used by a SpawnerFormationScaler and the ScaleManager to generate spawners.
+    /// </summary>
     [GlobalClass]
     public partial class SpawnerConfig : Resource
     {
         private SpawnerLocation _location = SpawnerLocation.Top;
 
-        private Godot.Collections.Array<SpawnerScaler> _scalersGD;
+        private SpawnPool _spawnPool = new();
 
-        private List<SpawnerScaler> _scalers;
-
-        public List<SpawnerScaler> Scalers => _scalers;
+        private Godot.Collections.Array<SpawnData> _spawnPoolGD;
 
         [Export]
         public SpawnerLocation Location
@@ -30,14 +34,16 @@ namespace WaveManagement
             set => _location = value;
         }
 
+        public SpawnPool SpawnPool => _spawnPool;
+
         [Export]
-        public Godot.Collections.Array<SpawnerScaler> ScalersGD
+        public Godot.Collections.Array<SpawnData> SpawnPoolGD
         {
-            get => _scalersGD;
+            get => _spawnPoolGD;
             set
             {
-                _scalers = [.. value];
-                _scalersGD = value;
+                _spawnPool = new(value);
+                _spawnPoolGD = value;
             }
         }
     }

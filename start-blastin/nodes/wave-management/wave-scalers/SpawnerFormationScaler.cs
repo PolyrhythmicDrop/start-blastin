@@ -3,6 +3,9 @@ using Godot;
 
 namespace WaveManagement
 {
+    /// <summary>
+    /// Adjusts the possible enemies that can spawn and the locations of spawners based on the current wave.
+    /// </summary>
     [GlobalClass]
     public partial class SpawnerFormationScaler : WaveScaler
     {

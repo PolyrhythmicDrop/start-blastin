@@ -1,12 +1,36 @@
-[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=2 format=3 uid="uid://u8qm3rcajlpd"]
+[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=10 format=3 uid="uid://u8qm3rcajlpd"]
 
 [ext_resource type="Script" uid="uid://b40t8najievo0" path="res://nodes/wave-management/wave-scalers/SpawnerFormationScaler.cs" id="1_7xxrk"]
+[ext_resource type="Resource" uid="uid://vfsjsr1mvlk1" path="res://resources/enemies/drone.tres" id="1_n1xr6"]
+[ext_resource type="Script" uid="uid://dyer2c2n8y1v4" path="res://nodes/enemies/Spawners/SpawnData.cs" id="2_7bast"]
+[ext_resource type="Resource" uid="uid://oepg1yh64jk4" path="res://resources/enemies/speedy-drone.tres" id="3_6k8kb"]
+[ext_resource type="Script" uid="uid://c2ao0simwvpmt" path="res://nodes/wave-management/wave-scalers/SpawnerConfig.cs" id="4_vixdf"]
+
+[sub_resource type="Resource" id="Resource_2uen1"]
+script = ExtResource("2_7bast")
+EnemyResource = ExtResource("1_n1xr6")
+Weight = 2
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_dsyia"]
+script = ExtResource("2_7bast")
+EnemyResource = ExtResource("3_6k8kb")
+Weight = 1
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_boufn"]
+script = ExtResource("4_vixdf")
+SpawnPoolGD = Array[Object]([SubResource("Resource_2uen1"), SubResource("Resource_dsyia")])
+metadata/_custom_type_script = "uid://c2ao0simwvpmt"
+
+[sub_resource type="Resource" id="Resource_rjfax"]
+script = ExtResource("4_vixdf")
+Location = 3
+SpawnPoolGD = Array[Object]([SubResource("Resource_2uen1"), SubResource("Resource_dsyia")])
+metadata/_custom_type_script = "uid://c2ao0simwvpmt"
 
 [resource]
 resource_name = "y-pincer-spawn-formation"
 script = ExtResource("1_7xxrk")
-Formation = Dictionary[int, int]({
-0: 1,
-3: 1
-})
+FormationGD = Array[Object]([SubResource("Resource_boufn"), SubResource("Resource_rjfax")])
 metadata/_custom_type_script = "uid://b40t8najievo0"

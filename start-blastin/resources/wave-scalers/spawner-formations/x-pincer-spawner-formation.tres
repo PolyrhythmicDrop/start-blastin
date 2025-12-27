@@ -1,12 +1,37 @@
-[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=2 format=3 uid="uid://bkhhfbm45cg5d"]
+[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=10 format=3 uid="uid://bkhhfbm45cg5d"]
 
+[ext_resource type="Resource" uid="uid://vfsjsr1mvlk1" path="res://resources/enemies/drone.tres" id="1_ckx5h"]
 [ext_resource type="Script" uid="uid://b40t8najievo0" path="res://nodes/wave-management/wave-scalers/SpawnerFormationScaler.cs" id="1_mtu6e"]
+[ext_resource type="Script" uid="uid://c2ao0simwvpmt" path="res://nodes/wave-management/wave-scalers/SpawnerConfig.cs" id="1_oi7vm"]
+[ext_resource type="Script" uid="uid://dyer2c2n8y1v4" path="res://nodes/enemies/Spawners/SpawnData.cs" id="2_xop25"]
+[ext_resource type="Resource" uid="uid://oepg1yh64jk4" path="res://resources/enemies/speedy-drone.tres" id="3_13h8c"]
+
+[sub_resource type="Resource" id="Resource_2uen1"]
+script = ExtResource("2_xop25")
+EnemyResource = ExtResource("1_ckx5h")
+Weight = 2
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_dsyia"]
+script = ExtResource("2_xop25")
+EnemyResource = ExtResource("3_13h8c")
+Weight = 1
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_6e2m6"]
+script = ExtResource("1_oi7vm")
+Location = 1
+SpawnPoolGD = Array[Object]([SubResource("Resource_2uen1"), SubResource("Resource_dsyia")])
+metadata/_custom_type_script = "uid://c2ao0simwvpmt"
+
+[sub_resource type="Resource" id="Resource_raoqa"]
+script = ExtResource("1_oi7vm")
+Location = 2
+SpawnPoolGD = Array[Object]([SubResource("Resource_2uen1"), SubResource("Resource_dsyia")])
+metadata/_custom_type_script = "uid://c2ao0simwvpmt"
 
 [resource]
 resource_name = "x-pincer-spawn-formation"
 script = ExtResource("1_mtu6e")
-Formation = Dictionary[int, int]({
-1: 1,
-2: 1
-})
+FormationGD = Array[Object]([SubResource("Resource_6e2m6"), SubResource("Resource_raoqa")])
 metadata/_custom_type_script = "uid://b40t8najievo0"

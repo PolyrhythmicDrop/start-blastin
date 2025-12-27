@@ -14,8 +14,6 @@ namespace WaveManagement
         private Timer _waveTimer;
         private double _waveTime;
 
-        // private EnemyScaleManager _enemyScaleManager;
-        // private SpawnerScaleManager _spawnerScaleManager;
         private ScaleManager _scaleManager;
 
         public int Wave => _wave;
@@ -51,9 +49,6 @@ namespace WaveManagement
             _waveTimer.Timeout += EndWave;
 
             _scaleManager = GetNode<ScaleManager>("%ScaleManager");
-
-            // _enemyScaleManager = GetNode<EnemyScaleManager>("%EnemyScaleManager");
-            // _spawnerScaleManager = GetNode<SpawnerScaleManager>("%SpawnerScaleManager");
 
             ConnectSignals();
             SetBaseDifficultyModifier();
@@ -103,14 +98,7 @@ namespace WaveManagement
         private void SetScalers()
         {
             _scaleManager.SetCurrentScalers(_wave);
-            // _enemyScaleManager.SetCurrentScalers(_wave);
-            // _spawnerScaleManager.SetCurrentScalers(_wave);
         }
-
-        /// <summary>
-        /// Sets each spawner's enemy wave configuration.
-        /// </summary>
-        // private void ScaleSpawners() => _scaleManager.ScaleSpawners(_difficultyModifier);
 
         #endregion
 
@@ -122,14 +110,8 @@ namespace WaveManagement
         /// </summary>
         private async void InitializeFirstWave()
         {
-            // _enemyScaleManager.Initialize(this);
-            // _spawnerScaleManager.Initialize(this);
-            // await _spawnerScaleManager.AssembleFormation();
-
             _scaleManager.Initialize(this);
             await _scaleManager.AssembleFormation();
-
-            // ScaleSpawners();
 
             StartWave();
         }
@@ -208,7 +190,6 @@ namespace WaveManagement
         {
             SetScalers();
             await _scaleManager.AssembleFormation();
-            // ScaleSpawners();
         }
 
         /// <summary>

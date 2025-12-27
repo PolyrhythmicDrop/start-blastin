@@ -1,0 +1,47 @@
+[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=12 format=3 uid="uid://oh2bvpq8f31e"]
+
+[ext_resource type="Script" uid="uid://b40t8najievo0" path="res://nodes/wave-management/wave-scalers/SpawnerFormationScaler.cs" id="1_aagf8"]
+[ext_resource type="Resource" uid="uid://lv3xojj0ktlw" path="res://resources/enemies/salvo.tres" id="1_l5qlb"]
+[ext_resource type="Script" uid="uid://dyer2c2n8y1v4" path="res://nodes/enemies/Spawners/SpawnData.cs" id="2_530jv"]
+[ext_resource type="Resource" uid="uid://dwt1kb13007cq" path="res://resources/enemies/missile-drone.tres" id="3_ljbuf"]
+[ext_resource type="Script" uid="uid://c2ao0simwvpmt" path="res://nodes/wave-management/wave-scalers/SpawnerConfig.cs" id="4_eakly"]
+
+[sub_resource type="Resource" id="Resource_yyxxh"]
+script = ExtResource("2_530jv")
+EnemyResource = ExtResource("1_l5qlb")
+Weight = 1
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_quhcu"]
+script = ExtResource("2_530jv")
+EnemyResource = ExtResource("3_ljbuf")
+Weight = 3
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_kqluf"]
+script = ExtResource("4_eakly")
+SpawnPoolGD = Array[Object]([SubResource("Resource_yyxxh"), SubResource("Resource_quhcu")])
+metadata/_custom_type_script = "uid://c2ao0simwvpmt"
+
+[sub_resource type="Resource" id="Resource_kky0u"]
+script = ExtResource("2_530jv")
+EnemyResource = ExtResource("3_ljbuf")
+Weight = 1
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_1by6e"]
+script = ExtResource("4_eakly")
+Location = 1
+SpawnPoolGD = Array[Object]([SubResource("Resource_kky0u")])
+metadata/_custom_type_script = "uid://c2ao0simwvpmt"
+
+[sub_resource type="Resource" id="Resource_v48an"]
+script = ExtResource("4_eakly")
+Location = 2
+SpawnPoolGD = Array[Object]([SubResource("Resource_kky0u")])
+metadata/_custom_type_script = "uid://c2ao0simwvpmt"
+
+[resource]
+script = ExtResource("1_aagf8")
+FormationGD = Array[Object]([SubResource("Resource_kqluf"), SubResource("Resource_1by6e"), SubResource("Resource_v48an")])
+metadata/_custom_type_script = "uid://b40t8najievo0"

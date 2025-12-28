@@ -432,18 +432,18 @@ namespace Projectiles
                 }
                 case Faction.Players:
                 {
-                    // Set the mask so the projectile hits players.
-                    SetCollisionMaskValue(1, true);
-                    // Set the mask so that the projectile does not hit fellow enemies.
-                    SetCollisionMaskValue(3, false);
-                    // Set collision layer 4 (Projectiles-Player) to false.
-                    SetCollisionLayerValue(4, false);
-                    // Set the mask so the projectile hits player projectiles.
-                    SetCollisionMaskValue(4, true);
-                    // Set the collision layer 5 (Projectiles-Enemy) to true.
-                    SetCollisionLayerValue(5, true);
-                    // Set the mask so the projectile does not hit other enemy projectiles.
-                    SetCollisionMaskValue(5, false);
+                    // Set the mask so the projectile does not hit players.
+                    SetCollisionMaskValue(1, false);
+                    // Set the mask so that the projectile hits enemies.
+                    SetCollisionMaskValue(3, true);
+                    // Set the collision layer so that the projectile is a Player projectile.
+                    SetCollisionLayerValue(4, true);
+                    // Set the mask so the projectile does not hit player projectiles.
+                    SetCollisionMaskValue(4, false);
+                    // Set the collision layer 5 (Projectiles-Enemy) to false.
+                    SetCollisionLayerValue(5, false);
+                    // Set the mask so the projectile hits enemy projectiles.
+                    SetCollisionMaskValue(5, true);
                     break;
                 }
                 case Faction.All:
@@ -455,6 +455,17 @@ namespace Projectiles
                     SetCollisionMaskValue(4, true);
                     SetCollisionLayerValue(5, true);
                     SetCollisionMaskValue(5, true);
+                    break;
+                }
+                case Faction.None:
+                {
+                    // Set all relevant masks and layers to false.
+                    SetCollisionMaskValue(1, false);
+                    SetCollisionMaskValue(3, false);
+                    SetCollisionLayerValue(4, false);
+                    SetCollisionMaskValue(4, false);
+                    SetCollisionLayerValue(5, false);
+                    SetCollisionMaskValue(5, false);
                     break;
                 }
             }

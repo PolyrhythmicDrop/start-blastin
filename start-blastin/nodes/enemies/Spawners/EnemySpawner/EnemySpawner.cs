@@ -13,13 +13,13 @@ namespace Enemies.Spawners
         private Path2D _path;
         private PathFollow2D _pathFollow;
         private Curve2D _curve;
-        private float _pointMoveDuration = 5.0f;
-        private float _spawnInterval = 2.0f;
+        private float _pointMoveDuration = 4.0f;
+        private float _spawnInterval = 1.6f;
         private SpawnerLocation _location;
 
         // Base stats
-        private float _baseMoveDuration = 5.0f;
-        private float _baseSpawnInterval = 2.0f;
+        private float _baseMoveDuration = 4.0f;
+        private float _baseSpawnInterval = 1.6f;
 
         private Timer _spawnTimer;
 
@@ -193,8 +193,14 @@ namespace Enemies.Spawners
         private void MoveSpawnPoint()
         {
             Tween tween = CreateTween();
-            tween.TweenProperty(_pathFollow, "progress_ratio", 1.0, _pointMoveDuration);
-            tween.TweenProperty(_pathFollow, "progress_ratio", 0, _pointMoveDuration);
+            tween
+                .TweenProperty(_pathFollow, "progress_ratio", 1.0, _pointMoveDuration)
+                .SetTrans(Tween.TransitionType.Sine)
+                .SetEase(Tween.EaseType.OutIn);
+            tween
+                .TweenProperty(_pathFollow, "progress_ratio", 0, _pointMoveDuration)
+                .SetTrans(Tween.TransitionType.Sine)
+                .SetEase(Tween.EaseType.InOut);
             tween.SetLoops();
         }
 

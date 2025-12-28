@@ -45,6 +45,15 @@ namespace Enemies.Spawners
             set => _curve = value;
         }
 
+        public bool SpawnImmediately = false;
+
+        public float InitialProgressRatio = 0;
+
+        /// <summary>
+        /// Percent of the wave that must elapse before the SpawnTimer starts.
+        /// </summary>
+        public double? SpawnTimeOffset = null;
+
         /// <summary>
         /// The seconds that elapse before a new enemy is spawned from the spawner.
         /// </summary>
@@ -67,7 +76,6 @@ namespace Enemies.Spawners
         /// <summary>
         /// The location of the spawner. Used to affect the spawner's path and spawned enemy paths.
         /// </summary>
-        [Export]
         public SpawnerLocation Location
         {
             get => _location;
@@ -77,7 +85,7 @@ namespace Enemies.Spawners
         public override void _Ready()
         {
             _path = GetNode<Path2D>("%Path2D");
-            _pathFollow = _path.GetNode<PathFollow2D>("%PathFollow2D");
+            _pathFollow = _path?.GetNode<PathFollow2D>("%PathFollow2D");
             _path.Curve = _curve;
 
             _spawnPoint = _pathFollow.GetNode<Node2D>("%SpawnPoint");
@@ -89,7 +97,14 @@ namespace Enemies.Spawners
 
             ConnectSignals();
 
-            MoveSpawnPoint();
+            if (InitialProgressRatio > 0)
+            {
+                TweenInitialProgress();
+            }
+            else
+            {
+                MoveSpawnPoint();
+            }
         }
 
         private void ConnectSignals()
@@ -204,6 +219,25 @@ namespace Enemies.Spawners
             tween.SetLoops();
         }
 
+        private void TweenInitialProgress()
+        {
+            // Set the initial move-to point if we start from a different spot than origin.
+            _pathFollow.ProgressRatio = InitialProgressRatio;
+            float initialDuration =
+                _pointMoveDuration - (_pointMoveDuration * InitialProgressRatio);
+
+            Tween initTween = _pathFollow.CreateTween();
+            // Go to the end of the curve using the new duration.
+            initTween.TweenProperty(_pathFollow, "progress_ratio", 1.0, initialDuration);
+            // Go back to the beginning of the curve to reset the loop.
+            initTween
+                .TweenProperty(_pathFollow, "progress_ratio", 0, _pointMoveDuration)
+                .SetTrans(Tween.TransitionType.Sine)
+                .SetEase(Tween.EaseType.InOut);
+            // Call the normal MoveSpawnPoint() method to begin normal looping.
+            initTween.TweenCallback(Callable.From(MoveSpawnPoint));
+        }
+
         public void SetEnemyScaler(EnemyScaler scaler)
         {
             _enemyScaler = scaler;
@@ -247,7 +281,26 @@ namespace Enemies.Spawners
         {
             if (spawn)
             {
-                _spawnTimer.Start(_spawnInterval);
+                // Spawn an enemy immediately if that feature is enabled
+                if (SpawnImmediately)
+                {
+                    SpawnEnemy();
+                }
+
+                // Create a timer to offset spawning if that feature is enabled
+                if (SpawnTimeOffset != null)
+                {
+                    SceneTreeTimer timer = GetTree()
+                        .CreateTimer((double)SpawnTimeOffset, processAlways: false);
+                    timer.Timeout += () =>
+                    {
+                        _spawnTimer.Start(_spawnInterval);
+                    };
+                }
+                else
+                {
+                    _spawnTimer.Start(_spawnInterval);
+                }
             }
             else
             {

@@ -1,9 +1,10 @@
-[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=7 format=3 uid="uid://dlqifjude3djo"]
+[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=13 format=3 uid="uid://dlqifjude3djo"]
 
 [ext_resource type="Script" uid="uid://b40t8najievo0" path="res://nodes/wave-management/wave-scalers/SpawnerFormationScaler.cs" id="1_8grec"]
 [ext_resource type="Resource" uid="uid://vfsjsr1mvlk1" path="res://resources/enemies/drone.tres" id="1_rnipl"]
 [ext_resource type="Script" uid="uid://dyer2c2n8y1v4" path="res://nodes/enemies/Spawners/SpawnData.cs" id="2_dbncf"]
 [ext_resource type="Script" uid="uid://c2ao0simwvpmt" path="res://nodes/wave-management/wave-scalers/SpawnerConfig.cs" id="2_rnipl"]
+[ext_resource type="Resource" uid="uid://oepg1yh64jk4" path="res://resources/enemies/speedy-drone.tres" id="3_dbncf"]
 
 [sub_resource type="Resource" id="Resource_rnipl"]
 script = ExtResource("2_dbncf")
@@ -11,14 +12,52 @@ EnemyResource = ExtResource("1_rnipl")
 Weight = 1
 metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
 
+[sub_resource type="Resource" id="Resource_xdq1s"]
+script = ExtResource("2_dbncf")
+EnemyResource = ExtResource("3_dbncf")
+Weight = 2
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
 [sub_resource type="Resource" id="Resource_40jaa"]
 script = ExtResource("2_rnipl")
-SpawnPoolGD = Array[Object]([SubResource("Resource_rnipl")])
+SpawnImmediately = true
+InitialProgressRatio = 0.5
+SpawnPoolGD = Array[Object]([SubResource("Resource_rnipl"), SubResource("Resource_xdq1s")])
+metadata/_custom_type_script = "uid://c2ao0simwvpmt"
+
+[sub_resource type="Resource" id="Resource_gr40p"]
+script = ExtResource("2_dbncf")
+EnemyResource = ExtResource("3_dbncf")
+Weight = 1
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_3705c"]
+script = ExtResource("2_dbncf")
+EnemyResource = ExtResource("1_rnipl")
+Weight = 2
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_2btky"]
+script = ExtResource("2_rnipl")
+InitialProgressRatio = 0.2
+SpawnPoolGD = Array[Object]([SubResource("Resource_gr40p"), SubResource("Resource_3705c")])
+EnableSpawnOffset = true
+MinOffset = 0.3
+MaxOffset = 0.5
+metadata/_custom_type_script = "uid://c2ao0simwvpmt"
+
+[sub_resource type="Resource" id="Resource_dbncf"]
+script = ExtResource("2_rnipl")
+InitialProgressRatio = 0.6
+SpawnPoolGD = Array[Object]([SubResource("Resource_gr40p"), SubResource("Resource_3705c")])
+EnableSpawnOffset = true
+MinOffset = 0.7
+MaxOffset = 0.9
 metadata/_custom_type_script = "uid://c2ao0simwvpmt"
 
 [resource]
 resource_name = "default-spawner-formation"
 script = ExtResource("1_8grec")
-FormationGD = Array[Object]([SubResource("Resource_40jaa")])
+FormationGD = Array[Object]([SubResource("Resource_40jaa"), SubResource("Resource_2btky"), SubResource("Resource_dbncf")])
 MaxWave = 1
 metadata/_custom_type_script = "uid://b40t8najievo0"

@@ -8,7 +8,7 @@
 [sub_resource type="Resource" id="Resource_mj1k6"]
 script = ExtResource("3_0bm52")
 FireRate = 0.8
-ProjectileSpeed = 400.0
+ProjectileSpeed = 500.0
 metadata/_custom_type_script = "uid://bytfm61mpkr5u"
 
 [sub_resource type="Resource" id="Resource_m7x0c"]
@@ -21,7 +21,7 @@ resource_local_to_scene = true
 resource_name = "basic-drone"
 script = ExtResource("1_oggcu")
 ScenePath = "res://nodes/enemies/Drone/drone.tscn"
-Speed = 100.0
+Speed = 200.0
 CrashDamage = 2
 MaxHealth = 2.0
 WeaponResource = SubResource("Resource_m7x0c")

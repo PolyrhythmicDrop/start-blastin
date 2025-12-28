@@ -7,7 +7,7 @@
 process_mode = 1
 script = ExtResource("1_qioyi")
 Difficulty = 1
-WaveTime = 10.0
+WaveTime = 30.0
 
 [node name="WaveTimer" type="Timer" parent="."]
 unique_name_in_owner = true

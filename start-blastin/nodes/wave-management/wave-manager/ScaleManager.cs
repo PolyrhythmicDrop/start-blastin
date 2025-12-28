@@ -261,51 +261,10 @@ namespace WaveManagement
 
             foreach (SpawnerConfig config in configs)
             {
-                // Set the spawner's position, size, and rotation based on the location.
-                Vector2 position;
-                float rotationDegrees;
-                Curve2D curve;
-
-                switch (config.Location)
-                {
-                    default:
-                    case SpawnerLocation.Top:
-                        position = new Vector2(50, -82);
-                        rotationDegrees = 0;
-                        curve = ResourceLoader.Load<Curve2D>(
-                            "res://resources/curves/spawner-top-or-bottom.tres"
-                        );
-                        break;
-                    case SpawnerLocation.Left:
-                        position = new Vector2(-82, 50);
-                        rotationDegrees = 0;
-                        curve = ResourceLoader.Load<Curve2D>(
-                            "res://resources/curves/spawner-left-or-right.tres"
-                        );
-                        break;
-                    case SpawnerLocation.Right:
-                        position = new Vector2(2000, 1100);
-                        rotationDegrees = 180;
-                        curve = ResourceLoader.Load<Curve2D>(
-                            "res://resources/curves/spawner-left-or-right.tres"
-                        );
-                        break;
-                    case SpawnerLocation.Bottom:
-                        position = new Vector2(1870, 1162);
-                        rotationDegrees = 180;
-                        curve = ResourceLoader.Load<Curve2D>(
-                            "res://resources/curves/spawner-top-or-bottom.tres"
-                        );
-                        break;
-                }
-
                 EnemySpawner spawner = _spawnerScene.Instantiate<EnemySpawner>();
-                spawner.Name = $"{spawner.GetType().Name}-{Nanoid.Generate(size: 8)}";
-                spawner.Curve = curve;
-                spawner.Position = position;
-                spawner.RotationDegrees = rotationDegrees;
-                spawner.Location = config.Location;
+                config.ConfigureSpawner(spawner, _waveManager.WaveTime);
                 ScaleSpawner(spawner, config);
+
                 _activeSpawners[config.Location].Add(spawner);
                 levelNode.CallDeferred(MethodName.AddChild, spawner);
                 await ToSignal(spawner, Node.SignalName.Ready);

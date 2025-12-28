@@ -69,7 +69,10 @@ namespace Enemies
             _followTween.TweenCallback(
                 Callable.From(() =>
                 {
-                    _weapon.FireTimer.Start();
+                    if (_alive)
+                    {
+                        _weapon.FireTimer.Start();
+                    }
                 })
             );
             _followTween
@@ -79,7 +82,10 @@ namespace Enemies
             _followTween.TweenCallback(
                 Callable.From(() =>
                 {
-                    _weapon.FireTimer.Stop();
+                    if (_alive)
+                    {
+                        _weapon.FireTimer.Stop();
+                    }
                 })
             );
             _followTween
@@ -96,7 +102,11 @@ namespace Enemies
 
             _sprite.Play("destruction");
 
-            _sprite.AnimationFinished += () => base.Die(playerId);
+            _sprite.AnimationFinished += () =>
+            {
+                _sprite.Visible = false;
+                base.Die(playerId);
+            };
         }
     }
 }

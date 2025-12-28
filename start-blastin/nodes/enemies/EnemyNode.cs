@@ -377,7 +377,7 @@ namespace Enemies
 
         public virtual void OnCrash(KinematicCollision2D collision)
         {
-            if (collision.GetCollider() is Player player)
+            if (collision.GetCollider() is Player player && _alive)
             {
                 player.TakeDamage(_crashDamage);
                 Die();

@@ -27,8 +27,8 @@ namespace WaveManagement
 
         private Godot.Collections.Array<SpawnData> _spawnPoolGD;
 
-        private float _minSpawnOffset;
-        private float _maxSpawnOffset;
+        private float _minSpawnDelay;
+        private float _maxSpawnDelay;
 
         [Export]
         public SpawnerLocation Location
@@ -38,10 +38,17 @@ namespace WaveManagement
         }
 
         /// <summary>
-        /// Spawns an enemy immediately, independently of the spawn timer.
+        /// Spawns an enemy as soon as the spawn timer starts.
         /// </summary>
         [Export]
-        public bool SpawnImmediately { get; set; }
+        public bool SpawnImmediately { get; set; } = false;
+
+        /// <summary>
+        /// If true, begins moving the spawner only when the spawn timer has started.
+        /// If false, the spawner begins moving as soon as it enters the scene tree, regardless of whether it's spawning enemies or not.
+        /// </summary>
+        [Export]
+        public bool StartMoveOnSpawnTimer { get; set; } = false;
 
         /// <summary>
         /// The progress ratio the EnemySpawner begins at, or the point along its path that it begins.
@@ -63,28 +70,28 @@ namespace WaveManagement
             }
         }
 
-        [ExportGroup("Spawn Offsets")]
+        [ExportGroup("Spawn Timer Delay")]
         [Export(PropertyHint.GroupEnable)]
-        public bool EnableSpawnOffset { get; set; }
+        public bool EnableSpawnTimerDelay { get; set; }
 
         /// <summary>
-        /// Minimum spawn offset factor, in a range from 0 (starts the spawn timer immediately) to 1.0 (starts the spawn timer at the very end of the wave, i.e. never spawns)
+        /// Minimum factor to delay the spawn timer by, in a range from 0 (starts the spawn timer immediately on wave start) to 1.0 (starts the spawn timer at the very end of the wave, i.e. never spawns)
         /// </summary>
         [Export(PropertyHint.Range, "0,1.0")]
-        public float MinOffset
+        public float MinDelay
         {
-            get => _minSpawnOffset;
-            set => _minSpawnOffset = value;
+            get => _minSpawnDelay;
+            set => _minSpawnDelay = value;
         }
 
         /// <summary>
-        /// Maximum spawn offset factor, in a range from 0 (starts the spawn timer immediately) to 1.0 (starts the spawn timer at the very end of the wave, i.e. never spawns)
+        /// Maximum factor to delay the spawn timer by, in a range from 0 (starts the spawn timer immediately on wave start) to 1.0 (starts the spawn timer at the very end of the wave, i.e. never spawns)
         /// </summary>
         [Export(PropertyHint.Range, "0,1.0")]
-        public float MaxOffset
+        public float MaxDelay
         {
-            get => _maxSpawnOffset;
-            set => _maxSpawnOffset = value;
+            get => _maxSpawnDelay;
+            set => _maxSpawnDelay = value;
         }
 
         public void ConfigureSpawner(EnemySpawner spawner, double? waveTime = null)
@@ -127,21 +134,22 @@ namespace WaveManagement
                     break;
             }
 
-            // EnemySpawner spawner = _spawnerScene.Instantiate<EnemySpawner>();
             spawner.Name = $"{spawner.GetType().Name}-{Nanoid.Generate(size: 5)}";
             spawner.Curve = curve;
             spawner.Position = position;
             spawner.RotationDegrees = rotationDegrees;
             spawner.Location = _location;
             spawner.SpawnImmediately = SpawnImmediately;
+            spawner.StartMoveOnSpawnTimer = StartMoveOnSpawnTimer;
             spawner.InitialProgressRatio = InitialProgressRatio;
 
             // Set spawn offset
-            if (EnableSpawnOffset && waveTime != null)
+            if (EnableSpawnTimerDelay && waveTime != null)
             {
                 // Get the current wave time
                 // Get a random value between the min and the max.
-                spawner.SpawnTimeOffset = waveTime * RNG.GetRandomDouble(MinOffset, MaxOffset);
+                spawner.SpawnTimerDelay =
+                    (double)waveTime * RNG.GetRandomDouble(MinDelay, MaxDelay);
             }
         }
     }

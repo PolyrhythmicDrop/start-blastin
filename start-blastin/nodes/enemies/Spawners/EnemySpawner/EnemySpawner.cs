@@ -47,12 +47,14 @@ namespace Enemies.Spawners
 
         public bool SpawnImmediately = false;
 
+        public bool StartMoveOnSpawnTimer = false;
+
         public float InitialProgressRatio = 0;
 
         /// <summary>
         /// Percent of the wave that must elapse before the SpawnTimer starts.
         /// </summary>
-        public double? SpawnTimeOffset = null;
+        public double SpawnTimerDelay = 0;
 
         /// <summary>
         /// The seconds that elapse before a new enemy is spawned from the spawner.
@@ -97,11 +99,7 @@ namespace Enemies.Spawners
 
             ConnectSignals();
 
-            if (InitialProgressRatio > 0)
-            {
-                TweenInitialProgress();
-            }
-            else
+            if (!StartMoveOnSpawnTimer)
             {
                 MoveSpawnPoint();
             }
@@ -203,9 +201,24 @@ namespace Enemies.Spawners
         }
 
         /// <summary>
-        /// Moves the spawner's spawn point along its appointed path.
+        /// Begins moving the spawn point.
         /// </summary>
         private void MoveSpawnPoint()
+        {
+            if (InitialProgressRatio > 0)
+            {
+                TweenInitialProgress();
+            }
+            else
+            {
+                StartMoveLoop();
+            }
+        }
+
+        /// <summary>
+        /// Moves the spawner's spawn point back and forth along its appointed path in an eternal loop.
+        /// </summary>
+        private void StartMoveLoop()
         {
             Tween tween = CreateTween();
             tween
@@ -219,6 +232,9 @@ namespace Enemies.Spawners
             tween.SetLoops();
         }
 
+        /// <summary>
+        /// Handles initial spawner movement if you set an initial progress ratio other than 0.
+        /// </summary>
         private void TweenInitialProgress()
         {
             // Set the initial move-to point if we start from a different spot than origin.
@@ -235,7 +251,7 @@ namespace Enemies.Spawners
                 .SetTrans(Tween.TransitionType.Sine)
                 .SetEase(Tween.EaseType.InOut);
             // Call the normal MoveSpawnPoint() method to begin normal looping.
-            initTween.TweenCallback(Callable.From(MoveSpawnPoint));
+            initTween.TweenCallback(Callable.From(StartMoveLoop));
         }
 
         public void SetEnemyScaler(EnemyScaler scaler)
@@ -281,31 +297,41 @@ namespace Enemies.Spawners
         {
             if (spawn)
             {
-                // Spawn an enemy immediately if that feature is enabled
-                if (SpawnImmediately)
-                {
-                    SpawnEnemy();
-                }
-
                 // Create a timer to offset spawning if that feature is enabled
-                if (SpawnTimeOffset != null)
+                if (SpawnTimerDelay != 0)
                 {
                     SceneTreeTimer timer = GetTree()
-                        .CreateTimer((double)SpawnTimeOffset, processAlways: false);
+                        .CreateTimer((double)SpawnTimerDelay, processAlways: false);
                     timer.Timeout += () =>
                     {
-                        _spawnTimer.Start(_spawnInterval);
+                        StartSpawnTimer();
                     };
                 }
                 else
                 {
-                    _spawnTimer.Start(_spawnInterval);
+                    StartSpawnTimer();
                 }
             }
             else
             {
                 _spawnTimer.Stop();
             }
+        }
+
+        private void StartSpawnTimer()
+        {
+            // Spawn an enemy immediately if that feature is enabled
+            if (SpawnImmediately)
+            {
+                SpawnEnemy();
+            }
+
+            if (StartMoveOnSpawnTimer)
+            {
+                MoveSpawnPoint();
+            }
+
+            _spawnTimer.Start(_spawnInterval);
         }
 
         private void OnWaveStarted(object sender, WaveStartedEventArgs args)

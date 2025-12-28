@@ -39,20 +39,24 @@ metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
 
 [sub_resource type="Resource" id="Resource_2btky"]
 script = ExtResource("2_rnipl")
+SpawnImmediately = true
+StartMoveOnSpawnTimer = true
 InitialProgressRatio = 0.2
 SpawnPoolGD = Array[Object]([SubResource("Resource_gr40p"), SubResource("Resource_3705c")])
-EnableSpawnOffset = true
-MinOffset = 0.3
-MaxOffset = 0.5
+EnableSpawnTimerDelay = true
+MinDelay = 0.3
+MaxDelay = 0.5
 metadata/_custom_type_script = "uid://c2ao0simwvpmt"
 
 [sub_resource type="Resource" id="Resource_dbncf"]
 script = ExtResource("2_rnipl")
+SpawnImmediately = true
+StartMoveOnSpawnTimer = true
 InitialProgressRatio = 0.6
 SpawnPoolGD = Array[Object]([SubResource("Resource_gr40p"), SubResource("Resource_3705c")])
-EnableSpawnOffset = true
-MinOffset = 0.7
-MaxOffset = 0.9
+EnableSpawnTimerDelay = true
+MinDelay = 0.6
+MaxDelay = 0.8
 metadata/_custom_type_script = "uid://c2ao0simwvpmt"
 
 [resource]

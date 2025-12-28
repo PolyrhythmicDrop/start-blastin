@@ -126,31 +126,6 @@ public partial class Salvo : EnemyNode
         _rack.Play("fire");
     }
 
-    public override void PlayDamageAnimation()
-    {
-        string mixRatioPath = "mix_ratio";
-        string currentFramePath = "current_frame";
-
-        if (_spriteContainer.Material is ShaderMaterial shaderMaterial)
-        {
-            shaderMaterial.SetShaderParameter(mixRatioPath, 1.0);
-
-            Tween tween = _spriteContainer.CreateTween();
-            tween.TweenMethod(
-                Callable.From(
-                    (int currentFrame) =>
-                        shaderMaterial.SetShaderParameter(currentFramePath, currentFrame)
-                ),
-                0,
-                30,
-                0.5
-            );
-            tween.TweenCallback(
-                Callable.From(() => shaderMaterial.SetShaderParameter(mixRatioPath, 0))
-            );
-        }
-    }
-
     public override void Die(int? playerId = null)
     {
         _alive = false;

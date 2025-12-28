@@ -75,7 +75,7 @@ namespace Stats
             {
                 AddStat(type, roundValue);
             }
-            StatUpdatedEventArgs args = new(type, GetStat(type));
+            StatUpdatedEventArgs args = new(type, stat);
             RaiseStatUpdated(args);
         }
 

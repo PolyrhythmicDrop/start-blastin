@@ -287,8 +287,8 @@ namespace Entities
             _weaponComponent = GetNode<WeaponComponent>("%WeaponComponent");
             CurrentHealth = _maxHealth;
 
-            InitializeComponents();
             ConnectSignals();
+            InitializeComponents();
 
             // Apply initial equipment
             EquipPlugin([.. InitialPlugins]);

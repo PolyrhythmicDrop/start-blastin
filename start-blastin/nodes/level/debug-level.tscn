@@ -1,34 +1,11 @@
-[gd_scene load_steps=14 format=3 uid="uid://cca75d2re7isj"]
+[gd_scene load_steps=7 format=3 uid="uid://cca75d2re7isj"]
 
 [ext_resource type="Texture2D" uid="uid://cilgl08og1qhy" path="res://nodes/backgrounds/background-purple-nebulae-stars.png" id="1_1iju8"]
 [ext_resource type="Script" uid="uid://bpw7egf87stew" path="res://architecture/utility/Debugger.cs" id="1_hxhdr"]
 [ext_resource type="PackedScene" uid="uid://dl7j0usiolxux" path="res://nodes/environmental/play-area-border.tscn" id="2_hxhdr"]
 [ext_resource type="PackedScene" uid="uid://nenl15kjphyb" path="res://nodes/player/player.tscn" id="3_gl8ah"]
-[ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="4_gl8ah"]
-[ext_resource type="Script" uid="uid://b3qmdj461ykoi" path="res://architecture/items/plugins/Plugin.cs" id="5_1iju8"]
-[ext_resource type="Texture2D" uid="uid://cr72gwqck8b8v" path="res://assets/icons/item-icons/projectiles/bullet-icon.png" id="5_4imkk"]
-[ext_resource type="Resource" uid="uid://bo57x7idkejky" path="res://resources/items/plugins/sample-plugin.tres" id="5_jmnrl"]
-[ext_resource type="Script" uid="uid://e8ufr3v1a1f" path="res://architecture/items/plugins/WeaponPlugin.cs" id="6_avtic"]
 [ext_resource type="PackedScene" uid="uid://bsyev7gatn1jy" path="res://nodes/environmental/oob-area.tscn" id="8_mybqq"]
 [ext_resource type="PackedScene" uid="uid://dxdlpe5yuamuy" path="res://nodes/wave-management/wave-manager/wave-manager.tscn" id="9_4usc6"]
-
-[sub_resource type="Resource" id="Resource_c7qc0"]
-script = ExtResource("4_gl8ah")
-Type = 8
-Value = 600.0
-metadata/_custom_type_script = "uid://bmeda5w63vsw7"
-
-[sub_resource type="Resource" id="Resource_ald07"]
-resource_local_to_scene = true
-resource_name = "bullet-plugin"
-script = ExtResource("6_avtic")
-Name = &"Bullet"
-Description = &"Regular \'ol bullet"
-Icon = ExtResource("5_4imkk")
-Scrappable = false
-AppearsInShop = false
-Effects = Array[Object]([SubResource("Resource_c7qc0")])
-metadata/_custom_type_script = "uid://e8ufr3v1a1f"
 
 [node name="DebugLevel" type="Node" groups=["level"]]
 
@@ -49,8 +26,6 @@ stretch_mode = 5
 
 [node name="Player" parent="." instance=ExtResource("3_gl8ah")]
 position = Vector2(901, 766)
-WeaponPlugin = SubResource("Resource_ald07")
-InitialPlugins = Array[ExtResource("5_1iju8")]([ExtResource("5_jmnrl")])
 
 [node name="OOB-Area" parent="." instance=ExtResource("8_mybqq")]
 

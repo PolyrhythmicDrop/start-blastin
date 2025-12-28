@@ -332,7 +332,6 @@ namespace Enemies
 
         public virtual async void Die(int? playerId = null)
         {
-            _alive = false;
             if (playerId != null)
             {
                 EnemyKilledEventArgs args = new(
@@ -351,7 +350,30 @@ namespace Enemies
             }
         }
 
-        public virtual void PlayDamageAnimation() { }
+        public virtual void PlayDamageAnimation()
+        {
+            string mixRatioPath = "mix_ratio";
+            string currentFramePath = "current_frame";
+
+            if (Material is ShaderMaterial shaderMaterial)
+            {
+                shaderMaterial.SetShaderParameter(mixRatioPath, 1.0);
+
+                Tween tween = CreateTween();
+                tween.TweenMethod(
+                    Callable.From(
+                        (int currentFrame) =>
+                            shaderMaterial.SetShaderParameter(currentFramePath, currentFrame)
+                    ),
+                    0,
+                    30,
+                    0.5
+                );
+                tween.TweenCallback(
+                    Callable.From(() => shaderMaterial.SetShaderParameter(mixRatioPath, 0))
+                );
+            }
+        }
 
         public virtual void OnCrash(KinematicCollision2D collision)
         {

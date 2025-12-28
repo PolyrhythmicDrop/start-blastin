@@ -19,7 +19,6 @@ resource_local_to_scene = true
 resource_name = "missile-drone-weapon"
 script = ExtResource("4_jn13m")
 Stats = SubResource("Resource_yebq7")
-ScenePath = "res://nodes/weapons/Blaster.tscn"
 metadata/_custom_type_script = "uid://bytfm61mpkr5u"
 
 [resource]

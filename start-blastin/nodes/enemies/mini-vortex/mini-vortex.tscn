@@ -1,0 +1,166 @@
+[gd_scene load_steps=23 format=3 uid="uid://csgn11flcwe80"]
+
+[ext_resource type="Material" uid="uid://c2utwn3c0waxt" path="res://resources/materials/enemy-hit-effect.tres" id="1_7busk"]
+[ext_resource type="Script" uid="uid://dgl5eo10l8xi5" path="res://nodes/enemies/mini-vortex/MiniVortex.cs" id="1_v62ag"]
+[ext_resource type="Script" uid="uid://bekbgunrmk3ad" path="res://nodes/weapons/Barrel.cs" id="2_e0mk0"]
+[ext_resource type="Texture2D" uid="uid://bwf3cftii5aj" path="res://assets/enemies/mini-vortex/mini-vortex-64-sheet.png" id="3_04xer"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7busk"]
+atlas = ExtResource("3_04xer")
+region = Rect2(0, 288, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_04xer"]
+atlas = ExtResource("3_04xer")
+region = Rect2(0, 192, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ricob"]
+atlas = ExtResource("3_04xer")
+region = Rect2(0, 96, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rrger"]
+atlas = ExtResource("3_04xer")
+region = Rect2(0, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nsx0y"]
+atlas = ExtResource("3_04xer")
+region = Rect2(96, 288, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bwrsr"]
+atlas = ExtResource("3_04xer")
+region = Rect2(96, 192, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_llkfd"]
+atlas = ExtResource("3_04xer")
+region = Rect2(192, 96, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_awnma"]
+atlas = ExtResource("3_04xer")
+region = Rect2(192, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_37ekg"]
+atlas = ExtResource("3_04xer")
+region = Rect2(288, 288, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t06bc"]
+atlas = ExtResource("3_04xer")
+region = Rect2(288, 192, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ww1ji"]
+atlas = ExtResource("3_04xer")
+region = Rect2(288, 96, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hywq1"]
+atlas = ExtResource("3_04xer")
+region = Rect2(288, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qpuga"]
+atlas = ExtResource("3_04xer")
+region = Rect2(96, 96, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0fwku"]
+atlas = ExtResource("3_04xer")
+region = Rect2(96, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u0ycn"]
+atlas = ExtResource("3_04xer")
+region = Rect2(192, 288, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_syv27"]
+atlas = ExtResource("3_04xer")
+region = Rect2(192, 192, 96, 96)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_t06bc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7busk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_04xer")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ricob")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rrger")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nsx0y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bwrsr")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_llkfd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_awnma")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_37ekg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t06bc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ww1ji")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hywq1")
+}],
+"loop": false,
+"name": &"destruction",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qpuga")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0fwku")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u0ycn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_syv27")
+}],
+"loop": false,
+"name": &"fire",
+"speed": 10.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vjwc2"]
+radius = 32.06244
+
+[node name="MiniVortex" type="AnimatableBody2D"]
+material = ExtResource("1_7busk")
+collision_layer = 4
+collision_mask = 11
+sync_to_physics = false
+script = ExtResource("1_v62ag")
+
+[node name="SpriteContainer" type="Node2D" parent="."]
+use_parent_material = true
+
+[node name="Sprite" type="AnimatedSprite2D" parent="SpriteContainer"]
+unique_name_in_owner = true
+use_parent_material = true
+sprite_frames = SubResource("SpriteFrames_t06bc")
+autoplay = "default"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
+shape = SubResource("CircleShape2D_vjwc2")
+
+[node name="Barrel" type="Node2D" parent="."]
+position = Vector2(11, 0)
+script = ExtResource("2_e0mk0")
+Base = true
+DefaultActive = true
+metadata/_custom_type_script = "uid://bekbgunrmk3ad"

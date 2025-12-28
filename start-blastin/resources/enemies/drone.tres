@@ -14,7 +14,6 @@ metadata/_custom_type_script = "uid://bytfm61mpkr5u"
 [sub_resource type="Resource" id="Resource_m7x0c"]
 script = ExtResource("4_mj1k6")
 Stats = SubResource("Resource_mj1k6")
-ScenePath = "res://nodes/weapons/Blaster.tscn"
 metadata/_custom_type_script = "uid://boyq442k65gay"
 
 [resource]

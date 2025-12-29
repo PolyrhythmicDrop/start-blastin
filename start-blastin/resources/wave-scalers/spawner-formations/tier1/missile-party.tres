@@ -20,6 +20,8 @@ metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
 
 [sub_resource type="Resource" id="Resource_kqluf"]
 script = ExtResource("4_eakly")
+SpawnImmediately = true
+InitialProgressRatio = 0.5
 SpawnPoolGD = Array[Object]([SubResource("Resource_yyxxh"), SubResource("Resource_quhcu")])
 metadata/_custom_type_script = "uid://c2ao0simwvpmt"
 
@@ -32,16 +34,29 @@ metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
 [sub_resource type="Resource" id="Resource_1by6e"]
 script = ExtResource("4_eakly")
 Location = 1
+StartMoveOnSpawnTimer = true
+InitialProgressRatio = 0.4
+EnableSpawnTimerDelay = true
+MinDelay = 0.3
+MaxDelay = 0.6
 SpawnPoolGD = Array[Object]([SubResource("Resource_kky0u")])
 metadata/_custom_type_script = "uid://c2ao0simwvpmt"
 
 [sub_resource type="Resource" id="Resource_v48an"]
 script = ExtResource("4_eakly")
 Location = 2
+SpawnImmediately = true
+InitialProgressRatio = 0.6
+EnableSpawnTimerDelay = true
+MinDelay = 0.3
+MaxDelay = 0.6
 SpawnPoolGD = Array[Object]([SubResource("Resource_kky0u")])
 metadata/_custom_type_script = "uid://c2ao0simwvpmt"
 
 [resource]
+resource_name = "missile-party"
 script = ExtResource("1_aagf8")
 FormationGD = Array[Object]([SubResource("Resource_kqluf"), SubResource("Resource_1by6e"), SubResource("Resource_v48an")])
+MinWave = 8
+MaxWave = 15
 metadata/_custom_type_script = "uid://b40t8najievo0"

@@ -1,3 +1,4 @@
+using Entities;
 using Godot;
 
 namespace Enemies
@@ -5,6 +6,7 @@ namespace Enemies
     [GlobalClass]
     public partial class Drone : EnemyNode
     {
+        private RayCast2D _visionRay;
         private Node2D _spriteContainer;
         private AnimatedSprite2D _base;
         private AnimatedSprite2D _engine;
@@ -13,6 +15,10 @@ namespace Enemies
         public override void _Ready()
         {
             base._Ready();
+            // Stop the fire timer since we'll control it using the raycast instead.
+            _weapon.FireTimer.Stop();
+
+            _visionRay = GetNode<RayCast2D>("%VisionRay");
             _spriteContainer = GetNode<Node2D>("%SpriteContainer");
             _base = _spriteContainer.GetNode<AnimatedSprite2D>("%Base");
             _engine = _spriteContainer.GetNode<AnimatedSprite2D>("%Engine");
@@ -40,6 +46,23 @@ namespace Enemies
             }
         }
 
+        public override void _PhysicsProcess(double delta)
+        {
+            base._PhysicsProcess(delta);
+            if (_visionRay.IsColliding() && _visionRay.GetCollider() is Player)
+            {
+                if (_weapon.FireTimer.IsStopped())
+                {
+                    FireWeapon();
+                    _weapon.FireTimer.Start(_weapon.Stats.FireRate);
+                }
+            }
+            else if (!_visionRay.IsColliding() && !_weapon.FireTimer.IsStopped())
+            {
+                _weapon.FireTimer.Stop();
+            }
+        }
+
         private void SetMoveAnimation()
         {
             if (_currentGlobalPosition != _lastGlobalPosition)
@@ -50,6 +73,24 @@ namespace Enemies
             {
                 _engine.Play("idle");
             }
+        }
+
+        protected override void FollowPath(EntityPath path, float speed)
+        {
+            float pathLength = path.Curve.GetBakedLength();
+            float stepDuration = Mathf.Max((pathLength / speed) * 0.5f, 0.1f);
+
+            if (_followTween != null)
+            {
+                _followTween.Kill();
+            }
+
+            _followTween = CreateTween();
+            _followTween
+                .TweenProperty(path.PathFollow, "progress_ratio", 0.5, stepDuration)
+                .SetTrans(Tween.TransitionType.Sine)
+                .SetEase(Tween.EaseType.In);
+            _followTween.TweenProperty(path.PathFollow, "progress_ratio", 1.0, stepDuration);
         }
 
         protected override void FireWeapon()

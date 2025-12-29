@@ -60,6 +60,9 @@ namespace WaveManagement
             set => _defaultFormation = value;
         }
 
+        [Export(SRP_HINT.RESOURCE_PATH, "SpawnerFormationScaler")]
+        public string LevelOneFormation { get; set; } = "uid://3bayun5b03eq";
+
         public SpawnerScaler CurrentSpawnerScaler => _currentSpawnerScaler;
         public SpawnerFormationScaler CurrentFormation => _currentFormationScaler;
 
@@ -81,7 +84,7 @@ namespace WaveManagement
             _waveManager = waveManager;
             _currentEnemyScaler = ResourceLoader.Load<EnemyScaler>(_defaultEnemyScaler);
             _currentFormationScaler = ResourceLoader.Load<SpawnerFormationScaler>(
-                _defaultFormation
+                LevelOneFormation
             );
             _currentSpawnerScaler = ResourceLoader.Load<SpawnerScaler>(_defaultSpawnerScaler);
         }
@@ -130,7 +133,7 @@ namespace WaveManagement
                     );
                 }
 
-                PoolLoader.LoadResourcePool(pool, directory);
+                PoolLoader.LoadResourcePool(pool, directory, true);
             }
             catch (Exception e)
             {
@@ -151,6 +154,9 @@ namespace WaveManagement
             _currentEnemyScaler = SelectScaler(_enemyScalerPool, wave, _defaultEnemyScaler);
             _currentSpawnerScaler = SelectScaler(_spawnerScalerPool, wave, _defaultSpawnerScaler);
             _currentFormationScaler = SelectScaler(_formationPool, wave, _defaultFormation);
+
+            // Log the formation for testing
+            DebugLogger.LogMessage($"Formation {_currentFormationScaler.ResourceName} selected!");
         }
 
         /// <summary>

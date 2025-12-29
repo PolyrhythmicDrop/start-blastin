@@ -46,13 +46,40 @@
       "resource_name": {
         "visibility": 0.0
       }
+    },
+    "res://resources/items/plugins/": {
+      "metadata/_custom_type_script": {
+        "visibility": 0.0
+      },
+      "resource_local_to_scene": {
+        "visibility": 0.0
+      },
+      "resource_name": {
+        "visibility": 0.0
+      }
+    },
+    "res://resources/wave-scalers/spawner-formations/": {
+      "FormationGD": {
+        "visibility": 0
+      },
+      "metadata/_custom_type_script": {
+        "visibility": 0.0
+      },
+      "resource_local_to_scene": {
+        "visibility": 0.0
+      },
+      "resource_name": {
+        "visibility": 0.0
+      }
     }
   },
   "recent_paths": [
     "res://resources/colors/",
     "res://resources/",
     "res://resources/items/modifiers/",
-    "res://resources/items/"
+    "res://resources/items/",
+    "res://resources/items/plugins/",
+    "res://resources/wave-scalers/spawner-formations/"
   ],
   "table_functions": {
     "filter": [

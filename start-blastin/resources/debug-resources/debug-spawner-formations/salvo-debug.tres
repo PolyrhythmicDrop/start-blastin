@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=8 format=3 uid="uid://bpkly10pliwt5"]
+
+[ext_resource type="Resource" uid="uid://lv3xojj0ktlw" path="res://resources/enemies/salvo.tres" id="1_1chax"]
+[ext_resource type="Script" uid="uid://b40t8najievo0" path="res://nodes/wave-management/wave-scalers/SpawnerFormationScaler.cs" id="1_f26nx"]
+[ext_resource type="Script" uid="uid://dyer2c2n8y1v4" path="res://nodes/enemies/Spawners/SpawnData.cs" id="2_xpnv7"]
+[ext_resource type="Script" uid="uid://c2ao0simwvpmt" path="res://nodes/wave-management/wave-scalers/SpawnerConfig.cs" id="3_f8etl"]
+
+[sub_resource type="Resource" id="Resource_2o2s6"]
+script = ExtResource("2_xpnv7")
+EnemyResource = ExtResource("1_1chax")
+Weight = 1
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_2q20y"]
+script = ExtResource("3_f8etl")
+Location = 1
+SpawnImmediately = true
+InitialProgressRatio = 0.5
+SpawnPoolGD = Array[Object]([SubResource("Resource_2o2s6")])
+metadata/_custom_type_script = "uid://c2ao0simwvpmt"
+
+[sub_resource type="Resource" id="Resource_1chax"]
+script = ExtResource("3_f8etl")
+Location = 2
+SpawnImmediately = true
+InitialProgressRatio = 0.5
+SpawnPoolGD = Array[Object]([SubResource("Resource_2o2s6")])
+metadata/_custom_type_script = "uid://c2ao0simwvpmt"
+
+[resource]
+script = ExtResource("1_f26nx")
+FormationGD = Array[Object]([SubResource("Resource_2q20y"), SubResource("Resource_1chax")])
+metadata/_custom_type_script = "uid://b40t8najievo0"

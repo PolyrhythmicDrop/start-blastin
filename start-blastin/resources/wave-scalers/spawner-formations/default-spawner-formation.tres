@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=13 format=3 uid="uid://dlqifjude3djo"]
+[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=12 format=3 uid="uid://dlqifjude3djo"]
 
 [ext_resource type="Script" uid="uid://b40t8najievo0" path="res://nodes/wave-management/wave-scalers/SpawnerFormationScaler.cs" id="1_8grec"]
 [ext_resource type="Resource" uid="uid://vfsjsr1mvlk1" path="res://resources/enemies/drone.tres" id="1_rnipl"]
@@ -42,26 +42,14 @@ script = ExtResource("2_rnipl")
 SpawnImmediately = true
 StartMoveOnSpawnTimer = true
 InitialProgressRatio = 0.2
-SpawnPoolGD = Array[Object]([SubResource("Resource_gr40p"), SubResource("Resource_3705c")])
 EnableSpawnTimerDelay = true
 MinDelay = 0.3
 MaxDelay = 0.5
-metadata/_custom_type_script = "uid://c2ao0simwvpmt"
-
-[sub_resource type="Resource" id="Resource_dbncf"]
-script = ExtResource("2_rnipl")
-SpawnImmediately = true
-StartMoveOnSpawnTimer = true
-InitialProgressRatio = 0.6
 SpawnPoolGD = Array[Object]([SubResource("Resource_gr40p"), SubResource("Resource_3705c")])
-EnableSpawnTimerDelay = true
-MinDelay = 0.6
-MaxDelay = 0.8
 metadata/_custom_type_script = "uid://c2ao0simwvpmt"
 
 [resource]
 resource_name = "default-spawner-formation"
 script = ExtResource("1_8grec")
-FormationGD = Array[Object]([SubResource("Resource_40jaa"), SubResource("Resource_2btky"), SubResource("Resource_dbncf")])
-MaxWave = 1
+FormationGD = Array[Object]([SubResource("Resource_40jaa"), SubResource("Resource_2btky")])
 metadata/_custom_type_script = "uid://b40t8najievo0"

@@ -57,19 +57,6 @@ namespace WaveManagement
         [Export(PropertyHint.Range, "0,1.0")]
         public float InitialProgressRatio { get; set; } = 0;
 
-        public SpawnPool SpawnPool => _spawnPool;
-
-        [Export]
-        public Godot.Collections.Array<SpawnData> SpawnPoolGD
-        {
-            get => _spawnPoolGD;
-            set
-            {
-                _spawnPool = [.. value];
-                _spawnPoolGD = value;
-            }
-        }
-
         [ExportGroup("Spawn Timer Delay")]
         [Export(PropertyHint.GroupEnable)]
         public bool EnableSpawnTimerDelay { get; set; }
@@ -92,6 +79,20 @@ namespace WaveManagement
         {
             get => _maxSpawnDelay;
             set => _maxSpawnDelay = value;
+        }
+
+        public SpawnPool SpawnPool => _spawnPool;
+
+        [ExportGroup("Spawn Pool")]
+        [Export]
+        public Godot.Collections.Array<SpawnData> SpawnPoolGD
+        {
+            get => _spawnPoolGD;
+            set
+            {
+                _spawnPool = [.. value];
+                _spawnPoolGD = value;
+            }
         }
 
         public void ConfigureSpawner(EnemySpawner spawner, double? waveTime = null)

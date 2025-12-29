@@ -44,8 +44,6 @@ public partial class Missile : Projectile
         // _targetingArea.BodyExited -= OnTargetAreaExited;
     }
 
-    public override void _Process(double delta) { }
-
     protected override Vector2 GetTrajectory(double delta)
     {
         if (_currentTarget != null)

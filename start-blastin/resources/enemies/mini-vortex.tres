@@ -26,4 +26,6 @@ CrashDamage = 1
 MaxHealth = 3.0
 WeaponResource = SubResource("Resource_3uiad")
 PathCurve = ExtResource("1_fllia")
+FluxReward = 50
+ByteReward = 200
 metadata/_custom_type_script = "uid://cf7pn6qd7aa15"

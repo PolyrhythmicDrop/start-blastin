@@ -56,7 +56,7 @@ run/main_run_args="--debug-stringnames"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg", "res://addons/resources_spreadsheet_view/plugin.cfg", "res://addons/safe_resource_picker/plugin.cfg")
+enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg", "res://addons/resources_spreadsheet_view/plugin.cfg", "res://addons/safe_resource_picker/plugin.cfg", "res://addons/subresource_inspector/plugin.cfg")
 
 [file_customization]
 

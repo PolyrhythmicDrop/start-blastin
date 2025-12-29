@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://da7sqkjhcrp8a"]
 
-[ext_resource type="Curve2D" uid="uid://bnvfjkrio8lfp" path="res://resources/curves/straight-down.tres" id="1_43c8p"]
+[ext_resource type="Curve2D" uid="uid://mjr63ghlss3t" path="res://resources/curves/spiral-curve.tres" id="1_43c8p"]
 [ext_resource type="Script" uid="uid://dc7up85m78i4d" path="res://nodes/components/EntityPath.cs" id="1_g26qx"]
 
 [node name="Path2D" type="Path2D"]
@@ -9,4 +9,4 @@ script = ExtResource("1_g26qx")
 
 [node name="PathFollow2D" type="PathFollow2D" parent="."]
 unique_name_in_owner = true
-rotation = 1.5707964
+rotation = 1.7255002

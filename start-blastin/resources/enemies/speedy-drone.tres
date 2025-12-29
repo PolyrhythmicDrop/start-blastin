@@ -6,9 +6,11 @@
 [ext_resource type="Script" uid="uid://boyq442k65gay" path="res://nodes/weapons/WeaponResource.cs" id="4_xf4cm"]
 
 [sub_resource type="Resource" id="Resource_7utlb"]
+resource_local_to_scene = true
 script = ExtResource("3_76l53")
 Damage = 0.5
-ProjectileSpeed = 700.0
+FireRate = 0.8
+ProjectileSpeed = 500.0
 metadata/_custom_type_script = "uid://bytfm61mpkr5u"
 
 [sub_resource type="Resource" id="Resource_e63ao"]
@@ -21,7 +23,7 @@ resource_local_to_scene = true
 resource_name = "speedy-drone"
 script = ExtResource("1_5071d")
 ScenePath = "res://nodes/enemies/Drone/drone.tscn"
-Speed = 300.0
+Speed = 250.0
 CrashDamage = 1
 MaxHealth = 1.0
 WeaponResource = SubResource("Resource_e63ao")

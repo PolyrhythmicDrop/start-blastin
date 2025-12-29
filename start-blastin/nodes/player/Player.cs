@@ -281,7 +281,13 @@ namespace Entities
         public override void _Ready()
         {
             _animationComponent = GetNode<AnimationComponent>("%AnimationComponent");
+
             _hitBox = GetNode<CollisionShape2D>("%HitBox");
+            if (_hitBox.Shape is ConvexPolygonShape2D convex)
+            {
+                convex.SetPointCloud(convex.Points);
+            }
+
             _movementComponent = GetNode<MovementComponent>("%MovementComponent");
             _controller = GetNode<PlayerController>("%PlayerController");
             _weaponComponent = GetNode<WeaponComponent>("%WeaponComponent");

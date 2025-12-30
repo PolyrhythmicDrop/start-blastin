@@ -11,5 +11,6 @@ Icon = ExtResource("1_fd4fh")
 Rarity = 1
 FluxCost = 10
 ByteCost = 10
+AppearsInShop = false
 Effects = null
 metadata/_custom_type_script = "uid://bauhwivw4ftik"

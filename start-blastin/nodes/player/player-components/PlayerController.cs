@@ -73,11 +73,12 @@ namespace PlayerComponents
         {
             if (Input.IsActionPressed("fire"))
             {
-                _player.Fire();
+                // _player.Fire();
+                _player.Block();
             }
             else if (Input.IsActionJustReleased("fire") || !Input.IsActionPressed("fire"))
             {
-                _player.StopFire();
+                // _player.StopFire();
             }
         }
 

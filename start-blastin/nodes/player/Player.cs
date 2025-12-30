@@ -41,6 +41,7 @@ namespace Entities
         private List<Modifier> _modifiers = new();
         private List<Plugin> _plugins = new();
         private WeaponPlugin _weaponPlugin;
+        private Shield _shield;
 
         private WeaponPlugin _defaultWeaponPlugin =>
             ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
@@ -287,6 +288,8 @@ namespace Entities
             {
                 convex.SetPointCloud(convex.Points);
             }
+
+            _shield = GetNode<Shield>("%Shield");
 
             _movementComponent = GetNode<MovementComponent>("%MovementComponent");
             _controller = GetNode<PlayerController>("%PlayerController");
@@ -903,5 +906,19 @@ namespace Entities
             DisconnectSignals();
             base._ExitTree();
         }
+
+        #region Shield
+
+        public void Block()
+        {
+            _shield.Enable();
+        }
+
+        public void EndBlock()
+        {
+            _shield.Disable();
+        }
+
+        #endregion
     }
 }

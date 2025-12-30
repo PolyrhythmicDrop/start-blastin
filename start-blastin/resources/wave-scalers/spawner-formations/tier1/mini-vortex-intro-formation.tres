@@ -30,5 +30,5 @@ resource_name = "mini-vortex-intro-formation"
 script = ExtResource("5_clifp")
 FormationGD = Array[Object]([SubResource("Resource_10rdk")])
 MinWave = 3
-MaxWave = 5
+MaxWave = 10
 metadata/_custom_type_script = "uid://b40t8najievo0"

@@ -95,8 +95,11 @@ namespace Enemies
 
         protected override void FireWeapon()
         {
-            base.FireWeapon();
-            _base.Play("fire");
+            if (_alive)
+            {
+                base.FireWeapon();
+                _base.Play("fire");
+            }
         }
 
         public override void Die(int? playerId = null)

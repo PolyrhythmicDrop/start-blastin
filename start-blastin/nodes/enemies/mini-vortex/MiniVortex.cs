@@ -39,8 +39,11 @@ namespace Enemies
 
         protected override void FireWeapon()
         {
-            base.FireWeapon();
-            _sprite.Play("fire");
+            if (_alive)
+            {
+                base.FireWeapon();
+                _sprite.Play("fire");
+            }
         }
 
         protected override void FollowPath(EntityPath path, float speed)
@@ -85,6 +88,15 @@ namespace Enemies
                     if (_alive)
                     {
                         _weapon.FireTimer.Stop();
+                    }
+                })
+            );
+            _followTween.TweenCallback(
+                Callable.From(() =>
+                {
+                    if (_alive)
+                    {
+                        _sprite.Play("default");
                     }
                 })
             );

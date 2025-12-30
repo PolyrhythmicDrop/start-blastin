@@ -3,7 +3,7 @@ using Godot;
 using Interfaces;
 
 [GlobalClass]
-public partial class Shield : StaticBody2D, IDeflector, IListener
+public partial class Shield : StaticBody2D, IDeflector, IListener, IVelocityProvider
 {
     private Sprite2D _sprite;
     private CollisionPolygon2D _collPoly;
@@ -13,7 +13,14 @@ public partial class Shield : StaticBody2D, IDeflector, IListener
     public Sprite2D Sprite => _sprite;
     public CollisionPolygon2D Polygon => _collPoly;
 
+    public float BlockTime { get; set; } = 0.5f;
+
     public bool DeflectActive { get; set; } = true;
+
+    /// <summary>
+    /// Is the shield active?
+    /// </summary>
+    public bool Enabled { get; set; } = true;
 
     public override void _Ready()
     {
@@ -37,7 +44,8 @@ public partial class Shield : StaticBody2D, IDeflector, IListener
 
     public void Enable()
     {
-        _shieldTimer.Start();
+        Enabled = true;
+        _shieldTimer.Start(BlockTime);
         _sprite.Visible = true;
         ProcessMode = ProcessModeEnum.Inherit;
         DeflectActive = true;
@@ -45,6 +53,7 @@ public partial class Shield : StaticBody2D, IDeflector, IListener
 
     public void Disable()
     {
+        Enabled = false;
         _sprite.Visible = false;
         ProcessMode = ProcessModeEnum.Disabled;
         DeflectActive = false;
@@ -54,5 +63,10 @@ public partial class Shield : StaticBody2D, IDeflector, IListener
     {
         DisconnectSignals();
         base._ExitTree();
+    }
+
+    public Vector2 GetCurrentVelocity()
+    {
+        return ConstantLinearVelocity;
     }
 }

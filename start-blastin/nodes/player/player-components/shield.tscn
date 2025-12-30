@@ -21,4 +21,5 @@ polygon = PackedVector2Array(-7, -24, -3.3884206, -30, 0.6115794, -30, 7.6115794
 
 [node name="Timer" type="Timer" parent="."]
 unique_name_in_owner = true
+wait_time = 0.5
 one_shot = true

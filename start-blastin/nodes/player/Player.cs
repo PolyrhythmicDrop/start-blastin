@@ -368,6 +368,10 @@ namespace Entities
         public override void _Process(double delta)
         {
             Move();
+            if (_shield.Enabled)
+            {
+                SetShieldVelocity();
+            }
         }
 
         public void Move()
@@ -917,6 +921,11 @@ namespace Entities
         public void EndBlock()
         {
             _shield.Disable();
+        }
+
+        private void SetShieldVelocity()
+        {
+            _shield.ConstantLinearVelocity = Velocity;
         }
 
         #endregion

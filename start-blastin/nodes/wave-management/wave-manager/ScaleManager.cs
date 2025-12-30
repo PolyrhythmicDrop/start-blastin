@@ -17,24 +17,27 @@ namespace WaveManagement
     [GlobalClass]
     public partial class ScaleManager : Node
     {
-        // ~~ Enemy Scaling Variables ~~ //
+        private PackedScene _spawnerScene = GD.Load<PackedScene>(
+            "res://nodes/enemies/Spawners/EnemySpawner/enemy-spawner.tscn"
+        );
+
         private string _defaultEnemyScaler =
             "res://resources/wave-scalers/enemy-scalers/default-enemy-scaler.tres";
-        private EnemyScaler _currentEnemyScaler;
-        private List<EnemyScaler> _enemyScalerPool = new();
-
-        // ~~ Spawner Scaling Variables ~~ //
 
         private string _defaultSpawnerScaler =
             "res://resources/wave-scalers/spawner-scalers/default-spawner-scaler.tres";
         private string _defaultFormation =
             "res://resources/wave-scalers/spawner-formations/default-spawner-formation.tres";
-        private PackedScene _spawnerScene = GD.Load<PackedScene>(
-            "res://nodes/enemies/Spawners/EnemySpawner/enemy-spawner.tscn"
-        );
 
+        private EnemyScaler _currentEnemyScaler;
+        private EnemyScaler _previousEnemyScaler;
         private SpawnerScaler _currentSpawnerScaler;
+        private SpawnerScaler _previousSpawnerScaler;
+
         private SpawnerFormationScaler _currentFormationScaler;
+        private SpawnerFormationScaler _previousFormationScaler;
+
+        private List<EnemyScaler> _enemyScalerPool = new();
 
         private List<SpawnerScaler> _spawnerScalerPool = new();
         private List<SpawnerFormationScaler> _formationPool = new();
@@ -83,10 +86,15 @@ namespace WaveManagement
             };
             _waveManager = waveManager;
             _currentEnemyScaler = ResourceLoader.Load<EnemyScaler>(_defaultEnemyScaler);
+            _previousEnemyScaler = _currentEnemyScaler;
+
             _currentFormationScaler = ResourceLoader.Load<SpawnerFormationScaler>(
                 LevelOneFormation
             );
+            _previousFormationScaler = _currentFormationScaler;
+
             _currentSpawnerScaler = ResourceLoader.Load<SpawnerScaler>(_defaultSpawnerScaler);
+            _previousSpawnerScaler = _currentSpawnerScaler;
         }
 
         /// <summary>
@@ -151,8 +159,13 @@ namespace WaveManagement
         /// Override this method and call <see cref="SelectScaler{T}"/> for all resource pools you need to load.
         public virtual void SetCurrentScalers(int wave)
         {
+            _previousEnemyScaler = _currentEnemyScaler;
             _currentEnemyScaler = SelectScaler(_enemyScalerPool, wave, _defaultEnemyScaler);
+
+            _previousSpawnerScaler = _currentSpawnerScaler;
             _currentSpawnerScaler = SelectScaler(_spawnerScalerPool, wave, _defaultSpawnerScaler);
+
+            _previousFormationScaler = _currentFormationScaler;
             _currentFormationScaler = SelectScaler(_formationPool, wave, _defaultFormation);
 
             // Log the formation for testing
@@ -183,9 +196,50 @@ namespace WaveManagement
                     );
                 }
 
-                int selection = RNG.GetRandomInt(0, matchingConfigs.Count - 1);
+                bool newScalerSelected = false;
+                T selectedScaler = null;
+                const int MAX_ATTEMPTS = 5;
+                int attempts = 0;
 
-                return matchingConfigs[selection];
+                while (!newScalerSelected && attempts < MAX_ATTEMPTS)
+                {
+                    int selection = RNG.GetRandomInt(0, matchingConfigs.Count - 1);
+                    selectedScaler = matchingConfigs[selection];
+
+                    switch (typeof(T))
+                    {
+                        case Type t when t == typeof(EnemyScaler):
+                        {
+                            newScalerSelected = !selectedScaler.Equals(_previousEnemyScaler);
+                            break;
+                        }
+                        case Type t when t == typeof(SpawnerScaler):
+                        {
+                            newScalerSelected = !selectedScaler.Equals(_previousSpawnerScaler);
+                            break;
+                        }
+                        case Type t when t == typeof(SpawnerFormationScaler):
+                        {
+                            newScalerSelected = !selectedScaler.Equals(_previousFormationScaler);
+                            break;
+                        }
+                    }
+
+                    attempts++;
+                }
+
+                if (selectedScaler == null)
+                {
+                    throw new InvalidOperationException(
+                        $"Could not find a new scaler of type {typeof(T).Name} to select! Returning default scaler."
+                    );
+                }
+                else
+                {
+                    return selectedScaler;
+                }
+
+                // return matchingConfigs[selection];
             }
             catch (Exception e)
             {

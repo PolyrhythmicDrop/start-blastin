@@ -367,18 +367,19 @@ namespace Entities
         #region Movement
         public override void _Process(double delta)
         {
-            Move();
+            Move(delta);
             if (_shield.Enabled)
             {
                 SetShieldVelocity();
             }
         }
 
-        public void Move()
+        public void Move(double delta)
         {
             Velocity = _movementComponent.SetVelocity(
                 _controller.xDirection,
-                _controller.yDirection
+                _controller.yDirection,
+                delta
             );
 
             MoveAndSlide();
@@ -915,7 +916,10 @@ namespace Entities
 
         public void Block()
         {
-            _shield.Enable();
+            if (!_shield.Enabled)
+            {
+                _shield.Enable();
+            }
         }
 
         public void EndBlock()

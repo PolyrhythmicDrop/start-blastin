@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Enemies;
 using Entities;
 using Events;
+using Factories;
 using Godot;
 using Interfaces;
 using Utility;
@@ -162,6 +163,7 @@ namespace Projectiles
         /// <param name="faction">The Faction this projectile belongs to.</param>
         public void SetRayMask(Faction faction)
         {
+            _ray?.SetCollisionMaskValue(8, true);
             switch (faction)
             {
                 case Faction.Enemies:
@@ -411,6 +413,8 @@ namespace Projectiles
         {
             // Enable aura detection (Layer 6) for both types
             SetCollisionMaskValue(6, true);
+            // Enable shield collision detection
+            SetCollisionMaskValue(8, true);
 
             switch (faction)
             {
@@ -512,8 +516,15 @@ namespace Projectiles
 
         public virtual void Deflect(IDeflector deflector, CollisionEventArgs args = null)
         {
+            // if (deflector is Node node)
+            // {
+            //     DebugLogger.LogMessage($"{Name} deflected by {node.Name}!");
+            // }
             // Convert to the opposite faction of the current faction.
-            ConvertToNewFaction();
+            if (deflector is Shield && _faction != Faction.Players)
+            {
+                ConvertToNewFaction(Faction.Players);
+            }
 
             // Default naive deflection, 180deg from current rotation.
             if (args == null || args?.CollisionNormal == Vector2.Zero)
@@ -537,6 +548,10 @@ namespace Projectiles
             {
                 AddDeflectionVelocity(velocitySource.GetCurrentVelocity());
             }
+
+            // Change the shader for easier detection
+            bool enemyFaction = _faction == Faction.Enemies ? true : false;
+            ProjectileFactory.SetProjectileShaderMaterial(this, enemyFaction);
         }
 
         public void SetProjectileAuraDetection(bool areaDetect)

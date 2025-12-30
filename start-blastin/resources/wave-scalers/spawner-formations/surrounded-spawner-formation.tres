@@ -24,10 +24,10 @@ script = ExtResource("4_bhaa7")
 Location = 1
 StartMoveOnSpawnTimer = true
 InitialProgressRatio = 0.5
-SpawnPoolGD = Array[Object]([SubResource("Resource_2uen1"), SubResource("Resource_dsyia")])
 EnableSpawnTimerDelay = true
 MinDelay = 0.4
 MaxDelay = 0.5
+SpawnPoolGD = Array[Object]([SubResource("Resource_2uen1"), SubResource("Resource_dsyia")])
 metadata/_custom_type_script = "uid://c2ao0simwvpmt"
 
 [sub_resource type="Resource" id="Resource_bhaa7"]
@@ -54,10 +54,10 @@ script = ExtResource("4_bhaa7")
 Location = 3
 StartMoveOnSpawnTimer = true
 InitialProgressRatio = 0.5
-SpawnPoolGD = Array[Object]([SubResource("Resource_2uen1"), SubResource("Resource_dsyia")])
 EnableSpawnTimerDelay = true
 MinDelay = 0.4
 MaxDelay = 0.5
+SpawnPoolGD = Array[Object]([SubResource("Resource_2uen1"), SubResource("Resource_dsyia")])
 metadata/_custom_type_script = "uid://c2ao0simwvpmt"
 
 [resource]

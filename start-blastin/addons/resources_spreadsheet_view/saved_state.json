@@ -24,19 +24,19 @@
     },
     "res://resources/items/": {
       "Icon": {
-        "visibility": 0
+        "visibility": 0.0
       },
       "Level": {
-        "visibility": 0
+        "visibility": 0.0
       },
       "NextLevel": {
-        "visibility": 0
+        "visibility": 0.0
       },
       "ProjectileType": {
-        "visibility": 0
+        "visibility": 0.0
       },
       "Upgradeable": {
-        "visibility": 0
+        "visibility": 0.0
       },
       "metadata/_custom_type_script": {
         "visibility": 0.0
@@ -45,7 +45,7 @@
         "visibility": 0.0
       },
       "resource_name": {
-        "visibility": 0
+        "visibility": 0.0
       },
       "resource_path": {
         "visibility": 0.0

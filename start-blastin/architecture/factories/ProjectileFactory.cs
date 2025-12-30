@@ -51,7 +51,7 @@ namespace Factories
             return ammo;
         }
 
-        private static void SetProjectileShaderMaterial(Projectile projectile, bool enemy)
+        public static void SetProjectileShaderMaterial(Projectile projectile, bool enemy)
         {
             // TODO: Add different palette swaps for different types of projectiles
             if (enemy)

@@ -29,14 +29,14 @@ motion_mode = 1
 platform_on_leave = 2
 script = ExtResource("1_4j62c")
 MaxHealth = 10.0
-Speed = 600.0
+Speed = 1250.0
 CrashDamage = 2.0
 PhaseDuration = 0.7999999999999999
 PhaseCooldown = 2.0
 PhaseSpeed = 200.0
 WeaponPlugin = ExtResource("2_5h4ma")
 Damage = 1.0
-FireRate = 0.5
+FireRate = 0.1
 ProjectileSpeed = 100.0
 PluginSlots = 3
 

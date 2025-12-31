@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://nenl15kjphyb"]
+[gd_scene load_steps=14 format=3 uid="uid://nenl15kjphyb"]
 
 [ext_resource type="Script" uid="uid://ceknkp5q1onls" path="res://nodes/player/Player.cs" id="1_4j62c"]
 [ext_resource type="Resource" uid="uid://dmulsmpa1tm6h" path="res://resources/items/weapon-plugins/bullet-plugin.tres" id="2_5h4ma"]
@@ -10,6 +10,7 @@
 [ext_resource type="Resource" uid="uid://coiv5i1pkqvv8" path="res://resources/weapons/blaster.tres" id="6_1fmtd"]
 [ext_resource type="PackedScene" uid="uid://bajml0u2freln" path="res://nodes/weapons/barrel.tscn" id="9_xl06i"]
 [ext_resource type="PackedScene" uid="uid://k6jtmcb31ro7" path="res://nodes/player/player-components/shield.tscn" id="10_qwfek"]
+[ext_resource type="AudioStream" uid="uid://b7pkc7sd8c1b6" path="res://assets/audio/sfx/projectiles/bullet/BulletShot.wav" id="11_1n2qe"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_xl06i"]
 resource_local_to_scene = true
@@ -85,3 +86,9 @@ shape = SubResource("ConvexPolygonShape2D_xl06i")
 [node name="Shield" parent="." instance=ExtResource("10_qwfek")]
 unique_name_in_owner = true
 position = Vector2(29, 1.2676303e-06)
+
+[node name="ShotAudio" type="AudioStreamPlayer2D" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("11_1n2qe")
+panning_strength = 0.5
+bus = &"Player"

@@ -43,6 +43,10 @@ namespace Entities
         private WeaponPlugin _weaponPlugin;
         private Shield _shield;
 
+        private AudioStreamPlayer2D _bulletShot;
+
+        public AudioStreamPlayer2D BulletShot => _bulletShot;
+
         private WeaponPlugin _defaultWeaponPlugin =>
             ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
 
@@ -290,6 +294,7 @@ namespace Entities
             }
 
             _shield = GetNode<Shield>("%Shield");
+            _bulletShot = GetNode<AudioStreamPlayer2D>("%ShotAudio");
 
             _movementComponent = GetNode<MovementComponent>("%MovementComponent");
             _controller = GetNode<PlayerController>("%PlayerController");

@@ -61,6 +61,10 @@ namespace PlayerComponents
             if (_weapon != null)
             {
                 _weapon.FireTimer.Timeout += _weapon.Fire;
+                _weapon.FireTimer.Timeout += () =>
+                {
+                    _player.BulletShot.Play();
+                };
             }
         }
 
@@ -71,6 +75,7 @@ namespace PlayerComponents
             if (fireTimer.IsStopped())
             {
                 _weapon.Fire();
+                _player.BulletShot.Play();
                 fireTimer.Start(_weapon.Stats.FireRate);
             }
         }

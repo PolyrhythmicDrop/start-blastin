@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=9 format=3 uid="uid://bu5re55rkrty4"]
+
+[ext_resource type="Resource" uid="uid://b6vj8iih7r25c" path="res://resources/enemies/mini-vortex.tres" id="1_uakgb"]
+[ext_resource type="Script" uid="uid://dyer2c2n8y1v4" path="res://nodes/enemies/Spawners/SpawnData.cs" id="2_ya8ke"]
+[ext_resource type="Resource" uid="uid://oepg1yh64jk4" path="res://resources/enemies/speedy-drone.tres" id="3_koief"]
+[ext_resource type="Script" uid="uid://c2ao0simwvpmt" path="res://nodes/wave-management/wave-scalers/SpawnerConfig.cs" id="4_d6c0r"]
+[ext_resource type="Script" uid="uid://b40t8najievo0" path="res://nodes/wave-management/wave-scalers/SpawnerFormationScaler.cs" id="5_clifp"]
+
+[sub_resource type="Resource" id="Resource_tldj8"]
+script = ExtResource("2_ya8ke")
+EnemyResource = ExtResource("1_uakgb")
+Weight = 10
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_736uj"]
+script = ExtResource("2_ya8ke")
+EnemyResource = ExtResource("3_koief")
+Weight = 6
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_10rdk"]
+script = ExtResource("4_d6c0r")
+SpawnImmediately = true
+InitialProgressRatio = 0.2
+SpawnPoolGD = Array[Object]([SubResource("Resource_tldj8"), SubResource("Resource_736uj")])
+metadata/_custom_type_script = "uid://c2ao0simwvpmt"
+
+[resource]
+resource_name = "mini-vortex-intro-formation"
+script = ExtResource("5_clifp")
+FormationGD = Array[Object]([SubResource("Resource_10rdk")])
+MinWave = 3
+MaxWave = 10
+metadata/_custom_type_script = "uid://b40t8najievo0"

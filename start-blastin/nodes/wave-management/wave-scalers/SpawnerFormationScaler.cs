@@ -1,28 +1,29 @@
-using System;
+using System.Collections.Generic;
 using Godot;
 
 namespace WaveManagement
 {
-    public enum SpawnerLocation
-    {
-        Top,
-        Left,
-        Right,
-        Bottom,
-    }
-
+    /// <summary>
+    /// Adjusts the possible enemies that can spawn and the locations of spawners based on the current wave.
+    /// </summary>
     [GlobalClass]
     public partial class SpawnerFormationScaler : WaveScaler
     {
-        private Godot.Collections.Dictionary<SpawnerLocation, int> _formation;
+        private List<SpawnerConfig> _formation;
 
-        /// <summary>
-        /// Layout and number of spawners at each location.
-        /// </summary>
-        /// <remarks>
-        /// The Key is a <see cref="SpawnerLocation"/>, and the Value is the number of spawners that should be at that location.
-        /// </remarks>
+        private Godot.Collections.Array<SpawnerConfig> _formationGD;
+
+        public List<SpawnerConfig> Formation => _formation;
+
         [Export]
-        public Godot.Collections.Dictionary<SpawnerLocation, int> Formation;
+        public Godot.Collections.Array<SpawnerConfig> FormationGD
+        {
+            get => _formationGD;
+            set
+            {
+                _formation = [.. value];
+                _formationGD = value;
+            }
+        }
     }
 }

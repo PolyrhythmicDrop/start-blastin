@@ -57,6 +57,7 @@ size_flags_vertical = 1
 unique_name_in_owner = true
 disable_mode = 1
 collision_layer = 2
+collision_mask = 9
 
 [node name="HUDCollision" type="CollisionShape2D" parent="HUDBody"]
 unique_name_in_owner = true

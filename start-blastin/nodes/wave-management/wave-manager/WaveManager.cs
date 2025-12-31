@@ -13,8 +13,8 @@ namespace WaveManagement
         private float _difficultyModifier = 0.1f;
         private Timer _waveTimer;
         private double _waveTime;
-        private EnemyScaleManager _enemyScaleManager;
-        private SpawnerScaleManager _spawnerScaleManager;
+
+        private ScaleManager _scaleManager;
 
         public int Wave => _wave;
 
@@ -23,6 +23,8 @@ namespace WaveManagement
         /// </summary>
         [Export]
         public Difficulty Difficulty { get; set; } = Difficulty.Easy;
+
+        public float DifficultyModifier => _difficultyModifier;
 
         /// <summary>
         /// Wait time for the <see cref="_waveTimer"/>.
@@ -43,11 +45,10 @@ namespace WaveManagement
         public override void _Ready()
         {
             _waveTimer = GetNode<Timer>("%WaveTimer");
-            _waveTimer.Timeout += EndWave;
             _waveTimer.WaitTime = _waveTime;
+            _waveTimer.Timeout += EndWave;
 
-            _enemyScaleManager = GetNode<EnemyScaleManager>("%EnemyScaleManager");
-            _spawnerScaleManager = GetNode<SpawnerScaleManager>("%SpawnerScaleManager");
+            _scaleManager = GetNode<ScaleManager>("%ScaleManager");
 
             ConnectSignals();
             SetBaseDifficultyModifier();
@@ -60,27 +61,15 @@ namespace WaveManagement
         /// </summary>
         private void SetBaseDifficultyModifier()
         {
-            switch (Difficulty)
+            _difficultyModifier = Difficulty switch
             {
-                case Difficulty.Easy:
-                    _difficultyModifier = 0.1f;
-                    break;
-                default:
-                case Difficulty.Medium:
-                    _difficultyModifier = 0.3f;
-                    break;
-                case Difficulty.Hard:
-                    _difficultyModifier = 0.5f;
-                    break;
-            }
+                Difficulty.Easy => 0.1f,
+                Difficulty.Medium => 0.3f,
+                Difficulty.Hard => 0.5f,
+                _ => 0.3f,
+            };
         }
 
-        /// <summary>
-        /// Connects WaveManager signals.
-        /// <list type="unordered">
-        /// <item><see cref="EventBus.StartWaveButtonPressed"/> => <see cref="StartWave()"/></item>
-        /// </list>
-        /// </summary>
         private void ConnectSignals()
         {
             EventBus.Instance.StartWaveButtonPressed += StartWave;
@@ -97,10 +86,6 @@ namespace WaveManagement
         {
             if (!_waveTimer.IsStopped())
             {
-                // EventBus.Instance.EmitSignal(
-                //     EventBus.SignalName.WaveTimeLeft,
-                //     [_waveTimer.TimeLeft, _waveTime]
-                // );
                 EventBus.Instance.RaiseWaveTimeLeft(_waveTimer.TimeLeft, _waveTime);
             }
         }
@@ -112,18 +97,8 @@ namespace WaveManagement
         /// </summary>
         private void SetScalers()
         {
-            _enemyScaleManager.SetCurrentScalers(_wave);
-            _spawnerScaleManager.SetCurrentScalers(_wave);
+            _scaleManager.SetCurrentScalers(_wave);
         }
-
-        /// <summary>
-        /// Sets each spawner's enemy wave configuration.
-        /// </summary>
-        private void ScaleSpawners() =>
-            _spawnerScaleManager.ScaleSpawners(
-                _enemyScaleManager.CurrentEnemyScaler,
-                _difficultyModifier
-            );
 
         #endregion
 
@@ -135,10 +110,8 @@ namespace WaveManagement
         /// </summary>
         private async void InitializeFirstWave()
         {
-            _enemyScaleManager.Initialize(this);
-            _spawnerScaleManager.Initialize(this);
-            await _spawnerScaleManager.AssembleFormation();
-            ScaleSpawners();
+            _scaleManager.Initialize(this);
+            await _scaleManager.AssembleFormation();
 
             StartWave();
         }
@@ -150,7 +123,6 @@ namespace WaveManagement
         private void StartWave()
         {
             _waveTimer.Start(_waveTime);
-            // EventBus.Instance.EmitSignal(EventBus.SignalName.WaveStarted, _wave);
             EventBus.Instance.RaiseWaveStarted(_wave);
         }
 
@@ -217,8 +189,7 @@ namespace WaveManagement
         private async void ScaleWave()
         {
             SetScalers();
-            await _spawnerScaleManager.AssembleFormation();
-            ScaleSpawners();
+            await _scaleManager.AssembleFormation();
         }
 
         /// <summary>

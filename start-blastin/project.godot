@@ -56,13 +56,14 @@ run/main_run_args="--debug-stringnames"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg", "res://addons/resources_spreadsheet_view/plugin.cfg", "res://addons/safe_resource_picker/plugin.cfg")
+enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg", "res://addons/resources_spreadsheet_view/plugin.cfg", "res://addons/safe_resource_picker/plugin.cfg", "res://addons/subresource_inspector/plugin.cfg")
 
 [file_customization]
 
 folder_colors={
 "res://architecture/": "purple",
 "res://assets/": "pink",
+"res://assets/audio/": "orange",
 "res://nodes/": "green",
 "res://nodes/player/components/": "purple",
 "res://nodes/player/sprites/": "pink",
@@ -209,6 +210,7 @@ debug-heal-player={
 2d_physics/layer_4="Projectiles-Player"
 2d_physics/layer_5="Projectiles-Enemy"
 2d_physics/layer_6="Auras"
+2d_physics/layer_8="Shields"
 
 [rendering]
 

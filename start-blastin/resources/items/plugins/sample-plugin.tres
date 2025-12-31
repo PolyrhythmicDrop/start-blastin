@@ -11,5 +11,6 @@ Name = &"Sample Plugin"
 Description = &"It\'s a sample."
 Icon = ExtResource("2_ad7uv")
 FluxCost = 10
+AppearsInShop = false
 Effects = Array[Object]([])
 metadata/_custom_type_script = "uid://b3qmdj461ykoi"

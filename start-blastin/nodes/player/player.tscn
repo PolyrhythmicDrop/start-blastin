@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://nenl15kjphyb"]
+[gd_scene load_steps=14 format=3 uid="uid://nenl15kjphyb"]
 
 [ext_resource type="Script" uid="uid://ceknkp5q1onls" path="res://nodes/player/Player.cs" id="1_4j62c"]
 [ext_resource type="Resource" uid="uid://dmulsmpa1tm6h" path="res://resources/items/weapon-plugins/bullet-plugin.tres" id="2_5h4ma"]
@@ -9,6 +9,8 @@
 [ext_resource type="Script" uid="uid://wvxahp2d8k6f" path="res://nodes/player/player-components/WeaponComponent.cs" id="5_5h4ma"]
 [ext_resource type="Resource" uid="uid://coiv5i1pkqvv8" path="res://resources/weapons/blaster.tres" id="6_1fmtd"]
 [ext_resource type="PackedScene" uid="uid://bajml0u2freln" path="res://nodes/weapons/barrel.tscn" id="9_xl06i"]
+[ext_resource type="PackedScene" uid="uid://k6jtmcb31ro7" path="res://nodes/player/player-components/shield.tscn" id="10_qwfek"]
+[ext_resource type="AudioStream" uid="uid://b7pkc7sd8c1b6" path="res://assets/audio/sfx/projectiles/bullet/BulletShot.wav" id="11_1n2qe"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_xl06i"]
 resource_local_to_scene = true
@@ -19,7 +21,7 @@ shader_parameter/mix_ratio = 0.0
 shader_parameter/color_array = PackedColorArray(1, 0.60784316, 0.7137255, 1, 1, 0.32941177, 0.4392157, 1, 0.74509805, 0.60784316, 1, 1, 0.34509805, 0.29803923, 0.5176471, 1, 0.14509805, 0.49019608, 0.60784316, 1, 0.14509805, 0.7372549, 0.7764706, 1)
 
 [sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_xl06i"]
-points = PackedVector2Array(29, -5.9999986, 29, 6.0000014, -10, 30, -25.000002, 29.999998, -25, 0, -24.999998, -30.000002, -10, -30)
+points = PackedVector2Array(26, -5.999999, -10, -30, -24.999998, -30.000002, -25, 0, -25.000002, 29.999998, -10, 30, 26, 6.000001)
 
 [node name="Player" type="CharacterBody2D" groups=["players"]]
 rotation = -1.5707964
@@ -28,14 +30,14 @@ motion_mode = 1
 platform_on_leave = 2
 script = ExtResource("1_4j62c")
 MaxHealth = 10.0
-Speed = 500.0
+Speed = 1250.0
 CrashDamage = 2.0
 PhaseDuration = 0.7999999999999999
 PhaseCooldown = 2.0
 PhaseSpeed = 200.0
 WeaponPlugin = ExtResource("2_5h4ma")
-Damage = 0.1
-FireRate = 0.5
+Damage = 1.0
+FireRate = 0.1
 ProjectileSpeed = 100.0
 PluginSlots = 3
 
@@ -58,7 +60,6 @@ InitWeaponResource = ExtResource("6_1fmtd")
 [node name="BarrelN" parent="WeaponComponent" instance=ExtResource("9_xl06i")]
 position = Vector2(14, 6.119594e-07)
 Base = true
-DefaultActive = true
 
 [node name="BarrelW" parent="WeaponComponent" instance=ExtResource("9_xl06i")]
 position = Vector2(3.45703e-07, -12)
@@ -81,3 +82,13 @@ Direction = 4
 [node name="HitBox" type="CollisionShape2D" parent="."]
 unique_name_in_owner = true
 shape = SubResource("ConvexPolygonShape2D_xl06i")
+
+[node name="Shield" parent="." instance=ExtResource("10_qwfek")]
+unique_name_in_owner = true
+position = Vector2(29, 1.2676303e-06)
+
+[node name="ShotAudio" type="AudioStreamPlayer2D" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("11_1n2qe")
+panning_strength = 0.5
+bus = &"Player"

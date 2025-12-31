@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using Autoloads;
 using Enemies;
 using Events;
@@ -243,10 +244,16 @@ namespace Effects
                                 ApplyEffect(target);
                             }
                         }
+                        // Don't throw an exception if this is a StatEffect, since that's applied separately but is still handled.
+                        else if (this is StatEffect)
+                        {
+                            return;
+                        }
                         else
                         {
                             throw new ArgumentException(
-                                $"Cannot apply a Trigger.Equip effect without a target, or without TargetType set to Self! Target: {target} | Target: {Target}"
+                                $"Cannot apply a Trigger.Equip effect without a target, or without TargetType set to Self! Target: {target} | Target: {Target}",
+                                paramName: nameof(target)
                             );
                         }
                         break;

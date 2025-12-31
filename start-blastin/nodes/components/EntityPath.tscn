@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://da7sqkjhcrp8a"]
 
-[ext_resource type="Curve2D" uid="uid://bw2uhxjrpsgc0" path="res://resources/curves/salvo-curve.tres" id="1_43c8p"]
+[ext_resource type="Curve2D" uid="uid://d3m8xemmt4jsn" path="res://resources/curves/down-and-stop.tres" id="1_43c8p"]
 [ext_resource type="Script" uid="uid://dc7up85m78i4d" path="res://nodes/components/EntityPath.cs" id="1_g26qx"]
 
 [node name="Path2D" type="Path2D"]

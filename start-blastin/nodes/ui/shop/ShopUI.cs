@@ -47,11 +47,12 @@ namespace UI.Shop
         {
             PoolLoader.LoadResourcePool(_itemPool, "res://resources/items/", true);
             // Cull all items that can't appear in the shop
-            var unsellable = _itemPool.FindAll(item => !item.AppearsInShop);
+            List<Item> unsellable = _itemPool.FindAll(item => !item.AppearsInShop);
             foreach (Item item in unsellable)
             {
                 _itemPool.Remove(item);
             }
+            unsellable.Clear();
         }
 
         public override void _Ready()

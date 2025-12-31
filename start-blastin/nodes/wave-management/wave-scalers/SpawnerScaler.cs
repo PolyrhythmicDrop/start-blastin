@@ -5,22 +5,18 @@ using Godot;
 
 namespace WaveManagement
 {
+    /// <summary>
+    /// Adjusts all EnemySpawner's movement speed and spawn interval based on the current wave.
+    /// </summary>
     [GlobalClass]
     public partial class SpawnerScaler : WaveScaler
     {
-        private SpawnPool _spawnPool = new();
         private float _moveDurationModifier;
         private float _spawnIntervalModifier;
 
-        [Export]
-        public Godot.Collections.Array<SpawnData> SpawnPool
-        {
-            get => _spawnPool.ConvertToGodotArray();
-            set => _spawnPool = new SpawnPool(value);
-        }
-
         /// <summary>
         /// Modifies the spawner's <see cref="EnemySpawner.SpawnPointMoveDuration"/> variable, which determines the speed of the spawn point's movement.
+        /// The higher the value, the faster the EnemySpawner moves.
         /// </summary>
         [Export]
         public float MoveDurationModifier
@@ -31,6 +27,7 @@ namespace WaveManagement
 
         /// <summary>
         /// Modifies the spawner's <see cref="EnemySpawner.SpawnInterval"/> variable, which determines the interval of time between enemy spawns.
+        /// The higher the value, the more frequently the EnemySpawner spawns enemies.
         /// </summary>
         [Export]
         public float SpawnIntervalModifier
@@ -52,7 +49,6 @@ namespace WaveManagement
             return new SpawnerScaler
             {
                 ResourceName = this.ResourceName + "-adjusted",
-                SpawnPool = this._spawnPool.ConvertToGodotArray(),
                 MoveDurationModifier = Mathf.Min(80f, this._moveDurationModifier + difficultyScale),
                 SpawnIntervalModifier = Mathf.Min(
                     80f,

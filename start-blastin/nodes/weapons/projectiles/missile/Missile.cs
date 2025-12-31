@@ -15,7 +15,7 @@ public partial class Missile : Projectile
     /// <summary>
     /// Rotation speed per frame, in radians.
     /// </summary>
-    private const float TURNRAD = 0.035f;
+    private const float TURNRAD = 0.025f;
 
     // Targeting variables
     private Area2D _targetingArea;
@@ -43,8 +43,6 @@ public partial class Missile : Projectile
         // _targetingArea.BodyEntered -= OnTargetAreaEntered;
         // _targetingArea.BodyExited -= OnTargetAreaExited;
     }
-
-    public override void _Process(double delta) { }
 
     protected override Vector2 GetTrajectory(double delta)
     {

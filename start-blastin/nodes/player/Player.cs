@@ -41,6 +41,11 @@ namespace Entities
         private List<Modifier> _modifiers = new();
         private List<Plugin> _plugins = new();
         private WeaponPlugin _weaponPlugin;
+        private Shield _shield;
+
+        private AudioStreamPlayer2D _bulletShot;
+
+        public AudioStreamPlayer2D BulletShot => _bulletShot;
 
         private WeaponPlugin _defaultWeaponPlugin =>
             ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
@@ -281,14 +286,23 @@ namespace Entities
         public override void _Ready()
         {
             _animationComponent = GetNode<AnimationComponent>("%AnimationComponent");
+
             _hitBox = GetNode<CollisionShape2D>("%HitBox");
+            if (_hitBox.Shape is ConvexPolygonShape2D convex)
+            {
+                convex.SetPointCloud(convex.Points);
+            }
+
+            _shield = GetNode<Shield>("%Shield");
+            _bulletShot = GetNode<AudioStreamPlayer2D>("%ShotAudio");
+
             _movementComponent = GetNode<MovementComponent>("%MovementComponent");
             _controller = GetNode<PlayerController>("%PlayerController");
             _weaponComponent = GetNode<WeaponComponent>("%WeaponComponent");
             CurrentHealth = _maxHealth;
 
-            InitializeComponents();
             ConnectSignals();
+            InitializeComponents();
 
             // Apply initial equipment
             EquipPlugin([.. InitialPlugins]);
@@ -358,14 +372,19 @@ namespace Entities
         #region Movement
         public override void _Process(double delta)
         {
-            Move();
+            Move(delta);
+            if (_shield.Enabled)
+            {
+                SetShieldVelocity();
+            }
         }
 
-        public void Move()
+        public void Move(double delta)
         {
             Velocity = _movementComponent.SetVelocity(
                 _controller.xDirection,
-                _controller.yDirection
+                _controller.yDirection,
+                delta
             );
 
             MoveAndSlide();
@@ -897,5 +916,27 @@ namespace Entities
             DisconnectSignals();
             base._ExitTree();
         }
+
+        #region Shield
+
+        public void Block()
+        {
+            if (!_shield.Enabled)
+            {
+                _shield.Enable();
+            }
+        }
+
+        public void EndBlock()
+        {
+            _shield.Disable();
+        }
+
+        private void SetShieldVelocity()
+        {
+            _shield.ConstantLinearVelocity = Velocity;
+        }
+
+        #endregion
     }
 }

@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3 uid="uid://k6jtmcb31ro7"]
+
+[ext_resource type="Texture2D" uid="uid://cdro5m8x72u18" path="res://assets/shields/shield.png" id="1_et6lk"]
+[ext_resource type="Script" uid="uid://xtu1hpna512e" path="res://nodes/player/player-components/Shield.cs" id="1_jihpr"]
+
+[node name="Shield" type="StaticBody2D"]
+collision_layer = 129
+collision_mask = 28
+script = ExtResource("1_jihpr")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+texture = ExtResource("1_et6lk")
+region_enabled = true
+region_rect = Rect2(26, 2, 14, 60)
+region_filter_clip_enabled = true
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+unique_name_in_owner = true
+build_mode = 1
+polygon = PackedVector2Array(-7, -24, -3.3884206, -30, 0.6115794, -30, 7.6115794, -5.000001, 7.6115794, 4.999999, 0.6115794, 30, -3.3884206, 30, -7, 24)
+
+[node name="Timer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 0.5
+one_shot = true

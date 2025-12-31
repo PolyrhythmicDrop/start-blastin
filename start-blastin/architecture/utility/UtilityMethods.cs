@@ -24,5 +24,71 @@ namespace Utility
                 "$1 $2"
             );
         }
+
+        /// <summary>
+        /// Converts a unit Curve resource to a Curve2D object for pathing.
+        /// Only works for simple, linear curves.
+        /// </summary>
+        /// <param name="curve">The Curve to convert.</param>
+        /// <param name="targetLength">The length of the curve</param>
+        /// <param name="sampleCount">The number of points to sample on the curve.</param>
+        /// <returns></returns>
+        public static Curve2D ConvertCurveToCurve2D(
+            Curve curve,
+            float targetLength = 1080,
+            int sampleCount = 20
+        )
+        {
+            Curve2D curve2D = new Curve2D();
+
+            for (int i = 0; i <= sampleCount; i++)
+            {
+                // Get the X position along the unit curve for this iteration.
+                float x = i / (float)sampleCount;
+
+                // Get the Y value from the curve at the X position (the offset).
+                float y = curve.Sample(x);
+
+                // Convert the new x and y values to a Vector 2 point in space along the specified length.
+                Vector2 point = new Vector2(x * targetLength, y * targetLength);
+
+                // Add the point to the new Curve2D.
+                curve2D.AddPoint(point);
+            }
+
+            return curve2D;
+        }
+
+        public static Curve2D ScaleCurve2DToLength(Curve2D originalCurve, float targetLength)
+        {
+            if (originalCurve == null || originalCurve.PointCount == 0)
+            {
+                return originalCurve;
+            }
+
+            // Get the length of the original curve.
+            float originalLength = originalCurve.GetBakedLength();
+            if (originalLength == 0)
+            {
+                return originalCurve;
+            }
+
+            // Get the scaling factor.
+            float scaleFactor = targetLength / originalLength;
+
+            Curve2D scaledCurve = new Curve2D();
+
+            // Scale each point along the original curve.
+            for (int i = 0; i < originalCurve.PointCount; i++)
+            {
+                Vector2 position = originalCurve.GetPointPosition(i) * scaleFactor;
+                Vector2 inHandle = originalCurve.GetPointIn(i) * scaleFactor;
+                Vector2 outHandle = originalCurve.GetPointOut(i) * scaleFactor;
+
+                scaledCurve.AddPoint(position, inHandle, outHandle);
+            }
+
+            return scaledCurve;
+        }
     }
 }

@@ -51,7 +51,7 @@ namespace Factories
             return ammo;
         }
 
-        private static void SetProjectileShaderMaterial(Projectile projectile, bool enemy)
+        public static void SetProjectileShaderMaterial(Projectile projectile, bool enemy)
         {
             // TODO: Add different palette swaps for different types of projectiles
             if (enemy)
@@ -68,30 +68,5 @@ namespace Factories
                 projectile.Material = null;
             }
         }
-
-        // /// <summary>
-        // /// Converts the projectile to a new owner, either the player or an enemy.
-        // /// Affects the shader material and the collision layers.
-        // /// </summary>
-        // /// <param name="projectile">The projectile to convert.</param>
-        // /// <param name="enemy">True if you want to turn the projectile into a enemy projectile, false to turn it into an player projectile.</param>
-        // public static void ConvertProjectileOwner(Projectile projectile, bool enemy)
-        // {
-        //     // Set the collision layers for the projectile and its RayCast
-        //     SetProjectileCollisionLayers(projectile, enemy);
-        //     projectile.SetRayMask(enemy);
-
-        //     // Set the shader material
-        //     SetProjectileShaderMaterial(projectile, enemy);
-
-        //     // Remove the projectile from the enemy pool so it doesn't get re-used.
-        //     projectile.SourceWeapon.Pool.Remove(projectile);
-
-        //     // If the projectile is a Missile, remove the current target
-        //     if (projectile is Missile missile)
-        //     {
-        //         missile.RemoveCurrentTarget();
-        //     }
-        // }
     }
 }

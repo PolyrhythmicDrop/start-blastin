@@ -1,20 +1,12 @@
-[gd_scene load_steps=40 format=3 uid="uid://ceskd66h14gf0"]
+[gd_scene load_steps=39 format=3 uid="uid://ceskd66h14gf0"]
 
 [ext_resource type="Script" uid="uid://7vphrsrmft36" path="res://nodes/enemies/salvo/Salvo.cs" id="1_mymqi"]
-[ext_resource type="Shader" uid="uid://bmacriris3r2k" path="res://resources/shaders/color-cycling-hit-effect.gdshader" id="3_p7tmb"]
+[ext_resource type="Material" uid="uid://c2utwn3c0waxt" path="res://resources/materials/enemy-hit-effect.tres" id="1_p7tmb"]
 [ext_resource type="Texture2D" uid="uid://b283vsw35o07h" path="res://assets/enemies/salvo/sir-salvo-engines-green.png" id="3_sfe3p"]
 [ext_resource type="Texture2D" uid="uid://dm4pfsdwaeao8" path="res://assets/enemies/salvo/sir-salvo-body-green.png" id="4_p7tmb"]
 [ext_resource type="Script" uid="uid://bekbgunrmk3ad" path="res://nodes/weapons/Barrel.cs" id="5_3pyoe"]
 [ext_resource type="Texture2D" uid="uid://c7nqm5bu87a12" path="res://assets/enemies/salvo/sir-salvo-rack-green.png" id="5_p7tmb"]
 [ext_resource type="Texture2D" uid="uid://bk1vfy16djv4w" path="res://assets/enemies/salvo/sir-salvo-destruction.png" id="6_y5jid"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_sfe3p"]
-resource_local_to_scene = true
-shader = ExtResource("3_p7tmb")
-shader_parameter/start_frame = 0
-shader_parameter/current_frame = 0
-shader_parameter/mix_ratio = 0.0
-shader_parameter/color_array = PackedColorArray(0.90325063, 0.71606773, 0.13664433, 1, 0.9286023, 0.44844162, 0.029969092, 1, 0.9297021, 0.55911386, 0.73078054, 1, 0.49905097, 0.24068788, 0.34344208, 1, 0.14509805, 0.49019608, 0.60784316, 1, 0.14509805, 0.7372549, 0.7764706, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_b18cq"]
 atlas = ExtResource("3_sfe3p")
@@ -265,6 +257,7 @@ radius = 37.0
 height = 90.0
 
 [node name="Salvo" type="AnimatableBody2D"]
+material = ExtResource("1_p7tmb")
 collision_layer = 4
 collision_mask = 11
 sync_to_physics = false
@@ -273,7 +266,7 @@ metadata/_custom_type_script = "uid://7vphrsrmft36"
 
 [node name="SpriteContainer" type="Node2D" parent="."]
 unique_name_in_owner = true
-material = SubResource("ShaderMaterial_sfe3p")
+use_parent_material = true
 
 [node name="Engine" type="AnimatedSprite2D" parent="SpriteContainer"]
 unique_name_in_owner = true

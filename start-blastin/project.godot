@@ -32,6 +32,7 @@ config/icon="res://icon.svg"
 
 EventBus="*res://architecture/autoloads/EventBus.cs"
 ServiceManager="*res://architecture/services/ServiceManager.cs"
+AudioService="*res://architecture/services/AudioService.cs"
 
 [debug]
 
@@ -63,7 +64,7 @@ enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg", "res://addon
 folder_colors={
 "res://architecture/": "purple",
 "res://assets/": "pink",
-"res://assets/audio/": "orange",
+"res://audio/": "orange",
 "res://nodes/": "green",
 "res://nodes/player/components/": "purple",
 "res://nodes/player/sprites/": "pink",

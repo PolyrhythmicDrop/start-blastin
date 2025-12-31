@@ -1,0 +1,10 @@
+[gd_resource type="AudioStreamRandomizer" load_steps=2 format=3 uid="uid://cgc4tra8abrff"]
+
+[ext_resource type="AudioStream" uid="uid://b7pkc7sd8c1b6" path="res://audio/sfx/projectiles/bullet/BulletShot.wav" id="1_xjvjp"]
+
+[resource]
+resource_name = "player-bullet-shot"
+random_pitch = 1.05
+random_volume_offset_db = 0.08
+streams_count = 1
+stream_0/stream = ExtResource("1_xjvjp")

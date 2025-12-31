@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dsrqls6e4km5h"]
+
+[ext_resource type="Script" uid="uid://bxy072ikgwytk" path="res://architecture/services/AudioService.cs" id="1_rp2ns"]
+
+[node name="AudioService" type="Node"]
+script = ExtResource("1_rp2ns")

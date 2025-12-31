@@ -4,6 +4,7 @@ using Entities;
 using Factories;
 using Godot;
 using Projectiles;
+using Services;
 using Utility;
 using Weapons;
 
@@ -63,7 +64,8 @@ namespace PlayerComponents
                 _weapon.FireTimer.Timeout += _weapon.Fire;
                 _weapon.FireTimer.Timeout += () =>
                 {
-                    _player.BulletShot.Play();
+                    // _player.BulletShot.Play();
+                    AudioService.Instance.PlaySound("player-bullet-shot", "Player", _player, 1);
                 };
             }
         }
@@ -75,7 +77,7 @@ namespace PlayerComponents
             if (fireTimer.IsStopped())
             {
                 _weapon.Fire();
-                _player.BulletShot.Play();
+                AudioService.Instance.PlaySound("player-bullet-shot", "Player", _player, 1);
                 fireTimer.Start(_weapon.Stats.FireRate);
             }
         }

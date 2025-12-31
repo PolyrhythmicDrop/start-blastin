@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Autoloads;
 using Entities;
 using Godot;
-using Items;
-using UI;
 using Utility;
 
 namespace Services

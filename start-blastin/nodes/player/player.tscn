@@ -1,8 +1,9 @@
-[gd_scene load_steps=16 format=3 uid="uid://nenl15kjphyb"]
+[gd_scene load_steps=18 format=3 uid="uid://nenl15kjphyb"]
 
 [ext_resource type="Script" uid="uid://ceknkp5q1onls" path="res://nodes/player/Player.cs" id="1_4j62c"]
 [ext_resource type="Resource" uid="uid://dmulsmpa1tm6h" path="res://resources/items/weapon-plugins/bullet-plugin.tres" id="2_5h4ma"]
 [ext_resource type="PackedScene" uid="uid://cr3k7kv44d7a6" path="res://nodes/player/player-components/animation-component.tscn" id="2_hs1md"]
+[ext_resource type="Script" uid="uid://bw0jf3wqbeqhj" path="res://nodes/player/player-components/InventoryComponent.cs" id="3_2xyxk"]
 [ext_resource type="Script" uid="uid://inq1tkdh0ogf" path="res://nodes/player/player-components/AudioComponent.cs" id="3_eiqky"]
 [ext_resource type="Script" uid="uid://dcupxkt621nuk" path="res://nodes/player/player-components/PlayerController.cs" id="4_1fmtd"]
 [ext_resource type="Shader" uid="uid://bmacriris3r2k" path="res://resources/shaders/color-cycling-hit-effect.gdshader" id="4_5h4ma"]
@@ -10,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://bh7mbhu54my3n" path="res://nodes/player/player-components/movement-component.tscn" id="4_xl06i"]
 [ext_resource type="Script" uid="uid://wvxahp2d8k6f" path="res://nodes/player/player-components/WeaponComponent.cs" id="5_5h4ma"]
 [ext_resource type="Resource" uid="uid://coiv5i1pkqvv8" path="res://resources/weapons/blaster.tres" id="6_1fmtd"]
+[ext_resource type="Script" uid="uid://75hy3sdqpcbx" path="res://nodes/player/player-components/PlayerStateComponent.cs" id="9_j4qgx"]
 [ext_resource type="PackedScene" uid="uid://bajml0u2freln" path="res://nodes/weapons/barrel.tscn" id="9_xl06i"]
 [ext_resource type="PackedScene" uid="uid://k6jtmcb31ro7" path="res://nodes/player/player-components/shield.tscn" id="10_qwfek"]
 
@@ -47,6 +49,11 @@ FireRate = 0.1
 ProjectileSpeed = 100.0
 PluginSlots = 3
 
+[node name="InventoryComponent" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("3_2xyxk")
+metadata/_custom_type_script = "uid://bw0jf3wqbeqhj"
+
 [node name="AudioComponent" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("3_eiqky")
@@ -59,6 +66,11 @@ material = SubResource("ShaderMaterial_xl06i")
 
 [node name="MovementComponent" parent="." instance=ExtResource("4_xl06i")]
 unique_name_in_owner = true
+
+[node name="PlayerStateComponent" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("9_j4qgx")
+metadata/_custom_type_script = "uid://75hy3sdqpcbx"
 
 [node name="PlayerController" type="Node" parent="."]
 unique_name_in_owner = true

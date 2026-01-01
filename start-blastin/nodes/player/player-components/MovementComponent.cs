@@ -1,8 +1,10 @@
 using System;
 using Autoloads;
+using Enemies;
 using Entities;
 using Godot;
 using Interfaces;
+using Utility;
 
 namespace PlayerComponents
 {
@@ -22,11 +24,13 @@ namespace PlayerComponents
 
         public float CurrentSpeedX => _currentSpeedX;
         public float CurrentSpeedY => _currentSpeedY;
-        public bool PhaseReady;
 
+        // public bool PhaseReady;
+
+        #region Initialization
         public override void _Ready()
         {
-            PhaseReady = true;
+            // PhaseReady = true;
             _phaseTimer = GetNode<Timer>("%PhaseTimer");
             _phaseCooldownTimer = GetNode<Timer>("%PhaseCooldownTimer");
         }
@@ -42,15 +46,17 @@ namespace PlayerComponents
 
         public void ConnectSignals()
         {
-            _phaseTimer.Timeout += _player.EndPhase;
-            _phaseCooldownTimer.Timeout += _player.OnPhaseReady;
+            _phaseTimer.Timeout += EndPhase;
+            _phaseCooldownTimer.Timeout += OnPhaseReady;
         }
 
         public void DisconnectSignals()
         {
-            _phaseTimer.Timeout -= _player.EndPhase;
-            _phaseCooldownTimer.Timeout -= _player.OnPhaseReady;
+            _phaseTimer.Timeout -= EndPhase;
+            _phaseCooldownTimer.Timeout -= OnPhaseReady;
         }
+
+        #endregion
 
         public override void _Process(double delta)
         {
@@ -61,6 +67,14 @@ namespace PlayerComponents
                     _phaseCooldownTimer.TimeLeft
                 );
             }
+        }
+
+        #region Movement
+
+        public void Move(double delta, float xDir, float yDir)
+        {
+            _player.Velocity = SetVelocity(xDir, yDir, delta);
+            _player.MoveAndSlide();
         }
 
         public Vector2 SetVelocity(float xInput, float yInput, double delta)
@@ -152,20 +166,62 @@ namespace PlayerComponents
                 }
             }
         }
+        #endregion
+
+        #region Phasing
+
+        public void OnPhaseReady()
+        {
+            _player.Animation.PlayPhaseReadyEffect();
+            _player.State.PhaseReady = true;
+        }
 
         public void StartPhase()
         {
-            PhaseReady = false;
-            _phaseTimer.Start(_player.PhaseDuration);
-            EventBus.Instance.RaisePhaseStarted(_player.PlayerId);
-            EventBus.Instance.RaisePlayerPhaseTimeLeft(_player.PlayerId, _player.PhaseCooldown);
+            if (_player.State.CanPhase())
+            {
+                _player.State.Phasing = true;
+                _player.Speed += _player.PhaseSpeed;
+
+                // Set collision
+                _player.SetCollisionMaskValue(3, false);
+                _player.SetCollisionMaskValue(5, false);
+                foreach (EnemyNode enemy in EnemyFinder.GetAllEnemies())
+                {
+                    enemy.SetCollisionMaskValue(1, false);
+                }
+
+                // _movementComponent.StartPhase();
+                _player.State.PhaseReady = false;
+                _phaseTimer.Start(_player.PhaseDuration);
+                EventBus.Instance.RaisePhaseStarted(_player.PlayerId);
+                EventBus.Instance.RaisePlayerPhaseTimeLeft(_player.PlayerId, _player.PhaseCooldown);
+
+                _player.Animation.TogglePhaseAnimation(true);
+            }
         }
 
         public void EndPhase()
         {
+            _player.State.Phasing = false;
+            _player.Speed -= _player.PhaseSpeed;
+
+            // Set collision
+            _player.SetCollisionMaskValue(3, true);
+            _player.SetCollisionMaskValue(5, true);
+            foreach (EnemyNode enemy in EnemyFinder.GetAllEnemies())
+            {
+                enemy.SetCollisionMaskValue(1, true);
+            }
+
+            // _movementComponent.EndPhase();
             _phaseCooldownTimer.Start(_player.PhaseCooldown);
             EventBus.Instance.RaisePhaseEnded(_player.PlayerId);
+
+            _player.Animation.TogglePhaseAnimation(false);
         }
+
+        #endregion
 
         public override void _ExitTree()
         {

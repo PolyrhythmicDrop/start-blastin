@@ -4,6 +4,7 @@ using Interfaces;
 
 namespace PlayerComponents
 {
+    [GlobalClass]
     public partial class InventoryComponent : Node, IPlayerComponent
     {
         private Player _player;

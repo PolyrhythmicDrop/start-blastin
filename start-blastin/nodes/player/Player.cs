@@ -34,20 +34,24 @@ namespace Entities
         #region Components
         private PlayerService _service = ServiceManager.Instance.GetService<PlayerService>();
         private StatManager _stats = new();
+        private InventoryComponent _inventory;
+        private AudioComponent _audioComponent;
         private AnimationComponent _animationComponent;
         private MovementComponent _movementComponent;
         private WeaponComponent _weaponComponent;
-        private AudioComponent _audioComponent;
+        private PlayerStateComponent _stateComponent;
+        private PlayerController _controller;
 
+        public InventoryComponent Inventory => _inventory;
         public MovementComponent Movement => _movementComponent;
         public WeaponComponent WeaponComp => _weaponComponent;
         public AnimationComponent Animation => _animationComponent;
         public AudioComponent Audio => _audioComponent;
+        public PlayerStateComponent State => _stateComponent;
 
         #endregion
 
         private CollisionShape2D _hitBox;
-        private PlayerController _controller;
         private List<Modifier> _modifiers = new();
         private List<Plugin> _plugins = new();
         private WeaponPlugin _weaponPlugin;
@@ -85,12 +89,18 @@ namespace Entities
 
         #region State
 
-        private bool _isPhasing = false;
-        private bool _phaseReady => _movementComponent.PhaseReady;
-        private bool _isDying = false;
-        private bool _deflectEnabled;
+        public bool DeflectActive
+        {
+            get => _stateComponent.DeflectActive;
+            set => _stateComponent.DeflectActive = value;
+        }
 
-        public bool DeflectActive { get; set; }
+        // private bool _isPhasing = false;
+        // private bool _phaseReady => _movementComponent.PhaseReady;
+        // private bool _isDying = false;
+        // private bool _deflectEnabled;
+
+        // public bool DeflectActive { get; set; }
 
         #endregion
 
@@ -267,8 +277,8 @@ namespace Entities
         [Signal]
         public delegate void PlayerDiedEventHandler();
 
-        public bool Dying => _isDying;
-        public bool Dodging => _isPhasing;
+        // public bool Dying => _isDying;
+        // public bool Dodging => _isPhasing;
 
         public void Fire() => _weaponComponent.FireWeapon();
 
@@ -304,6 +314,9 @@ namespace Entities
             _movementComponent = GetNode<MovementComponent>("%MovementComponent");
             _controller = GetNode<PlayerController>("%PlayerController");
             _weaponComponent = GetNode<WeaponComponent>("%WeaponComponent");
+            _stateComponent = GetNode<PlayerStateComponent>("%PlayerStateComponent");
+            _inventory = GetNode<InventoryComponent>("%InventoryComponent");
+
             CurrentHealth = _maxHealth;
 
             ConnectSignals();
@@ -385,66 +398,28 @@ namespace Entities
             }
         }
 
-        public void Move(double delta)
-        {
-            Velocity = _movementComponent.SetVelocity(
-                _controller.xDirection,
-                _controller.yDirection,
-                delta
-            );
+        public void Move(double delta) =>
+            _movementComponent.Move(delta, _controller.xDirection, _controller.yDirection);
 
-            MoveAndSlide();
-        }
+        // {
+        //     Velocity = _movementComponent.SetVelocity(
+        //         _controller.xDirection,
+        //         _controller.yDirection,
+        //         delta
+        //     );
 
-        public void StartPhase()
-        {
-            if (CanPhase())
-            {
-                _isPhasing = true;
-                Speed += PhaseSpeed;
+        //     MoveAndSlide();
+        // }
 
-                // Set collision
-                SetCollisionMaskValue(3, false);
-                SetCollisionMaskValue(5, false);
-                Godot.Collections.Array<Node> enemies = GetTree().GetNodesInGroup("enemies");
-                foreach (EnemyNode enemy in enemies)
-                {
-                    enemy.SetCollisionMaskValue(1, false);
-                }
+        public void StartPhase() => _movementComponent.StartPhase();
 
-                _movementComponent.StartPhase();
-                _animationComponent.TogglePhaseAnimation(true);
-            }
-        }
+        public void EndPhase() => _movementComponent.EndPhase();
 
-        public void EndPhase()
-        {
-            _isPhasing = false;
-            Speed -= PhaseSpeed;
-
-            // Set collision
-            SetCollisionMaskValue(3, true);
-            SetCollisionMaskValue(5, true);
-            Godot.Collections.Array<Node> enemies = GetTree().GetNodesInGroup("enemies");
-            foreach (EnemyNode enemy in enemies)
-            {
-                enemy.SetCollisionMaskValue(1, true);
-            }
-
-            _movementComponent.EndPhase();
-            _animationComponent.TogglePhaseAnimation(false);
-        }
-
-        private bool CanPhase()
-        {
-            return !_isPhasing && !_isDying && _phaseReady;
-        }
-
-        public void OnPhaseReady()
-        {
-            _animationComponent.PlayPhaseReadyEffect();
-            _movementComponent.PhaseReady = true;
-        }
+        // public void OnPhaseReady()
+        // {
+        //     _animationComponent.PlayPhaseReadyEffect();
+        //     _movementComponent.PhaseReady = true;
+        // }
         #endregion
 
         #region Health
@@ -485,7 +460,7 @@ namespace Entities
         public void Die(int? playerId = null)
         {
             _controller.Enabled = false;
-            _isDying = true;
+            _stateComponent.Dying = true;
             _hitBox.Disabled = true;
             _animationComponent.PlayDieAnimation();
         }

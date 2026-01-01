@@ -2,12 +2,12 @@ using System;
 using Autoloads;
 using Entities;
 using Godot;
-using Utility;
+using Interfaces;
 
 namespace PlayerComponents
 {
     [GlobalClass]
-    public partial class MovementComponent : Node
+    public partial class MovementComponent : Node, IListener
     {
         private Player _player;
         private float _maxSpeed => _player.Speed;
@@ -40,10 +40,16 @@ namespace PlayerComponents
             ConnectSignals();
         }
 
-        private void ConnectSignals()
+        public void ConnectSignals()
         {
             _phaseTimer.Timeout += _player.EndPhase;
             _phaseCooldownTimer.Timeout += _player.OnPhaseReady;
+        }
+
+        public void DisconnectSignals()
+        {
+            _phaseTimer.Timeout -= _player.EndPhase;
+            _phaseCooldownTimer.Timeout -= _player.OnPhaseReady;
         }
 
         public override void _Process(double delta)
@@ -89,20 +95,7 @@ namespace PlayerComponents
             }
 
             return new Vector2(_currentSpeedX, _currentSpeedY);
-
-            // return new Vector2(xInput * _maxSpeed, yInput * _maxSpeed);
         }
-
-        // public void Accelerate(float xInput, float yInput, double delta)
-        // {
-        //     // Get the x and y speed based on inputs and current velocity
-        //     _currentSpeedX += ACCEL_PER_TICK * ((float)delta * xInput);
-        //     _currentSpeedY += ACCEL_PER_TICK * ((float)delta * yInput);
-
-        //     // Clamp to max speed
-        //     _currentSpeedX = Math.Clamp(_currentSpeedX, -_maxSpeed, _maxSpeed);
-        //     _currentSpeedY = Math.Clamp(_currentSpeedY, -_maxSpeed, _maxSpeed);
-        // }
 
         public void AccelerateX(float xInput, double delta)
         {
@@ -172,6 +165,12 @@ namespace PlayerComponents
         {
             _phaseCooldownTimer.Start(_player.PhaseCooldown);
             EventBus.Instance.RaisePhaseEnded(_player.PlayerId);
+        }
+
+        public override void _ExitTree()
+        {
+            DisconnectSignals();
+            base._ExitTree();
         }
     }
 }

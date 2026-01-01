@@ -37,6 +37,10 @@ namespace Entities
         private AnimationComponent _animationComponent;
         private MovementComponent _movementComponent;
         private WeaponComponent _weaponComponent;
+        private AudioComponent _audioComponent;
+
+        public AudioComponent Audio => _audioComponent;
+
         private CollisionShape2D _hitBox;
         private PlayerController _controller;
         private List<Modifier> _modifiers = new();
@@ -87,9 +91,6 @@ namespace Entities
         #endregion
 
         public int PlayerId => _playerId;
-
-        [Export]
-        public SoundSet Sounds { get; set; }
 
         [Export(PropertyHint.Range, "1,100,1,or_greater")]
         public float MaxHealth
@@ -286,6 +287,7 @@ namespace Entities
         public override void _Ready()
         {
             _animationComponent = GetNode<AnimationComponent>("%AnimationComponent");
+            _audioComponent = GetNode<AudioComponent>("%AudioComponent");
 
             _hitBox = GetNode<CollisionShape2D>("%HitBox");
             if (_hitBox.Shape is ConvexPolygonShape2D convex)
@@ -309,6 +311,7 @@ namespace Entities
 
         private void InitializeComponents()
         {
+            _audioComponent.Initialize(this);
             _animationComponent.Initialize(this);
             _movementComponent.Initialize(this);
             _controller.Initialize(this);
@@ -689,6 +692,13 @@ namespace Entities
         {
             _weaponPlugin = weaponPlugin;
             _weaponComponent.SetWeaponProjectile(weaponPlugin.ProjectileType);
+
+            // Set the weapon's fire sound as the player's current firing sound
+            if (_weaponPlugin?.FireSound != null)
+            {
+                _audioComponent.Sounds.Fire = _weaponPlugin.FireSound;
+            }
+
             EventBus.Instance.RaisePlayerWeaponChanged(_playerId, _weaponPlugin);
         }
 

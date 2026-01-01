@@ -39,7 +39,12 @@ namespace Entities
         private WeaponComponent _weaponComponent;
         private AudioComponent _audioComponent;
 
+        public MovementComponent Movement => _movementComponent;
+        public WeaponComponent WeaponComp => _weaponComponent;
+        public AnimationComponent Animation => _animationComponent;
         public AudioComponent Audio => _audioComponent;
+
+        #endregion
 
         private CollisionShape2D _hitBox;
         private PlayerController _controller;
@@ -51,7 +56,6 @@ namespace Entities
         private WeaponPlugin _defaultWeaponPlugin =>
             ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
 
-        #endregion
         #region Stats
 
         private float _maxHealth => _stats.GetStat(StatType.MaxHealth).CurrentValue;

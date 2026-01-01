@@ -4,7 +4,6 @@
 
 [resource]
 resource_name = "player-bullet-shot"
-random_pitch = 1.05
-random_volume_offset_db = 0.08
+random_pitch = 1.1
 streams_count = 1
 stream_0/stream = ExtResource("1_xjvjp")

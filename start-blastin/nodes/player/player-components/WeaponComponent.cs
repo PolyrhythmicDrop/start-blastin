@@ -64,8 +64,7 @@ namespace PlayerComponents
                 _weapon.FireTimer.Timeout += _weapon.Fire;
                 _weapon.FireTimer.Timeout += () =>
                 {
-                    // _player.BulletShot.Play();
-                    AudioService.Instance.PlaySound("player-bullet-shot", "Player", _player, 1);
+                    AudioService.Instance.PlaySound("player-bullet-shot", _player, 1);
                 };
             }
         }
@@ -77,7 +76,7 @@ namespace PlayerComponents
             if (fireTimer.IsStopped())
             {
                 _weapon.Fire();
-                AudioService.Instance.PlaySound("player-bullet-shot", "Player", _player, 1);
+                AudioService.Instance.PlaySound("player-bullet-shot", _player, 1);
                 fireTimer.Start(_weapon.Stats.FireRate);
             }
         }

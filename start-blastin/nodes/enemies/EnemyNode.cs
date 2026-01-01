@@ -8,6 +8,7 @@ using Godot;
 using Interfaces;
 using Microsoft.VisualBasic;
 using Projectiles;
+using Services;
 using Stats;
 using Utility;
 using WaveManagement;
@@ -327,6 +328,7 @@ namespace Enemies
 
         protected virtual void FireWeapon()
         {
+            AudioService.Instance.PlaySound("player-bullet-shot", this, 1);
             _weapon.Fire();
         }
 

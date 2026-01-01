@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using Enemies;
 using Entities;
 using FileIO;
 using Godot;
@@ -156,13 +157,11 @@ namespace Services
                     Parent = parent ?? this,
                 };
 
+                // Set the name of the AudioStreamPlayer
+                player.Name = $"{data.Parent.Name}-{soundName}";
+
                 // Add the player as a child of its parent.
                 data.Parent?.AddChild(player);
-
-                // if (data.Parent == this)
-                // {
-                //     data.Player.Position = GetViewport().GetVisibleRect().Size / 2;
-                // }
 
                 // If the audioPlayers dictionary already contains the sound, add the new audio player data to the existing list.
                 if (_audioPlayers.ContainsKey(soundName))
@@ -225,7 +224,26 @@ namespace Services
         }
 
         /// <summary>
-        /// Plays a sound.
+        /// Basic wrapper method for playing a sound. Pass a source to enable automatic bus detection.
+        /// </summary>
+        /// <param name="soundName">The name of the sound to play.</param>
+        /// <param name="source">The source of the sound. Determines which bus plays the sound and the position of the sound.</param>
+        public void PlaySound(string soundName, Node source = null, int maxPolyphony = 5)
+        {
+            // Figure out the correct bus from the source
+            string bus = source switch
+            {
+                EnemyNode => "Enemies",
+                Player => "Player",
+                Control => "UI",
+                _ => "Master",
+            };
+
+            PlaySound(soundName, bus, source);
+        }
+
+        /// <summary>
+        /// Plays a sound with all the details explicitly specified. Use this directly if you want to override default sound playing behavior.
         /// </summary>
         /// <param name="soundName">The name of the sound to play. This must be an existing entry in the sound list.</param>
         public void PlaySound(

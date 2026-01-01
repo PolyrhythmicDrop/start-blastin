@@ -1,3 +1,4 @@
+using DataStructures;
 using Godot;
 using Weapons;
 
@@ -70,6 +71,9 @@ namespace Enemies
             get => _byteReward;
             set => _byteReward = value;
         }
+
+        [Export]
+        public SoundSet Sounds { get; set; }
 
         public EnemyResource()
             : this(0, 1, null, "", 0, null, 0, 0) { }

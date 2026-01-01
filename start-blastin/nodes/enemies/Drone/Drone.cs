@@ -1,5 +1,6 @@
 using Entities;
 using Godot;
+using Services;
 
 namespace Enemies
 {
@@ -11,6 +12,8 @@ namespace Enemies
         private AnimatedSprite2D _base;
         private AnimatedSprite2D _engine;
         private AnimatedSprite2D _destruction;
+
+        // ~~ Sound Strings ~~ //
 
         public override void _Ready()
         {

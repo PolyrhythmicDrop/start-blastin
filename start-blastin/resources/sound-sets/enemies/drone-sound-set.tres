@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SoundSet" load_steps=2 format=3 uid="uid://c2r5pw0qbvtfr"]
+
+[ext_resource type="Script" uid="uid://dt02kxv7k56mm" path="res://architecture/data-structures/SoundSet.cs" id="1_k2w0n"]
+
+[resource]
+script = ExtResource("1_k2w0n")
+Playlist = Dictionary[int, String]({
+0: "drone-shots"
+})
+Fire = "uid://c86hwny0l2bri"
+metadata/_custom_type_script = "uid://dt02kxv7k56mm"

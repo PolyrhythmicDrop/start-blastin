@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autoloads;
+using DataStructures;
 using Effects;
 using Enemies;
 using Events;
@@ -86,6 +87,9 @@ namespace Entities
         #endregion
 
         public int PlayerId => _playerId;
+
+        [Export]
+        public SoundSet Sounds { get; set; }
 
         [Export(PropertyHint.Range, "1,100,1,or_greater")]
         public float MaxHealth

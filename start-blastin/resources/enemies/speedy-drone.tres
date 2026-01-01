@@ -1,7 +1,8 @@
-[gd_resource type="Resource" script_class="EnemyResource" load_steps=7 format=3 uid="uid://oepg1yh64jk4"]
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=8 format=3 uid="uid://oepg1yh64jk4"]
 
 [ext_resource type="Script" uid="uid://cf7pn6qd7aa15" path="res://nodes/enemies/EnemyResource.cs" id="1_5071d"]
 [ext_resource type="Curve2D" uid="uid://ugylfjdaw4vv" path="res://resources/curves/sine-wave.tres" id="2_76l53"]
+[ext_resource type="Resource" uid="uid://c2r5pw0qbvtfr" path="res://resources/sound-sets/enemies/drone-sound-set.tres" id="2_xf4cm"]
 [ext_resource type="Script" uid="uid://bytfm61mpkr5u" path="res://nodes/weapons/WeaponStats.cs" id="3_76l53"]
 [ext_resource type="Script" uid="uid://boyq442k65gay" path="res://nodes/weapons/WeaponResource.cs" id="4_xf4cm"]
 
@@ -30,4 +31,5 @@ WeaponResource = SubResource("Resource_e63ao")
 PathCurve = ExtResource("2_76l53")
 FluxReward = 20
 ByteReward = 100
+Sounds = ExtResource("2_xf4cm")
 metadata/_custom_type_script = "uid://cf7pn6qd7aa15"

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
+using System.Runtime.CompilerServices;
 using Enemies;
 using Entities;
 using FileIO;
@@ -41,6 +41,48 @@ namespace Services
         {
             Instance = this;
             LoadRandomizersToDictionary();
+        }
+
+        /// <summary>
+        /// Gets all the sound names from the _streams Dictionary.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<string> GetSoundStrings()
+        {
+            foreach (string str in _streams.Keys)
+            {
+                yield return str;
+            }
+        }
+
+        /// <summary>
+        /// Matches a passed UID to a sound name string in the dictionary.
+        /// </summary>
+        /// <param name="uid">The UID to match.</param>
+        /// <returns>The sound name string, if found. If a matching string was not found, throws an exception and returns null.</returns>
+        public string MatchUidToSoundString(string uid)
+        {
+            // Convert the UID to a path, trim the .tres suffix, split according to the '/' character, and get the penultimate entry in the new array.
+            string pathStr = ResourceUid.UidToPath(uid).TrimSuffix(".tres").Split('/')[^1];
+            try
+            {
+                foreach (string streamStr in GetSoundStrings())
+                {
+                    if (pathStr == streamStr)
+                    {
+                        return streamStr;
+                    }
+                }
+                // If we couldn't find a matching string in the _streams list, throw
+                throw new InvalidCastException(
+                    $"Could not match the passed UID ({uid}) to a stream string! Make sure the UID belongs to an {typeof(AudioStreamRandomizer)} in the {STREAM_PATH} directory."
+                );
+            }
+            catch (Exception e)
+            {
+                DebugLogger.LogMessage(e.Message, true, true);
+                return null;
+            }
         }
 
         // Loads all existing AudioStreamRandomizers into the dictionary with the appropriate key.
@@ -230,6 +272,11 @@ namespace Services
         /// <param name="source">The source of the sound. Determines which bus plays the sound and the position of the sound.</param>
         public void PlaySound(string soundName, Node source = null, int maxPolyphony = 5)
         {
+            if (string.IsNullOrEmpty(soundName))
+            {
+                return;
+            }
+
             // Figure out the correct bus from the source
             string bus = source switch
             {
@@ -255,6 +302,20 @@ namespace Services
         {
             try
             {
+                // If the passed sound name is a UID, attempt to match it to an existing sound string.
+                if (soundName.Contains("uid://"))
+                {
+                    soundName = MatchUidToSoundString(soundName);
+                }
+
+                if (soundName == null || !_streams.ContainsKey(soundName))
+                {
+                    throw new ArgumentException(
+                        $"Could not find {soundName} in the list of audio streams! Make sure it exists and that you didn't typo somewhere.",
+                        paramName: soundName
+                    );
+                }
+
                 // Attempt to find any players that already have the sound loaded.
                 bool playersFound = _audioPlayers.TryGetValue(
                     soundName,
@@ -308,6 +369,11 @@ namespace Services
 
         public void PlaySoundFromData(string soundName, AudioPlayerData data, int maxPolyphony = 5)
         {
+            if (string.IsNullOrEmpty(soundName))
+            {
+                return;
+            }
+
             PlaySound(soundName, data.Bus, data.Parent, maxPolyphony);
         }
     }

@@ -1,13 +1,11 @@
 using System;
-using System.Reflection;
 using Autoloads;
+using DataStructures;
 using Entities;
 using Events;
 using Factories;
 using Godot;
 using Interfaces;
-using Microsoft.VisualBasic;
-using Projectiles;
 using Services;
 using Stats;
 using Utility;
@@ -33,6 +31,8 @@ namespace Enemies
 
         protected CollisionShape2D _shape;
         protected EntityPath _path;
+
+        protected SoundSet _sounds;
 
         #region Position and Velocity
         protected Vector2 _currentGlobalPosition;
@@ -128,9 +128,15 @@ namespace Enemies
         /// <param name="enemyResource">The resource used to create the enemy.</param>
         public virtual void Initialize(EnemyResource enemyResource)
         {
+            // Health
             _baseMaxHealth = enemyResource.MaxHealth;
             _currentHealth = _baseMaxHealth;
 
+            // Currency
+            _fluxReward = enemyResource.FluxReward;
+            _byteReward = enemyResource.ByteReward;
+
+            // Weapon initialization
             _weapon = WeaponFactory.CreateWeapon(
                 enemyResource.WeaponResource,
                 velocityProvider: this,
@@ -141,17 +147,17 @@ namespace Enemies
             _baseSpeed = enemyResource.Speed;
             _baseCrashDamage = enemyResource.CrashDamage;
 
-            _fluxReward = enemyResource.FluxReward;
-            _byteReward = enemyResource.ByteReward;
+            // Sound initialization
+            _sounds = (SoundSet)enemyResource.Sounds.Duplicate();
 
-            InitializeStats();
+            InitializeStatManager();
         }
 
         /// <summary>
         /// Initializes the enemy's stat manager and base stats.
         /// Called after <see cref="Initialize"/>, before the enemy is added to the scene tree.
         /// </summary>
-        public virtual void InitializeStats()
+        public virtual void InitializeStatManager()
         {
             _stats = new();
             _stats.AddStat(StatType.CrashDamage, _baseCrashDamage);
@@ -328,7 +334,7 @@ namespace Enemies
 
         protected virtual void FireWeapon()
         {
-            AudioService.Instance.PlaySound("player-bullet-shot", this, 1);
+            AudioService.Instance.PlaySound(_sounds?.Fire, this, 1);
             _weapon.Fire();
         }
 

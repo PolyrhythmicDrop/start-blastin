@@ -86,6 +86,21 @@ wave-manager="The wave manager. Use this group for debugging."
 
 theme/custom="uid://byu0wrnknwnnb"
 
+[importer_defaults]
+
+wav={
+"compress/mode": 0,
+"edit/loop_begin": 0,
+"edit/loop_end": -1,
+"edit/loop_mode": 0,
+"edit/normalize": false,
+"edit/trim": false,
+"force/8_bit": false,
+"force/max_rate": false,
+"force/max_rate_hz": 44100,
+"force/mono": false
+}
+
 [input]
 
 ui_accept={

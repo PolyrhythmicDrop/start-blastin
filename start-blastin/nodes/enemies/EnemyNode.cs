@@ -122,7 +122,7 @@ namespace Enemies
         }
 
         /// <summary>
-        /// Initializes the enemy node from an enemey resource.
+        /// Initializes the enemy node from an enemy resource.
         /// Called from the EnemyFactory before the enemy is added to the scene tree.
         /// </summary>
         /// <param name="enemyResource">The resource used to create the enemy.</param>
@@ -148,7 +148,7 @@ namespace Enemies
             _baseCrashDamage = enemyResource.CrashDamage;
 
             // Sound initialization
-            _sounds = (SoundSet)enemyResource.Sounds.Duplicate();
+            _sounds = (SoundSet)enemyResource.Sounds?.Duplicate();
 
             InitializeStatManager();
         }

@@ -2,7 +2,7 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://cccurllusfwgl"
+uid="uid://dc233os2xrmsn"
 path="res://.godot/imported/DroneShot.wav-f19f117608e324344de63a51447417f5.sample"
 
 [deps]
@@ -21,4 +21,4 @@ edit/normalize=false
 edit/loop_mode=0
 edit/loop_begin=0
 edit/loop_end=-1
-compress/mode=2
+compress/mode=0

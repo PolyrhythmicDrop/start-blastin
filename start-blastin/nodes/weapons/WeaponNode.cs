@@ -232,7 +232,7 @@ namespace Weapons
             {
                 if (healthful is Player healthfulPlayer)
                 {
-                    if (!healthfulPlayer.Dodging)
+                    if (!healthfulPlayer.State.Phasing)
                     {
                         healthfulPlayer.TakeDamage(_stats.Damage);
                         EventBus.Instance.RaisePlayerHitByProjectile(

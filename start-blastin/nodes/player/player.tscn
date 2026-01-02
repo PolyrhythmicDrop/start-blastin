@@ -1,7 +1,6 @@
-[gd_scene load_steps=18 format=3 uid="uid://nenl15kjphyb"]
+[gd_scene load_steps=16 format=3 uid="uid://nenl15kjphyb"]
 
 [ext_resource type="Script" uid="uid://ceknkp5q1onls" path="res://nodes/player/Player.cs" id="1_4j62c"]
-[ext_resource type="Resource" uid="uid://dmulsmpa1tm6h" path="res://resources/items/weapon-plugins/bullet-plugin.tres" id="2_5h4ma"]
 [ext_resource type="PackedScene" uid="uid://cr3k7kv44d7a6" path="res://nodes/player/player-components/animation-component.tscn" id="2_hs1md"]
 [ext_resource type="Script" uid="uid://bw0jf3wqbeqhj" path="res://nodes/player/player-components/InventoryComponent.cs" id="3_2xyxk"]
 [ext_resource type="Script" uid="uid://inq1tkdh0ogf" path="res://nodes/player/player-components/AudioComponent.cs" id="3_eiqky"]
@@ -10,7 +9,6 @@
 [ext_resource type="Script" uid="uid://dt02kxv7k56mm" path="res://architecture/data-structures/SoundSet.cs" id="4_j4qgx"]
 [ext_resource type="PackedScene" uid="uid://bh7mbhu54my3n" path="res://nodes/player/player-components/movement-component.tscn" id="4_xl06i"]
 [ext_resource type="Script" uid="uid://wvxahp2d8k6f" path="res://nodes/player/player-components/WeaponComponent.cs" id="5_5h4ma"]
-[ext_resource type="Resource" uid="uid://coiv5i1pkqvv8" path="res://resources/weapons/blaster.tres" id="6_1fmtd"]
 [ext_resource type="Script" uid="uid://75hy3sdqpcbx" path="res://nodes/player/player-components/PlayerStateComponent.cs" id="9_j4qgx"]
 [ext_resource type="PackedScene" uid="uid://bajml0u2freln" path="res://nodes/weapons/barrel.tscn" id="9_xl06i"]
 [ext_resource type="PackedScene" uid="uid://k6jtmcb31ro7" path="res://nodes/player/player-components/shield.tscn" id="10_qwfek"]
@@ -43,7 +41,6 @@ CrashDamage = 2.0
 PhaseDuration = 0.7999999999999999
 PhaseCooldown = 2.0
 PhaseSpeed = 200.0
-WeaponPlugin = ExtResource("2_5h4ma")
 Damage = 1.0
 FireRate = 0.1
 ProjectileSpeed = 100.0
@@ -53,6 +50,11 @@ PluginSlots = 3
 unique_name_in_owner = true
 script = ExtResource("3_2xyxk")
 metadata/_custom_type_script = "uid://bw0jf3wqbeqhj"
+
+[node name="Shield" parent="InventoryComponent" instance=ExtResource("10_qwfek")]
+unique_name_in_owner = true
+position = Vector2(0, -29)
+rotation = -1.5707964
 
 [node name="AudioComponent" type="Node" parent="."]
 unique_name_in_owner = true
@@ -79,7 +81,6 @@ script = ExtResource("4_1fmtd")
 [node name="WeaponComponent" type="Node2D" parent="."]
 unique_name_in_owner = true
 script = ExtResource("5_5h4ma")
-InitWeaponResource = ExtResource("6_1fmtd")
 
 [node name="BarrelN" parent="WeaponComponent" instance=ExtResource("9_xl06i")]
 position = Vector2(14, 6.119594e-07)
@@ -106,7 +107,3 @@ Direction = 4
 [node name="HitBox" type="CollisionShape2D" parent="."]
 unique_name_in_owner = true
 shape = SubResource("ConvexPolygonShape2D_xl06i")
-
-[node name="Shield" parent="." instance=ExtResource("10_qwfek")]
-unique_name_in_owner = true
-position = Vector2(29, 1.2676303e-06)

@@ -52,13 +52,14 @@ namespace Entities
         #endregion
 
         private CollisionShape2D _hitBox;
-        private List<Modifier> _modifiers = new();
-        private List<Plugin> _plugins = new();
-        private WeaponPlugin _weaponPlugin;
-        private Shield _shield;
 
-        private WeaponPlugin _defaultWeaponPlugin =>
-            ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
+        // private List<Modifier> _modifiers = new();
+        // private List<Plugin> _plugins = new();
+        // private WeaponPlugin _weaponPlugin;
+        // private Shield _shield;
+
+        // private WeaponPlugin _defaultWeaponPlugin =>
+        //     ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
 
         #region Stats
 
@@ -167,13 +168,13 @@ namespace Entities
             set => _stats.UpdateStat(StatType.PhaseSpeed, Mathf.Max(0.0f, value));
         }
 
-        [ExportGroup("Weapon Stats")]
-        [Export]
-        public WeaponPlugin WeaponPlugin
-        {
-            get => _weaponPlugin;
-            set => _weaponPlugin = value;
-        }
+        // [ExportGroup("Weapon Stats")]
+        // [Export]
+        // public WeaponPlugin WeaponPlugin
+        // {
+        //     get => _weaponPlugin;
+        //     set => _weaponPlugin = value;
+        // }
 
         /// <summary>
         /// The damage done by the player's weapon.
@@ -231,11 +232,11 @@ namespace Entities
             set => _stats.UpdateStat(StatType.PluginSlots, value);
         }
 
-        /// <summary>
-        /// The player's initial set of equipped plugins. Used for debugging.
-        /// </summary>
-        [Export]
-        public Godot.Collections.Array<Plugin> InitialPlugins { get; set; } = new();
+        // /// <summary>
+        // /// The player's initial set of equipped plugins. Used for debugging.
+        // /// </summary>
+        // [Export]
+        // public Godot.Collections.Array<Plugin> InitialPlugins { get; set; } = new();
 
         [ExportGroup("Currency")]
         [Export(PropertyHint.Range, "0,10000,10,greater_than")]
@@ -274,9 +275,6 @@ namespace Entities
 
         public WeaponNode Weapon => _weaponComponent.Weapon;
 
-        [Signal]
-        public delegate void PlayerDiedEventHandler();
-
         // public bool Dying => _isDying;
         // public bool Dodging => _isPhasing;
 
@@ -300,8 +298,16 @@ namespace Entities
 
         public override void _Ready()
         {
-            _animationComponent = GetNode<AnimationComponent>("%AnimationComponent");
+            CurrentHealth = _maxHealth;
+
+            // Set component node variables
             _audioComponent = GetNode<AudioComponent>("%AudioComponent");
+            _animationComponent = GetNode<AnimationComponent>("%AnimationComponent");
+            _movementComponent = GetNode<MovementComponent>("%MovementComponent");
+            _controller = GetNode<PlayerController>("%PlayerController");
+            _stateComponent = GetNode<PlayerStateComponent>("%PlayerStateComponent");
+            _inventory = GetNode<InventoryComponent>("%InventoryComponent");
+            _weaponComponent = GetNode<WeaponComponent>("%WeaponComponent");
 
             _hitBox = GetNode<CollisionShape2D>("%HitBox");
             if (_hitBox.Shape is ConvexPolygonShape2D convex)
@@ -309,21 +315,13 @@ namespace Entities
                 convex.SetPointCloud(convex.Points);
             }
 
-            _shield = GetNode<Shield>("%Shield");
+            // _shield = GetNode<Shield>("%Shield");
 
-            _movementComponent = GetNode<MovementComponent>("%MovementComponent");
-            _controller = GetNode<PlayerController>("%PlayerController");
-            _weaponComponent = GetNode<WeaponComponent>("%WeaponComponent");
-            _stateComponent = GetNode<PlayerStateComponent>("%PlayerStateComponent");
-            _inventory = GetNode<InventoryComponent>("%InventoryComponent");
-
-            CurrentHealth = _maxHealth;
-
-            ConnectSignals();
             InitializeComponents();
+            ConnectSignals();
 
-            // Apply initial equipment
-            EquipPlugin([.. InitialPlugins]);
+            // // Apply initial equipment
+            // EquipPlugin([.. InitialPlugins]);
         }
 
         private void InitializeComponents()
@@ -332,13 +330,15 @@ namespace Entities
             _animationComponent.Initialize(this);
             _movementComponent.Initialize(this);
             _controller.Initialize(this);
+            _stateComponent.Initialize(this);
+            _inventory.Initialize(this);
             _weaponComponent.Initialize(this);
 
-            if (_weaponPlugin != _defaultWeaponPlugin)
-            {
-                _weaponComponent.SetWeaponProjectile(_weaponPlugin.ProjectileType);
-            }
-            _plugins.Capacity = (int)_stats.GetStat(StatType.PluginSlots).CurrentValue;
+            // if (_weaponPlugin != _defaultWeaponPlugin)
+            // {
+            //     _weaponComponent.SetWeaponProjectile(_weaponPlugin.ProjectileType);
+            // }
+            // _plugins.Capacity = (int)_stats.GetStat(StatType.PluginSlots).CurrentValue;
         }
 
         private void ConnectSignals()
@@ -392,10 +392,10 @@ namespace Entities
         public override void _Process(double delta)
         {
             Move(delta);
-            if (_shield.Enabled)
-            {
-                SetShieldVelocity();
-            }
+            // if (_shield.Enabled)
+            // {
+            //     SetShieldVelocity();
+            // }
         }
 
         public void Move(double delta) =>
@@ -467,7 +467,7 @@ namespace Entities
 
         public void Despawn()
         {
-            EmitSignal(SignalName.PlayerDied);
+            // EmitSignal(SignalName.PlayerDied);
             QueueFree();
         }
 
@@ -479,19 +479,20 @@ namespace Entities
         /// </summary>
         /// <param name="item">The item to check for.</param>
         /// <returns>True if the player is able to buy and equip the item, false if not.</returns>
-        public bool CanBuyItem(Item item)
-        {
-            bool canAfford = CanAffordItem(item);
-            // bool noDupePlugins = _plugins.Contains(item) ? false : true;
-            bool noDupePlugins =
-                _plugins.Find(plugin => plugin.ResourceName == item.ResourceName) == null
-                    ? true
-                    : false;
-            bool noDupeWeapon = _weaponPlugin != item;
-            bool freeSlot = (_plugins.Count + 1) <= _pluginSlots;
+        public bool CanBuyItem(Item item) => _stateComponent.CanBuyItem(item);
 
-            return canAfford && noDupePlugins && noDupeWeapon && freeSlot;
-        }
+        // {
+        //     bool canAfford = CanAffordItem(item);
+        //     // bool noDupePlugins = _plugins.Contains(item) ? false : true;
+        //     bool noDupePlugins =
+        //         _plugins.Find(plugin => plugin.ResourceName == item.ResourceName) == null
+        //             ? true
+        //             : false;
+        //     bool noDupeWeapon = _weaponPlugin != item;
+        //     bool freeSlot = (_plugins.Count + 1) <= _pluginSlots;
+
+        //     return canAfford && noDupePlugins && noDupeWeapon && freeSlot;
+        // }
 
         /// <summary>
         /// Checks to see if the player can scrap the passed item.
@@ -511,22 +512,21 @@ namespace Entities
         /// <param name="flux">Output that indicates whether or not the player has enough flux.</param>
         /// <param name="bytes">Output that indicates whether or not the player has enough bytes.</param>
         /// <returns>True if the player is able to buy and equip the item, false if not.</returns>
-        public bool CanAffordItem(Item item, out bool flux, out bool bytes)
-        {
-            flux = item.FluxCost <= Flux;
-            bytes = item.ByteCost <= Bytes;
-            return flux && bytes;
-        }
+        public bool CanAffordItem(Item item, out bool flux, out bool bytes) =>
+            _stateComponent.CanAffordItem(item, out flux, out bytes);
+
+        // {
+        //     flux = item.FluxCost <= Flux;
+        //     bytes = item.ByteCost <= Bytes;
+        //     return flux && bytes;
+        // }
 
         /// <summary>
         /// Checks if the player can afford an item based on its flux and byte cost.
         /// </summary>
         /// <param name="item">The item to check.</param>
         /// <returns>True if the player can afford the item, false if not.</returns>
-        public bool CanAffordItem(Item item)
-        {
-            return item.FluxCost <= _flux && item.ByteCost <= _bytes;
-        }
+        public bool CanAffordItem(Item item) => _stateComponent.CanAffordItem(item);
 
         private void OnItemBought(object sender, ItemBoughtEventArgs args)
         {
@@ -546,7 +546,7 @@ namespace Entities
             switch (item)
             {
                 case Modifier modifier:
-                    AddModifier(modifier);
+                    EquipModifier(modifier);
                     break;
                 case Plugin plugin:
                     EquipPlugin(plugin);
@@ -563,145 +563,145 @@ namespace Entities
             ScrapItem(args.Item);
         }
 
-        private void ScrapItem(Item item)
-        {
-            // Add to the player's byte count.
-            // TODO: consider adding an item that lets you scrap stuff for flux, or both currencies.
-            Bytes += item.ScrapValue;
+        private void ScrapItem(Item item) => _inventory.ScrapItem(item);
 
-            // Remove the item from the player's equipment.
-            if (item is Plugin plugin)
-            {
-                UnequipPlugin(plugin);
-            }
+        // {
+        //     // Add to the player's byte count.
+        //     // TODO: consider adding an item that lets you scrap stuff for flux, or both currencies.
+        //     Bytes += item.ScrapValue;
 
-            // Apply stat effects based on the new loadout.
-            ApplyEquipStatEffects();
-        }
+        //     // Remove the item from the player's equipment.
+        //     if (item is Plugin plugin)
+        //     {
+        //         UnequipPlugin(plugin);
+        //     }
 
-        public void UnequipPlugin(Plugin plugin)
-        {
-            DebugLogger.LogMessage($"Unequipping {plugin.ResourceName}!", true);
+        //     // Apply stat effects based on the new loadout.
+        //     ApplyEquipStatEffects();
+        // }
 
-            DisablePluginEffects(plugin);
+        public void UnequipPlugin(Plugin plugin) => _inventory.UnequipPlugin(plugin);
 
-            if (plugin is WeaponPlugin)
-            {
-                // Revert to the basic bullet if you sell a weapon plugin.
-                ResetWeaponPlugin();
-            }
-            else if (_plugins.Contains(plugin))
-            {
-                _plugins.Remove(plugin);
-                EventBus.Instance.RaisePlayerItemRemoved(_playerId, plugin);
-            }
-        }
+        // {
+        //     DebugLogger.LogMessage($"Unequipping {plugin.ResourceName}!", true);
 
-        private void DisablePluginEffects(Plugin plugin)
-        {
-            DebugLogger.LogMessage($"Removing effects of {plugin.ResourceName}!", true);
-            foreach (Effect effect in plugin.GetEffectList())
-            {
-                if (effect is ChainEffect chainEffect)
-                {
-                    foreach (Effect nestedEffect in chainEffect.GetAllEffects())
-                    {
-                        nestedEffect.Disable(this);
-                    }
-                }
-                effect.Disable(this);
-            }
-        }
+        //     DisablePluginEffects(plugin);
 
-        public void AddModifier(params Modifier[] modifiers)
-        {
-            if (_modifiers != null)
-            {
-                _modifiers.AddRange(modifiers);
-                ApplyEquipStatEffects();
-            }
-        }
+        //     if (plugin is WeaponPlugin)
+        //     {
+        //         // Revert to the basic bullet if you sell a weapon plugin.
+        //         ResetWeaponPlugin();
+        //     }
+        //     else if (_plugins.Contains(plugin))
+        //     {
+        //         _plugins.Remove(plugin);
+        //         EventBus.Instance.RaisePlayerItemRemoved(_playerId, plugin);
+        //     }
+        // }
 
-        public void EquipPlugin(params Plugin[] plugins)
-        {
-            foreach (Plugin plugin in plugins)
-            {
-                // Add the plugin to the plugins list and raise the PlayerPluginEquipped event for this particular plugin
-                if (_plugins.Count <= _pluginSlots && plugin is not Items.WeaponPlugin)
-                {
-                    _plugins.Add(plugin);
-                    EventBus.Instance.RaisePlayerPluginEquipped(_playerId, plugin);
-                }
-                // Swap out any weapon plugins
-                else if (plugin is WeaponPlugin weaponPlugin)
-                {
-                    SwapWeaponPlugin(weaponPlugin);
-                    EventBus.Instance.RaisePlayerWeaponChanged(_playerId, _weaponPlugin);
-                }
-                else
-                {
-                    DebugLogger.LogMessage(
-                        $"Cannot add {plugin.ResourceName} to plugin list! Equipped plugin count cannot exceed plugin slots. Slots: {_pluginSlots} | Current equipped plugins: {_plugins.Count}",
-                        true,
-                        true
-                    );
-                }
-            }
+        private void DisablePluginEffects(Plugin plugin) => _inventory.DisablePluginEffects(plugin);
 
-            EnablePluginEffects(plugins);
+        // {
+        //     DebugLogger.LogMessage($"Removing effects of {plugin.ResourceName}!", true);
+        //     foreach (Effect effect in plugin.GetEffectList())
+        //     {
+        //         if (effect is ChainEffect chainEffect)
+        //         {
+        //             foreach (Effect nestedEffect in chainEffect.GetAllEffects())
+        //             {
+        //                 nestedEffect.Disable(this);
+        //             }
+        //         }
+        //         effect.Disable(this);
+        //     }
+        // }
 
-            // Apply equip effects
-            ApplyEquipStatEffects();
-        }
+        public void EquipModifier(params Modifier[] modifiers) =>
+            _inventory.EquipModifier(modifiers);
 
-        public void EnablePluginEffects(params Plugin[] plugins)
-        {
-            foreach (Plugin plugin in plugins)
-            {
-                // Only enable the top-level effects in the plugin.
-                // Nested effects are enabled by the parent ChainEffect.
-                foreach (Effect effect in plugin.GetEffectList())
-                {
-                    effect.Enable(this);
-                }
-            }
-        }
+        // {
+        //     if (_modifiers != null)
+        //     {
+        //         _modifiers.AddRange(modifiers);
+        //         ApplyEquipStatEffects();
+        //     }
+        // }
 
-        public void SwapWeaponPlugin(WeaponPlugin weaponPlugin)
-        {
-            _weaponPlugin = weaponPlugin;
-            _weaponComponent.SetWeaponProjectile(weaponPlugin.ProjectileType);
+        public void EquipPlugin(params Plugin[] plugins) => _inventory.EquipPlugin(plugins);
 
-            // Set the weapon's fire sound as the player's current firing sound
-            if (_weaponPlugin?.FireSound != null)
-            {
-                _audioComponent.Sounds.Fire = _weaponPlugin.FireSound;
-            }
+        // {
+        //     foreach (Plugin plugin in plugins)
+        //     {
+        //         // Add the plugin to the plugins list and raise the PlayerPluginEquipped event for this particular plugin
+        //         if (_plugins.Count <= _pluginSlots && plugin is not Items.WeaponPlugin)
+        //         {
+        //             _plugins.Add(plugin);
+        //             EventBus.Instance.RaisePlayerPluginEquipped(_playerId, plugin);
+        //         }
+        //         // Swap out any weapon plugins
+        //         else if (plugin is WeaponPlugin weaponPlugin)
+        //         {
+        //             SwapWeaponPlugin(weaponPlugin);
+        //             EventBus.Instance.RaisePlayerWeaponChanged(_playerId, _weaponPlugin);
+        //         }
+        //         else
+        //         {
+        //             DebugLogger.LogMessage(
+        //                 $"Cannot add {plugin.ResourceName} to plugin list! Equipped plugin count cannot exceed plugin slots. Slots: {_pluginSlots} | Current equipped plugins: {_plugins.Count}",
+        //                 true,
+        //                 true
+        //             );
+        //         }
+        //     }
 
-            EventBus.Instance.RaisePlayerWeaponChanged(_playerId, _weaponPlugin);
-        }
+        //     EnablePluginEffects(plugins);
 
-        /// <summary>
-        /// Resets the player's projectile type to the base projectile.
-        /// </summary>
-        private void ResetWeaponPlugin()
-        {
-            _weaponPlugin = ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
-            _weaponComponent.SetWeaponProjectile(_weaponPlugin.ProjectileType);
-            // EventBus.Instance.RaisePlayerWeaponChanged(_playerId, _weaponPlugin);
-        }
+        //     // Apply equip effects
+        //     ApplyEquipStatEffects();
+        // }
 
-        public IReadOnlyList<Plugin> GetPlugins()
-        {
-            return _plugins.AsReadOnly();
-        }
+        // public void EnablePluginEffects(params Plugin[] plugins)
+        // {
+        //     foreach (Plugin plugin in plugins)
+        //     {
+        //         // Only enable the top-level effects in the plugin.
+        //         // Nested effects are enabled by the parent ChainEffect.
+        //         foreach (Effect effect in plugin.GetEffectList())
+        //         {
+        //             effect.Enable(this);
+        //         }
+        //     }
+        // }
 
-        public bool HasPlugin(Plugin plugin)
-        {
-            bool hasWeapon = _weaponPlugin?.Equals(plugin) ?? false;
-            bool hasPlugin = _plugins.Find(eqPlugin => eqPlugin.Equals(plugin)) != null;
-            return hasWeapon || hasPlugin;
-        }
+        public void SwapWeaponPlugin(WeaponPlugin weaponPlugin) =>
+            _inventory.SwapWeaponPlugin(weaponPlugin);
+
+        // {
+        //     _weaponPlugin = weaponPlugin;
+        //     _weaponComponent.SetWeaponProjectile(weaponPlugin.ProjectileType);
+
+        //     // Set the weapon's fire sound as the player's current firing sound
+        //     if (_weaponPlugin?.FireSound != null)
+        //     {
+        //         _audioComponent.Sounds.Fire = _weaponPlugin.FireSound;
+        //     }
+
+        //     EventBus.Instance.RaisePlayerWeaponChanged(_playerId, _weaponPlugin);
+        // }
+
+        // /// <summary>
+        // /// Resets the player's projectile type to the base projectile.
+        // /// </summary>
+        // private void ResetWeaponPlugin()
+        // {
+        //     _weaponPlugin = ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
+        //     _weaponComponent.SetWeaponProjectile(_weaponPlugin.ProjectileType);
+        //     // EventBus.Instance.RaisePlayerWeaponChanged(_playerId, _weaponPlugin);
+        // }
+
+        public IReadOnlyList<Plugin> GetPlugins() => _inventory.EquippedPlugins;
+
+        public bool HasPlugin(Plugin plugin) => _inventory.HasPlugin(plugin);
 
         #endregion
 
@@ -761,81 +761,81 @@ namespace Entities
             }
         }
 
-        private void ApplyEquipEffects(Plugin plugin)
-        {
-            foreach (Effect effect in plugin.GetEffectList())
-            {
-                foreach (Effect nestedEffect in effect.GetAllEffects())
-                {
-                    // Don't apply equip effects if it's a StatEffect, since those are handled all together by ApplyEquipStatEffects
-                    // Otherwise apply effects from Equip + Self effects.
-                    if (
-                        nestedEffect is not StatEffect
-                        && nestedEffect.Trigger == Trigger.Equip
-                        && nestedEffect.Target == TargetType.Self
-                    )
-                    {
-                        nestedEffect.ApplyEffect(this);
-                    }
-                }
-            }
-        }
+        // private void ApplyEquipEffects(Plugin plugin)
+        // {
+        //     foreach (Effect effect in plugin.GetEffectList())
+        //     {
+        //         foreach (Effect nestedEffect in effect.GetAllEffects())
+        //         {
+        //             // Don't apply equip effects if it's a StatEffect, since those are handled all together by ApplyEquipStatEffects
+        //             // Otherwise apply effects from Equip + Self effects.
+        //             if (
+        //                 nestedEffect is not StatEffect
+        //                 && nestedEffect.Trigger == Trigger.Equip
+        //                 && nestedEffect.Target == TargetType.Self
+        //             )
+        //             {
+        //                 nestedEffect.ApplyEffect(this);
+        //             }
+        //         }
+        //     }
+        // }
 
-        /// <summary>
-        /// Applies StatEffects from all equipped items, starting with addition operations and ending with multiplicative operations.
-        /// Starts with base values of all stats and applies the changes to each stat's current values.
-        /// </summary>
-        private void ApplyEquipStatEffects()
-        {
-            // Sort the StatEffects by operation
-            List<StatEffect> addStatEffects = new();
-            List<StatEffect> multiplyStatEffects = new();
+        // /// <summary>
+        // /// Applies StatEffects from all equipped items, starting with addition operations and ending with multiplicative operations.
+        // /// Starts with base values of all stats and applies the changes to each stat's current values.
+        // /// </summary>
+        // private void ApplyEquipStatEffects()
+        // {
+        //     // Sort the StatEffects by operation
+        //     List<StatEffect> addStatEffects = new();
+        //     List<StatEffect> multiplyStatEffects = new();
 
-            foreach (Modifier modifier in _modifiers)
-            {
-                SortEffects(modifier.Effects, addStatEffects, multiplyStatEffects);
-            }
+        //     foreach (Modifier modifier in _modifiers)
+        //     {
+        //         SortEffects(modifier.Effects, addStatEffects, multiplyStatEffects);
+        //     }
 
-            foreach (Plugin plugin in _plugins)
-            {
-                List<Effect> equipEffects = plugin
-                    .GetEffectList()
-                    .FindAll(effect => effect.Trigger == Trigger.Equip);
-                SortEffects(equipEffects, addStatEffects, multiplyStatEffects);
-            }
+        //     foreach (Plugin plugin in _plugins)
+        //     {
+        //         List<Effect> equipEffects = plugin
+        //             .GetEffectList()
+        //             .FindAll(effect => effect.Trigger == Trigger.Equip);
+        //         SortEffects(equipEffects, addStatEffects, multiplyStatEffects);
+        //     }
 
-            // Add the weapon plugin to the mix
-            List<Effect> weapEffects = _weaponPlugin
-                .GetEffectList()
-                .FindAll(effect => effect.Trigger == Trigger.Equip);
-            SortEffects(weapEffects, addStatEffects, multiplyStatEffects);
+        //     // Add the weapon plugin to the mix
+        //     List<Effect> weapEffects = _weaponPlugin
+        //         .GetEffectList()
+        //         .FindAll(effect => effect.Trigger == Trigger.Equip);
+        //     SortEffects(weapEffects, addStatEffects, multiplyStatEffects);
 
-            UpdateStatsWithEffects(addStatEffects, multiplyStatEffects);
-        }
+        //     UpdateStatsWithEffects(addStatEffects, multiplyStatEffects);
+        // }
 
-        private void SortEffects(
-            IEnumerable<Effect> effects,
-            List<StatEffect> addEffects,
-            List<StatEffect> multiplyEffects
-        )
-        {
-            foreach (Effect effect in effects)
-            {
-                if (effect is StatEffect statEffect)
-                {
-                    if (statEffect.Operation == Operation.Add)
-                    {
-                        addEffects.Add(statEffect);
-                    }
-                    else if (statEffect.Operation == Operation.Multiply)
-                    {
-                        multiplyEffects.Add(statEffect);
-                    }
-                }
-            }
-        }
+        // private void SortEffectsByOperation(
+        //     IEnumerable<Effect> effects,
+        //     List<StatEffect> addEffects,
+        //     List<StatEffect> multiplyEffects
+        // )
+        // {
+        //     foreach (Effect effect in effects)
+        //     {
+        //         if (effect is StatEffect statEffect)
+        //         {
+        //             if (statEffect.Operation == Operation.Add)
+        //             {
+        //                 addEffects.Add(statEffect);
+        //             }
+        //             else if (statEffect.Operation == Operation.Multiply)
+        //             {
+        //                 multiplyEffects.Add(statEffect);
+        //             }
+        //         }
+        //     }
+        // }
 
-        private void UpdateStatsWithEffects(
+        public void UpdateStatsWithEffects(
             List<StatEffect> addEffects,
             List<StatEffect> multiplyEffects
         )
@@ -905,26 +905,26 @@ namespace Entities
             base._ExitTree();
         }
 
-        #region Shield
+        // #region Shield
 
-        public void Block()
-        {
-            if (!_shield.Enabled)
-            {
-                _shield.Enable();
-            }
-        }
+        // public void Block()
+        // {
+        //     if (!_shield.Enabled)
+        //     {
+        //         _shield.Enable();
+        //     }
+        // }
 
-        public void EndBlock()
-        {
-            _shield.Disable();
-        }
+        // public void EndBlock()
+        // {
+        //     _shield.Disable();
+        // }
 
-        private void SetShieldVelocity()
-        {
-            _shield.ConstantLinearVelocity = Velocity;
-        }
+        // private void SetShieldVelocity()
+        // {
+        //     _shield.ConstantLinearVelocity = Velocity;
+        // }
 
-        #endregion
+        // #endregion
     }
 }

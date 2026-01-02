@@ -115,6 +115,8 @@ namespace Enemies
             _base.Visible = false;
             _engine.Visible = false;
 
+            // Play the destruction sound
+            AudioService.Instance.PlaySound(_sounds?.Destruction, this, 1, attenuation: 0.8f);
             _destruction.Visible = true;
             _destruction.Play();
 

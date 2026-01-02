@@ -164,7 +164,8 @@ namespace Services
             string soundName,
             string bus = "Master",
             Node parent = null,
-            int maxPolyphony = 5
+            int maxPolyphony = 5,
+            float attenuation = 1
         )
         {
             try
@@ -189,6 +190,7 @@ namespace Services
                     Bus = bus,
                     MaxPolyphony = maxPolyphony,
                     Stream = stream,
+                    Attenuation = attenuation,
                 };
 
                 // Create a new set of AudioPlayerData
@@ -270,7 +272,12 @@ namespace Services
         /// </summary>
         /// <param name="soundName">The name of the sound to play.</param>
         /// <param name="source">The source of the sound. Determines which bus plays the sound and the position of the sound.</param>
-        public void PlaySound(string soundName, Node source = null, int maxPolyphony = 5)
+        public void PlaySound(
+            string soundName,
+            Node source = null,
+            int maxPolyphony = 5,
+            float attenuation = 1
+        )
         {
             if (string.IsNullOrEmpty(soundName))
             {
@@ -286,18 +293,19 @@ namespace Services
                 _ => "Master",
             };
 
-            PlaySound(soundName, bus, source);
+            PlaySound(soundName, bus, source, maxPolyphony, attenuation);
         }
 
         /// <summary>
-        /// Plays a sound with all the details explicitly specified. Use this directly if you want to override default sound playing behavior.
+        /// Plays a sound with all the details explicitly specified. Use this directly if you want to specify a bus instead of automatically detecting which one to use.
         /// </summary>
         /// <param name="soundName">The name of the sound to play. This must be an existing entry in the sound list.</param>
         public void PlaySound(
             string soundName,
             string bus = "Master",
-            Node parent = null,
-            int maxPolyphony = 5
+            Node source = null,
+            int maxPolyphony = 5,
+            float attenuation = 1
         )
         {
             try
@@ -327,11 +335,11 @@ namespace Services
                 {
                     // Set up the predicate in order of importance: parent, position, bus.
                     Predicate<AudioPlayerData> predicate;
-                    if (parent != null)
+                    if (source != null)
                     {
                         predicate = data =>
                         {
-                            return data.Parent == parent;
+                            return data.Parent == source;
                         };
                     }
                     else
@@ -343,7 +351,7 @@ namespace Services
                     }
 
                     AudioPlayerData playerData = playerDataList.Find(predicate);
-                    // If we found a set of data with the correct bus, play the sound and return. We're done!
+                    // If we found a set of data with the correct bus or parent, play the sound and return. We're done!
                     if (playerData != null)
                     {
                         playerData.Player.Play();
@@ -356,8 +364,9 @@ namespace Services
                 AudioStreamPlayer2D newPlayer = AddNewAudioStreamPlayer(
                     soundName,
                     bus,
-                    parent,
-                    maxPolyphony
+                    source,
+                    maxPolyphony,
+                    attenuation
                 );
                 newPlayer?.Play();
             }
@@ -367,14 +376,19 @@ namespace Services
             }
         }
 
-        public void PlaySoundFromData(string soundName, AudioPlayerData data, int maxPolyphony = 5)
+        public void PlaySoundFromData(
+            string soundName,
+            AudioPlayerData data,
+            int maxPolyphony = 5,
+            float attenuation = 1
+        )
         {
             if (string.IsNullOrEmpty(soundName))
             {
                 return;
             }
 
-            PlaySound(soundName, data.Bus, data.Parent, maxPolyphony);
+            PlaySound(soundName, data.Bus, data.Parent, maxPolyphony, attenuation);
         }
     }
 }

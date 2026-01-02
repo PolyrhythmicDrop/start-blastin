@@ -3,7 +3,7 @@
 [ext_resource type="AudioStream" uid="uid://dc233os2xrmsn" path="res://audio/sfx/enemies/drone/DroneShot.wav" id="1_y6agw"]
 
 [resource]
-random_pitch = 1.05
+random_pitch = 1.01
 random_volume_offset_db = 0.08
 streams_count = 1
 stream_0/stream = ExtResource("1_y6agw")

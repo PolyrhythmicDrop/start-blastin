@@ -53,14 +53,6 @@ namespace Entities
 
         private CollisionShape2D _hitBox;
 
-        // private List<Modifier> _modifiers = new();
-        // private List<Plugin> _plugins = new();
-        // private WeaponPlugin _weaponPlugin;
-        // private Shield _shield;
-
-        // private WeaponPlugin _defaultWeaponPlugin =>
-        //     ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
-
         #region Stats
 
         private float _maxHealth => _stats.GetStat(StatType.MaxHealth).CurrentValue;
@@ -95,13 +87,6 @@ namespace Entities
             get => _stateComponent.DeflectActive;
             set => _stateComponent.DeflectActive = value;
         }
-
-        // private bool _isPhasing = false;
-        // private bool _phaseReady => _movementComponent.PhaseReady;
-        // private bool _isDying = false;
-        // private bool _deflectEnabled;
-
-        // public bool DeflectActive { get; set; }
 
         #endregion
 
@@ -168,17 +153,13 @@ namespace Entities
             set => _stats.UpdateStat(StatType.PhaseSpeed, Mathf.Max(0.0f, value));
         }
 
-        // [ExportGroup("Weapon Stats")]
-        // [Export]
-        // public WeaponPlugin WeaponPlugin
-        // {
-        //     get => _weaponPlugin;
-        //     set => _weaponPlugin = value;
-        // }
-
+        [ExportGroup("Weapon Stats")]
         /// <summary>
         /// The damage done by the player's weapon.
         /// </summary>
+        /// <remarks>
+        /// This value is augmented or decreased by the player's equipped WeaponPlugin.
+        /// </remarks>
         [Export]
         public float Damage
         {
@@ -200,7 +181,10 @@ namespace Entities
         /// Rate of fire for the weapon, used in the FireTimer.
         /// Lower values mean a faster fire rate.
         /// </summary>
-        [Export]
+        /// <remarks>
+        /// This value is augmented or decreased by the player's equipped WeaponPlugin.
+        /// </remarks>
+        [Export(PropertyHint.Range, "0.05,5,0.01,greater_than")]
         public float FireRate
         {
             get => _fireRate;
@@ -209,12 +193,12 @@ namespace Entities
 
         /// <summary>
         /// The base speed of any projectile coming out of the player's weapon.
-        /// The player's WeaponPlugin can modify this value.
+        /// Projectile speed is augmented by the firing object's speed.
         /// </summary>
         /// <remarks>
-        /// Projectile speed is augmented by the firing object's speed.
+        /// This value is augmented or decreased by the player's equipped WeaponPlugin.
         /// </remarks>
-        [Export]
+        [Export(PropertyHint.Range, "0,10000,greater_than")]
         public float ProjectileSpeed
         {
             get => _projectileSpeed;
@@ -231,12 +215,6 @@ namespace Entities
             get => _pluginSlots;
             set => _stats.UpdateStat(StatType.PluginSlots, value);
         }
-
-        // /// <summary>
-        // /// The player's initial set of equipped plugins. Used for debugging.
-        // /// </summary>
-        // [Export]
-        // public Godot.Collections.Array<Plugin> InitialPlugins { get; set; } = new();
 
         [ExportGroup("Currency")]
         [Export(PropertyHint.Range, "0,10000,10,greater_than")]
@@ -275,9 +253,6 @@ namespace Entities
 
         public WeaponNode Weapon => _weaponComponent.Weapon;
 
-        // public bool Dying => _isDying;
-        // public bool Dodging => _isPhasing;
-
         public void Fire() => _weaponComponent.FireWeapon();
 
         public void StopFire() => _weaponComponent.StopWeapon();
@@ -315,13 +290,8 @@ namespace Entities
                 convex.SetPointCloud(convex.Points);
             }
 
-            // _shield = GetNode<Shield>("%Shield");
-
             InitializeComponents();
             ConnectSignals();
-
-            // // Apply initial equipment
-            // EquipPlugin([.. InitialPlugins]);
         }
 
         private void InitializeComponents()
@@ -333,12 +303,6 @@ namespace Entities
             _stateComponent.Initialize(this);
             _inventory.Initialize(this);
             _weaponComponent.Initialize(this);
-
-            // if (_weaponPlugin != _defaultWeaponPlugin)
-            // {
-            //     _weaponComponent.SetWeaponProjectile(_weaponPlugin.ProjectileType);
-            // }
-            // _plugins.Capacity = (int)_stats.GetStat(StatType.PluginSlots).CurrentValue;
         }
 
         private void ConnectSignals()

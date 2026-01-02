@@ -1,20 +1,8 @@
-[gd_resource type="Resource" script_class="EnemyResource" load_steps=8 format=3 uid="uid://b6vj8iih7r25c"]
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=5 format=3 uid="uid://b6vj8iih7r25c"]
 
 [ext_resource type="Curve2D" uid="uid://bnvfjkrio8lfp" path="res://resources/curves/straight-down.tres" id="1_fllia"]
 [ext_resource type="Script" uid="uid://bytfm61mpkr5u" path="res://nodes/weapons/WeaponStats.cs" id="1_naq0v"]
 [ext_resource type="Script" uid="uid://cf7pn6qd7aa15" path="res://nodes/enemies/EnemyResource.cs" id="1_sgr72"]
-[ext_resource type="Script" uid="uid://boyq442k65gay" path="res://nodes/weapons/WeaponResource.cs" id="2_fllia"]
-
-[sub_resource type="Resource" id="Resource_23x4b"]
-script = ExtResource("1_naq0v")
-FireRate = 0.2
-ProjectileSpeed = 400.0
-metadata/_custom_type_script = "uid://bytfm61mpkr5u"
-
-[sub_resource type="Resource" id="Resource_3uiad"]
-script = ExtResource("2_fllia")
-Stats = SubResource("Resource_23x4b")
-metadata/_custom_type_script = "uid://boyq442k65gay"
 
 [sub_resource type="Resource" id="Resource_fllia"]
 script = ExtResource("1_naq0v")
@@ -30,7 +18,6 @@ ScenePath = "res://nodes/enemies/mini-vortex/mini-vortex.tscn"
 Speed = 200.0
 CrashDamage = 1
 MaxHealth = 3.0
-WeaponResource = SubResource("Resource_3uiad")
 WeaponStats = SubResource("Resource_fllia")
 PathCurve = ExtResource("1_fllia")
 FluxReward = 50

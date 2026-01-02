@@ -44,9 +44,6 @@ namespace PlayerComponents
                 ProjectileSpeed = _player.ProjectileSpeed,
             };
 
-            // Create the weapon node using the stats.
-            WeaponResource resource = new() { Stats = weaponStats };
-
             _weaponNode = WeaponFactory.CreateWeapon(
                 weaponStats,
                 velocityProvider: _player,

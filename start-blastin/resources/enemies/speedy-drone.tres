@@ -1,23 +1,9 @@
-[gd_resource type="Resource" script_class="EnemyResource" load_steps=9 format=3 uid="uid://oepg1yh64jk4"]
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=6 format=3 uid="uid://oepg1yh64jk4"]
 
 [ext_resource type="Script" uid="uid://cf7pn6qd7aa15" path="res://nodes/enemies/EnemyResource.cs" id="1_5071d"]
 [ext_resource type="Curve2D" uid="uid://ugylfjdaw4vv" path="res://resources/curves/sine-wave.tres" id="2_76l53"]
 [ext_resource type="Resource" uid="uid://c2r5pw0qbvtfr" path="res://resources/sound-sets/enemies/drone-sound-set.tres" id="2_xf4cm"]
 [ext_resource type="Script" uid="uid://bytfm61mpkr5u" path="res://nodes/weapons/WeaponStats.cs" id="3_76l53"]
-[ext_resource type="Script" uid="uid://boyq442k65gay" path="res://nodes/weapons/WeaponResource.cs" id="4_xf4cm"]
-
-[sub_resource type="Resource" id="Resource_7utlb"]
-resource_local_to_scene = true
-script = ExtResource("3_76l53")
-Damage = 0.5
-FireRate = 0.8
-ProjectileSpeed = 500.0
-metadata/_custom_type_script = "uid://bytfm61mpkr5u"
-
-[sub_resource type="Resource" id="Resource_e63ao"]
-script = ExtResource("4_xf4cm")
-Stats = SubResource("Resource_7utlb")
-metadata/_custom_type_script = "uid://boyq442k65gay"
 
 [sub_resource type="Resource" id="Resource_76l53"]
 resource_local_to_scene = true
@@ -35,7 +21,6 @@ ScenePath = "res://nodes/enemies/Drone/drone.tscn"
 Speed = 250.0
 CrashDamage = 1
 MaxHealth = 1.0
-WeaponResource = SubResource("Resource_e63ao")
 WeaponStats = SubResource("Resource_76l53")
 PathCurve = ExtResource("2_76l53")
 FluxReward = 20

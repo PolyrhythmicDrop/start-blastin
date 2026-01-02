@@ -42,7 +42,7 @@ PhaseDuration = 0.7999999999999999
 PhaseCooldown = 2.0
 PhaseSpeed = 200.0
 Damage = 1.0
-FireRate = 0.1
+FireRate = 2.0
 ProjectileSpeed = 100.0
 PluginSlots = 3
 

@@ -20,7 +20,7 @@ namespace Weapons
     /// Weapons can be used by both enemies and the player.
     /// </summary>
     /// <remarks>
-    /// WeaponNode objects are typically built in the <see cref="WeaponFactory"/> class using a base <see cref="WeaponResource"/> as its source of base stats.
+    /// WeaponNode objects are typically built in the <see cref="WeaponFactory"/> class using a base <see cref="WeaponStats"/> resource as its source of base stats.
     /// </remarks>
     [GlobalClass]
     public partial class WeaponNode : Node2D

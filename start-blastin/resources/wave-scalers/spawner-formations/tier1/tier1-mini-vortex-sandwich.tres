@@ -1,12 +1,10 @@
-[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=20 format=3 uid="uid://dmn38vpvm2r85"]
+[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=16 format=3 uid="uid://dmn38vpvm2r85"]
 
 [ext_resource type="Resource" uid="uid://b6vj8iih7r25c" path="res://resources/enemies/mini-vortex.tres" id="1_0qib3"]
 [ext_resource type="Script" uid="uid://b40t8najievo0" path="res://nodes/wave-management/wave-scalers/SpawnerFormationScaler.cs" id="1_gbt46"]
 [ext_resource type="Script" uid="uid://c2ao0simwvpmt" path="res://nodes/wave-management/wave-scalers/SpawnerConfig.cs" id="1_us6wm"]
 [ext_resource type="Script" uid="uid://dyer2c2n8y1v4" path="res://nodes/enemies/Spawners/SpawnData.cs" id="2_m43y6"]
 [ext_resource type="Resource" uid="uid://oepg1yh64jk4" path="res://resources/enemies/speedy-drone.tres" id="4_m43y6"]
-[ext_resource type="Script" uid="uid://bytfm61mpkr5u" path="res://nodes/weapons/WeaponStats.cs" id="5_oa5me"]
-[ext_resource type="Script" uid="uid://boyq442k65gay" path="res://nodes/weapons/WeaponResource.cs" id="6_12qaa"]
 [ext_resource type="Script" uid="uid://cf7pn6qd7aa15" path="res://nodes/enemies/EnemyResource.cs" id="7_qnxvr"]
 
 [sub_resource type="Resource" id="Resource_0g5tc"]
@@ -51,17 +49,6 @@ _data = {
 }
 point_count = 2
 
-[sub_resource type="Resource" id="Resource_hvw3a"]
-script = ExtResource("5_oa5me")
-FireRate = 0.2
-ProjectileSpeed = 400.0
-metadata/_custom_type_script = "uid://bytfm61mpkr5u"
-
-[sub_resource type="Resource" id="Resource_ou61q"]
-script = ExtResource("6_12qaa")
-Stats = SubResource("Resource_hvw3a")
-metadata/_custom_type_script = "uid://boyq442k65gay"
-
 [sub_resource type="Resource" id="Resource_tymb7"]
 resource_local_to_scene = true
 resource_name = "mini-vortex"
@@ -70,7 +57,6 @@ ScenePath = "res://nodes/enemies/mini-vortex/mini-vortex.tscn"
 Speed = 200.0
 CrashDamage = 1
 MaxHealth = 3.0
-WeaponResource = SubResource("Resource_ou61q")
 PathCurve = SubResource("Curve2D_gexv4")
 FluxReward = 50
 ByteReward = 200

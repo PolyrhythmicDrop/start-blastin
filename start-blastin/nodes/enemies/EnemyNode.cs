@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Autoloads;
 using DataStructures;
 using Entities;
@@ -353,12 +354,37 @@ namespace Enemies
                 );
                 EventBus.Instance.RaiseEnemyKilled(args);
             }
-            // Queue free after all child projectiles die
+            // Queue free after all child projectiles die and all child audio nodes stop playing
+            bool soundsFinished = await WaitForAudioEnd();
             bool projectilesDisabled = await _weapon.WaitForAllProjectilesDisabled();
-            if (projectilesDisabled)
+
+            if (projectilesDisabled && soundsFinished)
             {
                 QueueFree();
             }
+        }
+
+        private async Task<bool> WaitForAudioEnd()
+        {
+            var children = GetChildren();
+            foreach (Node node in children)
+            {
+                if (node is not AudioStreamPlayer2D audioStream)
+                {
+                    continue;
+                }
+
+                if (!audioStream.Playing)
+                {
+                    continue;
+                }
+                else
+                {
+                    await ToSignal(audioStream, AudioStreamPlayer2D.SignalName.Finished);
+                    continue;
+                }
+            }
+            return true;
         }
 
         public virtual void PlayDamageAnimation()

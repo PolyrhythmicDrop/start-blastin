@@ -219,7 +219,7 @@ namespace Services
                 }
 
                 // Set up a callback so the audio player is removed when its parent exits the tree.
-                data.Parent.TreeExiting += () => RemoveAudioStreamPlayer(player);
+                data.Parent.TreeExited += () => RemoveAudioStreamPlayer(player);
 
                 return player;
             }
@@ -234,7 +234,7 @@ namespace Services
         /// Finds an <see cref="AudioStreamPlayer2D"/> in the _audioPlayers list and attempts to remove it.
         /// </summary>
         /// <param name="audioPlayer">The audio player to remove.</param>
-        public void RemoveAudioStreamPlayer(AudioStreamPlayer2D audioPlayer)
+        public async void RemoveAudioStreamPlayer(AudioStreamPlayer2D audioPlayer)
         {
             AudioPlayerData dataToRemove = null;
             string soundName = null;
@@ -263,7 +263,15 @@ namespace Services
             if (dataToRemove != null && soundName != null)
             {
                 _audioPlayers[soundName].Remove(dataToRemove);
-                audioPlayer.QueueFree();
+                if (!audioPlayer.Playing)
+                {
+                    audioPlayer.QueueFree();
+                }
+                else
+                {
+                    await ToSignal(audioPlayer, AudioStreamPlayer2D.SignalName.Finished);
+                    audioPlayer.QueueFree();
+                }
             }
         }
 

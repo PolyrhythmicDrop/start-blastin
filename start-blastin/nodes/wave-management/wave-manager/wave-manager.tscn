@@ -18,5 +18,5 @@ one_shot = true
 [node name="ScaleManager" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("2_2lj5f")
-LevelOneFormation = "uid://24rnstxyor8g"
+LevelOneFormation = "uid://bu5re55rkrty4"
 metadata/_custom_type_script = "uid://d0dqgm5onjrth"

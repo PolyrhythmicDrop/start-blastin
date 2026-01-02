@@ -9,7 +9,7 @@ namespace Enemies
     {
         protected string _scenePath;
         protected float _maxHealth;
-        protected WeaponResource _weaponResource;
+        protected WeaponStats _weaponStats;
         protected Curve2D _pathCurve;
         protected float _speed;
         protected int _crashDamage;
@@ -45,10 +45,10 @@ namespace Enemies
         }
 
         [Export]
-        public WeaponResource WeaponResource
+        public WeaponStats WeaponStats
         {
-            get => _weaponResource;
-            set => _weaponResource = value;
+            get => _weaponStats;
+            set => _weaponStats = value;
         }
 
         [Export]
@@ -84,7 +84,7 @@ namespace Enemies
             Curve2D pathCurve,
             string scenePath,
             float speed,
-            WeaponResource weaponResource,
+            WeaponStats weaponStats,
             int flux,
             int bytes
         )
@@ -94,7 +94,7 @@ namespace Enemies
             _pathCurve = pathCurve;
             _scenePath = scenePath;
             _speed = speed;
-            _weaponResource = weaponResource;
+            _weaponStats = weaponStats;
             _fluxReward = flux;
             _byteReward = bytes;
         }

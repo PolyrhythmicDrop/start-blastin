@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="EnemyResource" load_steps=8 format=3 uid="uid://byx0853b2l38p"]
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=9 format=3 uid="uid://byx0853b2l38p"]
 
 [ext_resource type="Curve2D" uid="uid://mjr63ghlss3t" path="res://resources/curves/spiral-curve.tres" id="1_n7ikl"]
 [ext_resource type="Script" uid="uid://bytfm61mpkr5u" path="res://nodes/weapons/WeaponStats.cs" id="1_ofri8"]
@@ -17,6 +17,12 @@ script = ExtResource("2_n7ikl")
 Stats = SubResource("Resource_a5igg")
 metadata/_custom_type_script = "uid://boyq442k65gay"
 
+[sub_resource type="Resource" id="Resource_nfvmi"]
+script = ExtResource("1_ofri8")
+FireRate = 0.2
+ProjectileSpeed = 400.0
+metadata/_custom_type_script = "uid://bytfm61mpkr5u"
+
 [resource]
 resource_local_to_scene = true
 script = ExtResource("1_w53lv")
@@ -25,6 +31,7 @@ Speed = 400.0
 CrashDamage = 2
 MaxHealth = 2.0
 WeaponResource = SubResource("Resource_emmdk")
+WeaponStats = SubResource("Resource_nfvmi")
 PathCurve = ExtResource("1_n7ikl")
 FluxReward = 100
 ByteReward = 300

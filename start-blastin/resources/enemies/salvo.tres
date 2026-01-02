@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="EnemyResource" load_steps=7 format=3 uid="uid://lv3xojj0ktlw"]
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=8 format=3 uid="uid://lv3xojj0ktlw"]
 
 [ext_resource type="Script" uid="uid://cf7pn6qd7aa15" path="res://nodes/enemies/EnemyResource.cs" id="1_2n6d0"]
 [ext_resource type="Script" uid="uid://bytfm61mpkr5u" path="res://nodes/weapons/WeaponStats.cs" id="2_eisoc"]
@@ -17,6 +17,13 @@ script = ExtResource("3_p8o26")
 Stats = SubResource("Resource_m4qc2")
 metadata/_custom_type_script = "uid://boyq442k65gay"
 
+[sub_resource type="Resource" id="Resource_bl1by"]
+script = ExtResource("2_eisoc")
+ProjectileType = 1
+Damage = 0.1
+FireRate = 1.0
+metadata/_custom_type_script = "uid://bytfm61mpkr5u"
+
 [resource]
 script = ExtResource("1_2n6d0")
 ScenePath = "res://nodes/enemies/salvo/salvo.tscn"
@@ -24,6 +31,7 @@ Speed = 200.0
 CrashDamage = 4
 MaxHealth = 10.0
 WeaponResource = SubResource("Resource_0b4fe")
+WeaponStats = SubResource("Resource_bl1by")
 PathCurve = ExtResource("2_p8o26")
 FluxReward = 100
 ByteReward = 300

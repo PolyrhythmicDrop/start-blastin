@@ -15,12 +15,12 @@ namespace Factories
         /// <summary>
         /// Instantiates and builds a weapon based on a passed resource.
         /// </summary>
-        /// <param name="weaponResource">The resource to create the weapon from. Resource contains the weapon's scene path and stats.</param>
+        /// <param name="stats">The resource to create the weapon from. Resource contains the weapon's scene path and stats.</param>
         /// <param name="enemyWeapon">True if the weapon belongs to an enemy. False if it belongs to the player. Used to apply the correct shader material to projectiles.</param>
         /// <param name="enemyScaler">Modifies the created weapon based on a wave configuration.</param>
         /// <returns>A built <see cref="WeaponNode"/> with its stats set by the passed <see cref="WeaponResource"/> and (optionally) <see cref="EnemyScaler"/>.</returns>
         public static WeaponNode CreateWeapon(
-            WeaponResource weaponResource,
+            WeaponStats stats,
             IVelocityProvider velocityProvider = null,
             IWeaponOwner owner = null
         )
@@ -33,11 +33,11 @@ namespace Factories
                 builtWeapon.SetOwner(owner);
             }
 
-            WeaponResource newResource = (WeaponResource)
-                weaponResource.DuplicateDeep(Resource.DeepDuplicateMode.Internal);
-            WeaponStats weaponStats = newResource.Stats;
+            // WeaponResource newResource = (WeaponResource)
+            //     stats.DuplicateDeep(Resource.DeepDuplicateMode.Internal);
+            // WeaponStats weaponStats = newResource.Stats;
 
-            builtWeapon.InitializeStats(weaponStats);
+            builtWeapon.InitializeStats(stats);
 
             if (velocityProvider != null)
             {

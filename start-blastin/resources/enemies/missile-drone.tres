@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="EnemyResource" load_steps=8 format=3 uid="uid://dwt1kb13007cq"]
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=9 format=3 uid="uid://dwt1kb13007cq"]
 
 [ext_resource type="Curve2D" uid="uid://ugylfjdaw4vv" path="res://resources/curves/sine-wave.tres" id="1_lbdoq"]
 [ext_resource type="Resource" uid="uid://c2r5pw0qbvtfr" path="res://resources/sound-sets/enemies/drone-sound-set.tres" id="2_o4e7f"]
@@ -22,6 +22,15 @@ script = ExtResource("4_jn13m")
 Stats = SubResource("Resource_yebq7")
 metadata/_custom_type_script = "uid://bytfm61mpkr5u"
 
+[sub_resource type="Resource" id="Resource_jn13m"]
+resource_local_to_scene = true
+script = ExtResource("3_o4e7f")
+ProjectileType = 1
+Damage = 2.0
+FireRate = 1.5
+ProjectileSpeed = 400.0
+metadata/_custom_type_script = "uid://bytfm61mpkr5u"
+
 [resource]
 resource_local_to_scene = true
 resource_name = "missile-drone"
@@ -31,6 +40,7 @@ Speed = 400.0
 CrashDamage = 2
 MaxHealth = 1.0
 WeaponResource = SubResource("Resource_o4e7f")
+WeaponStats = SubResource("Resource_jn13m")
 PathCurve = ExtResource("1_lbdoq")
 FluxReward = 20
 ByteReward = 150

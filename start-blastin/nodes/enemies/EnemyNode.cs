@@ -138,12 +138,12 @@ namespace Enemies
 
             // Weapon initialization
             _weapon = WeaponFactory.CreateWeapon(
-                enemyResource.WeaponResource,
+                enemyResource.WeaponStats,
                 velocityProvider: this,
                 owner: this
             );
-            _baseFireRate = enemyResource.WeaponResource.Stats.FireRate;
-            _baseWeaponDamage = enemyResource.WeaponResource.Stats.Damage;
+            _baseFireRate = enemyResource.WeaponStats.FireRate;
+            _baseWeaponDamage = enemyResource.WeaponStats.Damage;
             _baseSpeed = enemyResource.Speed;
             _baseCrashDamage = enemyResource.CrashDamage;
 

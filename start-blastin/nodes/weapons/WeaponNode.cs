@@ -34,7 +34,7 @@ namespace Weapons
         private IVelocityProvider _velocityProvider;
 
         /// <summary>
-        /// The weapon's base stats, inherited from its parent <see cref="WeaponResource"/>.
+        /// The weapon's base stats.
         /// </summary>
         public WeaponStats Stats => _stats;
 

@@ -13,19 +13,11 @@ namespace PlayerComponents
     {
         private Player _player;
 
-        // private WeaponResource _initWeaponResource;
         private WeaponNode _weaponNode;
 
         private WeaponPlugin _weaponPlugin => _player?.Inventory?.WeaponPlugin;
 
         public BarrelRack Barrels => _weaponNode?.Barrels;
-
-        // [Export]
-        // public WeaponResource InitWeaponResource
-        // {
-        //     get => _initWeaponResource;
-        //     set => _initWeaponResource = value;
-        // }
 
         public WeaponNode Weapon => _weaponNode;
 
@@ -33,7 +25,6 @@ namespace PlayerComponents
         {
             _player = player;
             InitializeWeaponNode();
-            // EquipWeapon(InitWeaponResource);
         }
 
         /// <summary>
@@ -57,7 +48,7 @@ namespace PlayerComponents
             WeaponResource resource = new() { Stats = weaponStats };
 
             _weaponNode = WeaponFactory.CreateWeapon(
-                resource,
+                weaponStats,
                 velocityProvider: _player,
                 owner: _player
             );
@@ -65,26 +56,6 @@ namespace PlayerComponents
             AddChild(_weaponNode);
 
             ConnectFireTimerSignals();
-
-            // if (_weaponNode != null)
-            // {
-            //     RemoveChild(_weaponNode);
-            // }
-            // else
-            // {
-            //     _weaponNode = WeaponFactory.CreateWeapon(
-            //         weaponResource,
-            //         velocityProvider: _player,
-            //         owner: _player
-            //     );
-            //     // Initialize stats
-            //     _weaponNode.Stats.FireRate = _player.FireRate;
-            //     _weaponNode.Stats.Damage = _player.Damage;
-            //     _weaponNode.Stats.ProjectileSpeed = _player.ProjectileSpeed;
-
-            //     AddChild(_weaponNode);
-            //     ConnectFireTimerSignals();
-            // }
         }
 
         private void ConnectFireTimerSignals()

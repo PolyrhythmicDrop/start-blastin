@@ -75,5 +75,10 @@ namespace PlayerComponents
             bytes = item.ByteCost <= _player.Bytes;
             return flux && bytes;
         }
+
+        public bool CanScrapItem(Item item)
+        {
+            return item is not Modifier && item.Scrappable;
+        }
     }
 }

@@ -216,6 +216,9 @@ namespace Enemies
             }
         }
 
+        /// <summary>
+        /// Adjusts the speed at which the enemy follows a path based on the enemy's speed.
+        /// </summary>
         protected virtual void AdjustFollowSpeed()
         {
             if (_path?.PathFollow == null || _followTween == null)

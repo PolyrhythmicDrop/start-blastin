@@ -5,6 +5,7 @@ using Entities;
 using Godot;
 using Interfaces;
 using Items;
+using SafeResourcePicker;
 using Utility;
 
 namespace PlayerComponents
@@ -31,13 +32,17 @@ namespace PlayerComponents
         [Export]
         public Godot.Collections.Array<Plugin> InitialPlugins { get; set; } = new();
 
+        /// <summary>
+        /// The player's initial weapon plugin. Generally used for debugging.
+        /// </summary>
+        [Export(SRP_HINT.RESOURCE_PATH, "WeaponPlugin")]
+        public string InitialWeaponPlugin { get; set; } = "uid://dmulsmpa1tm6h";
+
         private WeaponPlugin _weaponPlugin;
         private WeaponPlugin _defaultWeaponPlugin = ResourceLoader.Load<WeaponPlugin>(
             "uid://dmulsmpa1tm6h"
         );
 
-        [ExportGroup("Weapon Stats")]
-        [Export]
         public WeaponPlugin WeaponPlugin
         {
             get => _weaponPlugin;
@@ -48,7 +53,14 @@ namespace PlayerComponents
         // Changes to WeaponPlugin in the editor will automatically override this.
         public InventoryComponent()
         {
-            _weaponPlugin = _defaultWeaponPlugin;
+            // if (InitialWeaponPlugin != ResourceUid.PathToUid(_defaultWeaponPlugin.ResourcePath))
+            // {
+            //     _weaponPlugin = ResourceLoader.Load<WeaponPlugin>(InitialWeaponPlugin);
+            // }
+            // else
+            // {
+            //     _weaponPlugin = _defaultWeaponPlugin;
+            // }
         }
 
         #region Initialization
@@ -69,6 +81,16 @@ namespace PlayerComponents
         {
             _player = player;
             _plugins.Capacity = _player.PluginSlots;
+
+            // Equip the initial weapon plugin
+            if (InitialWeaponPlugin != ResourceUid.PathToUid(_defaultWeaponPlugin.ResourcePath))
+            {
+                _weaponPlugin = ResourceLoader.Load<WeaponPlugin>(InitialWeaponPlugin);
+            }
+            else
+            {
+                _weaponPlugin = _defaultWeaponPlugin;
+            }
 
             // Equip any initial plugins.
             EquipPlugin([.. InitialPlugins]);

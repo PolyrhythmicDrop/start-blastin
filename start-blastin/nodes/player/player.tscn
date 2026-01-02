@@ -49,6 +49,7 @@ PluginSlots = 3
 [node name="InventoryComponent" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("3_2xyxk")
+InitialWeaponPlugin = "uid://cfbrihynipg38"
 metadata/_custom_type_script = "uid://bw0jf3wqbeqhj"
 
 [node name="Shield" parent="InventoryComponent" instance=ExtResource("10_qwfek")]

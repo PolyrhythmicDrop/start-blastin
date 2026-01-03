@@ -310,6 +310,9 @@ namespace Enemies
         {
             if (_alive)
             {
+                // Play the hit sound
+                AudioService.Instance.PlaySound(_sounds?.Hit, this);
+
                 PlayDamageAnimation();
                 IndicatorFactory.CreateTextIndicator(
                     (MathF.Round(damage, 1) * -1).ToString(),

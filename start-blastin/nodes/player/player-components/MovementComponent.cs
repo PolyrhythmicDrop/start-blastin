@@ -172,33 +172,36 @@ namespace PlayerComponents
 
         public void OnPhaseReady()
         {
+            _player.Audio.PlayPhaseReadySound();
             _player.Animation.PlayPhaseReadyEffect();
             _player.State.PhaseReady = true;
         }
 
         public void StartPhase()
         {
-            if (_player.State.CanPhase())
+            if (!_player.State.CanPhase())
             {
-                _player.State.Phasing = true;
-                _player.Speed += _player.PhaseSpeed;
-
-                // Set collision
-                _player.SetCollisionMaskValue(3, false);
-                _player.SetCollisionMaskValue(5, false);
-                foreach (EnemyNode enemy in EnemyFinder.GetAllEnemies())
-                {
-                    enemy.SetCollisionMaskValue(1, false);
-                }
-
-                // _movementComponent.StartPhase();
-                _player.State.PhaseReady = false;
-                _phaseTimer.Start(_player.PhaseDuration);
-                EventBus.Instance.RaisePhaseStarted(_player.PlayerId);
-                EventBus.Instance.RaisePlayerPhaseTimeLeft(_player.PlayerId, _player.PhaseCooldown);
-
-                _player.Animation.TogglePhaseAnimation(true);
+                return;
             }
+
+            _player.State.Phasing = true;
+            _player.Speed += _player.PhaseSpeed;
+
+            // Set collision
+            _player.SetCollisionMaskValue(3, false);
+            _player.SetCollisionMaskValue(5, false);
+            foreach (EnemyNode enemy in EnemyFinder.GetAllEnemies())
+            {
+                enemy.SetCollisionMaskValue(1, false);
+            }
+
+            _player.State.PhaseReady = false;
+            _phaseTimer.Start(_player.PhaseDuration);
+            EventBus.Instance.RaisePhaseStarted(_player.PlayerId);
+            EventBus.Instance.RaisePlayerPhaseTimeLeft(_player.PlayerId, _player.PhaseCooldown);
+
+            _player.Audio.PlayPhaseStartSound();
+            _player.Animation.TogglePhaseAnimation(true);
         }
 
         public void EndPhase()

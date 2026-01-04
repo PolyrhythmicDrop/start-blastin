@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_0sbu6")
+Fire = "uid://fds6sy013cfx"
 Destruction = "uid://c5npnitq6tajp"
 Hit = "uid://btbnuob41kila"
 metadata/_custom_type_script = "uid://dt02kxv7k56mm"

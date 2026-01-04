@@ -29,12 +29,12 @@ namespace DataStructures
         public string MoveEnd { get; set; }
 
         [Export(SRP_HINT.RESOURCE_PATH, "AudioStreamRandomizer")]
-        public string Phase { get; set; }
-
-        [Export(SRP_HINT.RESOURCE_PATH, "AudioStreamRandomizer")]
         public string Hit { get; set; }
 
         [Export(SRP_HINT.RESOURCE_PATH, "AudioStreamRandomizer")]
         public string Block { get; set; }
+
+        [Export(SRP_HINT.RESOURCE_PATH, "AudioStreamRandomizer")]
+        public string Heal { get; set; }
     }
 }

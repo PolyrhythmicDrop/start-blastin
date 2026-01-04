@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Enemies;
 using Events;
 using Godot;
+using Services;
 using Stats;
 using Utility;
 using Weapons;
@@ -137,6 +138,7 @@ public partial class Salvo : EnemyNode
         _engine.Visible = false;
         _rack.Visible = false;
 
+        AudioService.Instance.PlaySound(_sounds?.Destruction, this, 1, volume: -5);
         _destruction.Visible = true;
         _destruction.Play();
 

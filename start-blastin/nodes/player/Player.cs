@@ -280,8 +280,8 @@ namespace Entities
                 convex.SetPointCloud(convex.Points);
             }
 
-            InitializeComponents();
             ConnectSignals();
+            InitializeComponents();
         }
 
         private void InitializeComponents()
@@ -293,6 +293,8 @@ namespace Entities
             _stateComponent.Initialize(this);
             _inventory.Initialize(this);
             _weaponComponent.Initialize(this);
+
+            _inventory.EquipInitialPlugins();
         }
 
         private void ConnectSignals()
@@ -462,7 +464,7 @@ namespace Entities
         public void EquipPlugin(params Plugin[] plugins) => _inventory.EquipPlugin(plugins);
 
         public void SwapWeaponPlugin(WeaponPlugin weaponPlugin) =>
-            _inventory.SwapWeaponPlugin(weaponPlugin);
+            _inventory.EquipWeaponPlugin(weaponPlugin);
 
         public IReadOnlyList<Plugin> GetPlugins() => _inventory.EquippedPlugins;
 

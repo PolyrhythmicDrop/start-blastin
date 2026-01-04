@@ -113,7 +113,7 @@ namespace Enemies
             _weapon.FireTimer.Stop();
             _shape.Disabled = true;
 
-            AudioService.Instance.PlaySound(_sounds?.Destruction, this, 1, attenuation: 0.8f);
+            AudioService.Instance.PlaySound(_sounds?.Destruction, this, 1, volume: -4);
             _sprite.Play("destruction");
 
             _sprite.AnimationFinished += () =>

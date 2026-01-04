@@ -6,17 +6,18 @@
 [ext_resource type="Script" uid="uid://inq1tkdh0ogf" path="res://nodes/player/player-components/AudioComponent.cs" id="3_eiqky"]
 [ext_resource type="Script" uid="uid://dcupxkt621nuk" path="res://nodes/player/player-components/PlayerController.cs" id="4_1fmtd"]
 [ext_resource type="Shader" uid="uid://bmacriris3r2k" path="res://resources/shaders/color-cycling-hit-effect.gdshader" id="4_5h4ma"]
-[ext_resource type="Script" uid="uid://dt02kxv7k56mm" path="res://architecture/data-structures/SoundSet.cs" id="4_j4qgx"]
 [ext_resource type="PackedScene" uid="uid://bh7mbhu54my3n" path="res://nodes/player/player-components/movement-component.tscn" id="4_xl06i"]
 [ext_resource type="Script" uid="uid://wvxahp2d8k6f" path="res://nodes/player/player-components/WeaponComponent.cs" id="5_5h4ma"]
+[ext_resource type="Script" uid="uid://btnqmc5i2faj2" path="res://architecture/data-structures/PlayerSoundSet.cs" id="5_eiqky"]
 [ext_resource type="Script" uid="uid://75hy3sdqpcbx" path="res://nodes/player/player-components/PlayerStateComponent.cs" id="9_j4qgx"]
 [ext_resource type="PackedScene" uid="uid://bajml0u2freln" path="res://nodes/weapons/barrel.tscn" id="9_xl06i"]
 [ext_resource type="PackedScene" uid="uid://k6jtmcb31ro7" path="res://nodes/player/player-components/shield.tscn" id="10_qwfek"]
 
-[sub_resource type="Resource" id="Resource_2xyxk"]
-script = ExtResource("4_j4qgx")
-Fire = "uid://cgc4tra8abrff"
-metadata/_custom_type_script = "uid://dt02kxv7k56mm"
+[sub_resource type="Resource" id="Resource_j4qgx"]
+script = ExtResource("5_eiqky")
+PhaseStart = "uid://dcjb5wvlxpeg1"
+PhaseReady = "uid://ccw5lcude4k4h"
+metadata/_custom_type_script = "uid://btnqmc5i2faj2"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_xl06i"]
 resource_local_to_scene = true
@@ -49,6 +50,7 @@ PluginSlots = 3
 [node name="InventoryComponent" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("3_2xyxk")
+InitialWeaponPlugin = "uid://cfbrihynipg38"
 metadata/_custom_type_script = "uid://bw0jf3wqbeqhj"
 
 [node name="Shield" parent="InventoryComponent" instance=ExtResource("10_qwfek")]
@@ -59,7 +61,7 @@ rotation = -1.5707964
 [node name="AudioComponent" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("3_eiqky")
-Sounds = SubResource("Resource_2xyxk")
+Sounds = SubResource("Resource_j4qgx")
 metadata/_custom_type_script = "uid://inq1tkdh0ogf"
 
 [node name="AnimationComponent" parent="." instance=ExtResource("2_hs1md")]

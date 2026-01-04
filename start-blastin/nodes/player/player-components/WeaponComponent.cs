@@ -44,6 +44,9 @@ namespace PlayerComponents
                 ProjectileSpeed = _player.ProjectileSpeed,
             };
 
+            // Set the player's shot audio to match the one in the current WeaponPlugin.
+            _player.Audio.SetFireSound(_player.Inventory.WeaponPlugin.FireSound);
+
             _weaponNode = WeaponFactory.CreateWeapon(
                 weaponStats,
                 velocityProvider: _player,
@@ -60,10 +63,7 @@ namespace PlayerComponents
             if (_weaponNode != null)
             {
                 _weaponNode.FireTimer.Timeout += _weaponNode.Fire;
-                _weaponNode.FireTimer.Timeout += () =>
-                {
-                    _player.Audio.PlayFireSound();
-                };
+                _weaponNode.FireTimer.Timeout += _player.Audio.PlayFireSound;
             }
         }
 

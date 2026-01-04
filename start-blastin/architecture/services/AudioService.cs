@@ -165,7 +165,8 @@ namespace Services
             string bus = "Master",
             Node parent = null,
             int maxPolyphony = 5,
-            float attenuation = 1
+            float attenuation = 1,
+            float volume = 0
         )
         {
             try
@@ -191,6 +192,7 @@ namespace Services
                     MaxPolyphony = maxPolyphony,
                     Stream = stream,
                     Attenuation = attenuation,
+                    VolumeDb = volume,
                 };
 
                 // Create a new set of AudioPlayerData
@@ -284,7 +286,8 @@ namespace Services
             string soundName,
             Node source = null,
             int maxPolyphony = 5,
-            float attenuation = 1
+            float attenuation = 1,
+            float volume = 0
         )
         {
             if (string.IsNullOrEmpty(soundName))
@@ -301,7 +304,7 @@ namespace Services
                 _ => "Master",
             };
 
-            PlaySound(soundName, bus, source, maxPolyphony, attenuation);
+            PlaySound(soundName, bus, source, maxPolyphony, attenuation, volume);
         }
 
         /// <summary>
@@ -313,7 +316,8 @@ namespace Services
             string bus = "Master",
             Node source = null,
             int maxPolyphony = 5,
-            float attenuation = 1
+            float attenuation = 1,
+            float volume = 0
         )
         {
             try
@@ -341,8 +345,9 @@ namespace Services
                 // If we found an existing set of players, find one in the list that has the correct bus.
                 if (playersFound)
                 {
-                    // Set up the predicate in order of importance: parent, position, bus.
+                    // Set up the predicate in order of importance: complete match, parent, then bus.
                     Predicate<AudioPlayerData> predicate;
+
                     if (source != null)
                     {
                         predicate = data =>
@@ -367,14 +372,15 @@ namespace Services
                     }
                 }
 
-                // If we didn't find an existing set of players for this sound or if we couldn't find a player with the correct bus,
+                // If we didn't find an existing set of players for this sound or if we couldn't find a player with the correct bus or parent,
                 // create a new player, add it to the list, and play its sound.
                 AudioStreamPlayer2D newPlayer = AddNewAudioStreamPlayer(
                     soundName,
                     bus,
                     source,
                     maxPolyphony,
-                    attenuation
+                    attenuation,
+                    volume
                 );
                 newPlayer?.Play();
             }
@@ -388,7 +394,8 @@ namespace Services
             string soundName,
             AudioPlayerData data,
             int maxPolyphony = 5,
-            float attenuation = 1
+            float attenuation = 1,
+            float volume = 0
         )
         {
             if (string.IsNullOrEmpty(soundName))
@@ -396,7 +403,7 @@ namespace Services
                 return;
             }
 
-            PlaySound(soundName, data.Bus, data.Parent, maxPolyphony, attenuation);
+            PlaySound(soundName, data.Bus, data.Parent, maxPolyphony, attenuation, volume);
         }
     }
 }

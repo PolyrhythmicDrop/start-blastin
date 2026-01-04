@@ -311,7 +311,7 @@ namespace Enemies
             if (_alive)
             {
                 // Play the hit sound
-                AudioService.Instance.PlaySound(_sounds?.Hit, this);
+                AudioService.Instance.PlaySound(_sounds?.Hit, this, volume: -6);
 
                 PlayDamageAnimation();
                 IndicatorFactory.CreateTextIndicator(

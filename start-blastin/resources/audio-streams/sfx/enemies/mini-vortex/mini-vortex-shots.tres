@@ -1,0 +1,7 @@
+[gd_resource type="AudioStreamRandomizer" load_steps=2 format=3 uid="uid://fds6sy013cfx"]
+
+[ext_resource type="AudioStream" uid="uid://cookbsgc2oqej" path="res://audio/sfx/projectiles/bullet/BulletShot2.wav" id="1_18klr"]
+
+[resource]
+streams_count = 1
+stream_0/stream = ExtResource("1_18klr")

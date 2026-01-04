@@ -49,20 +49,6 @@ namespace PlayerComponents
             set => _weaponPlugin = value;
         }
 
-        // Constructor sets the initial _weaponPlugin to the default.
-        // Changes to WeaponPlugin in the editor will automatically override this.
-        public InventoryComponent()
-        {
-            // if (InitialWeaponPlugin != ResourceUid.PathToUid(_defaultWeaponPlugin.ResourcePath))
-            // {
-            //     _weaponPlugin = ResourceLoader.Load<WeaponPlugin>(InitialWeaponPlugin);
-            // }
-            // else
-            // {
-            //     _weaponPlugin = _defaultWeaponPlugin;
-            // }
-        }
-
         #region Initialization
 
         /// <summary>
@@ -82,18 +68,27 @@ namespace PlayerComponents
             _player = player;
             _plugins.Capacity = _player.PluginSlots;
 
-            // Equip the initial weapon plugin
+            // Set the weapon plugin. This must be done before WeaponComponent.InitializeWeaponNode() is called.
             if (InitialWeaponPlugin != ResourceUid.PathToUid(_defaultWeaponPlugin.ResourcePath))
             {
                 _weaponPlugin = ResourceLoader.Load<WeaponPlugin>(InitialWeaponPlugin);
+                // EquipWeaponPlugin(ResourceLoader.Load<WeaponPlugin>(InitialWeaponPlugin));
             }
             else
             {
                 _weaponPlugin = _defaultWeaponPlugin;
+                // EquipWeaponPlugin(_defaultWeaponPlugin);
             }
 
             // Equip any initial plugins.
-            EquipPlugin([.. InitialPlugins]);
+            // EquipPlugin([.. initPluginList]);
+            // EquipPlugin([.. ]);
+        }
+
+        public void EquipInitialPlugins()
+        {
+            Plugin[] initPlugins = [.. InitialPlugins, _weaponPlugin];
+            EquipPlugin(initPlugins);
         }
 
         #endregion
@@ -133,8 +128,7 @@ namespace PlayerComponents
                 // Swap out any weapon plugins
                 else if (plugin is WeaponPlugin weaponPlugin)
                 {
-                    SwapWeaponPlugin(weaponPlugin);
-                    EventBus.Instance.RaisePlayerWeaponChanged(_player.PlayerId, _weaponPlugin);
+                    EquipWeaponPlugin(weaponPlugin);
                 }
                 else
                 {
@@ -152,7 +146,7 @@ namespace PlayerComponents
             ApplyEquipStatEffects();
         }
 
-        public void SwapWeaponPlugin(WeaponPlugin weaponPlugin)
+        public void EquipWeaponPlugin(WeaponPlugin weaponPlugin)
         {
             _weaponPlugin = weaponPlugin;
             _player.WeaponComp.SetWeaponProjectile(weaponPlugin.ProjectileType);
@@ -160,7 +154,7 @@ namespace PlayerComponents
             // Set the weapon's fire sound as the player's current firing sound
             if (_weaponPlugin?.FireSound != null)
             {
-                _player.Audio.Sounds.Fire = _weaponPlugin.FireSound;
+                _player.Audio.SetFireSound(_weaponPlugin.FireSound);
             }
 
             EventBus.Instance.RaisePlayerWeaponChanged(_player.PlayerId, _weaponPlugin);
@@ -206,7 +200,7 @@ namespace PlayerComponents
 
         public void DisablePluginEffects(Plugin plugin)
         {
-            DebugLogger.LogMessage($"Removing effects of {plugin.ResourceName}!", true);
+            DebugLogger.LogMessage($"Removing effects of {plugin.Name}!", true);
 
             foreach (Effect effect in plugin.GetEffectList())
             {
@@ -214,10 +208,10 @@ namespace PlayerComponents
                 {
                     foreach (Effect nestedEffect in chainEffect.GetAllEffects())
                     {
-                        nestedEffect.Disable(this);
+                        nestedEffect.Disable(_player);
                     }
                 }
-                effect.Disable(this);
+                effect.Disable(_player);
             }
         }
 
@@ -226,9 +220,10 @@ namespace PlayerComponents
         /// </summary>
         private void ResetWeaponPlugin()
         {
-            // _weaponPlugin = ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
-            _weaponPlugin = _defaultWeaponPlugin;
-            _player.WeaponComp.SetWeaponProjectile(_weaponPlugin.ProjectileType);
+            // _weaponPlugin = _defaultWeaponPlugin;
+            // _player.WeaponComp.SetWeaponProjectile(_weaponPlugin.ProjectileType);
+            // EventBus.Instance.RaisePlayerWeaponChanged(_player.PlayerId, _weaponPlugin);
+            EquipWeaponPlugin(_defaultWeaponPlugin);
         }
 
         #endregion
@@ -243,7 +238,7 @@ namespace PlayerComponents
                 // Nested effects are enabled by the parent ChainEffect.
                 foreach (Effect effect in plugin.GetEffectList())
                 {
-                    effect.Enable(this);
+                    effect.Enable(_player);
                 }
             }
         }

@@ -7,7 +7,7 @@
 [sub_resource type="Resource" id="Resource_7esar"]
 script = ExtResource("1_qwm1n")
 Type = 8
-Value = 300.0
+Value = 500.0
 metadata/_custom_type_script = "uid://bmeda5w63vsw7"
 
 [sub_resource type="Resource" id="Resource_lyair"]
@@ -25,6 +25,7 @@ metadata/_custom_type_script = "uid://bmeda5w63vsw7"
 [resource]
 script = ExtResource("1_jxmcs")
 ProjectileType = 1
+FireSound = "uid://dyjyods5a3df"
 Name = &"Missile"
 Description = &"Homing missile that tracks down the nearest target."
 Icon = ExtResource("2_7esar")

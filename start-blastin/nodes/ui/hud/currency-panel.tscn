@@ -8,19 +8,22 @@
 font_size = 26
 
 [node name="CurrencyPanel" type="PanelContainer"]
-anchors_preset = -1
-anchor_top = 0.4810185
+custom_minimum_size = Vector2(400, 60)
+anchors_preset = 14
+anchor_top = 0.5
 anchor_right = 1.0
-anchor_bottom = 0.51898146
+anchor_bottom = 0.5
+offset_top = -17.0
+offset_bottom = 17.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_2627c")
-metadata/_edit_use_anchors_ = true
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
+theme_override_constants/margin_left = 10
 theme_override_constants/margin_right = 10
 
 [node name="VBoxContainer" type="HBoxContainer" parent="MarginContainer"]
@@ -28,8 +31,9 @@ layout_mode = 2
 alignment = 2
 
 [node name="BytesBox" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-size_flags_horizontal = 8
+size_flags_horizontal = 10
 size_flags_vertical = 3
 theme_override_constants/separation = 8
 
@@ -43,7 +47,8 @@ stretch_mode = 5
 [node name="BytesLabel" type="Label" parent="MarginContainer/VBoxContainer/BytesBox"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 6
+size_flags_vertical = 1
 size_flags_stretch_ratio = 8.0
 theme_override_font_sizes/font_size = 16
 text = "1000"
@@ -52,8 +57,9 @@ horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="FluxBox" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-size_flags_horizontal = 8
+size_flags_horizontal = 10
 size_flags_vertical = 3
 theme_override_constants/separation = 8
 
@@ -68,7 +74,7 @@ stretch_mode = 5
 [node name="FluxLabel" type="Label" parent="MarginContainer/VBoxContainer/FluxBox"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 6
 size_flags_stretch_ratio = 8.0
 theme_override_font_sizes/font_size = 32
 text = "1000"

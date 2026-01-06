@@ -1,0 +1,83 @@
+[gd_scene load_steps=8 format=3 uid="uid://cetcmxk8kmdts"]
+
+[ext_resource type="Script" uid="uid://bm2kl2kq1a5cb" path="res://nodes/background-generator/BackgroundGenerator.cs" id="1_uikdr"]
+[ext_resource type="Texture2D" uid="uid://b1wgivtxpn2q2" path="res://nodes/background-generator/color-scheme.tres" id="2_l4b6t"]
+[ext_resource type="Material" uid="uid://dki5t3q3g4180" path="res://nodes/background-generator/StarStuff.tres" id="3_l4b6t"]
+[ext_resource type="Material" uid="uid://0xakyc8h5c4h" path="res://nodes/background-generator/StarParticles.tres" id="4_2w1w1"]
+[ext_resource type="Texture2D" uid="uid://cldtkatbsqrm7" path="res://nodes/background-generator/stars.png" id="4_kruqx"]
+[ext_resource type="Material" uid="uid://c1de5j1q0y657" path="res://nodes/background-generator/Nebulae.tres" id="6_t7csb"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_l4b6t"]
+blend_mode = 1
+particles_animation = true
+particles_anim_h_frames = 16
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[node name="BackgroundGenerator" type="Control"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_uikdr")
+ColorScheme = ExtResource("2_l4b6t")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="Background" type="ColorRect" parent="CanvasLayer"]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.09019608, 0.09019608, 0.06666667, 1)
+
+[node name="StarStuff" type="ColorRect" parent="."]
+unique_name_in_owner = true
+material = ExtResource("3_l4b6t")
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 8.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="StarParticles" type="GPUParticles2D" parent="."]
+unique_name_in_owner = true
+material = SubResource("CanvasItemMaterial_l4b6t")
+position = Vector2(50, 50)
+amount = 100
+texture = ExtResource("4_kruqx")
+fixed_fps = 60
+visibility_rect = Rect2(-1000, -1000, 2000, 2000)
+local_coords = true
+process_material = ExtResource("4_2w1w1")
+
+[node name="PauseParticles" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 0.5
+
+[node name="Nebulae" type="ColorRect" parent="."]
+unique_name_in_owner = true
+material = ExtResource("6_t7csb")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="StarContainer" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="PlanetContainer" type="Node2D" parent="."]
+unique_name_in_owner = true

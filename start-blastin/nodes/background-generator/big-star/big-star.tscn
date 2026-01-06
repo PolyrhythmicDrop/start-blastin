@@ -1,0 +1,17 @@
+[gd_scene load_steps=6 format=3 uid="uid://ba6t04t30nstb"]
+
+[ext_resource type="Shader" uid="uid://bo3621ff1i03d" path="res://nodes/background-generator/big-star/big-star-shader.gdshader" id="1_c8ckv"]
+[ext_resource type="Texture2D" uid="uid://b1wgivtxpn2q2" path="res://nodes/background-generator/color-scheme.tres" id="2_3xvvb"]
+[ext_resource type="Texture2D" uid="uid://d1ef6vmimkfes" path="res://nodes/background-generator/big-star/stars-special.png" id="3_rrtbp"]
+[ext_resource type="Script" uid="uid://cm8scug5av5vg" path="res://nodes/background-generator/big-star/BigStar.cs" id="4_3xvvb"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tyl8t"]
+shader = ExtResource("1_c8ckv")
+shader_parameter/colorscheme = ExtResource("2_3xvvb")
+
+[node name="BigStar" type="Sprite2D"]
+material = SubResource("ShaderMaterial_tyl8t")
+texture = ExtResource("3_rrtbp")
+region_enabled = true
+region_rect = Rect2(25, 0, 25, 25)
+script = ExtResource("4_3xvvb")

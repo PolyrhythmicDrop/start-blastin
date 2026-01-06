@@ -6,7 +6,7 @@
 [resource]
 shader = ExtResource("1_7ee8o")
 shader_parameter/direction = Vector3(1, 0, 0)
-shader_parameter/spread = 200.0
+shader_parameter/spread = 45.0
 shader_parameter/flatness = 0.0
 shader_parameter/initial_linear_velocity = 0.0
 shader_parameter/initial_angle = 0.0
@@ -28,10 +28,10 @@ shader_parameter/linear_accel_random = 0.0
 shader_parameter/radial_accel_random = 0.0
 shader_parameter/tangent_accel_random = 0.0
 shader_parameter/damping_random = 0.0
-shader_parameter/scale_random = 0.0
-shader_parameter/hue_variation_random = 0.0
+shader_parameter/scale_random = 1.0
+shader_parameter/hue_variation_random = 0.5
 shader_parameter/anim_speed_random = 0.0
-shader_parameter/anim_offset_random = 0.0
+shader_parameter/anim_offset_random = 1.0
 shader_parameter/lifetime_randomness = 0.0
 shader_parameter/emission_box_extents = Vector3(50, 50, 1)
 shader_parameter/color_value = Color(1.353256, 1.353256, 1.353256, 1)

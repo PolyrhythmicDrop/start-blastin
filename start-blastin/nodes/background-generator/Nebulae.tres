@@ -1,15 +1,16 @@
 [gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://c1de5j1q0y657"]
 
-[ext_resource type="Texture2D" uid="uid://b1wgivtxpn2q2" path="res://nodes/background-generator/color-scheme.tres" id="1"]
 [ext_resource type="Shader" uid="uid://pilwqo8kvs84" path="res://nodes/background-generator/Nebulae.gdshader" id="2"]
+[ext_resource type="Texture2D" uid="uid://b1wgivtxpn2q2" path="res://resources/colors/bg-color-schemes/og-color-bg-scheme.tres" id="2_bp0dx"]
 
 [resource]
+resource_local_to_scene = true
 shader = ExtResource("2")
 shader_parameter/size = 5.0
 shader_parameter/OCTAVES = 3
 shader_parameter/seed = 4.507
 shader_parameter/pixels = 500.0
-shader_parameter/colorscheme = ExtResource("1")
+shader_parameter/colorscheme = ExtResource("2_bp0dx")
 shader_parameter/background_color = Color(0.0901961, 0.0901961, 0.0666667, 1)
 shader_parameter/should_tile = true
 shader_parameter/reduce_background = false

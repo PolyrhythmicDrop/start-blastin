@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://bbf5wq6yjahti"]
 
 [ext_resource type="Shader" uid="uid://cbtt5p1bmw2yb" path="res://nodes/background-generator/planet/planet-shader.gdshader" id="1_g7stc"]
-[ext_resource type="Texture2D" uid="uid://b1wgivtxpn2q2" path="res://nodes/background-generator/color-scheme.tres" id="2_xi733"]
+[ext_resource type="Texture2D" uid="uid://b1wgivtxpn2q2" path="res://resources/colors/bg-color-schemes/og-color-bg-scheme.tres" id="2_xi733"]
 [ext_resource type="Texture2D" uid="uid://j0ec8ky203m7" path="res://nodes/background-generator/planet/100x100.png" id="3_2y5pt"]
 [ext_resource type="Script" uid="uid://pkdv2e40mfrt" path="res://nodes/background-generator/planet/Planet.cs" id="3_xi733"]
 

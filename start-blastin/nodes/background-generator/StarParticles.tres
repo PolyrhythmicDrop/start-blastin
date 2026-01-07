@@ -1,7 +1,7 @@
 [gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://0xakyc8h5c4h"]
 
 [ext_resource type="Shader" uid="uid://ccfhd8tmqskku" path="res://nodes/background-generator/star-particles-shader.gdshader" id="1_7ee8o"]
-[ext_resource type="Texture2D" uid="uid://b1wgivtxpn2q2" path="res://nodes/background-generator/color-scheme.tres" id="2_ci75x"]
+[ext_resource type="Texture2D" uid="uid://b1wgivtxpn2q2" path="res://resources/colors/bg-color-schemes/og-color-bg-scheme.tres" id="2_ci75x"]
 
 [resource]
 shader = ExtResource("1_7ee8o")

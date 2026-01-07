@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://cetcmxk8kmdts"]
 
 [ext_resource type="Script" uid="uid://bm2kl2kq1a5cb" path="res://nodes/background-generator/BackgroundGenerator.cs" id="1_uikdr"]
-[ext_resource type="Texture2D" uid="uid://b1wgivtxpn2q2" path="res://nodes/background-generator/color-scheme.tres" id="2_l4b6t"]
+[ext_resource type="Texture2D" uid="uid://lugk4ges551x" path="res://resources/colors/bg-color-schemes/berry-nebula-bg-scheme.tres" id="2_t7csb"]
 [ext_resource type="Material" uid="uid://dki5t3q3g4180" path="res://nodes/background-generator/StarStuff.tres" id="3_l4b6t"]
 [ext_resource type="Material" uid="uid://0xakyc8h5c4h" path="res://nodes/background-generator/StarParticles.tres" id="4_2w1w1"]
 [ext_resource type="Texture2D" uid="uid://cldtkatbsqrm7" path="res://nodes/background-generator/stars.png" id="4_kruqx"]
@@ -25,7 +25,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_uikdr")
-ColorScheme = ExtResource("2_l4b6t")
+ColorScheme = ExtResource("2_t7csb")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 layer = -1
@@ -37,7 +37,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.09019608, 0.09019608, 0.06666667, 1)
+color = Color(0, 0, 0, 1)
 
 [node name="StarStuff" type="ColorRect" parent="."]
 unique_name_in_owner = true
@@ -57,6 +57,7 @@ material = SubResource("CanvasItemMaterial_l4b6t")
 position = Vector2(50, 50)
 amount = 100
 texture = ExtResource("4_kruqx")
+speed_scale = 0.5
 fixed_fps = 60
 visibility_rect = Rect2(-1000, -1000, 2000, 2000)
 local_coords = true

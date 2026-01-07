@@ -1,15 +1,16 @@
 [gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://dki5t3q3g4180"]
 
-[ext_resource type="Texture2D" uid="uid://b1wgivtxpn2q2" path="res://nodes/background-generator/color-scheme.tres" id="1"]
 [ext_resource type="Shader" uid="uid://cr6u7hm8t21eg" path="res://nodes/background-generator/StarStuff.gdshader" id="2"]
+[ext_resource type="Texture2D" uid="uid://b1wgivtxpn2q2" path="res://resources/colors/bg-color-schemes/og-color-bg-scheme.tres" id="2_1ruqo"]
 
 [resource]
+resource_local_to_scene = true
 shader = ExtResource("2")
 shader_parameter/size = 20.0
 shader_parameter/OCTAVES = 8
 shader_parameter/seed = 5.0570001927075
 shader_parameter/pixels = 1920.0
-shader_parameter/should_tile = false
+shader_parameter/should_tile = true
 shader_parameter/reduce_background = false
-shader_parameter/colorscheme = ExtResource("1")
+shader_parameter/colorscheme = ExtResource("2_1ruqo")
 shader_parameter/uv_correct = Vector2(1, 1)

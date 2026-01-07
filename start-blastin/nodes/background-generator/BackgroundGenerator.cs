@@ -203,6 +203,12 @@ namespace BackgroundGenerator
             }
 
             BigStar star = _bigStarScene.Instantiate<BigStar>();
+
+            if (star.Material is ShaderMaterial starMaterial)
+            {
+                starMaterial.SetShaderParameter("colorscheme", ColorScheme);
+            }
+
             star.Position = pos;
             _starContainer.AddChild(star);
             _starObjects.Add(star);
@@ -235,6 +241,12 @@ namespace BackgroundGenerator
             Vector2 pos = new Vector2(xPos, yPos);
 
             Planet planet = _planetScene.Instantiate<Planet>();
+
+            if (planet.Material is ShaderMaterial planetMaterial)
+            {
+                planetMaterial.SetShaderParameter("colorscheme", ColorScheme);
+            }
+
             planet.Scale = planetScale;
             planet.Position = pos;
             _planetContainer.AddChild(planet);

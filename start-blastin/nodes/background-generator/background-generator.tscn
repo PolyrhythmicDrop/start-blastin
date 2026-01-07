@@ -14,16 +14,7 @@ particles_anim_h_frames = 16
 particles_anim_v_frames = 1
 particles_anim_loop = false
 
-[node name="BackgroundGenerator" type="Control"]
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
+[node name="BackgroundGenerator" type="Node2D"]
 script = ExtResource("1_uikdr")
 ColorScheme = ExtResource("2_t7csb")
 
@@ -42,12 +33,11 @@ color = Color(0, 0, 0, 1)
 [node name="StarStuff" type="ColorRect" parent="."]
 unique_name_in_owner = true
 material = ExtResource("3_l4b6t")
-layout_mode = 1
-anchors_preset = -1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 8.0
-offset_bottom = 8.0
+offset_right = 1920.0
+offset_bottom = 1080.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -70,7 +60,6 @@ wait_time = 0.5
 [node name="Nebulae" type="ColorRect" parent="."]
 unique_name_in_owner = true
 material = ExtResource("6_t7csb")
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

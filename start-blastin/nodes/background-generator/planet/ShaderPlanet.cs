@@ -3,7 +3,7 @@ using Godot;
 
 namespace BackgroundGenerator
 {
-    public partial class Planet : Sprite2D
+    public partial class ShaderPlanet : Sprite2D
     {
         public override void _Ready()
         {

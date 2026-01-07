@@ -5,7 +5,7 @@ using Godot;
 namespace BackgroundGenerator
 {
     [GlobalClass]
-    public partial class BackgroundGenerator : Control
+    public partial class BackgroundGenerator : Node2D
     {
         private ColorRect _background;
         private ColorRect _starStuff;
@@ -26,8 +26,10 @@ namespace BackgroundGenerator
         private bool _reduceBackground = false;
         private Vector2 _mirrorSize = new Vector2(200, 200);
 
-        private List<Planet> _planetObjects = new();
+        private List<ShaderPlanet> _planetObjects = new();
         private List<BigStar> _starObjects = new();
+
+        private Vector2 _viewportSize => GetViewportRect().Size;
 
         [Export]
         public GradientTexture1D ColorScheme { get; set; }
@@ -98,10 +100,11 @@ namespace BackgroundGenerator
                 return;
             }
 
-            Vector2 rectSize = GetRect().Size;
+            // Vector2 rectSize = GetRect().Size;
+            Vector2 rectSize = _viewportSize;
 
             // Set StarStuff seed and pixels
-            starStuffMaterial.SetShaderParameter("seed", GD.RandRange(1, 10));
+            // starStuffMaterial.SetShaderParameter("seed", GD.RandRange(1.0, 10.0));
             starStuffMaterial.SetShaderParameter("pixels", MathF.Max(rectSize.X, rectSize.Y));
 
             // Set the aspect ratio
@@ -153,7 +156,8 @@ namespace BackgroundGenerator
 
             _starObjects.Clear();
 
-            Vector2 rectSize = GetRect().Size;
+            // Vector2 rectSize = GetRect().Size;
+            Vector2 rectSize = _viewportSize;
 
             int starAmount = (int)(MathF.Max(rectSize.X, rectSize.Y) / 20);
             starAmount = Math.Max(starAmount, 1);
@@ -166,7 +170,7 @@ namespace BackgroundGenerator
 
         public void MakeNewPlanets()
         {
-            foreach (Planet p in _planetObjects)
+            foreach (ShaderPlanet p in _planetObjects)
             {
                 p.QueueFree();
             }
@@ -184,7 +188,8 @@ namespace BackgroundGenerator
         public void PlaceBigStar()
         {
             Vector2 pos;
-            Vector2 rectSize = GetRect().Size;
+            // Vector2 rectSize = GetRect().Size;
+            Vector2 rectSize = _viewportSize;
 
             if (_shouldTile)
             {
@@ -216,7 +221,8 @@ namespace BackgroundGenerator
 
         public void PlacePlanet()
         {
-            Vector2 rectSize = GetRect().Size;
+            // Vector2 rectSize = GetRect().Size;
+            Vector2 rectSize = _viewportSize;
 
             // Set the planet's scale
             float minSize = Math.Min(rectSize.X, rectSize.Y);
@@ -240,7 +246,7 @@ namespace BackgroundGenerator
             }
             Vector2 pos = new Vector2(xPos, yPos);
 
-            Planet planet = _planetScene.Instantiate<Planet>();
+            ShaderPlanet planet = _planetScene.Instantiate<ShaderPlanet>();
 
             if (planet.Material is ShaderMaterial planetMaterial)
             {
@@ -286,7 +292,7 @@ namespace BackgroundGenerator
 
             particleMaterial.SetShaderParameter("colorscheme", ColorScheme);
 
-            foreach (Planet p in _planetObjects)
+            foreach (ShaderPlanet p in _planetObjects)
             {
                 if (p.Material is ShaderMaterial pMat)
                 {

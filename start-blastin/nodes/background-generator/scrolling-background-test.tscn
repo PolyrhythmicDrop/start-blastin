@@ -1,0 +1,44 @@
+[gd_scene load_steps=3 format=3 uid="uid://bq7imdtl082ko"]
+
+[ext_resource type="Script" uid="uid://c6px1s64ay1p1" path="res://nodes/background-generator/ScrollingBackgroundTest.cs" id="1_lly12"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4gvry"]
+size = Vector2(2120, 1200)
+
+[node name="Node" type="Node"]
+script = ExtResource("1_lly12")
+
+[node name="BG-CanvasLayer" type="CanvasLayer" parent="."]
+layer = -2
+
+[node name="Background" type="ColorRect" parent="BG-CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="CelestialBody-CanvasLayer" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="SpawnBlock" type="Area2D" parent="CelestialBody-CanvasLayer"]
+position = Vector2(954, -598)
+collision_layer = 256
+collision_mask = 256
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CelestialBody-CanvasLayer/SpawnBlock"]
+position = Vector2(0, -150)
+shape = SubResource("RectangleShape2D_4gvry")
+
+[node name="CenterPane" type="Node2D" parent="CelestialBody-CanvasLayer"]
+
+[node name="DespawnBlock" type="Area2D" parent="CelestialBody-CanvasLayer"]
+position = Vector2(954, 2002)
+collision_layer = 256
+collision_mask = 256
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CelestialBody-CanvasLayer/DespawnBlock"]
+position = Vector2(0, -150)
+shape = SubResource("RectangleShape2D_4gvry")

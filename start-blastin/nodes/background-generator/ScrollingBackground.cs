@@ -14,8 +14,6 @@ namespace BackgroundGenerator
         private ColorRect _background;
         private Area2D _spawnBlock;
         private CollisionShape2D _spawnShape;
-        private Area2D _despawnBlock;
-        private CollisionShape2D _despawnShape;
 
         private int _maxBodies = 3;
         private CanvasLayer _bodyCanvas;
@@ -37,8 +35,7 @@ namespace BackgroundGenerator
             _background = GetNode<ColorRect>("%Background");
             _spawnBlock = GetNode<Area2D>("%SpawnBlock");
             _spawnShape = _spawnBlock.GetNode<CollisionShape2D>("%SpawnShape2D");
-            _despawnBlock = GetNode<Area2D>("%DespawnBlock");
-            _despawnShape = _despawnBlock.GetNode<CollisionShape2D>("%DespawnShape2D");
+
             _bodyCanvas = GetNode<CanvasLayer>("%CelestialBody-CanvasLayer");
 
             ConnectSignals();

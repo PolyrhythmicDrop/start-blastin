@@ -6,19 +6,29 @@ namespace BackgroundGenerator
     [GlobalClass]
     public partial class BigStar : CelestialBody, IColorScheme
     {
+        protected new AnimatedSprite2D _sprite;
+
         public override void _Ready()
         {
-            _sprite = GetNode<Sprite2D>("%BigStarSprite");
-            _sprite.Texture = (Texture2D)_sprite.Texture.Duplicate(true);
-            float xCoord = (GD.Randi() % 5) * 25.0f;
-            _sprite.RegionRect = new Rect2(
-                x: xCoord,
-                y: _sprite.RegionRect.Position.Y,
-                width: _sprite.RegionRect.Size.X,
-                height: _sprite.RegionRect.Size.Y
-            );
+            _sprite = GetNode<AnimatedSprite2D>("%BigStarSprite");
+            _sprite.SpriteFrames = (SpriteFrames)_sprite.SpriteFrames.Duplicate(true);
+            _sprite.Frame = GD.RandRange(0, 5);
 
             base._Ready();
+
+            _sprite.Play();
+        }
+
+        protected override void AddVisibleNotifier()
+        {
+            // Get the size of the current frame.
+            Texture2D texture = _sprite.SpriteFrames.GetFrameTexture("default", _sprite.Frame);
+            Rect2 rect = new(_sprite.Position, texture.GetSize());
+
+            AddChild(_visibleNotifier);
+            _visibleNotifier.Rect = rect;
+
+            _visibleNotifier.ShowRect = false;
         }
 
         public void ApplyColorScheme(GradientTexture1D scheme)

@@ -23,14 +23,14 @@ namespace BackgroundGenerator
             return _visibleNotifier?.IsOnScreen() ?? false;
         }
 
-        protected void AddVisibleNotifier()
+        protected virtual void AddVisibleNotifier()
         {
             // Get the size of the object.
             Rect2 rect = _sprite.GetRect();
             AddChild(_visibleNotifier);
             _visibleNotifier.Rect = rect;
 
-            _visibleNotifier.ShowRect = true;
+            _visibleNotifier.ShowRect = false;
         }
     }
 }

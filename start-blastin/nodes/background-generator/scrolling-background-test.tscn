@@ -36,13 +36,3 @@ collision_mask = 256
 [node name="SpawnShape2D" type="CollisionShape2D" parent="CelestialBody-CanvasLayer/SpawnBlock"]
 unique_name_in_owner = true
 shape = SubResource("RectangleShape2D_4gvry")
-
-[node name="DespawnBlock" type="Area2D" parent="CelestialBody-CanvasLayer"]
-unique_name_in_owner = true
-position = Vector2(954, 2062)
-collision_layer = 256
-collision_mask = 256
-
-[node name="DespawnShape2D" type="CollisionShape2D" parent="CelestialBody-CanvasLayer/DespawnBlock"]
-unique_name_in_owner = true
-shape = SubResource("RectangleShape2D_4gvry")

@@ -1,9 +1,12 @@
 using System;
 using Godot;
+using Interfaces;
+using Utility;
 
 namespace BackgroundGenerator
 {
-    public partial class ShaderPlanet : Sprite2D
+    [GlobalClass]
+    public partial class ShaderPlanet : CelestialBody, IColorScheme
     {
         public override void _Ready()
         {
@@ -18,6 +21,19 @@ namespace BackgroundGenerator
                 shaderMaterial.SetShaderParameter("seed", GD.RandRange(1.0, 10.0));
                 shaderMaterial.SetShaderParameter("pixels", (int)(Scale.X * 100));
             }
+        }
+
+        public void ApplyColorScheme(GradientTexture1D scheme)
+        {
+            if (Material is ShaderMaterial planetMaterial)
+            {
+                planetMaterial.SetShaderParameter("colorscheme", scheme);
+            }
+        }
+
+        public override void _Process(double delta)
+        {
+            MoveLocalY(SPEED * (float)delta, true);
         }
     }
 }

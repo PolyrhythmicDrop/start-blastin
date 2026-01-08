@@ -9,7 +9,7 @@
 shader = ExtResource("1_qnmmi")
 shader_parameter/size = 5.365
 shader_parameter/OCTAVES = 3
-shader_parameter/seed = 4.8750001840625
+shader_parameter/seed = 4.658000173755
 shader_parameter/pixels = 500.0
 shader_parameter/colorscheme = ExtResource("2_hmqu6")
 shader_parameter/light_origin = Vector2(1.617, 0.637)

@@ -4,9 +4,12 @@
 [ext_resource type="Texture2D" uid="uid://d1ef6vmimkfes" path="res://nodes/background-generator/big-star/stars-special.png" id="3_rrtbp"]
 [ext_resource type="Script" uid="uid://cm8scug5av5vg" path="res://nodes/background-generator/big-star/BigStar.cs" id="4_3xvvb"]
 
-[node name="BigStar" type="Sprite2D"]
+[node name="BigStar" type="Node2D"]
+script = ExtResource("4_3xvvb")
+
+[node name="BigStarSprite" type="Sprite2D" parent="."]
+unique_name_in_owner = true
 material = ExtResource("1_c8ckv")
 texture = ExtResource("3_rrtbp")
 region_enabled = true
 region_rect = Rect2(25, 0, 25, 25)
-script = ExtResource("4_3xvvb")

@@ -8,6 +8,13 @@ namespace BackgroundGenerator
     [GlobalClass]
     public partial class ShaderPlanet : CelestialBody, IColorScheme
     {
+        // Set defaults in constructor. These can be overridden later, either in the factory or with a resource.
+        public ShaderPlanet()
+        {
+            _minScale = 0.2f;
+            _maxScale = 8.0f;
+        }
+
         public override void _Ready()
         {
             _sprite = GetNode<Sprite2D>("%ShaderPlanetSprite");

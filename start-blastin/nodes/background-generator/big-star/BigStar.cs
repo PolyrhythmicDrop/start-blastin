@@ -6,6 +6,12 @@ namespace BackgroundGenerator
     [GlobalClass]
     public partial class BigStar : CelestialBody, IColorScheme
     {
+        public BigStar()
+        {
+            _minScale = 0.8f;
+            _maxScale = 2.0f;
+        }
+
         protected new AnimatedSprite2D _sprite;
 
         public override void _Ready()

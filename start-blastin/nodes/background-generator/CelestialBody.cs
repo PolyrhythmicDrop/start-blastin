@@ -7,7 +7,13 @@ namespace BackgroundGenerator
     {
         protected Sprite2D _sprite;
 
+        protected float _minScale = 1.0f;
+        protected float _maxScale = 1.0f;
+
         protected VisibleOnScreenNotifier2D _visibleNotifier = new VisibleOnScreenNotifier2D();
+
+        public float MinScale => _minScale;
+        public float MaxScale => _maxScale;
 
         public VisibleOnScreenNotifier2D VisibleNotifier => _visibleNotifier;
 

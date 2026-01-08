@@ -18,16 +18,31 @@ namespace BackgroundGenerator
         private GpuParticles2D _particles;
         private Parallax2D _parallax;
 
-        private int _maxBodies = 3;
+        private int _maxPlanets = 3;
+        private int _maxBigStars = 5;
         private CanvasLayer _bodyCanvas;
 
         private List<CelestialBody> _bodies = new();
 
+        private List<ShaderPlanet> _shaderPlanets = new();
+        private List<BigStar> _bigStars = new();
+
+        // ~~ Spawn timers ~~
+        private Timer _planetSpawnTimer;
+        private Timer _bigStarSpawnTimer;
+
         [Export]
-        public int MaxBodies
+        public int MaxPlanets
         {
-            get => _maxBodies;
-            set => _maxBodies = value;
+            get => _maxPlanets;
+            set => _maxPlanets = value;
+        }
+
+        [Export]
+        public int MaxBigStars
+        {
+            get => _maxBigStars;
+            set => _maxBigStars = value;
         }
 
         [Export]
@@ -39,30 +54,97 @@ namespace BackgroundGenerator
             _spawnBlock = GetNode<Area2D>("%SpawnBlock");
             _spawnShape = _spawnBlock.GetNode<CollisionShape2D>("%SpawnShape2D");
 
+            _planetSpawnTimer = GetNode<Timer>("%ShaderPlanetSpawnTimer");
+            _bigStarSpawnTimer = GetNode<Timer>("%BigStarSpawnTimer");
+
+            RandomizeSpawnTime(_planetSpawnTimer);
+            RandomizeSpawnTime(_bigStarSpawnTimer);
+
             _particles = GetNode<GpuParticles2D>("%StarParticles");
             _parallax = GetNode<Parallax2D>("%Parallax2D");
 
-            GenerateStarParticles();
-
             _bodyCanvas = GetNode<CanvasLayer>("%CelestialBody-CanvasLayer");
 
+            GenerateStarParticles();
+
             ConnectSignals();
+
+            _planetSpawnTimer.Start();
+            _bigStarSpawnTimer.Start();
         }
 
-        public void ConnectSignals() { }
+        public void ConnectSignals()
+        {
+            _planetSpawnTimer.Timeout += () => TrySpawnBody(CelestialBodyType.ShaderPlanet);
+            _bigStarSpawnTimer.Timeout += () => TrySpawnBody(CelestialBodyType.BigStar);
+        }
 
         public void DisconnectSignals() { }
 
-        public override void _Process(double delta)
+        private void RandomizeSpawnTime(Timer timer)
         {
-            if (_bodies.Count < MaxBodies)
+            float factor = (float)GD.RandRange(0.2, 3);
+            timer.WaitTime *= factor;
+        }
+
+        public override void _Process(double delta) { }
+
+        /// <summary>
+        /// Rolls to see if we should spawn a new celestial body.
+        /// </summary>
+        /// <param name="type"></param>
+        public void TrySpawnBody(CelestialBodyType type)
+        {
+            switch (type)
             {
-                GenerateCelestialBody();
+                case CelestialBodyType.ShaderPlanet:
+                {
+                    if (_shaderPlanets.Count < MaxPlanets)
+                    {
+                        bool generate = GD.Randi() % 2 == 0;
+                        DebugLogger.LogMessage(
+                            $"Let's see if we should spawn a ShaderPlanet: {generate}"
+                        );
+                        if (generate)
+                        {
+                            GenerateCelestialBody(type);
+                        }
+                        RandomizeSpawnTime(_planetSpawnTimer);
+                        _planetSpawnTimer.Start();
+                    }
+                    break;
+                }
+                case CelestialBodyType.BigStar:
+                    if (_bigStars.Count < MaxBigStars)
+                    {
+                        bool generate = GD.Randi() % 2 == 0;
+                        DebugLogger.LogMessage(
+                            $"Let's see if we should spawn a BigStar: {generate}"
+                        );
+                        if (generate)
+                        {
+                            GenerateCelestialBody(type);
+                        }
+                        RandomizeSpawnTime(_bigStarSpawnTimer);
+                        _bigStarSpawnTimer.Start();
+                    }
+                    break;
             }
         }
 
-        private void GenerateCelestialBody()
+        private void GenerateCelestialBody(CelestialBodyType? type = null)
         {
+            DebugLogger.LogMessage($"Generating a celestial body of type {type}!");
+
+            CelestialBody body = type switch
+            {
+                CelestialBodyType.ShaderPlanet => GenerateShaderPlanet(),
+                CelestialBodyType.BigStar => GenerateBigStar(),
+                _ => CelestialBodyFactory.CreateRandomCelestialBody(),
+            };
+
+            _bodyCanvas.AddChild(body);
+
             // Select a position for the body from somewhere within the spawning area
             Rect2 spawnRect = _spawnShape.Shape.GetRect();
             int x = GD.RandRange(
@@ -75,18 +157,34 @@ namespace BackgroundGenerator
             );
 
             Vector2 position = new Vector2(x, y);
-
-            CelestialBody body = CelestialBodyFactory.CreateCelestialBody(randomScale: true);
-
-            _bodyCanvas.AddChild(body);
             body.GlobalPosition = _spawnBlock.ToGlobal(position);
+
             ConnectCelestialBodySignals(body);
-            _bodies.Add(body);
 
             if (body is IColorScheme schemed)
             {
                 schemed.ApplyColorScheme(ColorScheme);
             }
+        }
+
+        private ShaderPlanet GenerateShaderPlanet()
+        {
+            ShaderPlanet planet = CelestialBodyFactory.CreateCelestialBody<ShaderPlanet>(
+                randomScale: true
+            );
+
+            _shaderPlanets.Add(planet);
+
+            return planet;
+        }
+
+        private BigStar GenerateBigStar()
+        {
+            BigStar bigStar = CelestialBodyFactory.CreateCelestialBody<BigStar>(randomScale: true);
+
+            _bigStars.Add(bigStar);
+
+            return bigStar;
         }
 
         private void ConnectCelestialBodySignals(CelestialBody body)
@@ -119,10 +217,10 @@ namespace BackgroundGenerator
                 particleMaterial.SetShaderParameter("colorscheme", ColorScheme);
             }
 
-            // float particleAmount = (parallaxSize.X * parallaxSize.Y) / _particles.Amount;
-            // int x = (int)(particleAmount * 0.75f);
-            // int y = (int)(particleAmount * 0.25f);
-            // _particles.Amount = Math.Max(20, (int)GD.Randi() % (x + y));
+            float particleAmount = (parallaxSize.X * parallaxSize.Y) / _particles.Amount;
+            int x = (int)(particleAmount * 0.75f);
+            int y = (int)(particleAmount * 0.25f);
+            _particles.Amount = Math.Max(20, (int)GD.Randi() % (x + y));
         }
     }
 }

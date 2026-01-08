@@ -19,6 +19,16 @@ size = Vector2(2120, 1200)
 script = ExtResource("2_lly12")
 ColorScheme = ExtResource("3_j73ms")
 
+[node name="ShaderPlanetSpawnTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 5.0
+one_shot = true
+
+[node name="BigStarSpawnTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 5.0
+one_shot = true
+
 [node name="BG-CanvasLayer" type="CanvasLayer" parent="."]
 layer = -5
 

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Autoloads;
 using BackgroundGenerator;
 using Godot;
@@ -15,31 +16,70 @@ namespace Factories
             "res://nodes/background-generator/big-star/big-star.tscn"
         );
 
-        public static CelestialBody CreateCelestialBody(
-            CelestialBodyResource resource = null,
-            bool randomScale = false
-        )
+        public static CelestialBody CreateCelestialBodyFromResource(CelestialBodyResource resource)
         {
             // Load the correct type of scene
             CelestialBodyType type = resource != null ? resource.Type : SelectRandomBodyType();
 
             CelestialBody body = type switch
             {
-                CelestialBodyType.ShaderPlanet => _shaderPlanetScene.Instantiate<ShaderPlanet>(),
-                CelestialBodyType.BigStar => _bigStarScene.Instantiate<BigStar>(),
+                CelestialBodyType.ShaderPlanet => CreateCelestialBody<ShaderPlanet>(
+                    resource.RandomScale,
+                    resource.ScaleFactor
+                ),
+                CelestialBodyType.BigStar => CreateCelestialBody<BigStar>(
+                    resource.RandomScale,
+                    resource.ScaleFactor
+                ),
+                _ => CreateCelestialBody<ShaderPlanet>(resource.RandomScale, resource.ScaleFactor),
+            };
+
+            return body;
+        }
+
+        public static T CreateCelestialBody<T>(bool randomScale = false, float? scaling = null)
+            where T : CelestialBody
+        {
+            CelestialBody body = typeof(T) switch
+            {
+                Type t when t == typeof(ShaderPlanet) =>
+                    _shaderPlanetScene.Instantiate<ShaderPlanet>(),
+                Type t when t == typeof(BigStar) => _bigStarScene.Instantiate<BigStar>(),
                 _ => _shaderPlanetScene.Instantiate<ShaderPlanet>(),
             };
 
             if (randomScale)
             {
-                float scaleFactor = (float)GD.RandRange(0.2, 0.9) * (float)GD.RandRange(0.1, 10);
+                float scaleFactor = MathF.Round(
+                    (float)GD.RandRange(body.MinScale, body.MaxScale),
+                    3
+                );
                 Vector2 planetScale = Vector2.One * scaleFactor;
                 body.Scale = planetScale;
             }
+            else
+            {
+                body.Scale =
+                    Vector2.One * (scaling ?? (float)GD.RandRange(body.MinScale, body.MaxScale));
+            }
 
-            body.Name = $"{body.GetType().Name}-{Nanoid.Generate(size: 3)}";
+            body.Name = $"{typeof(T).Name}-{Nanoid.Generate(size: 3)}";
 
-            return body;
+            return (T)body;
+        }
+
+        public static CelestialBody CreateRandomCelestialBody()
+        {
+            CelestialBodyType type = SelectRandomBodyType();
+
+            return type switch
+            {
+                CelestialBodyType.ShaderPlanet => CreateCelestialBody<ShaderPlanet>(
+                    randomScale: true
+                ),
+                CelestialBodyType.BigStar => CreateCelestialBody<BigStar>(randomScale: true),
+                _ => CreateCelestialBody<BigStar>(randomScale: true),
+            };
         }
 
         /// <summary>

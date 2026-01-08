@@ -17,5 +17,18 @@ namespace BackgroundGenerator
 
         [Export]
         public Texture2D Texture { get; set; }
+
+        [Export]
+        public float ScaleFactor { get; set; }
+
+        [ExportGroup("Random Scaling")]
+        [Export(PropertyHint.GroupEnable)]
+        public bool RandomScale { get; set; }
+
+        [Export(PropertyHint.Range, "0.05,10,greater_than")]
+        public float MinScale { get; set; }
+
+        [Export(PropertyHint.Range, "0.05,10,greater_than")]
+        public float MaxScale { get; set; }
     }
 }

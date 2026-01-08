@@ -56,7 +56,7 @@ namespace BackgroundGenerator
             }
         }
 
-        public void GenerateCelestialBody()
+        private void GenerateCelestialBody()
         {
             // Select a position for the body from somewhere within the spawning area
             Rect2 spawnRect = _spawnShape.Shape.GetRect();
@@ -71,16 +71,31 @@ namespace BackgroundGenerator
 
             Vector2 position = new Vector2(x, y);
 
-            CelestialBody body = CelestialBodyFactory.CreateCelestialBody();
+            CelestialBody body = CelestialBodyFactory.CreateCelestialBody(randomScale: true);
 
             _bodyCanvas.AddChild(body);
             body.GlobalPosition = _spawnBlock.ToGlobal(position);
-            DebugLogger.LogMessage($"GlobalPosition = {body.GlobalPosition}");
+            ConnectCelestialBodySignals(body);
             _bodies.Add(body);
 
             if (body is IColorScheme schemed)
             {
                 schemed.ApplyColorScheme(ColorScheme);
+            }
+        }
+
+        private void ConnectCelestialBodySignals(CelestialBody body)
+        {
+            body.VisibleNotifier.ScreenExited += () => RemoveCelestialBody(body);
+        }
+
+        private void RemoveCelestialBody(CelestialBody body)
+        {
+            DebugLogger.LogMessage($"Removing {body.Name}!");
+            _bodies.Remove(body);
+            if (IsInstanceValid(body) && !body.IsQueuedForDeletion())
+            {
+                body.QueueFree();
             }
         }
     }

@@ -2,6 +2,7 @@ using System;
 using Autoloads;
 using BackgroundGenerator;
 using Godot;
+using NanoidDotNet;
 
 namespace Factories
 {
@@ -14,7 +15,10 @@ namespace Factories
             "res://nodes/background-generator/big-star/big-star.tscn"
         );
 
-        public static CelestialBody CreateCelestialBody(CelestialBodyResource resource = null)
+        public static CelestialBody CreateCelestialBody(
+            CelestialBodyResource resource = null,
+            bool randomScale = false
+        )
         {
             // Load the correct type of scene
             CelestialBodyType type = resource != null ? resource.Type : SelectRandomBodyType();
@@ -25,6 +29,15 @@ namespace Factories
                 CelestialBodyType.BigStar => _bigStarScene.Instantiate<BigStar>(),
                 _ => _shaderPlanetScene.Instantiate<ShaderPlanet>(),
             };
+
+            if (randomScale)
+            {
+                float scaleFactor = (float)GD.RandRange(0.2, 0.9) * (float)GD.RandRange(0.1, 10);
+                Vector2 planetScale = Vector2.One * scaleFactor;
+                body.Scale = planetScale;
+            }
+
+            body.Name = $"{body.GetType().Name}-{Nanoid.Generate(size: 3)}";
 
             return body;
         }

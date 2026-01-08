@@ -9,7 +9,6 @@ namespace BackgroundGenerator
         public override void _Ready()
         {
             _sprite = GetNode<Sprite2D>("%BigStarSprite");
-
             _sprite.Texture = (Texture2D)_sprite.Texture.Duplicate(true);
             float xCoord = (GD.Randi() % 5) * 25.0f;
             _sprite.RegionRect = new Rect2(
@@ -18,11 +17,13 @@ namespace BackgroundGenerator
                 width: _sprite.RegionRect.Size.X,
                 height: _sprite.RegionRect.Size.Y
             );
+
+            base._Ready();
         }
 
         public void ApplyColorScheme(GradientTexture1D scheme)
         {
-            if (Material is ShaderMaterial starMaterial)
+            if (_sprite.Material is ShaderMaterial starMaterial)
             {
                 starMaterial.SetShaderParameter("colorscheme", scheme);
             }
@@ -30,7 +31,7 @@ namespace BackgroundGenerator
 
         public override void _Process(double delta)
         {
-            MoveLocalY(SPEED * (float)delta, true);
+            MoveLocalY(SPEED * (float)delta, false);
         }
     }
 }

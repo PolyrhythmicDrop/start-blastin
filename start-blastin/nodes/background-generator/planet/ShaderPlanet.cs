@@ -10,12 +10,16 @@ namespace BackgroundGenerator
     {
         public override void _Ready()
         {
-            Material = (ShaderMaterial)Material.Duplicate(true);
+            _sprite = GetNode<Sprite2D>("%ShaderPlanetSprite");
+            base._Ready();
+
+            _sprite.Material = (ShaderMaterial)_sprite.Material.Duplicate(true);
+
             double lightX = GD.RandRange(0.0, 1.0);
             double lightY = GD.RandRange(0.0, 1.0);
             Vector2 lightVect = new Vector2((float)lightX, (float)lightY);
 
-            if (Material is ShaderMaterial shaderMaterial)
+            if (_sprite.Material is ShaderMaterial shaderMaterial)
             {
                 shaderMaterial.SetShaderParameter("light_origin", lightVect);
                 shaderMaterial.SetShaderParameter("seed", GD.RandRange(1.0, 10.0));
@@ -25,7 +29,7 @@ namespace BackgroundGenerator
 
         public void ApplyColorScheme(GradientTexture1D scheme)
         {
-            if (Material is ShaderMaterial planetMaterial)
+            if (_sprite.Material is ShaderMaterial planetMaterial)
             {
                 planetMaterial.SetShaderParameter("colorscheme", scheme);
             }
@@ -33,7 +37,7 @@ namespace BackgroundGenerator
 
         public override void _Process(double delta)
         {
-            MoveLocalY(SPEED * (float)delta, true);
+            MoveLocalY(SPEED * (float)delta, false);
         }
     }
 }

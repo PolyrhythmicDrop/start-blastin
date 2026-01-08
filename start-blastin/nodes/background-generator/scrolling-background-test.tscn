@@ -39,7 +39,7 @@ shape = SubResource("RectangleShape2D_4gvry")
 
 [node name="DespawnBlock" type="Area2D" parent="CelestialBody-CanvasLayer"]
 unique_name_in_owner = true
-position = Vector2(954, 1832)
+position = Vector2(954, 2062)
 collision_layer = 256
 collision_mask = 256
 

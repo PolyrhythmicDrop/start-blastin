@@ -14,7 +14,10 @@ shader_parameter/pixels = 500.0
 shader_parameter/colorscheme = ExtResource("2_hmqu6")
 shader_parameter/light_origin = Vector2(1.617, 0.637)
 
-[node name="ShaderPlanet" type="Sprite2D"]
+[node name="ShaderPlanet" type="Node2D"]
+script = ExtResource("4_5scaq")
+
+[node name="ShaderPlanetSprite" type="Sprite2D" parent="."]
+unique_name_in_owner = true
 material = SubResource("ShaderMaterial_2y5pt")
 texture = ExtResource("3_gcppf")
-script = ExtResource("4_5scaq")

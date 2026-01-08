@@ -1,7 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://bq7imdtl082ko"]
+[gd_scene load_steps=7 format=3 uid="uid://bq7imdtl082ko"]
 
 [ext_resource type="Script" uid="uid://cyxnxbvsy0ky" path="res://nodes/background-generator/ScrollingBackground.cs" id="2_lly12"]
+[ext_resource type="Texture2D" uid="uid://cldtkatbsqrm7" path="res://nodes/background-generator/stars.png" id="3_8mioe"]
 [ext_resource type="Texture2D" uid="uid://lugk4ges551x" path="res://resources/colors/bg-color-schemes/berry-nebula-bg-scheme.tres" id="3_j73ms"]
+[ext_resource type="Material" uid="uid://0xakyc8h5c4h" path="res://nodes/background-generator/StarParticles.tres" id="4_stqqb"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_2tko2"]
+blend_mode = 1
+particles_animation = true
+particles_anim_h_frames = 16
+particles_anim_v_frames = 1
+particles_anim_loop = false
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4gvry"]
 size = Vector2(2120, 1200)
@@ -11,7 +20,7 @@ script = ExtResource("2_lly12")
 ColorScheme = ExtResource("3_j73ms")
 
 [node name="BG-CanvasLayer" type="CanvasLayer" parent="."]
-layer = -2
+layer = -5
 
 [node name="Background" type="ColorRect" parent="BG-CanvasLayer"]
 unique_name_in_owner = true
@@ -22,6 +31,23 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 metadata/_edit_use_anchors_ = true
+
+[node name="Parallax2D" type="Parallax2D" parent="BG-CanvasLayer"]
+unique_name_in_owner = true
+scroll_scale = Vector2(0.05, 0.05)
+repeat_size = Vector2(2100, 1200)
+autoscroll = Vector2(0, 6)
+ignore_camera_scroll = true
+
+[node name="StarParticles" type="GPUParticles2D" parent="BG-CanvasLayer/Parallax2D"]
+unique_name_in_owner = true
+material = SubResource("CanvasItemMaterial_2tko2")
+amount = 300
+texture = ExtResource("3_8mioe")
+fixed_fps = 60
+visibility_rect = Rect2(-193.96796, -194.38068, 387.87946, 387.63757)
+local_coords = true
+process_material = ExtResource("4_stqqb")
 
 [node name="CelestialBody-CanvasLayer" type="CanvasLayer" parent="."]
 unique_name_in_owner = true

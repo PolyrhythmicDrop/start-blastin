@@ -15,6 +15,9 @@ namespace BackgroundGenerator
         private Area2D _spawnBlock;
         private CollisionShape2D _spawnShape;
 
+        private GpuParticles2D _particles;
+        private Parallax2D _parallax;
+
         private int _maxBodies = 3;
         private CanvasLayer _bodyCanvas;
 
@@ -35,6 +38,11 @@ namespace BackgroundGenerator
             _background = GetNode<ColorRect>("%Background");
             _spawnBlock = GetNode<Area2D>("%SpawnBlock");
             _spawnShape = _spawnBlock.GetNode<CollisionShape2D>("%SpawnShape2D");
+
+            _particles = GetNode<GpuParticles2D>("%StarParticles");
+            _parallax = GetNode<Parallax2D>("%Parallax2D");
+
+            GenerateStarParticles();
 
             _bodyCanvas = GetNode<CanvasLayer>("%CelestialBody-CanvasLayer");
 
@@ -94,6 +102,27 @@ namespace BackgroundGenerator
             {
                 body.QueueFree();
             }
+        }
+
+        private void GenerateStarParticles()
+        {
+            // _particles.SpeedScale = 1.0;
+            // _particles.Amount = 1;
+
+            var parallaxSize = _parallax.RepeatSize;
+            if (_particles.ProcessMaterial is ShaderMaterial particleMaterial)
+            {
+                particleMaterial.SetShaderParameter(
+                    "emission_box_extents",
+                    new Vector3(parallaxSize.X, parallaxSize.Y, 1.0f)
+                );
+                particleMaterial.SetShaderParameter("colorscheme", ColorScheme);
+            }
+
+            // float particleAmount = (parallaxSize.X * parallaxSize.Y) / _particles.Amount;
+            // int x = (int)(particleAmount * 0.75f);
+            // int y = (int)(particleAmount * 0.25f);
+            // _particles.Amount = Math.Max(20, (int)GD.Randi() % (x + y));
         }
     }
 }

@@ -21,6 +21,8 @@ namespace Enemies.Spawners
         private float _baseMoveDuration = 4.0f;
         private float _baseSpawnInterval = 1.6f;
 
+        private bool _waveTimerActive = false;
+
         private Timer _spawnTimer;
 
         private SpawnPool _spawnPool = new();
@@ -123,7 +125,10 @@ namespace Enemies.Spawners
         private EnemyResource GetEnemyFromPool()
         {
             if (_spawnPool == null || _spawnPool.Count == 0)
+            {
+                DebugLogger.LogMessage($"_spawnPool isn't populated!", true, true);
                 return null;
+            }
 
             // Calculate total weight
             int totalWeight = 0;
@@ -145,6 +150,7 @@ namespace Enemies.Spawners
                     return data.EnemyResource;
                 }
             }
+            // If you can't find an enemy to return, simply return the first enemy in the pool.
             return _spawnPool[0].EnemyResource;
         }
 
@@ -156,9 +162,19 @@ namespace Enemies.Spawners
         /// </summary>
         private void SpawnEnemy()
         {
+            if (!_waveTimerActive)
+            {
+                return;
+            }
+
             // Duplicate the enemy resource and create a new EnemyNode based on it.
             EnemyResource enemyResource = (EnemyResource)
-                GetEnemyFromPool().DuplicateDeep(Resource.DeepDuplicateMode.Internal);
+                GetEnemyFromPool()?.DuplicateDeep(Resource.DeepDuplicateMode.All);
+
+            if (enemyResource?.WeaponStats == null)
+            {
+                DebugLogger.LogMessage($"WeaponStats for {enemyResource} is null!", true, true);
+            }
 
             // Create an enemy from the factory and apply the current wave scaling.
             EnemyNode enemy = EnemyFactory.CreateEnemy(enemyResource);
@@ -301,11 +317,8 @@ namespace Enemies.Spawners
                 if (SpawnTimerDelay != 0)
                 {
                     SceneTreeTimer timer = GetTree()
-                        .CreateTimer((double)SpawnTimerDelay, processAlways: false);
-                    timer.Timeout += () =>
-                    {
-                        StartSpawnTimer();
-                    };
+                        .CreateTimer(SpawnTimerDelay, processAlways: false);
+                    timer.Timeout += StartSpawnTimer;
                 }
                 else
                 {
@@ -320,6 +333,10 @@ namespace Enemies.Spawners
 
         private void StartSpawnTimer()
         {
+            if (!_waveTimerActive)
+            {
+                return;
+            }
             // Spawn an enemy immediately if that feature is enabled
             if (SpawnImmediately)
             {
@@ -336,12 +353,14 @@ namespace Enemies.Spawners
 
         private void OnWaveStarted(object sender, WaveStartedEventArgs args)
         {
-            ToggleSpawning(true);
+            _waveTimerActive = true;
             _currentWave = args.Wave;
+            ToggleSpawning(true);
         }
 
         private void OnWaveTimerEnded()
         {
+            _waveTimerActive = false;
             ToggleSpawning(false);
         }
 

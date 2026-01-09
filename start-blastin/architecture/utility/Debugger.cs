@@ -54,7 +54,7 @@ namespace Utility
         {
             WaveManager waveManager = GetTree().GetNodesInGroup("wave-manager")[0] as WaveManager;
             // Kill all enemies
-            var enemies = GetTree().GetNodesInGroup("enemies");
+            var enemies = EnemyFinder.GetAllEnemies();
             foreach (EnemyNode enemy in enemies)
             {
                 enemy.Die();

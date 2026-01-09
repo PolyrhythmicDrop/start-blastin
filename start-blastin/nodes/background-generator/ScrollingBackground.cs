@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Autoloads;
+using Events;
 using Factories;
 using Godot;
 using Interfaces;
@@ -75,16 +76,40 @@ namespace BackgroundGenerator
 
         public void ConnectSignals()
         {
+            // Connect the body spawn timers.
             _planetSpawnTimer.Timeout += () => TrySpawnBody(CelestialBodyType.ShaderPlanet);
             _bigStarSpawnTimer.Timeout += () => TrySpawnBody(CelestialBodyType.BigStar);
+
+            // Connect wave timer for wave-based variations.
+            EventBus.Instance.WaveStarted += OnWaveStarted;
         }
 
-        public void DisconnectSignals() { }
+        public void DisconnectSignals()
+        {
+            EventBus.Instance.WaveStarted -= OnWaveStarted;
+        }
+
+        public override void _ExitTree()
+        {
+            DisconnectSignals();
+            base._ExitTree();
+        }
 
         private void RandomizeSpawnTime(Timer timer)
         {
             float factor = (float)GD.RandRange(0.2, 3);
             timer.WaitTime *= factor;
+        }
+
+        private void OnWaveStarted(object source, WaveStartedEventArgs args)
+        {
+            // Change the starfield every 3 waves.
+            bool changeStarfield = args.Wave % 3 == 0;
+
+            if (changeStarfield)
+            {
+                GenerateStarParticles();
+            }
         }
 
         public override void _Process(double delta) { }
@@ -207,6 +232,8 @@ namespace BackgroundGenerator
             // _particles.SpeedScale = 1.0;
             // _particles.Amount = 1;
 
+            _particles.Emitting = false;
+
             var parallaxSize = _parallax.RepeatSize;
             if (_particles.ProcessMaterial is ShaderMaterial particleMaterial)
             {
@@ -221,6 +248,8 @@ namespace BackgroundGenerator
             int x = (int)(particleAmount * 0.75f);
             int y = (int)(particleAmount * 0.25f);
             _particles.Amount = Math.Max(20, (int)GD.Randi() % (x + y));
+
+            _particles.Emitting = true;
         }
     }
 }

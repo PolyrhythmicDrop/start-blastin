@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Autoloads;
 using Enemies.Spawners;
@@ -296,14 +297,24 @@ namespace WaveManagement
         /// <returns></returns>
         private async Task ClearFormation()
         {
-            foreach (KeyValuePair<SpawnerLocation, List<EnemySpawner>> kvp in _activeSpawners)
+            // foreach (KeyValuePair<SpawnerLocation, List<EnemySpawner>> kvp in _activeSpawners)
+            // {
+            //     foreach (EnemySpawner spawner in kvp.Value)
+            //     {
+            //         spawner.QueueFree();
+            //         await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+            //     }
+            //     kvp.Value.Clear();
+            // }
+
+            foreach (List<EnemySpawner> spawners in _activeSpawners.Values)
             {
-                foreach (EnemySpawner spawner in kvp.Value)
+                foreach (EnemySpawner spawner in spawners.ToList())
                 {
                     spawner.QueueFree();
                     await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
                 }
-                kvp.Value.Clear();
+                spawners.Clear();
             }
         }
 

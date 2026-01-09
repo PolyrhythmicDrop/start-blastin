@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Autoloads;
@@ -150,6 +151,7 @@ namespace WaveManagement
             {
                 _waveTimer.Stop();
             }
+
             EndWave();
         }
 
@@ -160,9 +162,9 @@ namespace WaveManagement
         /// <returns></returns>
         private async Task<bool> WaitForEnemiesToClear()
         {
-            int enemyCount = GetTree().GetNodesInGroup("enemies").Count;
+            int enemyCount = EnemyFinder.GetAllEnemies().Count();
             int prevEnemyCount = enemyCount;
-            while ((enemyCount = GetTree().GetNodesInGroup("enemies").Count) > 0)
+            while ((enemyCount = EnemyFinder.GetAllEnemies().Count()) > 0)
             {
                 if (enemyCount != prevEnemyCount)
                 {

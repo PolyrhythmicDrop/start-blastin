@@ -1,11 +1,10 @@
-[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=16 format=3 uid="uid://dmn38vpvm2r85"]
+[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=13 format=3 uid="uid://dmn38vpvm2r85"]
 
 [ext_resource type="Resource" uid="uid://b6vj8iih7r25c" path="res://resources/enemies/mini-vortex.tres" id="1_0qib3"]
 [ext_resource type="Script" uid="uid://b40t8najievo0" path="res://nodes/wave-management/wave-scalers/SpawnerFormationScaler.cs" id="1_gbt46"]
 [ext_resource type="Script" uid="uid://c2ao0simwvpmt" path="res://nodes/wave-management/wave-scalers/SpawnerConfig.cs" id="1_us6wm"]
 [ext_resource type="Script" uid="uid://dyer2c2n8y1v4" path="res://nodes/enemies/Spawners/SpawnData.cs" id="2_m43y6"]
 [ext_resource type="Resource" uid="uid://oepg1yh64jk4" path="res://resources/enemies/speedy-drone.tres" id="4_m43y6"]
-[ext_resource type="Script" uid="uid://cf7pn6qd7aa15" path="res://nodes/enemies/EnemyResource.cs" id="7_qnxvr"]
 
 [sub_resource type="Resource" id="Resource_0g5tc"]
 script = ExtResource("2_m43y6")
@@ -43,28 +42,9 @@ MaxDelay = 0.6
 SpawnPoolGD = Array[Object]([SubResource("Resource_npood"), SubResource("Resource_oa5me")])
 metadata/_custom_type_script = "uid://c2ao0simwvpmt"
 
-[sub_resource type="Curve2D" id="Curve2D_gexv4"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2200)
-}
-point_count = 2
-
-[sub_resource type="Resource" id="Resource_tymb7"]
-resource_local_to_scene = true
-resource_name = "mini-vortex"
-script = ExtResource("7_qnxvr")
-ScenePath = "res://nodes/enemies/mini-vortex/mini-vortex.tscn"
-Speed = 200.0
-CrashDamage = 1
-MaxHealth = 3.0
-PathCurve = SubResource("Curve2D_gexv4")
-FluxReward = 50
-ByteReward = 200
-metadata/_custom_type_script = "uid://cf7pn6qd7aa15"
-
 [sub_resource type="Resource" id="Resource_3ctwt"]
 script = ExtResource("2_m43y6")
-EnemyResource = SubResource("Resource_tymb7")
+EnemyResource = ExtResource("1_0qib3")
 Weight = 1
 metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
 

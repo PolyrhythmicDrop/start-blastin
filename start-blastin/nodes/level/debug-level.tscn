@@ -1,6 +1,5 @@
-[gd_scene load_steps=9 format=3 uid="uid://cca75d2re7isj"]
+[gd_scene load_steps=8 format=3 uid="uid://cca75d2re7isj"]
 
-[ext_resource type="Texture2D" uid="uid://cilgl08og1qhy" path="res://nodes/backgrounds/background-purple-nebulae-stars.png" id="1_1iju8"]
 [ext_resource type="Script" uid="uid://bpw7egf87stew" path="res://architecture/utility/Debugger.cs" id="1_hxhdr"]
 [ext_resource type="PackedScene" uid="uid://bq7imdtl082ko" path="res://nodes/background-generator/scrolling-background-test.tscn" id="1_jmnrl"]
 [ext_resource type="PackedScene" uid="uid://dl7j0usiolxux" path="res://nodes/environmental/play-area-border.tscn" id="2_hxhdr"]
@@ -15,20 +14,6 @@
 
 [node name="Player" parent="." instance=ExtResource("3_gl8ah")]
 position = Vector2(960, 882)
-
-[node name="TextureRect" type="TextureRect" parent="."]
-visible = false
-z_index = -100
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-texture = ExtResource("1_1iju8")
-expand_mode = 2
-stretch_mode = 5
 
 [node name="PlayAreaBorder" parent="." instance=ExtResource("2_hxhdr")]
 collision_mask = 9

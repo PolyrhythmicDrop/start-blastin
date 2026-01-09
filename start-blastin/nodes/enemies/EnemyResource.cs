@@ -1,5 +1,6 @@
 using DataStructures;
 using Godot;
+using Utility;
 using Weapons;
 
 namespace Enemies
@@ -48,7 +49,18 @@ namespace Enemies
         public WeaponStats WeaponStats
         {
             get => _weaponStats;
-            set => _weaponStats = value;
+            set
+            {
+                if (value == null)
+                {
+                    DebugLogger.LogMessage(
+                        $"WeaponStats for {ResourceName} is being set to null!",
+                        true,
+                        true
+                    );
+                }
+                _weaponStats = value;
+            }
         }
 
         [Export]
@@ -75,28 +87,28 @@ namespace Enemies
         [Export]
         public SoundSet Sounds { get; set; }
 
-        public EnemyResource()
-            : this(0, 1, null, "", 0, null, 0, 0) { }
+        // public EnemyResource()
+        //     : this(0, 1, null, "", 0, null, 0, 0) { }
 
-        public EnemyResource(
-            int crashDamage,
-            float maxHealth,
-            Curve2D pathCurve,
-            string scenePath,
-            float speed,
-            WeaponStats weaponStats,
-            int flux,
-            int bytes
-        )
-        {
-            _crashDamage = crashDamage;
-            _maxHealth = maxHealth;
-            _pathCurve = pathCurve;
-            _scenePath = scenePath;
-            _speed = speed;
-            _weaponStats = weaponStats;
-            _fluxReward = flux;
-            _byteReward = bytes;
-        }
+        // public EnemyResource(
+        //     int crashDamage,
+        //     float maxHealth,
+        //     Curve2D pathCurve,
+        //     string scenePath,
+        //     float speed,
+        //     WeaponStats weaponStats,
+        //     int flux,
+        //     int bytes
+        // )
+        // {
+        //     _crashDamage = crashDamage;
+        //     _maxHealth = maxHealth;
+        //     _pathCurve = pathCurve;
+        //     _scenePath = scenePath;
+        //     _speed = speed;
+        //     _weaponStats = weaponStats;
+        //     _fluxReward = flux;
+        //     _byteReward = bytes;
+        // }
     }
 }

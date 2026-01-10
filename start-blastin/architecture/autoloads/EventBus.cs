@@ -56,9 +56,9 @@ namespace Autoloads
 
         public event EventHandler<PlayerIdEventArgs> PhaseEnded;
 
-        public event EventHandler<PlayerPhaseTimeLeftEventArgs> PlayerPhaseTimeLeft;
+        public event EventHandler<PlayerPhaseCooldownTimeLeftEventArgs> PlayerPhaseCooldownTimeLeft;
 
-        private PlayerPhaseTimeLeftEventArgs _phaseTimeLeftArgs = new();
+        private PlayerPhaseCooldownTimeLeftEventArgs _phaseCooldownTimeLeftArgs = new();
 
         public event EventHandler<PlayerPhaseCooldownChangedEventArgs> PlayerPhaseCooldownChanged;
 
@@ -188,11 +188,16 @@ namespace Autoloads
             PhaseEnded?.Invoke(this, args);
         }
 
-        public void RaisePlayerPhaseTimeLeft(int playerId, double timeLeft)
+        public void RaisePlayerPhaseCooldownTimeLeft(
+            int playerId,
+            double timeLeft,
+            double totalTime
+        )
         {
-            _phaseTimeLeftArgs.PlayerId = playerId;
-            _phaseTimeLeftArgs.TimeLeft = timeLeft;
-            PlayerPhaseTimeLeft?.Invoke(this, _phaseTimeLeftArgs);
+            _phaseCooldownTimeLeftArgs.PlayerId = playerId;
+            _phaseCooldownTimeLeftArgs.TimeLeft = timeLeft;
+            _phaseCooldownTimeLeftArgs.TotalTime = totalTime;
+            PlayerPhaseCooldownTimeLeft?.Invoke(this, _phaseCooldownTimeLeftArgs);
         }
 
         public void RaisePlayerPhaseCooldownChanged(int playerId, float cooldown)

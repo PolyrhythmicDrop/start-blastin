@@ -608,6 +608,8 @@ namespace Entities
                     );
                     break;
                 case StatType.PhaseCooldown:
+                    DebugLogger.LogMessage($"Player phase cooldown changed to {PhaseCooldown}");
+                    _movementComponent.OnPlayerPhaseCooldownChanged(args.Stat.CurrentValue);
                     EventBus.Instance.RaisePlayerPhaseCooldownChanged(
                         _playerId,
                         args.Stat.CurrentValue

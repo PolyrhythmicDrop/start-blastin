@@ -2,6 +2,7 @@ using System;
 using Autoloads;
 using Enemies;
 using Entities;
+using Events;
 using Godot;
 using Interfaces;
 using Utility;
@@ -62,9 +63,10 @@ namespace PlayerComponents
         {
             if (!_phaseCooldownTimer.IsStopped())
             {
-                EventBus.Instance.RaisePlayerPhaseTimeLeft(
+                EventBus.Instance.RaisePlayerPhaseCooldownTimeLeft(
                     _player.PlayerId,
-                    _phaseCooldownTimer.TimeLeft
+                    _phaseCooldownTimer.TimeLeft,
+                    _player.PhaseCooldown
                 );
             }
         }
@@ -172,9 +174,29 @@ namespace PlayerComponents
 
         public void OnPhaseReady()
         {
+            // Reset the phase cooldown bar using the current PhaseCooldown stat.
+            EventBus.Instance.RaisePlayerPhaseCooldownTimeLeft(
+                _player.PlayerId,
+                0,
+                _player.PhaseCooldown
+            );
             _player.Audio.PlayPhaseReadySound();
             _player.Animation.PlayPhaseReadyEffect();
             _player.State.PhaseReady = true;
+        }
+
+        public void OnPlayerPhaseCooldownChanged(float newCooldown)
+        {
+            if (_phaseCooldownTimer.IsStopped())
+            {
+                return;
+            }
+
+            // Reset the timer with the new cooldown, taking into account time already elapsed.
+            // double timeElapsed = _phaseCooldownTimer.WaitTime - _phaseCooldownTimer.TimeLeft;
+
+            // double difference = _player.PhaseCooldown - _phaseCooldownTimer.TimeLeft;
+            // _phaseCooldownTimer.Start(difference);
         }
 
         public void StartPhase()
@@ -198,7 +220,13 @@ namespace PlayerComponents
             _player.State.PhaseReady = false;
             _phaseTimer.Start(_player.PhaseDuration);
             EventBus.Instance.RaisePhaseStarted(_player.PlayerId);
-            EventBus.Instance.RaisePlayerPhaseTimeLeft(_player.PlayerId, _player.PhaseCooldown);
+
+            // Initialize the cooldown phase bar with the current cooldown stat.
+            EventBus.Instance.RaisePlayerPhaseCooldownTimeLeft(
+                _player.PlayerId,
+                _player.PhaseCooldown,
+                _player.PhaseCooldown
+            );
 
             _player.Audio.PlayPhaseStartSound();
             _player.Animation.TogglePhaseAnimation(true);
@@ -217,7 +245,6 @@ namespace PlayerComponents
                 enemy.SetCollisionMaskValue(1, true);
             }
 
-            // _movementComponent.EndPhase();
             _phaseCooldownTimer.Start(_player.PhaseCooldown);
             EventBus.Instance.RaisePhaseEnded(_player.PlayerId);
 

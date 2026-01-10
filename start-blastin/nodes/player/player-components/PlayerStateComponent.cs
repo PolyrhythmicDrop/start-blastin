@@ -13,6 +13,7 @@ namespace PlayerComponents
 
         public bool Phasing = false;
         public bool PhaseReady = true;
+
         public bool Dying = false;
         public bool DeflectActive = false;
 

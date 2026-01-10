@@ -38,7 +38,7 @@ namespace UI.HUD
             EventBus.Instance.PlayerMaxHealthChanged += OnPlayerMaxHealthChanged;
             EventBus.Instance.PlayerCurrentHealthChanged += OnPlayerCurrentHealthChanged;
             EventBus.Instance.PlayerPhaseCooldownChanged += OnPlayerPhaseCooldownChanged;
-            EventBus.Instance.PlayerPhaseTimeLeft += OnPlayerPhaseTimeLeft;
+            EventBus.Instance.PlayerPhaseCooldownTimeLeft += OnPlayerPhaseTimeLeft;
         }
 
         public void DisconnectSignals()
@@ -46,7 +46,7 @@ namespace UI.HUD
             EventBus.Instance.PlayerMaxHealthChanged -= OnPlayerMaxHealthChanged;
             EventBus.Instance.PlayerCurrentHealthChanged -= OnPlayerCurrentHealthChanged;
             EventBus.Instance.PlayerPhaseCooldownChanged -= OnPlayerPhaseCooldownChanged;
-            EventBus.Instance.PlayerPhaseTimeLeft -= OnPlayerPhaseTimeLeft;
+            EventBus.Instance.PlayerPhaseCooldownTimeLeft -= OnPlayerPhaseTimeLeft;
         }
 
         private void InitializeStatusBars()
@@ -74,8 +74,10 @@ namespace UI.HUD
             PlayerPhaseCooldownChangedEventArgs args
         ) => UpdatePhaseCooldown(args.PlayerId, args.CooldownTime);
 
-        private void OnPlayerPhaseTimeLeft(object source, PlayerPhaseTimeLeftEventArgs args) =>
-            UpdatePhaseTimeLeft(args.PlayerId, args.TimeLeft);
+        private void OnPlayerPhaseTimeLeft(
+            object source,
+            PlayerPhaseCooldownTimeLeftEventArgs args
+        ) => UpdatePhaseTimeLeft(args.PlayerId, args.TimeLeft, args.TotalTime);
 
         /// <summary>
         /// Updates the player's max health on the status bar.
@@ -112,7 +114,8 @@ namespace UI.HUD
         {
             if (playerId == _playerId)
             {
-                _phaseBar.SetTotalCooldown(totalCooldown);
+                bool phaseReady = _service.GetPlayer(_playerId).State.PhaseReady;
+                _phaseBar.SetTotalCooldown(totalCooldown, phaseReady);
             }
         }
 
@@ -121,11 +124,11 @@ namespace UI.HUD
         /// </summary>
         /// <param name="playerId">The ID of the player.</param>
         /// <param name="timeLeft">The time left on the cooldown timer.</param>
-        private void UpdatePhaseTimeLeft(int playerId, double timeLeft)
+        private void UpdatePhaseTimeLeft(int playerId, double timeLeft, double totalCooldown)
         {
             if (playerId == _playerId)
             {
-                _phaseBar.SetPhaseTimeLeft(timeLeft);
+                _phaseBar.SetPhaseCooldownTimeLeft(timeLeft, totalCooldown);
             }
         }
 

@@ -679,6 +679,7 @@ namespace Effects
         /// <param name="target">The target to apply the effect to.</param>
         protected void ApplyEffectToTarget(GodotObject target)
         {
+            DebugLogger.LogMessage($"Applying effect {GetType().Name} to {target}!");
             // Get the current effect state for this target or create a new one
             EffectState state = GetOrCreateEffectState(target);
 

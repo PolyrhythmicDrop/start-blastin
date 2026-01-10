@@ -66,16 +66,19 @@ namespace Stats
         {
             Stat stat = GetStat(type);
             float roundValue = MathF.Round(newValue, 4);
+            float previousValue;
 
             if (stat != null)
             {
+                previousValue = stat.CurrentValue;
                 stat.CurrentValue = roundValue;
             }
             else
             {
+                previousValue = 0;
                 AddStat(type, roundValue);
             }
-            StatUpdatedEventArgs args = new(type, stat);
+            StatUpdatedEventArgs args = new(type, stat, previousValue);
             RaiseStatUpdated(args);
         }
 
@@ -88,10 +91,19 @@ namespace Stats
             Stat stat = _stats[type];
             if (stat != null)
             {
+                float previousValue = stat.CurrentValue;
                 stat.CurrentValue = stat.BaseValue;
+                StatUpdatedEventArgs args = new(stat.Type, stat, previousValue);
+                RaiseStatUpdated(args);
             }
-            StatUpdatedEventArgs args = new(stat.Type, stat);
-            RaiseStatUpdated(args);
+            else
+            {
+                DebugLogger.LogMessage(
+                    $"Cannot reset {type} because it does not exist in this StatManager!",
+                    true,
+                    true
+                );
+            }
         }
 
         /// <summary>

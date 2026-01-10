@@ -72,7 +72,7 @@ namespace UI.HUD
         private void OnPlayerPhaseCooldownChanged(
             object source,
             PlayerPhaseCooldownChangedEventArgs args
-        ) => UpdatePhaseCooldown(args.PlayerId, args.CooldownTime);
+        ) => UpdatePhaseCooldown(args.PlayerId, args.NewCooldownTime);
 
         private void OnPlayerPhaseTimeLeft(
             object source,

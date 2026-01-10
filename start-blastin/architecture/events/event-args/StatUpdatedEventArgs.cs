@@ -8,10 +8,13 @@ namespace Events
         public StatType StatType { get; }
         public Stat Stat { get; }
 
-        public StatUpdatedEventArgs(StatType type, Stat stat)
+        public float OriginalValue { get; }
+
+        public StatUpdatedEventArgs(StatType type, Stat stat, float originalValue)
         {
             StatType = type;
             Stat = stat;
+            OriginalValue = originalValue;
         }
     }
 }

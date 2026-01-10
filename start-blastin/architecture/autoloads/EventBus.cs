@@ -200,9 +200,13 @@ namespace Autoloads
             PlayerPhaseCooldownTimeLeft?.Invoke(this, _phaseCooldownTimeLeftArgs);
         }
 
-        public void RaisePlayerPhaseCooldownChanged(int playerId, float cooldown)
+        public void RaisePlayerPhaseCooldownChanged(
+            int playerId,
+            float newCooldown,
+            float origCooldown
+        )
         {
-            PlayerPhaseCooldownChangedEventArgs args = new(playerId, cooldown);
+            PlayerPhaseCooldownChangedEventArgs args = new(playerId, newCooldown, origCooldown);
             PlayerPhaseCooldownChanged?.Invoke(this, args);
         }
 

@@ -185,18 +185,29 @@ namespace PlayerComponents
             _player.State.PhaseReady = true;
         }
 
-        public void OnPlayerPhaseCooldownChanged(float newCooldown)
+        /// <summary>
+        /// If the phase cooldown timer is running, adjusts its time to account for the new cooldown time.
+        /// </summary>
+        /// <param name="newCooldown"></param>
+        public void OnPlayerPhaseCooldownChanged(float newCooldown, float origCooldown)
         {
             if (_phaseCooldownTimer.IsStopped())
             {
                 return;
             }
 
-            // Reset the timer with the new cooldown, taking into account time already elapsed.
-            // double timeElapsed = _phaseCooldownTimer.WaitTime - _phaseCooldownTimer.TimeLeft;
-
-            // double difference = _player.PhaseCooldown - _phaseCooldownTimer.TimeLeft;
-            // _phaseCooldownTimer.Start(difference);
+            // Adjust the time left based on the new cooldown
+            double timeElapsed = origCooldown - _phaseCooldownTimer.TimeLeft;
+            double newTimeRemaining = newCooldown - timeElapsed;
+            if (newTimeRemaining <= 0)
+            {
+                _phaseCooldownTimer.Stop();
+                _phaseCooldownTimer.EmitSignal(Timer.SignalName.Timeout);
+            }
+            else
+            {
+                _phaseCooldownTimer.Start(newTimeRemaining);
+            }
         }
 
         public void StartPhase()

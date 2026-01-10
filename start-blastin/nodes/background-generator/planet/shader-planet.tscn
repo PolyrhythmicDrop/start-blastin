@@ -8,9 +8,9 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2y5pt"]
 shader = ExtResource("1_qnmmi")
 shader_parameter/size = 5.365
-shader_parameter/OCTAVES = 3
+shader_parameter/OCTAVES = 2
 shader_parameter/seed = 4.658000173755
-shader_parameter/pixels = 500.0
+shader_parameter/pixels = 1000.0
 shader_parameter/colorscheme = ExtResource("2_hmqu6")
 shader_parameter/light_origin = Vector2(1.617, 0.637)
 

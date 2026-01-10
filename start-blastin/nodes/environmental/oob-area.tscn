@@ -5,22 +5,22 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pxe5x"]
 resource_local_to_scene = true
 resource_name = "top-oob"
-size = Vector2(2300, 100)
+size = Vector2(2300, 185)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rl1rb"]
 resource_local_to_scene = true
 resource_name = "bottom-oob"
-size = Vector2(2300, 100)
+size = Vector2(2612, 239)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ntwxm"]
 resource_local_to_scene = true
 resource_name = "right-oob"
-size = Vector2(100, 1400)
+size = Vector2(210, 1819)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_l8aks"]
 resource_local_to_scene = true
 resource_name = "right-oob"
-size = Vector2(100, 1400)
+size = Vector2(217, 1712)
 
 [node name="OOB-Area" type="Area2D"]
 collision_layer = 2
@@ -30,21 +30,21 @@ priority = 1
 script = ExtResource("1_p6fuk")
 
 [node name="OOB-Top" type="CollisionShape2D" parent="."]
-position = Vector2(960, -200)
+position = Vector2(960, -242.5)
 shape = SubResource("RectangleShape2D_pxe5x")
 debug_color = Color(0.40196422, 0.6087442, 0, 0.41960785)
 
 [node name="OOB-Bottom" type="CollisionShape2D" parent="."]
-position = Vector2(960, 1280)
+position = Vector2(939, 1349.5)
 shape = SubResource("RectangleShape2D_rl1rb")
 debug_color = Color(0.40392157, 0.60784316, 0, 0.41960785)
 
 [node name="OOB-Right" type="CollisionShape2D" parent="."]
-position = Vector2(2120, 540)
+position = Vector2(2175, 544.5)
 shape = SubResource("RectangleShape2D_ntwxm")
 debug_color = Color(0.40392157, 0.60784316, 0, 0.41960785)
 
 [node name="OOB-Left" type="CollisionShape2D" parent="."]
-position = Vector2(-200, 540)
+position = Vector2(-258.5, 556)
 shape = SubResource("RectangleShape2D_l8aks")
 debug_color = Color(0.40392157, 0.60784316, 0, 0.41960785)

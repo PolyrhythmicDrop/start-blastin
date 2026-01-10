@@ -8,14 +8,24 @@ namespace BackgroundGenerator
     {
         public BigStar()
         {
-            _minScale = 0.8f;
-            _maxScale = 2.0f;
+            _minScale = 0.05f;
+            _maxScale = 1.1f;
+
+            _minSpeed = 1f;
+            _maxSpeed = 20f;
         }
 
         protected new AnimatedSprite2D _sprite;
 
+        public new AnimatedSprite2D Sprite => _sprite;
+
         public override void _Ready()
         {
+            if (SetSpeed <= 0)
+            {
+                SetSpeed = (float)GD.RandRange(_minSpeed, _maxSpeed);
+            }
+
             _sprite = GetNode<AnimatedSprite2D>("%BigStarSprite");
             _sprite.SpriteFrames = (SpriteFrames)_sprite.SpriteFrames.Duplicate(true);
             _sprite.Frame = GD.RandRange(0, 5);
@@ -43,11 +53,6 @@ namespace BackgroundGenerator
             {
                 starMaterial.SetShaderParameter("colorscheme", scheme);
             }
-        }
-
-        public override void _Process(double delta)
-        {
-            MoveLocalY(SPEED * (float)delta, false);
         }
     }
 }

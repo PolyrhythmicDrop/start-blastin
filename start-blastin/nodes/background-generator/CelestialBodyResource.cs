@@ -21,6 +21,12 @@ namespace BackgroundGenerator
         [Export]
         public float ScaleFactor { get; set; }
 
+        [Export]
+        public float MinSpeed { get; set; }
+
+        [Export]
+        public float MaxSpeed { get; set; }
+
         [ExportGroup("Random Scaling")]
         [Export(PropertyHint.GroupEnable)]
         public bool RandomScale { get; set; }

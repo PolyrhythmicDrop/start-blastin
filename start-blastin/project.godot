@@ -238,6 +238,11 @@ debug-heal-player={
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
+anti_aliasing/quality/msaa_2d=2
+anti_aliasing/screen_space_roughness_limiter/enabled=false
+textures/decals/filter=0
+textures/light_projectors/filter=0
 environment/screen_space_reflection/roughness_quality=0
 environment/subsurface_scattering/subsurface_scattering_quality=0
 2d/snap/snap_2d_transforms_to_pixel=true
+2d/snap/snap_2d_vertices_to_pixel=true

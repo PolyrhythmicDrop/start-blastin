@@ -11,12 +11,19 @@ namespace BackgroundGenerator
         // Set defaults in constructor. These can be overridden later, either in the factory or with a resource.
         public ShaderPlanet()
         {
-            _minScale = 0.2f;
-            _maxScale = 8.0f;
+            _minScale = 0.1f;
+            _maxScale = 6.0f;
+
+            _minSpeed = 5.0f;
+            _maxSpeed = 50.0f;
         }
 
         public override void _Ready()
         {
+            if (SetSpeed <= 0)
+            {
+                SetSpeed = (float)GD.RandRange(_minSpeed, _maxSpeed);
+            }
             _sprite = GetNode<Sprite2D>("%ShaderPlanetSprite");
             base._Ready();
 
@@ -32,6 +39,8 @@ namespace BackgroundGenerator
                 shaderMaterial.SetShaderParameter("seed", GD.RandRange(1.0, 10.0));
                 shaderMaterial.SetShaderParameter("pixels", (int)(Scale.X * 100));
             }
+
+            DebugLogger.LogMessage($"{Name} set speed: {SetSpeed}");
         }
 
         public void ApplyColorScheme(GradientTexture1D scheme)
@@ -40,11 +49,6 @@ namespace BackgroundGenerator
             {
                 planetMaterial.SetShaderParameter("colorscheme", scheme);
             }
-        }
-
-        public override void _Process(double delta)
-        {
-            MoveLocalY(SPEED * (float)delta, false);
         }
     }
 }

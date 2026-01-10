@@ -34,6 +34,8 @@ namespace Factories
                 _ => CreateCelestialBody<ShaderPlanet>(resource.RandomScale, resource.ScaleFactor),
             };
 
+            body.SetSpeed = (float)GD.RandRange(resource.MinSpeed, resource.MaxSpeed);
+
             return body;
         }
 

@@ -7,6 +7,8 @@ namespace BackgroundGenerator
     {
         protected Sprite2D _sprite;
 
+        public Sprite2D Sprite => _sprite;
+
         protected float _minScale = 1.0f;
         protected float _maxScale = 1.0f;
 
@@ -17,7 +19,19 @@ namespace BackgroundGenerator
 
         public VisibleOnScreenNotifier2D VisibleNotifier => _visibleNotifier;
 
-        protected const int SPEED = 200;
+        protected float _minSpeed;
+        protected float _maxSpeed;
+
+        protected float _setSpeed;
+
+        public float MinSpeed => _minSpeed;
+        public float MaxSpeed => _maxSpeed;
+
+        public float SetSpeed
+        {
+            get => _setSpeed;
+            set => _setSpeed = Math.Clamp(value, _minSpeed, _maxSpeed);
+        }
 
         public override void _Ready()
         {
@@ -37,6 +51,11 @@ namespace BackgroundGenerator
             _visibleNotifier.Rect = rect;
 
             _visibleNotifier.ShowRect = false;
+        }
+
+        public override void _Process(double delta)
+        {
+            MoveLocalY(_setSpeed * (float)delta, false);
         }
     }
 }

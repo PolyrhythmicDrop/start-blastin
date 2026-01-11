@@ -1,14 +1,30 @@
-[gd_scene load_steps=8 format=3 uid="uid://cca75d2re7isj"]
+[gd_scene load_steps=10 format=3 uid="uid://cca75d2re7isj"]
 
 [ext_resource type="Script" uid="uid://bpw7egf87stew" path="res://architecture/utility/Debugger.cs" id="1_hxhdr"]
 [ext_resource type="PackedScene" uid="uid://bq7imdtl082ko" path="res://nodes/background-generator/scrolling-background-test.tscn" id="1_jmnrl"]
 [ext_resource type="PackedScene" uid="uid://dl7j0usiolxux" path="res://nodes/environmental/play-area-border.tscn" id="2_hxhdr"]
 [ext_resource type="PackedScene" uid="uid://nenl15kjphyb" path="res://nodes/player/player.tscn" id="3_gl8ah"]
 [ext_resource type="Script" uid="uid://cv3ev8ojysetw" path="res://nodes/environmental/DeflectorWall.cs" id="7_ald07"]
+[ext_resource type="Script" uid="uid://33wv8gl0qq4r" path="res://nodes/level/LevelCamera.cs" id="8_jmnrl"]
 [ext_resource type="PackedScene" uid="uid://bsyev7gatn1jy" path="res://nodes/environmental/oob-area.tscn" id="8_mybqq"]
 [ext_resource type="PackedScene" uid="uid://dxdlpe5yuamuy" path="res://nodes/wave-management/wave-manager/wave-manager.tscn" id="9_4usc6"]
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_jmnrl"]
+noise_type = 3
+seed = 2
+frequency = 0.1347
+fractal_type = 0
+fractal_octaves = 3
+
 [node name="DebugLevel" type="Node" groups=["level"]]
+
+[node name="LevelCamera" type="Camera2D" parent="."]
+anchor_mode = 0
+limit_enabled = false
+limit_left = 0
+limit_top = 0
+script = ExtResource("8_jmnrl")
+Noise = SubResource("FastNoiseLite_jmnrl")
 
 [node name="ScrollingBackground" parent="." instance=ExtResource("1_jmnrl")]
 
@@ -22,9 +38,6 @@ script = ExtResource("7_ald07")
 [node name="OOB-Area" parent="." instance=ExtResource("8_mybqq")]
 
 [node name="WaveManager" parent="." instance=ExtResource("9_4usc6")]
-
-[node name="LevelCamera" type="Camera2D" parent="."]
-anchor_mode = 0
 
 [node name="Debugger" type="Node" parent="."]
 script = ExtResource("1_hxhdr")

@@ -14,7 +14,7 @@ particles_anim_v_frames = 1
 particles_anim_loop = false
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4gvry"]
-size = Vector2(2120, 1200)
+size = Vector2(2297, 1200)
 
 [node name="ScrollingBackground" type="Node"]
 script = ExtResource("2_lly12")
@@ -39,16 +39,21 @@ one_shot = true
 
 [node name="BG-CanvasLayer" type="CanvasLayer" parent="."]
 layer = -10
+follow_viewport_enabled = true
 
 [node name="Background" type="ColorRect" parent="BG-CanvasLayer"]
 unique_name_in_owner = true
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -180.0
+offset_top = -100.0
+offset_right = -180.0
+offset_bottom = -100.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(1.2, 1.2)
 color = Color(0, 0, 0, 1)
-metadata/_edit_use_anchors_ = true
 
 [node name="Parallax2D" type="Parallax2D" parent="BG-CanvasLayer"]
 unique_name_in_owner = true
@@ -80,6 +85,7 @@ process_material = ExtResource("4_stqqb")
 [node name="CelestialBody-CanvasLayer" type="CanvasLayer" parent="."]
 unique_name_in_owner = true
 layer = -5
+follow_viewport_enabled = true
 
 [node name="SpawnBlock" type="Area2D" parent="CelestialBody-CanvasLayer"]
 unique_name_in_owner = true
@@ -89,12 +95,15 @@ collision_mask = 256
 
 [node name="SpawnShape2D" type="CollisionShape2D" parent="CelestialBody-CanvasLayer/SpawnBlock"]
 unique_name_in_owner = true
+position = Vector2(18.5, 0)
 shape = SubResource("RectangleShape2D_4gvry")
 
 [node name="BigStar-CanvasLayer" type="CanvasLayer" parent="CelestialBody-CanvasLayer"]
 unique_name_in_owner = true
 layer = -2
+follow_viewport_enabled = true
 
 [node name="Planet-CanvasLayer" type="CanvasLayer" parent="CelestialBody-CanvasLayer"]
 unique_name_in_owner = true
 layer = -1
+follow_viewport_enabled = true

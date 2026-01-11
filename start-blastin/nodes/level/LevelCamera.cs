@@ -1,45 +1,102 @@
-using System;
-using System.Drawing;
+using System.Collections.Generic;
+using Autoloads;
+using Events;
 using Godot;
+using Interfaces;
 using Utility;
 
-public partial class LevelCamera : Camera2D
+namespace Environmental
 {
-    public const int width = 1920;
-    public const int height = 1080;
-
-    public float ratio = 1920 / 1080;
-    public Vector2 target = Vector2.One;
-
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
+    [GlobalClass]
+    public partial class LevelCamera : Camera2D, IListener
     {
-        GetViewport().SizeChanged += OnSizeChanged;
-        GetWindow().MinSize = new Vector2I(width, height);
-    }
+        private FastNoiseLite _noise;
 
-    public void OnSizeChanged()
-    {
-        Vector2I windowSize = GetWindow().Size;
-        if (windowSize.Y % 2 == 0)
+        private Vector2 _defaultOffset;
+
+        private Tween _shakeTween;
+
+        [Export]
+        public FastNoiseLite Noise
         {
-            windowSize.Y += 1;
+            get => _noise;
+            set => _noise = value;
         }
-        windowSize.X = (int)(windowSize.Y * ratio);
-        var targetSize = new Vector2(windowSize.X, windowSize.Y) / new Vector2(width, height);
-        target = targetSize;
-        DebugLogger.LogMessage($"Window size changed! New target: {target}", true);
-    }
 
-    public override void _Process(double delta)
-    {
-        if (!Zoom.IsEqualApprox(target))
+        public override void _Ready()
         {
-            Zoom = Zoom.Lerp(target, 0.2f);
+            _defaultOffset = Offset;
+            ConnectSignals();
         }
-        else
+
+        public void ConnectSignals()
         {
-            Zoom = target;
+            EventBus.Instance.PlayerTakeDamage += OnPlayerTakeDamage;
+        }
+
+        public void DisconnectSignals()
+        {
+            EventBus.Instance.PlayerTakeDamage -= OnPlayerTakeDamage;
+        }
+
+        private void OnPlayerTakeDamage(object source, PlayerTakeDamageEventArgs args)
+        {
+            ShakeCamera(args.Damage);
+        }
+
+        /// <summary>
+        /// Shakes the camera a set number of times based on an initial input.
+        /// </summary>
+        /// <param name="initialInput">The initial input value for the noise generator.</param>
+        private void ShakeCamera(float initialInput)
+        {
+            // Kill the current tween and start over if the tween is already running.
+            if (_shakeTween != null && _shakeTween.IsValid())
+            {
+                _shakeTween.Kill();
+            }
+
+            // Set a random seed for the noise so it's different every time
+            _noise.Seed = (int)GD.Randi();
+
+            // Create the coordinate list and apply initial input
+            HashSet<Vector2> shakeCoords = new();
+            Vector2 shakeInput = Vector2.One * initialInput;
+
+            // Populate the list of coordinates using the noise generator.
+            for (int i = 0; i < 5; i++)
+            {
+                Vector2 newCoords = GetCameraShake(shakeInput.X, shakeInput.Y);
+                shakeInput = newCoords;
+                shakeCoords.Add(newCoords);
+            }
+
+            // Tween all of the coordinates in sequence.
+            _shakeTween = CreateTween();
+            foreach (Vector2 coords in shakeCoords)
+            {
+                _shakeTween.TweenProperty(this, "offset", coords, 0.05f);
+            }
+            _shakeTween.TweenProperty(this, "offset", _defaultOffset, 0.05f);
+        }
+
+        /// <summary>
+        /// Returns coordinates for camera offset when given a set of input coordinates.
+        /// </summary>
+        /// <param name="inputX">Input used to generate the X-value of the returned noise Vector2.</param>
+        /// <param name="inputY">Input used to generate the X-value of the returned noise Vector2.</param>
+        /// <returns>X and Y noise coordinates as a Vector2.</returns>
+        private Vector2 GetCameraShake(float inputX, float inputY)
+        {
+            float noiseValueX = _noise.GetNoise1D(inputX);
+            float noiseValueY = _noise.GetNoise1D(inputY);
+            return new Vector2(noiseValueX * 25, noiseValueY * 25);
+        }
+
+        public override void _ExitTree()
+        {
+            DisconnectSignals();
+            base._ExitTree();
         }
     }
 }

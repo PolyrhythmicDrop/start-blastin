@@ -356,6 +356,8 @@ namespace Entities
                 parent: this
             );
 
+            EventBus.Instance.RaisePlayerTakeDamage(PlayerId, damage, this);
+
             if (_currentHealth <= 0)
             {
                 CurrentHealth = 0;

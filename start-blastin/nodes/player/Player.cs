@@ -103,11 +103,13 @@ namespace Entities
                 if (_currentHealth != value)
                 {
                     float diff = value - _currentHealth;
+                    float percent = value / _maxHealth;
                     _currentHealth = MathF.Round(value, 2);
                     EventBus.Instance.RaisePlayerCurrentHealthChanged(
                         _playerId,
                         _currentHealth,
-                        diff
+                        diff,
+                        percent
                     );
                 }
             }

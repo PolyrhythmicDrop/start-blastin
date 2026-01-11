@@ -10,11 +10,18 @@ namespace Environmental
     [GlobalClass]
     public partial class LevelCamera : Camera2D, IListener
     {
+        // ~~ Shake variables ~~
         private FastNoiseLite _noise;
-
         private Vector2 _defaultOffset;
-
         private Tween _shakeTween;
+
+        // ~~ Health vignette variables ~~
+
+        private CanvasLayer _vignetteLayer;
+        private ColorRect _vignetteRect;
+        private ShaderMaterial _vignetteMaterial;
+        private Tween _vignetteTween;
+        private bool _vignetteEnabled = false;
 
         [Export]
         public FastNoiseLite Noise
@@ -26,22 +33,98 @@ namespace Environmental
         public override void _Ready()
         {
             _defaultOffset = Offset;
+
+            _vignetteLayer = GetNode<CanvasLayer>("%VignetteLayer");
+            _vignetteRect = _vignetteLayer.GetNode<ColorRect>("%VignetteRect");
+            if (_vignetteRect.Material is ShaderMaterial shaderMaterial)
+            {
+                _vignetteMaterial = shaderMaterial;
+            }
+
             ConnectSignals();
         }
 
         public void ConnectSignals()
         {
             EventBus.Instance.PlayerTakeDamage += OnPlayerTakeDamage;
+            EventBus.Instance.PlayerCurrentHealthChanged += OnPlayerCurrentHealthChanged;
         }
 
         public void DisconnectSignals()
         {
             EventBus.Instance.PlayerTakeDamage -= OnPlayerTakeDamage;
+            EventBus.Instance.PlayerCurrentHealthChanged -= OnPlayerCurrentHealthChanged;
         }
 
         private void OnPlayerTakeDamage(object source, PlayerTakeDamageEventArgs args)
         {
             ShakeCamera(args.Damage);
+        }
+
+        private void OnPlayerCurrentHealthChanged(
+            object source,
+            PlayerCurrentHealthChangedEventArgs args
+        )
+        {
+            if (args.Percentage <= 0.1f && !_vignetteEnabled)
+            {
+                EnableLowHealthVignette();
+            }
+            else if (args.Percentage > 0.1f && _vignetteEnabled)
+            {
+                DisableLowHealthVignette();
+            }
+        }
+
+        private void EnableLowHealthVignette()
+        {
+            _vignetteEnabled = true;
+            if (_vignetteTween != null && _vignetteTween.IsValid())
+            {
+                _vignetteTween.Kill();
+            }
+
+            float maxIntensity = 0.45f;
+            float minIntensity = 0.1f;
+
+            Callable intensityCallable = Callable.From(
+                (float i) =>
+                {
+                    _vignetteMaterial.SetShaderParameter("intensity", i);
+                }
+            );
+
+            _vignetteTween = _vignetteRect.CreateTween();
+            _vignetteTween.SetLoops();
+            _vignetteTween
+                .TweenMethod(intensityCallable, minIntensity, maxIntensity, 0.5f)
+                .SetTrans(Tween.TransitionType.Sine)
+                .SetEase(Tween.EaseType.In);
+            _vignetteTween
+                .TweenMethod(intensityCallable, maxIntensity, minIntensity, 0.5f)
+                .SetTrans(Tween.TransitionType.Sine)
+                .SetEase(Tween.EaseType.In);
+        }
+
+        private void DisableLowHealthVignette()
+        {
+            _vignetteEnabled = false;
+            if (_vignetteTween != null && _vignetteTween.IsValid())
+            {
+                _vignetteTween.Kill();
+            }
+
+            Callable intensityCallable = Callable.From(
+                (float i) => _vignetteMaterial.SetShaderParameter("intensity", i)
+            );
+            float currentIntensity = (float)_vignetteMaterial.GetShaderParameter("intensity");
+
+            _vignetteTween = _vignetteRect.CreateTween();
+
+            _vignetteTween
+                .TweenMethod(intensityCallable, currentIntensity, 0, 0.5f)
+                .SetTrans(Tween.TransitionType.Sine)
+                .SetEase(Tween.EaseType.In);
         }
 
         /// <summary>

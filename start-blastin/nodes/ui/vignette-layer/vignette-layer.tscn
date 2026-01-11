@@ -1,8 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://c66l16un13w80"]
+[gd_scene load_steps=3 format=3 uid="uid://c66l16un13w80"]
 
 [ext_resource type="Material" uid="uid://cilbt3rwvdq5x" path="res://nodes/ui/vignette-layer/vignette-layer-material.tres" id="1_6mkgg"]
+[ext_resource type="Script" uid="uid://pfrqmk4x7u0n" path="res://nodes/ui/vignette-layer/HealthVignette.cs" id="1_rrb15"]
 
-[node name="VignetteLayer" type="CanvasLayer"]
+[node name="HealthVignetteLayer" type="CanvasLayer"]
+script = ExtResource("1_rrb15")
 
 [node name="VignetteRect" type="ColorRect" parent="."]
 unique_name_in_owner = true

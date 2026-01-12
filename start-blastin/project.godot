@@ -33,6 +33,7 @@ config/icon="res://icon.svg"
 EventBus="*res://architecture/autoloads/EventBus.cs"
 ServiceManager="*res://architecture/services/ServiceManager.cs"
 AudioService="*res://architecture/services/AudioService.cs"
+LimboConsole="*res://addons/limbo_console/limbo_console.gd"
 
 [debug]
 
@@ -57,7 +58,7 @@ run/main_run_args="--debug-stringnames"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg", "res://addons/resources_spreadsheet_view/plugin.cfg", "res://addons/safe_resource_picker/plugin.cfg", "res://addons/subresource_inspector/plugin.cfg")
+enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg", "res://addons/limbo_console/plugin.cfg", "res://addons/resources_spreadsheet_view/plugin.cfg", "res://addons/safe_resource_picker/plugin.cfg", "res://addons/subresource_inspector/plugin.cfg")
 
 [file_customization]
 
@@ -221,6 +222,21 @@ debug-remove-bytes={
 debug-heal-player={
 "deadzone": 0.2,
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":true,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":57,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+limbo_console_toggle={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":96,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+limbo_auto_complete_reverse={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":true,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":4194306,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+limbo_console_search_history={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":true,"meta_pressed":false,"pressed":false,"keycode":82,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
 ]
 }
 

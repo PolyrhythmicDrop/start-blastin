@@ -46,6 +46,7 @@ namespace Entities
         public WeaponNode Weapon => _weaponComponent.Weapon;
         public AnimationComponent Animation => _animationComponent;
         public AudioComponent Audio => _audioComponent;
+        public PlayerController Controller => _controller;
 
         #endregion
 

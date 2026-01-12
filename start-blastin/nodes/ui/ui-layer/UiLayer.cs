@@ -34,6 +34,8 @@ namespace UI
 
         public int PlayerId => _playerId;
 
+        public bool InputEnabled = true;
+
         public static UiLayer GetUiLayer(int playerId)
         {
             return _instances.TryGetValue(playerId, out UiLayer ui) ? ui : null;
@@ -96,7 +98,7 @@ namespace UI
 
         public override void _Input(InputEvent @event)
         {
-            if (Input.IsActionJustPressedByEvent("plugin-menu", @event))
+            if (Input.IsActionJustPressedByEvent("plugin-menu", @event) && InputEnabled)
             {
                 if (_pluginScreen.Active)
                 {

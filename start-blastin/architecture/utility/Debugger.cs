@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Enemies;
 using Entities;
 using FileIO;
@@ -223,8 +224,7 @@ namespace Utility
         }
 
         [ConsoleCommand(
-            "GetEntityStat",
-            "Retrieves and prints the current and base value of a stat for a given entity."
+            description: "Retrieves and prints the current and base value of a stat for a given entity."
         )]
         [AutoComplete(nameof(Entities), 0)]
         [AutoComplete(nameof(Stat), 1)]
@@ -248,6 +248,11 @@ namespace Utility
             }
         }
 
+        [ConsoleCommand(
+            description: "Sets the current value of the selected stat for a given entity."
+        )]
+        [AutoComplete(nameof(Entities), 0)]
+        [AutoComplete(nameof(Stat), 1)]
         private void SetEntityStat(string entityName, string stat, float value)
         {
             object entity = GetEntityFromName(entityName);
@@ -296,11 +301,33 @@ namespace Utility
 
         private string[] Weapons()
         {
-            DebugLogger.LogMessage(
-                $"Plugin pool count: {_pluginDict.Count} | Weapon pool count: {_weaponDict.Count}",
-                true
-            );
             return [.. _weaponDict.Keys];
+        }
+
+        [ConsoleCommand(description: "Equips a specific plugin on the player.")]
+        [AutoComplete(nameof(Plugins), 0)]
+        private void EquipPlugin(string pluginName)
+        {
+            Player player = _service.GetPlayer(1);
+            player.EquipPlugin(_pluginDict[pluginName]);
+        }
+
+        private string[] Plugins()
+        {
+            return [.. _pluginDict.Keys];
+        }
+
+        [ConsoleCommand(description: "Equips a specific modifier on the player.")]
+        [AutoComplete(nameof(Modifier), 0)]
+        private void EquipModifier(string modifierName)
+        {
+            Player player = _service.GetPlayer(1);
+            player.EquipModifier(_modifierDict[modifierName]);
+        }
+
+        private string[] Modifier()
+        {
+            return [.. _modifierDict.Keys];
         }
 
         private object GetEntityFromName(string entityName)

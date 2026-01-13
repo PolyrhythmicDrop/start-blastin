@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using Enemies;
 using Entities;
+using FileIO;
 using Godot;
 using Interfaces;
+using Items;
 using Limbo;
 using Limbo.Console.Sharp;
 using Services;
@@ -22,12 +24,55 @@ namespace Utility
     {
         private PlayerService _service;
 
+        private Dictionary<string, Plugin> _pluginDict = new();
+
+        private Dictionary<string, WeaponPlugin> _weaponDict = new();
+        private Dictionary<string, Modifier> _modifierDict = new();
+        private Dictionary<string, Item> _itemDict = new();
+
         private bool _limboConsoleOpen = false;
 
         public override void _Ready()
         {
+            LoadResourcePools();
             _service = ServiceManager.Instance?.GetService<PlayerService>();
             RegisterConsoleCommands();
+        }
+
+        private void LoadResourcePools()
+        {
+            HashSet<Item> itemSet = new();
+
+            PoolLoader.LoadResourcePool(itemSet, "res://resources/items/", true);
+
+            // Sort the items into the appropriate bins
+            foreach (Item item in itemSet)
+            {
+                switch (item)
+                {
+                    case WeaponPlugin weaponPlugin:
+                    {
+                        _weaponDict[weaponPlugin.Name] = weaponPlugin;
+                        break;
+                    }
+                    case Plugin plugin:
+                    {
+                        _pluginDict[plugin.Name] = plugin;
+                        break;
+                    }
+                    case Modifier modifier:
+                    {
+                        _modifierDict[modifier.Name] = modifier;
+                        break;
+                    }
+                    case Item:
+                    default:
+                    {
+                        _itemDict[item.Name] = item;
+                        break;
+                    }
+                }
+            }
         }
 
         public override void _Input(InputEvent @event)
@@ -155,14 +200,25 @@ namespace Utility
             playerOne.Heal(playerOne.MaxHealth);
         }
 
-        [ConsoleCommand(description: $"Heals an entity by a given value. ")]
+        [ConsoleCommand(description: "Heals an entity by a given value.")]
         [AutoComplete(nameof(Entities), 0)]
         private void HealEntity(string entityName, float value)
         {
-            object entity = GetEntityFromString(entityName);
+            object entity = GetEntityFromName(entityName);
             if (entity is IHealthful healthful)
             {
                 healthful.Heal(value);
+            }
+        }
+
+        [ConsoleCommand(description: "Hurts an entity by a given value.")]
+        [AutoComplete(nameof(Entities), 0)]
+        private void HurtEntity(string entityName, float value)
+        {
+            object entity = GetEntityFromName(entityName);
+            if (entity is IHealthful healthful)
+            {
+                healthful.TakeDamage(value);
             }
         }
 
@@ -174,21 +230,41 @@ namespace Utility
         [AutoComplete(nameof(Stat), 1)]
         private string GetEntityStat(string entityName, string stat)
         {
-            object entity = GetEntityFromString(entityName);
+            object entity = GetEntityFromName(entityName);
 
             if (entity is IStats stats)
             {
                 StatType statType = Enum.Parse<StatType>(stat);
                 Stat retrievedStat = stats.GetStatManager().GetStat(statType);
                 string returnString =
-                    $"{entityName} {statType}:\nCurrent Value: {retrievedStat.CurrentValue} | Base Value: {retrievedStat.BaseValue}";
+                    $"{entityName} {statType}:\nCurrent Value: {retrievedStat?.CurrentValue} | Base Value: {retrievedStat?.BaseValue}";
                 LimboConsole.PrintLine(returnString, true);
                 return returnString;
             }
             else
             {
-                LimboConsole.PrintLine($"Could not find stats for {entityName}!");
+                LimboConsole.Error($"Could not find stats for {entityName}!");
                 return null;
+            }
+        }
+
+        private void SetEntityStat(string entityName, string stat, float value)
+        {
+            object entity = GetEntityFromName(entityName);
+
+            if (entity is IStats statful)
+            {
+                StatType statType = Enum.Parse<StatType>(stat);
+                LimboConsole.Info(
+                    $"Setting {stat} for {entityName}. Original value: {statful.GetStatManager().GetStat(statType).CurrentValue} | New value: {value}"
+                );
+                statful.GetStatManager().UpdateStat(statType, value);
+            }
+            else
+            {
+                LimboConsole.Error(
+                    $"Could not update stat for {entityName}! Either entity was not found, or entity does not implement the {typeof(IStats).Name} interface."
+                );
             }
         }
 
@@ -196,7 +272,7 @@ namespace Utility
         [AutoComplete(nameof(Entities), 0)]
         private string GetEntityCurrentHealth(string entityName)
         {
-            object entity = GetEntityFromString(entityName);
+            object entity = GetEntityFromName(entityName);
             if (entity is IHealthful healthful)
             {
                 string health = $"{entityName} current health: {healthful.CurrentHealth}";
@@ -210,7 +286,24 @@ namespace Utility
             }
         }
 
-        private object GetEntityFromString(string entityName)
+        [ConsoleCommand(description: "Equips a specific weapon on the player.")]
+        [AutoComplete(nameof(Weapons), 0)]
+        private void EquipWeapon(string weaponName)
+        {
+            Player player = _service.GetPlayer(1);
+            player.EquipPlugin(_weaponDict[weaponName]);
+        }
+
+        private string[] Weapons()
+        {
+            DebugLogger.LogMessage(
+                $"Plugin pool count: {_pluginDict.Count} | Weapon pool count: {_weaponDict.Count}",
+                true
+            );
+            return [.. _weaponDict.Keys];
+        }
+
+        private object GetEntityFromName(string entityName)
         {
             object entity = null;
             // Determine the type of entity first
@@ -235,6 +328,11 @@ namespace Utility
                         break;
                     }
                 }
+            }
+
+            if (entity == null)
+            {
+                LimboConsole.Error($"Entity {entityName} not found!");
             }
 
             return entity;

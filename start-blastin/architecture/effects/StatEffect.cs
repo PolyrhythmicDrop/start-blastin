@@ -15,7 +15,7 @@ namespace Effects
         [Export]
         public StatType Type { get; set; }
 
-        [Export(PropertyHint.Range, "-100,100,0.1,or_greater,or_less")]
+        [Export(PropertyHint.Range, "-100,100,or_greater,or_less")]
         public float Value { get; set; }
 
         [Export(PropertyHint.Enum)]

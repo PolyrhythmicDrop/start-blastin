@@ -350,12 +350,17 @@ namespace Entities
 
         public void TakeDamage(float damage, int? playerId = null)
         {
+            // Play sound and animation
+            _audioComponent.PlayHitSound();
             _animationComponent.PlayDamageAnimation();
+
+            // Deal the damage
             CurrentHealth -= damage;
 
+            // Create and display an indicator
             IndicatorFactory.CreateTextIndicator(
                 (MathF.Round(damage, 1) * -1).ToString(),
-                new Vector2(GlobalPosition.X + 15, GlobalPosition.Y),
+                new Vector2(GlobalPosition.X + GD.RandRange(-20, 20), GlobalPosition.Y),
                 parent: this
             );
 

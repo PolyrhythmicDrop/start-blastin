@@ -16,7 +16,7 @@ namespace FileIO
         /// <param name="rootDirectory">The directory containing the resources of type <typeparamref name="T"/> to load.</param>
         /// <param name="recursive">Whether or not to load resources from subdirectories of the <paramref name="rootDirectory"/>.</param>
         public static void LoadResourcePool<T>(
-            List<T> pool,
+            ICollection<T> pool,
             string rootDirectory,
             bool recursive = false
         )
@@ -49,46 +49,6 @@ namespace FileIO
                             pool.Add(ResourceLoader.Load<T>(fullPath));
                         }
                     }
-
-                    // // Sort the subdirectories from the resource names.
-                    // List<string> rootResourceStrings = new();
-                    // List<string> subdirectoryStrings = new();
-
-                    // foreach (string str in directoryContents)
-                    // {
-                    //     if (str.EndsWith('/'))
-                    //     {
-                    //         subdirectoryStrings.Add(str);
-                    //     }
-                    //     else
-                    //     {
-                    //         rootResourceStrings.Add(str);
-                    //     }
-                    // }
-
-                    // foreach (string resourceName in rootResourceStrings)
-                    // {
-                    //     string fullPath = rootDirectory + resourceName;
-                    //     pool.Add(ResourceLoader.Load<T>(fullPath));
-                    // }
-
-                    // // Now get resources from any sub-directories and load those too.
-                    // if (recursive && subdirectoryStrings.Count > 0)
-                    // {
-                    //     rootDirectory = rootDirectory.EndsWith('/')
-                    //         ? rootDirectory
-                    //         : rootDirectory + '/';
-                    //     foreach (string subDir in subdirectoryStrings)
-                    //     {
-                    //         string subDirPath = rootDirectory + subDir;
-                    //         string[] subDirResources = ResourceLoader.ListDirectory(subDirPath);
-                    //         foreach (string resourceName in subDirResources)
-                    //         {
-                    //             string fullPath = subDirPath + resourceName;
-                    //             pool.Add(ResourceLoader.Load<T>(fullPath));
-                    //         }
-                    //     }
-                    // }
                 }
             }
             catch (Exception e)

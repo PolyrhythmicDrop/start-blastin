@@ -40,7 +40,7 @@ namespace PlayerComponents
         /// </summary>
         public void PlayFireSound()
         {
-            _service.PlaySound(Sounds?.Fire, _player, 1, volume: -6);
+            _service.PlaySound(Sounds?.Fire, _player, 5, volume: -4);
         }
 
         /// <summary>
@@ -54,6 +54,11 @@ namespace PlayerComponents
         public void PlayPhaseReadySound()
         {
             _service.PlaySound(Sounds?.PhaseReady, _player, 1, volume: -6);
+        }
+
+        public void PlayHitSound()
+        {
+            _service.PlaySound(Sounds?.Hit, _player, maxPolyphony: 1);
         }
     }
 }

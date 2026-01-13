@@ -7,7 +7,7 @@
 
 [sub_resource type="Resource" id="Resource_eisoc"]
 script = ExtResource("2_bl1by")
-Destruction = "uid://c5npnitq6tajp"
+Destruction = "uid://cm3xo8ppmc8pl"
 Hit = "uid://btbnuob41kila"
 metadata/_custom_type_script = "uid://dt02kxv7k56mm"
 

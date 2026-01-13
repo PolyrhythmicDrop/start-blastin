@@ -19,6 +19,7 @@
 script = ExtResource("5_eiqky")
 PhaseStart = "uid://dcjb5wvlxpeg1"
 PhaseReady = "uid://ccw5lcude4k4h"
+Hit = "uid://dkmk3fph0ifn6"
 metadata/_custom_type_script = "uid://btnqmc5i2faj2"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_xl06i"]

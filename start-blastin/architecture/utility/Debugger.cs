@@ -31,6 +31,8 @@ namespace Utility
         private Dictionary<string, Modifier> _modifierDict = new();
         private Dictionary<string, Item> _itemDict = new();
 
+        private Dictionary<Node2D, Label> _entityLabels = new();
+
         private bool _limboConsoleOpen = false;
 
         public override void _Ready()
@@ -389,6 +391,65 @@ namespace Utility
         private string[] Stat()
         {
             return Enum.GetNames(typeof(StatType));
+        }
+
+        private Label CreateEntityLabel(string entityName)
+        {
+            var entity = GetEntityFromName(entityName);
+
+            if (entity is Node2D node)
+            {
+                Label label = new()
+                {
+                    Text = entityName,
+                    Visible = false,
+                    Position = new Vector2(0, -50),
+                };
+                label.AddThemeFontSizeOverride("font_size", 22);
+                node.AddChild(label);
+                label.Rotation = node.GlobalRotation * -1;
+                _entityLabels[node] = label;
+                node.TreeExiting += () => ClearEntityLabel(node);
+                return label;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private void ClearEntityLabel(Node2D node)
+        {
+            _entityLabels.Remove(node);
+        }
+
+        [ConsoleCommand(description: "Shows name labels for all enemies.")]
+        private void ShowEntityLabels()
+        {
+            foreach (EnemyNode enemy in EnemyFinder.GetAllEnemies())
+            {
+                if (!_entityLabels.ContainsKey(enemy))
+                {
+                    Label label = CreateEntityLabel(enemy.Name);
+                    label.Visible = true;
+                }
+                else
+                {
+                    _entityLabels[enemy].Visible = true;
+                }
+            }
+        }
+
+        [ConsoleCommand(description: "Hides name labels for all enemies.")]
+        private void HideEntityLabels()
+        {
+            foreach (EnemyNode enemy in EnemyFinder.GetAllEnemies())
+            {
+                if (_entityLabels.ContainsKey(enemy))
+                {
+                    _entityLabels[enemy].Visible = false;
+                }
+            }
         }
     }
 }

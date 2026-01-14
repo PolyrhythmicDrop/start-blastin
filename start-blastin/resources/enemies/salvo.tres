@@ -1,15 +1,9 @@
-[gd_resource type="Resource" script_class="EnemyResource" load_steps=7 format=3 uid="uid://lv3xojj0ktlw"]
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=6 format=3 uid="uid://lv3xojj0ktlw"]
 
 [ext_resource type="Script" uid="uid://cf7pn6qd7aa15" path="res://nodes/enemies/EnemyResource.cs" id="1_2n6d0"]
-[ext_resource type="Script" uid="uid://dt02kxv7k56mm" path="res://architecture/data-structures/SoundSet.cs" id="2_bl1by"]
+[ext_resource type="Resource" uid="uid://df6h5kagv14tp" path="res://resources/sound-sets/enemies/salvo-sound-set.tres" id="2_bl1by"]
 [ext_resource type="Script" uid="uid://bytfm61mpkr5u" path="res://nodes/weapons/WeaponStats.cs" id="2_eisoc"]
 [ext_resource type="Curve2D" uid="uid://bw2uhxjrpsgc0" path="res://resources/curves/salvo-curve.tres" id="2_p8o26"]
-
-[sub_resource type="Resource" id="Resource_eisoc"]
-script = ExtResource("2_bl1by")
-Destruction = "uid://cm3xo8ppmc8pl"
-Hit = "uid://btbnuob41kila"
-metadata/_custom_type_script = "uid://dt02kxv7k56mm"
 
 [sub_resource type="Resource" id="Resource_bl1by"]
 script = ExtResource("2_eisoc")
@@ -28,5 +22,5 @@ WeaponStats = SubResource("Resource_bl1by")
 PathCurve = ExtResource("2_p8o26")
 FluxReward = 100
 ByteReward = 300
-Sounds = SubResource("Resource_eisoc")
+Sounds = ExtResource("2_bl1by")
 metadata/_custom_type_script = "uid://cf7pn6qd7aa15"

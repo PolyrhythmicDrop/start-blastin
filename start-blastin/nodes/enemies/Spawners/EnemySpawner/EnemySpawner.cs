@@ -1,4 +1,5 @@
 using Autoloads;
+using Components;
 using Events;
 using Factories;
 using Godot;

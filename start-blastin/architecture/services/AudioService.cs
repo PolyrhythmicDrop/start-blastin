@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using System.Reflection.Metadata;
+using DataStructures;
 using Enemies;
 using Entities;
 using FileIO;
@@ -13,16 +14,22 @@ namespace Services
     {
         public record AudioPlayerData
         {
-            public required AudioStreamPlayer2D Player;
+            public required AudioStreamPlayer2D AudioPlayer;
             public required string Bus;
             public required Node Parent;
         }
 
         private Dictionary<string, AudioStreamRandomizer> _streams = new();
 
+        private HashSet<AudioStream> _audioStreams = new();
+
         private Dictionary<string, List<AudioPlayerData>> _audioPlayers = new();
 
         private const string STREAM_PATH = "res://resources/audio-streams/";
+
+        private AudioBusLayout _busLayout = ResourceLoader.Load<AudioBusLayout>(
+            "uid://b51uxt0ra5280"
+        );
 
         public static AudioService Instance { get; private set; }
 
@@ -186,7 +193,7 @@ namespace Services
                 }
 
                 // Create a new AudioStreamPlayer using the passed values.
-                AudioStreamPlayer2D player = new()
+                AudioStreamPlayer2D audioPlayer = new()
                 {
                     Bus = bus,
                     MaxPolyphony = maxPolyphony,
@@ -198,16 +205,16 @@ namespace Services
                 // Create a new set of AudioPlayerData
                 AudioPlayerData data = new()
                 {
-                    Player = player,
+                    AudioPlayer = audioPlayer,
                     Bus = bus,
                     Parent = parent ?? this,
                 };
 
                 // Set the name of the AudioStreamPlayer
-                player.Name = $"{data.Parent.Name}-{soundName}";
+                audioPlayer.Name = $"{data.Parent.Name}-{soundName}";
 
                 // Add the player as a child of its parent.
-                data.Parent?.AddChild(player);
+                data.Parent?.AddChild(audioPlayer);
 
                 // If the audioPlayers dictionary already contains the sound, add the new audio player data to the existing list.
                 if (_audioPlayers.ContainsKey(soundName))
@@ -221,9 +228,9 @@ namespace Services
                 }
 
                 // Set up a callback so the audio player is removed when its parent exits the tree.
-                data.Parent.TreeExited += () => RemoveAudioStreamPlayer(player);
+                data.Parent.TreeExited += () => RemoveAudioStreamPlayer(audioPlayer);
 
-                return player;
+                return audioPlayer;
             }
             catch (Exception e)
             {
@@ -239,7 +246,7 @@ namespace Services
         public async void RemoveAudioStreamPlayer(AudioStreamPlayer2D audioPlayer)
         {
             AudioPlayerData dataToRemove = null;
-            string soundName = null;
+            string audioId = null;
             bool playerFound = false;
 
             // Attempt to find the passed player in the list.
@@ -247,12 +254,12 @@ namespace Services
             {
                 foreach (AudioPlayerData data in kvp.Value)
                 {
-                    if (data.Player.Equals(audioPlayer))
+                    if (data.AudioPlayer.Equals(audioPlayer))
                     {
                         playerFound = true;
                         dataToRemove = data;
-                        soundName = kvp.Key;
-                        data.Player = null;
+                        audioId = kvp.Key;
+                        data.AudioPlayer = null;
                         break;
                     }
                 }
@@ -262,9 +269,9 @@ namespace Services
                 }
             }
 
-            if (dataToRemove != null && soundName != null)
+            if (dataToRemove != null && audioId != null)
             {
-                _audioPlayers[soundName].Remove(dataToRemove);
+                _audioPlayers[audioId].Remove(dataToRemove);
                 if (!audioPlayer.Playing)
                 {
                     audioPlayer.QueueFree();
@@ -274,6 +281,190 @@ namespace Services
                     await ToSignal(audioPlayer, AudioStreamPlayer2D.SignalName.Finished);
                     audioPlayer.QueueFree();
                 }
+            }
+        }
+
+        private bool CheckBusExists(string bus)
+        {
+            for (int i = 0; i < AudioServer.BusCount; i++)
+            {
+                if (AudioServer.GetBusName(i) == bus)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Attempts to find and return an AudioPlayerData object containing the matching sound.
+        /// </summary>
+        /// <param name="sound">The sound to match.</param>
+        /// <returns></returns>
+        private AudioPlayerData TryGetMatchingAudioPlayerData(
+            AudioStream stream,
+            AudioData audioData,
+            string bus
+        )
+        {
+            // Attempt to find any players that already have the sound loaded.
+            bool playersFound = _audioPlayers.TryGetValue(
+                audioData.AudioID,
+                out List<AudioPlayerData> playerDataList
+            );
+
+            // If we found an existing set of players, find one in the list that matches our data closest.
+            if (playersFound)
+            {
+                // Set up the predicate in order of importance: parent, then bus.
+                Predicate<AudioPlayerData> predicate;
+
+                if (audioData.Source != null)
+                {
+                    predicate = (playerData) =>
+                    {
+                        return playerData.Parent == audioData.Source;
+                    };
+                }
+                else
+                {
+                    predicate = (playerData) =>
+                    {
+                        return playerData.Bus == bus;
+                    };
+                }
+
+                // Find an audio player using the selected predicate.
+                AudioPlayerData playerData = playerDataList.Find(predicate);
+                // If we found a set of data with the correct bus or parent, return the data (or null if nothing was found)
+                return playerData;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private AudioStreamPlayer2D AddNewAudioStreamPlayer(
+            AudioStream stream,
+            AudioData audioData,
+            string bus
+        )
+        {
+            try
+            {
+                // Create a new AudioStreamPlayer using the passed values.
+                AudioStreamPlayer2D audioPlayer = new()
+                {
+                    Bus = bus,
+                    MaxPolyphony = audioData.MaxPolyphony,
+                    Stream = stream,
+                    Attenuation = audioData.Attenuation,
+                    VolumeDb = audioData.Volume,
+                };
+
+                // Figure out the source node
+                Node parent;
+                if (audioData.Source != null && audioData.Positional == true)
+                {
+                    parent = audioData.Source;
+                }
+                else
+                {
+                    parent = this;
+                }
+
+                // Create a new set of AudioPlayerData
+                AudioPlayerData playerData = new()
+                {
+                    AudioPlayer = audioPlayer,
+                    Bus = bus,
+                    Parent = parent,
+                };
+
+                // Set the name of the AudioStreamPlayer
+                audioPlayer.Name = $"{playerData.Parent.Name}-{audioData.AudioID}";
+
+                // Add the player as a child of its parent.
+                playerData.Parent?.AddChild(audioPlayer);
+
+                // If the audioPlayers dictionary already contains the sound, add the new audio player data to the existing list.
+                if (_audioPlayers.ContainsKey(audioData.AudioID))
+                {
+                    _audioPlayers[audioData.AudioID].Add(playerData);
+                }
+                // Otherwise, add a new entry to the audioPlayers dictionary with the data.
+                else
+                {
+                    _audioPlayers[audioData.AudioID] = [playerData];
+                }
+
+                // Set up a callback so the audio player is removed when its parent exits the tree.
+                playerData.Parent.TreeExited += () => RemoveAudioStreamPlayer(audioPlayer);
+
+                return audioPlayer;
+            }
+            catch (Exception e)
+            {
+                DebugLogger.LogMessage(e.Message, true, true);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Plays a sound from <see cref="AudioData"/>.
+        /// </summary>
+        /// <param name="data">Data container for the sound to play and its properties.</param>
+        public void PlaySound(AudioData data)
+        {
+            // Check if there's an audio stream to load.
+            if (string.IsNullOrEmpty(data.Sound))
+            {
+                DebugLogger.LogMessage(
+                    $"Passed {nameof(data)} {data} contains no sound to play!",
+                    true,
+                    true
+                );
+                return;
+            }
+
+            // Figure out the correct bus from the source
+            string bus = data.Source switch
+            {
+                EnemyNode => "Enemies",
+                Player => "Player",
+                Control => "UI",
+                _ => "Master",
+            };
+
+            // If the bus doesn't match an existing bus in the layout, make a new bus with the selected name.
+            if (!CheckBusExists(bus))
+            {
+                AudioServer.AddBus();
+                AudioServer.SetBusName(AudioServer.BusCount - 1, bus);
+            }
+
+            // Generate the audio stream based on the passed data.
+            var stream = data.GenerateAudioStream();
+
+            // Add the audio stream to the hash set (if it's not already present).
+            _audioStreams.Add(stream);
+            DebugLogger.LogMessage($"Audio streams count: {_audioStreams.Count}");
+
+            // Attempt to get a matching audio player from the audio players list.
+            AudioPlayerData playerData = TryGetMatchingAudioPlayerData(stream, data, bus);
+
+            if (playerData == null)
+            {
+                // Create a new set of AudioPlayerData from the stream.
+                AudioStreamPlayer2D player2D = AddNewAudioStreamPlayer(stream, data, bus);
+                player2D?.Play();
+            }
+            else
+            {
+                // Play the sound from the found player
+                playerData.AudioPlayer?.Play();
             }
         }
 
@@ -367,7 +558,7 @@ namespace Services
                     // If we found a set of data with the correct bus or parent, play the sound and return. We're done!
                     if (playerData != null)
                     {
-                        playerData.Player.Play();
+                        playerData.AudioPlayer.Play();
                         return;
                     }
                 }

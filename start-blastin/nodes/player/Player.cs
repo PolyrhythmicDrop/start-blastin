@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Autoloads;
+using Components;
 using Effects;
 using Events;
 using Factories;
@@ -31,7 +32,7 @@ namespace Entities
         private PlayerService _service = ServiceManager.Instance.GetService<PlayerService>();
         private StatManager _stats = new();
         private InventoryComponent _inventory;
-        private AudioComponent _audioComponent;
+        private PlayerAudioComponent _audioComponent;
         private AnimationComponent _animationComponent;
         private MovementComponent _movementComponent;
         private WeaponComponent _weaponComponent;
@@ -45,7 +46,7 @@ namespace Entities
         public WeaponComponent WeaponComp => _weaponComponent;
         public WeaponNode Weapon => _weaponComponent.Weapon;
         public AnimationComponent Animation => _animationComponent;
-        public AudioComponent Audio => _audioComponent;
+        public PlayerAudioComponent Audio => _audioComponent;
         public PlayerController Controller => _controller;
 
         #endregion
@@ -269,7 +270,7 @@ namespace Entities
             CurrentHealth = _maxHealth;
 
             // Set component node variables
-            _audioComponent = GetNode<AudioComponent>("%AudioComponent");
+            _audioComponent = GetNode<PlayerAudioComponent>("%AudioComponent");
             _animationComponent = GetNode<AnimationComponent>("%AnimationComponent");
             _movementComponent = GetNode<MovementComponent>("%MovementComponent");
             _controller = GetNode<PlayerController>("%PlayerController");

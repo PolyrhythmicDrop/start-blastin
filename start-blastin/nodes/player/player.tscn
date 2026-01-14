@@ -1,9 +1,8 @@
-[gd_scene load_steps=18 format=3 uid="uid://nenl15kjphyb"]
+[gd_scene load_steps=23 format=3 uid="uid://nenl15kjphyb"]
 
 [ext_resource type="Script" uid="uid://ceknkp5q1onls" path="res://nodes/player/Player.cs" id="1_4j62c"]
 [ext_resource type="PackedScene" uid="uid://cr3k7kv44d7a6" path="res://nodes/player/player-components/animation-component.tscn" id="2_hs1md"]
 [ext_resource type="Script" uid="uid://bw0jf3wqbeqhj" path="res://nodes/player/player-components/InventoryComponent.cs" id="3_2xyxk"]
-[ext_resource type="Script" uid="uid://inq1tkdh0ogf" path="res://nodes/player/player-components/AudioComponent.cs" id="3_eiqky"]
 [ext_resource type="Script" uid="uid://b3qmdj461ykoi" path="res://architecture/items/plugins/Plugin.cs" id="3_lh1gn"]
 [ext_resource type="Script" uid="uid://dcupxkt621nuk" path="res://nodes/player/player-components/PlayerController.cs" id="4_1fmtd"]
 [ext_resource type="Shader" uid="uid://bmacriris3r2k" path="res://resources/shaders/color-cycling-hit-effect.gdshader" id="4_5h4ma"]
@@ -11,15 +10,59 @@
 [ext_resource type="PackedScene" uid="uid://bh7mbhu54my3n" path="res://nodes/player/player-components/movement-component.tscn" id="4_xl06i"]
 [ext_resource type="Script" uid="uid://wvxahp2d8k6f" path="res://nodes/player/player-components/WeaponComponent.cs" id="5_5h4ma"]
 [ext_resource type="Script" uid="uid://btnqmc5i2faj2" path="res://architecture/data-structures/PlayerSoundSet.cs" id="5_eiqky"]
+[ext_resource type="Script" uid="uid://bli5hxd5w3xhq" path="res://nodes/player/player-components/PlayerAudioComponent.cs" id="6_lh1gn"]
+[ext_resource type="Script" uid="uid://cx2eehu1aj48f" path="res://architecture/data-structures/AudioData.cs" id="7_lh1gn"]
 [ext_resource type="Script" uid="uid://75hy3sdqpcbx" path="res://nodes/player/player-components/PlayerStateComponent.cs" id="9_j4qgx"]
 [ext_resource type="PackedScene" uid="uid://bajml0u2freln" path="res://nodes/weapons/barrel.tscn" id="9_xl06i"]
 [ext_resource type="PackedScene" uid="uid://k6jtmcb31ro7" path="res://nodes/player/player-components/shield.tscn" id="10_qwfek"]
 
+[sub_resource type="Resource" id="Resource_1dubl"]
+script = ExtResource("7_lh1gn")
+Sound = "uid://crg6jk03jt6od"
+Volume = -4.0
+MaxPolyphony = 10
+Positional = true
+Randomized = true
+RandomPitch = 1.03
+RandomVolume = 0.1
+metadata/_custom_type_script = "uid://cx2eehu1aj48f"
+
+[sub_resource type="Resource" id="Resource_3bit2"]
+script = ExtResource("7_lh1gn")
+Sound = "uid://yodwmov7lmwe"
+MaxPolyphony = 1
+Positional = true
+Randomized = true
+RandomPitch = 1.05
+RandomVolume = 0.5
+metadata/_custom_type_script = "uid://cx2eehu1aj48f"
+
+[sub_resource type="Resource" id="Resource_lh1gn"]
+script = ExtResource("7_lh1gn")
+Sound = "uid://ip2rmkv248df"
+Volume = -6.0
+MaxPolyphony = 1
+Positional = true
+Randomized = true
+RandomPitch = 1.02
+metadata/_custom_type_script = "uid://cx2eehu1aj48f"
+
+[sub_resource type="Resource" id="Resource_lancr"]
+script = ExtResource("7_lh1gn")
+Sound = "uid://gnyxn17h7do4"
+MaxPolyphony = 1
+Positional = true
+Randomized = true
+RandomPitch = 1.03
+RandomVolume = 0.03
+metadata/_custom_type_script = "uid://cx2eehu1aj48f"
+
 [sub_resource type="Resource" id="Resource_j4qgx"]
 script = ExtResource("5_eiqky")
-PhaseStart = "uid://dcjb5wvlxpeg1"
-PhaseReady = "uid://ccw5lcude4k4h"
-Hit = "uid://dkmk3fph0ifn6"
+PhaseStart = SubResource("Resource_lancr")
+PhaseReady = SubResource("Resource_lh1gn")
+Fire = SubResource("Resource_1dubl")
+Hit = SubResource("Resource_3bit2")
 metadata/_custom_type_script = "uid://btnqmc5i2faj2"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_xl06i"]
@@ -63,7 +106,7 @@ rotation = -1.5707964
 
 [node name="AudioComponent" type="Node" parent="."]
 unique_name_in_owner = true
-script = ExtResource("3_eiqky")
+script = ExtResource("6_lh1gn")
 Sounds = SubResource("Resource_j4qgx")
 metadata/_custom_type_script = "uid://inq1tkdh0ogf"
 

@@ -1,4 +1,5 @@
 using System;
+using DataStructures;
 using Godot;
 using Projectiles;
 using SafeResourcePicker;
@@ -17,7 +18,7 @@ namespace Items
             set => _projectileType = value;
         }
 
-        [Export(SRP_HINT.RESOURCE_PATH, "AudioStreamRandomizer")]
-        public string FireSound { get; set; }
+        [Export]
+        public AudioData FireSound { get; set; }
     }
 }

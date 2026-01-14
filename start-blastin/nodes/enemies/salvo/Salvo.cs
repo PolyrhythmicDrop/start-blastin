@@ -2,13 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Components;
 using Enemies;
-using Events;
 using Godot;
-using Services;
-using Stats;
-using Utility;
-using Weapons;
 
 [GlobalClass]
 public partial class Salvo : EnemyNode
@@ -138,7 +134,8 @@ public partial class Salvo : EnemyNode
         _engine.Visible = false;
         _rack.Visible = false;
 
-        AudioService.Instance.PlaySound(_sounds?.Destruction, this, 1, volume: -5);
+        // AudioService.Instance.PlaySound(_sounds?.Destruction, this, 1, volume: -5);
+        _audioComponent.PlayDestructionSound();
         _destruction.Visible = true;
         _destruction.Play();
 

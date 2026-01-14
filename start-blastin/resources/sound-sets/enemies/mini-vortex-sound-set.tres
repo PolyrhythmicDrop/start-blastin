@@ -1,10 +1,30 @@
-[gd_resource type="Resource" script_class="SoundSet" load_steps=2 format=3 uid="uid://cy4btn0tjyjbl"]
+[gd_resource type="Resource" script_class="SoundSet" load_steps=5 format=3 uid="uid://cy4btn0tjyjbl"]
 
 [ext_resource type="Script" uid="uid://dt02kxv7k56mm" path="res://architecture/data-structures/SoundSet.cs" id="1_0sbu6"]
+[ext_resource type="Script" uid="uid://cx2eehu1aj48f" path="res://architecture/data-structures/AudioData.cs" id="1_fhdsa"]
+
+[sub_resource type="Resource" id="Resource_g3if1"]
+script = ExtResource("1_fhdsa")
+Sound = "uid://dc5wipp6uln75"
+MaxPolyphony = 1
+Positional = true
+Randomized = true
+RandomPitch = 1.05
+RandomVolume = 0.3
+metadata/_custom_type_script = "uid://cx2eehu1aj48f"
+
+[sub_resource type="Resource" id="Resource_fhdsa"]
+script = ExtResource("1_fhdsa")
+Sound = "uid://cp718xmomrsxt"
+MaxPolyphony = 1
+Positional = true
+Randomized = true
+RandomPitch = 0.9
+RandomVolume = 0.2
+metadata/_custom_type_script = "uid://cx2eehu1aj48f"
 
 [resource]
 script = ExtResource("1_0sbu6")
-Fire = "uid://fds6sy013cfx"
-Destruction = "uid://c5npnitq6tajp"
-Hit = "uid://btbnuob41kila"
+Destruction = SubResource("Resource_g3if1")
+Hit = SubResource("Resource_fhdsa")
 metadata/_custom_type_script = "uid://dt02kxv7k56mm"

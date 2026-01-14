@@ -1,6 +1,6 @@
+using Components;
 using Entities;
 using Godot;
-using Services;
 
 namespace Enemies
 {
@@ -116,7 +116,8 @@ namespace Enemies
             _engine.Visible = false;
 
             // Play the destruction sound
-            AudioService.Instance.PlaySound(_sounds?.Destruction, this, 1, volume: -4);
+            // AudioService.Instance.PlaySound(_sounds?.Destruction, this, 1, volume: -4);
+            _audioComponent.PlayDestructionSound();
             _destruction.Visible = true;
             _destruction.Play();
 

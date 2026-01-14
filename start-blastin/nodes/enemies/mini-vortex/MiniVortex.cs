@@ -1,7 +1,6 @@
 using System;
-using Enemies;
+using Components;
 using Godot;
-using Services;
 
 namespace Enemies
 {
@@ -113,7 +112,8 @@ namespace Enemies
             _weapon.FireTimer.Stop();
             _shape.Disabled = true;
 
-            AudioService.Instance.PlaySound(_sounds?.Destruction, this, 1, volume: -4);
+            // AudioService.Instance.PlaySound(_sounds?.Destruction, this, 1, volume: -4);
+            _audioComponent.PlayDestructionSound();
             _sprite.Play("destruction");
 
             _sprite.AnimationFinished += () =>

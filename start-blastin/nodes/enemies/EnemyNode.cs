@@ -1,15 +1,14 @@
 using System;
 using System.Threading.Tasks;
 using Autoloads;
+using Components;
 using DataStructures;
 using Entities;
 using Events;
 using Factories;
 using Godot;
 using Interfaces;
-using Services;
 using Stats;
-using Utility;
 using WaveManagement;
 using Weapons;
 
@@ -33,7 +32,9 @@ namespace Enemies
         protected CollisionShape2D _shape;
         protected EntityPath _path;
 
-        protected SoundSet _sounds;
+        protected AudioComponent _audioComponent;
+
+        // protected SoundSet _sounds;
 
         #region Position and Velocity
         protected Vector2 _currentGlobalPosition;
@@ -149,7 +150,9 @@ namespace Enemies
             _baseCrashDamage = enemyResource.CrashDamage;
 
             // Sound initialization
-            _sounds = (SoundSet)enemyResource.Sounds?.Duplicate();
+            _audioComponent = new() { Sounds = (SoundSet)enemyResource.Sounds?.Duplicate(true) };
+            _audioComponent.Initialize(this);
+            // _sounds = (SoundSet)enemyResource.Sounds?.Duplicate();
 
             InitializeStatManager();
         }
@@ -311,7 +314,8 @@ namespace Enemies
             if (_alive)
             {
                 // Play the hit sound
-                AudioService.Instance.PlaySound(_sounds?.Hit, this, volume: -6);
+                // AudioService.Instance.PlaySound(_sounds?.Hit, this, volume: -6);
+                _audioComponent.PlayHitSound();
 
                 PlayDamageAnimation();
                 IndicatorFactory.CreateTextIndicator(
@@ -341,7 +345,8 @@ namespace Enemies
 
         protected virtual void FireWeapon()
         {
-            AudioService.Instance.PlaySound(_sounds?.Fire, this, 1);
+            // AudioService.Instance.PlaySound(_sounds?.Fire, this, 1);
+            _audioComponent.PlayFireSound();
             _weapon.Fire();
         }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using Godot;
 using NanoidDotNet;
 using SafeResourcePicker;
@@ -21,17 +22,10 @@ namespace DataStructures
 
         private string _audioId = string.Empty;
 
-        public string AudioID
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_audioId))
-                {
-                    _audioId = Nanoid.Generate(size: 8);
-                }
-                return _audioId;
-            }
-        }
+        /// <summary>
+        /// ID representing the generated AudioStream of this AudioData.
+        /// </summary>
+        public string AudioID => _audioId;
 
         [Export]
         public float Volume { get; set; }
@@ -85,6 +79,9 @@ namespace DataStructures
                 return _generatedStream;
             }
 
+            // Set audioID
+            _audioId = GenerateAudioId();
+
             AudioStreamWav stream = ResourceLoader.Load<AudioStreamWav>(Sound);
 
             // Set looping parameters.
@@ -100,8 +97,8 @@ namespace DataStructures
             }
 
             // Convert the UID to a path, trim the .tres suffix, split according to the '/' character, and get the penultimate entry in the new array.
-            string pathStr = ResourceUid.UidToPath(Sound).TrimSuffix(".tres").Split('/')[^1];
-            stream.ResourceName = pathStr;
+            // string pathStr = ResourceUid.UidToPath(Sound).TrimSuffix(".tres").Split('/')[^1];
+            // stream.ResourceName = pathStr;
 
             if (Randomized)
             {
@@ -117,6 +114,21 @@ namespace DataStructures
             }
 
             return _generatedStream;
+        }
+
+        public string GenerateAudioId()
+        {
+            StringBuilder sb = new();
+
+            foreach (var property in GetType().GetProperties())
+            {
+                if (property.PropertyType != typeof(Node) && property.GetValue(this) != null)
+                {
+                    sb.Append($"{property.GetValue(this)}-");
+                }
+            }
+
+            return sb.ToString();
         }
     }
 }

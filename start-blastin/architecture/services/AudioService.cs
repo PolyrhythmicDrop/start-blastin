@@ -18,11 +18,6 @@ namespace Services
             public required Node Parent;
         }
 
-        /// <summary>
-        /// Cached audio streams. Key is the <see cref="AudioData.AudioID"/> of the AudioData used to generate the stream, value is the <see cref="AudioStream"/> object itself.
-        /// </summary>
-        private Dictionary<string, AudioStream> _audioStreams = new();
-
         private Dictionary<string, List<AudioPlayerData>> _audioPlayers = new();
 
         private Dictionary<
@@ -30,19 +25,9 @@ namespace Services
             (string audioId, AudioPlayerData data)
         > _audioPlayerLookup = new();
 
-        private AudioBusLayout _busLayout = ResourceLoader.Load<AudioBusLayout>(
-            "uid://b51uxt0ra5280"
-        );
-
         private HashSet<string> _busNames = new();
 
         public static AudioService Instance { get; private set; }
-
-        /// <summary>
-        /// Read-only dictionary of AudioPlayer nodes and their parents, arranged according to sound name.
-        /// </summary>
-        public IReadOnlyDictionary<string, IReadOnlyList<AudioPlayerData>> AudioPlayers =>
-            (IReadOnlyDictionary<string, IReadOnlyList<AudioPlayerData>>)_audioPlayers;
 
         public override void _Ready()
         {
@@ -91,7 +76,6 @@ namespace Services
             if (_audioPlayers[lookup.audioId].Count <= 0)
             {
                 _audioPlayers.Remove(lookup.audioId);
-                _audioStreams.Remove(lookup.audioId);
             }
         }
 
@@ -114,33 +98,32 @@ namespace Services
             );
 
             // If we found an existing set of players, find one in the list that matches our data closest.
-            if (playersFound)
+            if (!playersFound)
             {
-                // Set up the predicate in order of importance: parent, then bus.
-                Predicate<AudioPlayerData> predicate;
-
-                if (audioData.Source != null)
-                {
-                    predicate = (playerData) =>
-                    {
-                        return playerData.Parent == audioData.Source;
-                    };
-                }
-                else
-                {
-                    predicate = (playerData) =>
-                    {
-                        return playerData.Bus == bus;
-                    };
-                }
-
-                // Find an audio player using the selected predicate.
-                AudioPlayerData playerData = playerDataList.Find(predicate);
-                // If we found a set of data with the correct bus or parent, return the data (or null if nothing was found)
-                return playerData;
+                return null;
             }
             else
             {
+                if (audioData.Source != null)
+                {
+                    foreach (AudioPlayerData data in playerDataList)
+                    {
+                        if (data.Parent.Equals(audioData.Source))
+                        {
+                            return data;
+                        }
+                    }
+                }
+
+                // Search for the bus if you can't find a matching parent or if Source is null.
+                foreach (AudioPlayerData data in playerDataList)
+                {
+                    if (data.Bus == bus)
+                    {
+                        return data;
+                    }
+                }
+
                 return null;
             }
         }
@@ -203,9 +186,9 @@ namespace Services
                 }
 
                 // Set up a callback so the audio player is removed when its parent exits the tree.
-                playerData.Parent.TreeExited += () =>
+                playerData.Parent.TreeExited += async () =>
                 {
-                    RemoveAudioStreamPlayer(audioPlayer);
+                    await RemoveAudioStreamPlayer(audioPlayer);
                 };
 
                 return audioPlayer;
@@ -252,17 +235,14 @@ namespace Services
             }
 
             // Retrieve the audio stream from the cache or generate a new audio stream based on the passed data.
-            AudioStream stream = GetAudioStream(data);
-
-            // Log the stream to make sure they're the same?
-            DebugLogger.LogMessage($"{data.Source.Name} - {stream}", true);
+            AudioStream stream = data.GenerateAudioStream();
 
             // Attempt to get a matching audio player from the audio players list.
             AudioPlayerData playerData = TryGetMatchingAudioPlayerData(data, bus);
 
             if (playerData == null)
             {
-                // Create a new set of AudioPlayerData from the stream.
+                // Create a new audio player from the stream and add it to the player cache.
                 AudioStreamPlayer2D player2D = AddNewAudioStreamPlayer(stream, data, bus);
                 player2D?.Play();
             }
@@ -270,22 +250,6 @@ namespace Services
             {
                 // Play the sound from the found player
                 playerData.AudioPlayer?.Play();
-            }
-        }
-
-        private AudioStream GetAudioStream(AudioData data)
-        {
-            string id = data.AudioID;
-
-            if (_audioStreams.ContainsKey(id))
-            {
-                return _audioStreams[id];
-            }
-            else
-            {
-                AudioStream stream = data.GenerateAudioStream();
-                _audioStreams[id] = stream;
-                return stream;
             }
         }
     }

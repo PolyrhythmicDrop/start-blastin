@@ -451,5 +451,14 @@ namespace Utility
                 }
             }
         }
+
+        [ConsoleCommand("toggle_health_bars", "Turns on or off enemy health bars.")]
+        private void ToggleEnemyHealthBars()
+        {
+            foreach (EnemyNode enemy in EnemyFinder.GetAllEnemies())
+            {
+                enemy.ToggleHealthBarActive();
+            }
+        }
     }
 }

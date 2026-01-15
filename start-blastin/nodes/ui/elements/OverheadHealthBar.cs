@@ -35,9 +35,6 @@ namespace UI
         {
             Parent = parent;
             SetValues(Parent.MaxHealth, Parent.CurrentHealth);
-            DebugLogger.LogMessage(
-                $"Health bar for {Parent} set! Max: {Parent.MaxHealth} | Current: {Parent.CurrentHealth}"
-            );
         }
 
         public void ToggleBarVisibility(bool show)

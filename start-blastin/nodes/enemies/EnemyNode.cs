@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using Autoloads;
 using Components;
-using DataStructures;
 using Entities;
 using Events;
 using Factories;
@@ -10,7 +9,6 @@ using Godot;
 using Interfaces;
 using Stats;
 using UI;
-using Utility;
 using WaveManagement;
 using Weapons;
 
@@ -41,7 +39,6 @@ namespace Enemies
 
         #endregion
 
-        // protected SoundSet _sounds;
 
         #region Position and Velocity
         protected Vector2 _currentGlobalPosition;
@@ -86,6 +83,7 @@ namespace Enemies
         public WeaponNode Weapon => _weapon;
         public EntityPath Path => _path;
 
+        #region Health
         public float CurrentHealth
         {
             get => _currentHealth;
@@ -97,33 +95,6 @@ namespace Enemies
         }
 
         public float MaxHealth => _maxHealth;
-
-        #region Init
-        public override void _Ready()
-        {
-            base._Ready();
-            AddToGroup("enemies");
-
-            _shape = GetNode<CollisionShape2D>("%CollisionShape2D");
-
-            AddChild(_weapon);
-
-            // Start the weapon fire timer to fire on a set interval.
-            _weapon.FireTimer.Timeout += FireWeapon;
-
-            // Set an initial firing delay
-            double delay = RNG.GetRandomDouble(max: _weapon.Stats.FireRate);
-            _weapon.FireTimer.Start(delay);
-
-            // Initialize position tracking
-            _lastFramePosition = GlobalPosition;
-
-            // Initialize the health bar.
-            _healthBar = GetNode<OverheadHealthBar>("%OverheadHealthBar");
-            _healthBar.Initialize(this);
-
-            ConnectSignals();
-        }
 
         protected virtual void SetHealthBarPosition()
         {
@@ -137,22 +108,13 @@ namespace Enemies
             _healthBar.ToggleActive();
         }
 
-        public virtual void ConnectSignals()
-        {
-            if (_stats != null)
-            {
-                _stats.StatUpdated += OnStatUpdated;
-            }
-        }
+        #endregion
 
-        public virtual void DisconnectSignals()
-        {
-            _stats.StatUpdated -= OnStatUpdated;
-        }
+        #region Init
 
         /// <summary>
         /// Initializes the enemy node from an enemy resource.
-        /// Called from the EnemyFactory before the enemy is added to the scene tree.
+        /// Called from the EnemyFactory before the enemy is added to the scene tree, before _Ready().
         /// </summary>
         /// <param name="enemyResource">The resource used to create the enemy.</param>
         public virtual void Initialize(EnemyResource enemyResource)
@@ -180,8 +142,6 @@ namespace Enemies
             _audioComponent = new() { Sounds = enemyResource.Sounds };
             _audioComponent.Initialize(this);
 
-            // _sounds = (SoundSet)enemyResource.Sounds?.Duplicate();
-
             InitializeStatManager();
         }
 
@@ -197,6 +157,45 @@ namespace Enemies
             _stats.AddStat(StatType.FireRate, _baseFireRate);
             _stats.AddStat(StatType.MaxHealth, _baseMaxHealth);
             _stats.AddStat(StatType.Damage, _baseWeaponDamage);
+        }
+
+        public override void _Ready()
+        {
+            base._Ready();
+            AddToGroup("enemies");
+
+            _shape = GetNode<CollisionShape2D>("%CollisionShape2D");
+
+            AddChild(_weapon);
+
+            // Start the weapon fire timer to fire on a set interval.
+            _weapon.FireTimer.Timeout += FireWeapon;
+
+            // Set an initial firing delay
+            double delay = RNG.GetRandomDouble(max: _weapon.Stats.FireRate);
+            _weapon.FireTimer.Start(delay);
+
+            // Initialize position tracking
+            _lastFramePosition = GlobalPosition;
+
+            // Initialize the health bar.
+            _healthBar = GetNode<OverheadHealthBar>("%OverheadHealthBar");
+            _healthBar.Initialize(this);
+
+            ConnectSignals();
+        }
+
+        public virtual void ConnectSignals()
+        {
+            if (_stats != null)
+            {
+                _stats.StatUpdated += OnStatUpdated;
+            }
+        }
+
+        public virtual void DisconnectSignals()
+        {
+            _stats.StatUpdated -= OnStatUpdated;
         }
 
         public void SetPath(EntityPath path)

@@ -19,7 +19,20 @@ namespace Enemies
             _currentGlobalPosition = GlobalPosition;
             _lastGlobalPosition = _currentGlobalPosition;
 
+            SetHealthBarSize();
+
             FollowPath(_path, _followSpeed);
+        }
+
+        protected override void SetHealthBarSize()
+        {
+            // Get size of the base sprite
+            SpriteFrames sprite = _sprite.SpriteFrames ?? null;
+            if (sprite != null)
+            {
+                Rect2I usedRect = sprite.GetFrameTexture("default", 0).GetImage().GetUsedRect();
+                _healthBar.SetSize(usedRect.Size);
+            }
         }
 
         public override void _Process(double delta)

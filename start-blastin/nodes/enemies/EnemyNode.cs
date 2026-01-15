@@ -9,6 +9,7 @@ using Factories;
 using Godot;
 using Interfaces;
 using Stats;
+using UI;
 using Utility;
 using WaveManagement;
 using Weapons;
@@ -26,6 +27,7 @@ namespace Enemies
             IListener,
             IDeflector
     {
+        #region Nodes
         protected StatManager _stats;
 
         protected WeaponNode _weapon;
@@ -34,6 +36,10 @@ namespace Enemies
         protected EntityPath _path;
 
         protected AudioComponent _audioComponent;
+
+        protected OverheadHealthBar _healthBar;
+
+        #endregion
 
         // protected SoundSet _sounds;
 
@@ -83,7 +89,11 @@ namespace Enemies
         public float CurrentHealth
         {
             get => _currentHealth;
-            private set => _currentHealth = value;
+            private set
+            {
+                _currentHealth = value;
+                _healthBar?.SetValues(value, _maxHealth);
+            }
         }
 
         public float MaxHealth => _maxHealth;
@@ -108,7 +118,23 @@ namespace Enemies
             // Initialize position tracking
             _lastFramePosition = GlobalPosition;
 
+            // Initialize the health bar.
+            _healthBar = GetNode<OverheadHealthBar>("%OverheadHealthBar");
+            _healthBar.Initialize(this);
+
             ConnectSignals();
+        }
+
+        protected virtual void SetHealthBarPosition()
+        {
+            _healthBar.SetPosition(_currentGlobalPosition);
+        }
+
+        protected virtual void SetHealthBarSize() { }
+
+        public virtual void ToggleHealthBarActive()
+        {
+            _healthBar.ToggleActive();
         }
 
         public virtual void ConnectSignals()
@@ -279,6 +305,9 @@ namespace Enemies
                 _baseMaxHealth * (1 + (scaler.MaxHealthModifier * waveLogMultiplier));
             SetStat(StatType.MaxHealth, newMaxHealth);
 
+            // Fill the enemy's health.
+            CurrentHealth = MaxHealth;
+
             float newCrashDamage =
                 _baseCrashDamage * (1 + (scaler.CrashDamageModifier * waveLogMultiplier));
             SetStat(StatType.CrashDamage, newCrashDamage);
@@ -327,6 +356,8 @@ namespace Enemies
                 );
                 _currentHealth -= damage;
 
+                _healthBar.SetValues(MaxHealth, CurrentHealth);
+
                 if (_currentHealth <= 0)
                 {
                     _currentHealth = 0;
@@ -343,6 +374,8 @@ namespace Enemies
                 return;
             }
             _currentHealth = Mathf.Min(_currentHealth + healAmount, _maxHealth);
+
+            _healthBar.SetValues(MaxHealth, CurrentHealth);
         }
 
         protected virtual void FireWeapon()
@@ -353,6 +386,7 @@ namespace Enemies
 
         public virtual async void Die(int? playerId = null)
         {
+            _healthBar.ToggleBarVisibility(false);
             if (playerId != null)
             {
                 EnemyKilledEventArgs args = new(
@@ -371,29 +405,6 @@ namespace Enemies
             {
                 QueueFree();
             }
-        }
-
-        private async Task<bool> WaitForAudioEnd()
-        {
-            var children = GetChildren();
-            foreach (Node node in children)
-            {
-                if (node is not AudioStreamPlayer2D audioStream)
-                {
-                    continue;
-                }
-
-                if (!audioStream.Playing)
-                {
-                    continue;
-                }
-                else
-                {
-                    await ToSignal(audioStream, AudioStreamPlayer2D.SignalName.Finished);
-                    continue;
-                }
-            }
-            return true;
         }
 
         public virtual void PlayDamageAnimation()
@@ -441,6 +452,11 @@ namespace Enemies
             _lastFramePosition = GlobalPosition;
         }
 
+        public override void _Process(double delta)
+        {
+            SetHealthBarPosition();
+        }
+
         /// <summary>
         /// Follows an EntityPath at a set speed.
         /// </summary>
@@ -458,6 +474,33 @@ namespace Enemies
 
             _followTween = CreateTween();
             _followTween.TweenProperty(path.PathFollow, "progress_ratio", 1.0, duration);
+        }
+
+        /// <summary>
+        /// Finds any AudioStreamPlayer2D nodes in the enemy's scene tree and waits for their playback to finish before returning.
+        /// </summary>
+        /// <returns></returns>
+        private async Task<bool> WaitForAudioEnd()
+        {
+            var children = GetChildren();
+            foreach (Node node in children)
+            {
+                if (node is not AudioStreamPlayer2D audioStream)
+                {
+                    continue;
+                }
+
+                if (!audioStream.Playing)
+                {
+                    continue;
+                }
+                else
+                {
+                    await ToSignal(audioStream, AudioStreamPlayer2D.SignalName.Finished);
+                    continue;
+                }
+            }
+            return true;
         }
 
         public override void _ExitTree()

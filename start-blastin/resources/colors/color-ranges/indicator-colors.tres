@@ -5,7 +5,7 @@
 [resource]
 resource_local_to_scene = true
 script = ExtResource("1_6trme")
-Full = Color(0.60784316, 0.8784314, 0.12156863, 1)
+Full = Color(0.47058824, 0.9137255, 0.20392157, 1)
 Mid = Color(1, 0.64705884, 0.50980395, 1)
 Low = Color(1, 0.32941177, 0.4392157, 1)
 metadata/_custom_type_script = "uid://dts1aofdsvfvr"

@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://dwhfr6b04sn3"]
+[gd_scene load_steps=31 format=3 uid="uid://dwhfr6b04sn3"]
 
 [ext_resource type="Script" uid="uid://bf4nsy5w0ftaq" path="res://nodes/enemies/Drone/Drone.cs" id="1_2lfs3"]
 [ext_resource type="Texture2D" uid="uid://dniqs2y5gnx25" path="res://assets/enemies/drone/drone-engine.png" id="2_ijs4g"]
@@ -6,6 +6,7 @@
 [ext_resource type="Material" uid="uid://c2utwn3c0waxt" path="res://resources/materials/enemy-hit-effect.tres" id="2_owq5x"]
 [ext_resource type="Texture2D" uid="uid://baym56lbmyrdk" path="res://assets/enemies/drone/drone-destruction.png" id="4_k5dt5"]
 [ext_resource type="Script" uid="uid://bekbgunrmk3ad" path="res://nodes/weapons/Barrel.cs" id="6_eyaxp"]
+[ext_resource type="PackedScene" uid="uid://dyem7stdeqti4" path="res://nodes/ui/elements/overhead-health-bar.tscn" id="7_aakgy"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ijs4g"]
 radius = 20.0
@@ -245,10 +246,7 @@ unique_name_in_owner = true
 texture_filter = 1
 use_parent_material = true
 sprite_frames = SubResource("SpriteFrames_josik")
-animation = &"fire"
 autoplay = "default"
-frame = 4
-frame_progress = 1.0
 metadata/_aseprite_wizard_interface_config_ = {
 "animation_section": true,
 "layer_section": true,
@@ -305,3 +303,6 @@ position = Vector2(16, -1.9073486e-06)
 script = ExtResource("6_eyaxp")
 Base = true
 metadata/_custom_type_script = "uid://bekbgunrmk3ad"
+
+[node name="OverheadHealthBar" parent="." instance=ExtResource("7_aakgy")]
+unique_name_in_owner = true

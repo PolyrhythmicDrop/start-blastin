@@ -47,6 +47,8 @@ public partial class Salvo : EnemyNode
 
         ReadyBarrels();
 
+        SetHealthBarSize();
+
         ConnectSignals();
 
         FollowPath(_path, _followSpeed);
@@ -55,6 +57,17 @@ public partial class Salvo : EnemyNode
     private void ReadyBarrels()
     {
         _weapon.Barrels.ToggleActivateAllBarrels(true);
+    }
+
+    protected override void SetHealthBarSize()
+    {
+        // Get size of the base sprite
+        SpriteFrames sprite = _body.SpriteFrames ?? null;
+        if (sprite != null)
+        {
+            Rect2I usedRect = sprite.GetFrameTexture("default", 0).GetImage().GetUsedRect();
+            _healthBar.SetSize(usedRect.Size);
+        }
     }
 
     public override void ConnectSignals()

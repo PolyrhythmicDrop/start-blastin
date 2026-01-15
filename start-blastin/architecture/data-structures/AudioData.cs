@@ -12,6 +12,8 @@ namespace DataStructures
     [GlobalClass]
     public partial class AudioData : Resource
     {
+        private AudioStream _generatedStream;
+
         public Node Source { get; set; } = null;
 
         [Export(SRP_HINT.RESOURCE_PATH, "AudioStreamWAV")]
@@ -71,8 +73,18 @@ namespace DataStructures
         [Export]
         public int LoopEnd { get; set; } = 0;
 
+        /// <summary>
+        /// Generates a new audio stream using the AudioData resource values.
+        /// If a stream has already been generated, returns the generated stream.
+        /// </summary>
+        /// <returns>A custom AudioStream based on the passed values.</returns>
         public AudioStream GenerateAudioStream()
         {
+            if (_generatedStream != null)
+            {
+                return _generatedStream;
+            }
+
             AudioStreamWav stream = ResourceLoader.Load<AudioStreamWav>(Sound);
 
             // Set looping parameters.
@@ -97,12 +109,14 @@ namespace DataStructures
                 randomizer.AddStream(-1, stream);
                 randomizer.RandomPitch = RandomPitch;
                 randomizer.RandomVolumeOffsetDb = RandomVolume;
-                return randomizer;
+                _generatedStream = randomizer;
             }
             else
             {
-                return stream;
+                _generatedStream = stream;
             }
+
+            return _generatedStream;
         }
     }
 }

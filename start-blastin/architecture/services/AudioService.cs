@@ -254,6 +254,9 @@ namespace Services
             // Retrieve the audio stream from the cache or generate a new audio stream based on the passed data.
             AudioStream stream = GetAudioStream(data);
 
+            // Log the stream to make sure they're the same?
+            DebugLogger.LogMessage($"{data.Source.Name} - {stream}", true);
+
             // Attempt to get a matching audio player from the audio players list.
             AudioPlayerData playerData = TryGetMatchingAudioPlayerData(data, bus);
 

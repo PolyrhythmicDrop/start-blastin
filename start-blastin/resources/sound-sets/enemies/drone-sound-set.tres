@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dt02kxv7k56mm" path="res://architecture/data-structures/SoundSet.cs" id="1_k2w0n"]
 [ext_resource type="Script" uid="uid://cx2eehu1aj48f" path="res://architecture/data-structures/AudioData.cs" id="1_t4xav"]
+[ext_resource type="Resource" uid="uid://c86hwny0l2bri" path="res://resources/audio-data/sfx/enemies/drone/drone-shots.tres" id="2_76i86"]
 
 [sub_resource type="Resource" id="Resource_t4xav"]
 script = ExtResource("1_t4xav")
@@ -11,16 +12,6 @@ Positional = true
 Randomized = true
 RandomPitch = 0.5
 RandomVolume = 1.1
-metadata/_custom_type_script = "uid://cx2eehu1aj48f"
-
-[sub_resource type="Resource" id="Resource_76i86"]
-script = ExtResource("1_t4xav")
-Sound = "uid://dc233os2xrmsn"
-Volume = -0.5
-Positional = true
-Randomized = true
-RandomPitch = 1.1
-RandomVolume = 0.3
 metadata/_custom_type_script = "uid://cx2eehu1aj48f"
 
 [sub_resource type="Resource" id="Resource_toa20"]
@@ -35,7 +26,7 @@ metadata/_custom_type_script = "uid://cx2eehu1aj48f"
 
 [resource]
 script = ExtResource("1_k2w0n")
-Fire = SubResource("Resource_76i86")
+Fire = ExtResource("2_76i86")
 Destruction = SubResource("Resource_t4xav")
 Hit = SubResource("Resource_toa20")
 metadata/_custom_type_script = "uid://dt02kxv7k56mm"

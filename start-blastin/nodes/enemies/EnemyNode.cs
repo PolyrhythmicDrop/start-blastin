@@ -9,6 +9,7 @@ using Factories;
 using Godot;
 using Interfaces;
 using Stats;
+using Utility;
 using WaveManagement;
 using Weapons;
 
@@ -150,8 +151,9 @@ namespace Enemies
             _baseCrashDamage = enemyResource.CrashDamage;
 
             // Sound initialization
-            _audioComponent = new() { Sounds = (SoundSet)enemyResource.Sounds?.Duplicate(true) };
+            _audioComponent = new() { Sounds = enemyResource.Sounds };
             _audioComponent.Initialize(this);
+
             // _sounds = (SoundSet)enemyResource.Sounds?.Duplicate();
 
             InitializeStatManager();
@@ -345,7 +347,6 @@ namespace Enemies
 
         protected virtual void FireWeapon()
         {
-            // AudioService.Instance.PlaySound(_sounds?.Fire, this, 1);
             _audioComponent.PlayFireSound();
             _weapon.Fire();
         }

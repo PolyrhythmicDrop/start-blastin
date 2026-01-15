@@ -2,6 +2,7 @@ using System;
 using Godot;
 using NanoidDotNet;
 using SafeResourcePicker;
+using Utility;
 
 namespace DataStructures
 {
@@ -16,7 +17,19 @@ namespace DataStructures
         [Export(SRP_HINT.RESOURCE_PATH, "AudioStreamWAV")]
         public string Sound { get; set; }
 
-        public readonly string AudioID = Nanoid.Generate(size: 8);
+        private string _audioId = string.Empty;
+
+        public string AudioID
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_audioId))
+                {
+                    _audioId = Nanoid.Generate(size: 8);
+                }
+                return _audioId;
+            }
+        }
 
         [Export]
         public float Volume { get; set; }

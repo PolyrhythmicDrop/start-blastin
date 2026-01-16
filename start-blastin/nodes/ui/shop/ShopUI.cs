@@ -32,6 +32,14 @@ namespace UI.Shop
         private Button _rerollButton;
         private Button _healButton;
 
+        private RichTextLabel _healLabel;
+        private string _healIconKey = "healIcon";
+        private Texture2D _healTexture = ResourceLoader.Load<Texture2D>(
+            "res://assets/icons/currency/flux-icon.png"
+        );
+
+        private int _healPrice = 0;
+
         // ~~~
 
         private Dictionary<ShopItemContainer, Action> _containerFocusHandlers = new();
@@ -61,7 +69,8 @@ namespace UI.Shop
 
             _nextWaveButton = GetNode<Button>("%NextWaveButton");
             _rerollButton = GetNode<Button>("%RerollButton");
-            _healButton = GetNode<Button>("%Heal");
+            _healButton = GetNode<Button>("%HealButton");
+            _healLabel = GetNode<RichTextLabel>("%HealLabel");
 
             _descPanel = GetNode<DescriptionPanel>("%DescriptionPanelContainer");
 
@@ -73,6 +82,19 @@ namespace UI.Shop
             };
 
             ConnectSignals();
+        }
+
+        private void SetHealPrice()
+        {
+            Player player = _service.GetPlayer(_playerId);
+            _healPrice = (int)MathF.Round(player.MaxHealth - player.CurrentHealth, 0) * 100;
+            // DebugLogger.LogMessage($"{_healIconKey}", true);
+
+            _healLabel.Text = "";
+            _healLabel.AppendText("Heal");
+            _healLabel.Newline();
+            _healLabel.AddImage(_healTexture, width: 32, height: 32);
+            _healLabel.AppendText(_healPrice.ToString());
         }
 
         public void StockShop()
@@ -91,6 +113,7 @@ namespace UI.Shop
             {
                 Active = true;
                 RefreshAllAffordability(_playerId);
+                SetHealPrice();
                 if (_lastFocused != null)
                 {
                     _lastFocused.CallDeferred(MethodName.GrabFocus);
@@ -126,6 +149,11 @@ namespace UI.Shop
         {
             _rerollButton.Pressed += RerollShop;
             _nextWaveButton.Pressed += EventBus.Instance.RaiseStartWaveButtonPressed;
+            _healButton.Pressed += OnHealButtonPressed;
+            EventBus.Instance.PlayerMaxHealthChanged += (source, args) =>
+            {
+                SetHealPrice();
+            };
 
             _rerollButton.FocusEntered += RerollFocusEntered;
             _nextWaveButton.FocusEntered += NextWaveFocusEntered;
@@ -231,6 +259,17 @@ namespace UI.Shop
 
         private void OnPlayerPluginEquipped(object source, PlayerPluginEquippedEventArgs args) =>
             RefreshAllAffordability(args.PlayerId);
+
+        private void OnHealButtonPressed()
+        {
+            Player player = _service.GetPlayer(_playerId);
+            if (player.Flux >= _healPrice)
+            {
+                player.Flux -= _healPrice;
+                player.Heal(player.MaxHealth);
+                SetHealPrice();
+            }
+        }
 
         private void RefreshAllAffordability(int argsId)
         {

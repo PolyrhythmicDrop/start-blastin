@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="Plugin" load_steps=5 format=3 uid="uid://cky7i7nr0uoxo"]
+
+[ext_resource type="Script" uid="uid://b3qmdj461ykoi" path="res://architecture/items/plugins/Plugin.cs" id="1_bmokc"]
+[ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="1_iqigd"]
+[ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="2_27ix4"]
+
+[sub_resource type="Resource" id="Resource_o5wfg"]
+script = ExtResource("1_iqigd")
+Type = 6
+Value = 0.5
+Trigger = 4
+Stacking = true
+MaxStacks = -1
+Timed = true
+Time = 3.0
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[resource]
+script = ExtResource("1_bmokc")
+Name = &"Space Berserker"
+Description = &"You deal more damage for a limited time after you take a hit. Effects stack infinitely!"
+Icon = ExtResource("2_27ix4")
+Rarity = 4
+ByteCost = 1000
+Effects = Array[Object]([SubResource("Resource_o5wfg")])
+metadata/_custom_type_script = "uid://b3qmdj461ykoi"

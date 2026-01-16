@@ -7,6 +7,7 @@ using Enemies;
 using Events;
 using Godot;
 using Services;
+using Stats;
 using Utility;
 
 namespace Effects
@@ -72,7 +73,9 @@ namespace Effects
             public int CurrentStacks
             {
                 get => _currentStacks;
-                set => _currentStacks = Math.Min(_parent._maxStacks, value);
+                set =>
+                    _currentStacks =
+                        _parent._maxStacks >= 0 ? Math.Min(_parent._maxStacks, value) : value;
             }
 
             /// <summary>
@@ -508,10 +511,11 @@ namespace Effects
                     if (state.Timers == null)
                     {
                         state.Timers = new();
-                        if (_stacking)
-                        {
-                            state.Timers.Capacity = _maxStacks;
-                        }
+                        // if (_stacking)
+                        // {
+                        //     state.Timers.Capacity =
+                        //         _maxStacks <= 0 ? state.CurrentStacks + 1 : _maxStacks;
+                        // }
                     }
                     // Start the timer(s)
                     StartTimer(target, state);
@@ -679,7 +683,7 @@ namespace Effects
         /// <param name="target">The target to apply the effect to.</param>
         protected void ApplyEffectToTarget(GodotObject target)
         {
-            // DebugLogger.LogMessage($"Applying effect {GetType().Name} to {target}!");
+            DebugLogger.LogMessage($"Applying effect {GetType().Name} to {target}!");
             // Get the current effect state for this target or create a new one
             EffectState state = GetOrCreateEffectState(target);
 
@@ -770,7 +774,7 @@ namespace Effects
 
         protected void RemoveEffectFromTarget(GodotObject target)
         {
-            // DebugLogger.LogMessage($"Removing {this.ResourceName} from {target}", true);
+            DebugLogger.LogMessage($"Removing {this.ResourceName} from {target}", true);
 
             // Get the current EffectState, if any.
             try
@@ -814,13 +818,13 @@ namespace Effects
             bool stateActive = !_stacking && state.Active;
 
             // If stacking is enabled, there is at least one stack on the target.
-            bool noStacks = _stacking && state.CurrentStacks > 0;
+            bool activeStacks = _stacking && state.CurrentStacks > 0;
 
             // If infinite stacking is enabled, the effect is active on the target.
             bool infEffectActive =
                 _stacking && _maxStacks < 0 && (state.Active || state.CurrentStacks > 0);
 
-            return stateActive || noStacks || infEffectActive;
+            return stateActive || activeStacks || infEffectActive;
         }
 
         /// <summary>

@@ -41,9 +41,8 @@ namespace PlayerComponents
             bool canAfford = CanAffordItem(item);
             // bool noDupePlugins = _plugins.Contains(item) ? false : true;
             bool noDupePlugins =
-                _player.Inventory.EquippedPlugins.FirstOrDefault(plugin =>
-                    plugin.ResourceName == item.ResourceName
-                ) == null
+                _player.Inventory.EquippedPlugins.FirstOrDefault(plugin => plugin.Equals(item))
+                == null
                     ? true
                     : false;
             bool noDupeWeapon = !_player.Inventory.WeaponPlugin.Equals(item);

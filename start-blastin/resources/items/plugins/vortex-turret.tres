@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="Plugin" load_steps=5 format=3 uid="uid://ckct32itbe0dn"]
+
+[ext_resource type="Script" uid="uid://b3qmdj461ykoi" path="res://architecture/items/plugins/Plugin.cs" id="1_3tf3k"]
+[ext_resource type="Script" uid="uid://dm0gvemkpk22g" path="res://architecture/effects/TurretEffect.cs" id="1_shmu7"]
+[ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="2_td7q3"]
+
+[sub_resource type="Resource" id="Resource_bids6"]
+script = ExtResource("1_shmu7")
+FocusDirection = 4
+TimedRotation = true
+RotateTime = 1.25
+metadata/_custom_type_script = "uid://dm0gvemkpk22g"
+
+[resource]
+script = ExtResource("1_3tf3k")
+Name = &"Vortex Turret"
+Description = &"Adds a turret that spins uncontrollably. You never know where it\'s going to fire next!"
+Icon = ExtResource("2_td7q3")
+ByteCost = 400
+Effects = Array[Object]([SubResource("Resource_bids6")])
+metadata/_custom_type_script = "uid://b3qmdj461ykoi"

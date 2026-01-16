@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="Plugin" load_steps=8 format=3 uid="uid://nw3ni05j75ak"]
+
+[ext_resource type="Script" uid="uid://b3qmdj461ykoi" path="res://architecture/items/plugins/Plugin.cs" id="1_ug0wn"]
+[ext_resource type="Script" uid="uid://cw0apv8svo4i" path="res://architecture/effects/DeflectEffect.cs" id="1_wpaa8"]
+[ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="2_la3ho"]
+[ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="3_sm1nh"]
+
+[sub_resource type="Resource" id="Resource_lomis"]
+script = ExtResource("1_wpaa8")
+Trigger = 5
+metadata/_custom_type_script = "uid://cw0apv8svo4i"
+
+[sub_resource type="Resource" id="Resource_6ypho"]
+script = ExtResource("2_la3ho")
+Type = 2
+Value = 0.5
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[sub_resource type="Resource" id="Resource_wpaa8"]
+script = ExtResource("2_la3ho")
+Type = 3
+Value = 1.0
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[resource]
+script = ExtResource("1_ug0wn")
+Name = &"Amorphous Metal Phase Shield"
+Description = &"When phasing, projectiles bounce off your shield instead of passing through you. Phasing lasts longer, but has a longer cooldown."
+Icon = ExtResource("3_sm1nh")
+Rarity = 4
+ByteCost = 1000
+Effects = Array[Object]([SubResource("Resource_lomis"), SubResource("Resource_6ypho"), SubResource("Resource_wpaa8")])
+metadata/_custom_type_script = "uid://b3qmdj461ykoi"

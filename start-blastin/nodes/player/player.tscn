@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://b3qmdj461ykoi" path="res://architecture/items/plugins/Plugin.cs" id="3_lh1gn"]
 [ext_resource type="Script" uid="uid://dcupxkt621nuk" path="res://nodes/player/player-components/PlayerController.cs" id="4_1fmtd"]
 [ext_resource type="Shader" uid="uid://bmacriris3r2k" path="res://resources/shaders/color-cycling-hit-effect.gdshader" id="4_5h4ma"]
-[ext_resource type="Resource" uid="uid://brlipjg8g6t5k" path="res://resources/items/plugins/evasive-manuevers.tres" id="4_lancr"]
+[ext_resource type="Resource" uid="uid://cky7i7nr0uoxo" path="res://resources/items/plugins/space-berserker.tres" id="4_lh1gn"]
 [ext_resource type="PackedScene" uid="uid://bh7mbhu54my3n" path="res://nodes/player/player-components/movement-component.tscn" id="4_xl06i"]
 [ext_resource type="Script" uid="uid://wvxahp2d8k6f" path="res://nodes/player/player-components/WeaponComponent.cs" id="5_5h4ma"]
 [ext_resource type="Script" uid="uid://btnqmc5i2faj2" path="res://architecture/data-structures/PlayerSoundSet.cs" id="5_eiqky"]
@@ -96,7 +96,7 @@ PluginSlots = 3
 [node name="InventoryComponent" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("3_2xyxk")
-InitialPlugins = Array[ExtResource("3_lh1gn")]([ExtResource("4_lancr")])
+InitialPlugins = Array[ExtResource("3_lh1gn")]([ExtResource("4_lh1gn")])
 metadata/_custom_type_script = "uid://bw0jf3wqbeqhj"
 
 [node name="Shield" parent="InventoryComponent" instance=ExtResource("10_qwfek")]
@@ -108,7 +108,6 @@ rotation = -1.5707964
 unique_name_in_owner = true
 script = ExtResource("6_lh1gn")
 Sounds = SubResource("Resource_j4qgx")
-metadata/_custom_type_script = "uid://inq1tkdh0ogf"
 
 [node name="AnimationComponent" parent="." instance=ExtResource("2_hs1md")]
 unique_name_in_owner = true

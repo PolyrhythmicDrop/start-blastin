@@ -6,7 +6,6 @@ using Autoloads;
 using Enemies.Spawners;
 using FileIO;
 using Godot;
-using NanoidDotNet;
 using SafeResourcePicker;
 using Utility;
 
@@ -297,16 +296,6 @@ namespace WaveManagement
         /// <returns></returns>
         private async Task ClearFormation()
         {
-            // foreach (KeyValuePair<SpawnerLocation, List<EnemySpawner>> kvp in _activeSpawners)
-            // {
-            //     foreach (EnemySpawner spawner in kvp.Value)
-            //     {
-            //         spawner.QueueFree();
-            //         await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
-            //     }
-            //     kvp.Value.Clear();
-            // }
-
             foreach (List<EnemySpawner> spawners in _activeSpawners.Values)
             {
                 foreach (EnemySpawner spawner in spawners.ToList())

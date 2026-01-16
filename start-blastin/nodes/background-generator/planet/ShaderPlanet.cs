@@ -14,8 +14,8 @@ namespace BackgroundGenerator
             _minScale = 0.1f;
             _maxScale = 6.0f;
 
-            _minSpeed = 5.0f;
-            _maxSpeed = 50.0f;
+            _minSpeed = 1.0f;
+            _maxSpeed = 35.0f;
         }
 
         public override void _Ready()

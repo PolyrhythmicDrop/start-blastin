@@ -1,10 +1,8 @@
 using Autoloads;
-using Enemies;
-using Enemies.Spawners;
 using Godot;
 using NanoidDotNet;
 
-namespace WaveManagement
+namespace Enemies.Spawners
 {
     public enum SpawnerLocation
     {

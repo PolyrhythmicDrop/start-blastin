@@ -330,10 +330,10 @@ namespace BackgroundGenerator
             }
 
             float particleAmount =
-                (parallaxSize.X * parallaxSize.Y) * GD.RandRange(1, 2000) / particles.Amount;
+                (parallaxSize.X * parallaxSize.Y) * GD.RandRange(100, 4000) / particles.Amount;
             int x = (int)(particleAmount * 0.75f);
             int y = (int)(particleAmount * 0.25f);
-            particles.Amount = Math.Clamp((int)GD.Randi() % (x + y), 10000, 20000);
+            particles.Amount = Math.Clamp((int)GD.Randi() % (x + y), 20000, 40000);
 
             DebugLogger.LogMessage($"particle amount: {particles.Amount}");
 

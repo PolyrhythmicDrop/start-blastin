@@ -4,7 +4,7 @@
 [ext_resource type="Resource" uid="uid://lv3xojj0ktlw" path="res://resources/enemies/salvo.tres" id="1_l5qlb"]
 [ext_resource type="Script" uid="uid://dyer2c2n8y1v4" path="res://nodes/enemies/Spawners/SpawnData.cs" id="2_530jv"]
 [ext_resource type="Resource" uid="uid://dwt1kb13007cq" path="res://resources/enemies/missile-drone.tres" id="3_ljbuf"]
-[ext_resource type="Script" uid="uid://c2ao0simwvpmt" path="res://nodes/wave-management/wave-scalers/SpawnerConfig.cs" id="4_eakly"]
+[ext_resource type="Script" uid="uid://c2ao0simwvpmt" path="res://nodes/enemies/Spawners/SpawnerConfig.cs" id="4_eakly"]
 
 [sub_resource type="Resource" id="Resource_yyxxh"]
 script = ExtResource("2_530jv")

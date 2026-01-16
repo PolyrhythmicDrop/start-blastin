@@ -1,7 +1,7 @@
 using System;
 using Godot;
 
-namespace Enemies
+namespace Enemies.Spawners
 {
     [GlobalClass]
     public partial class SpawnData : Resource

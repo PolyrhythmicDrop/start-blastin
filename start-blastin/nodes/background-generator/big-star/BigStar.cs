@@ -11,7 +11,7 @@ namespace BackgroundGenerator
             _minScale = 0.05f;
             _maxScale = 1.1f;
 
-            _minSpeed = 1f;
+            _minSpeed = 0.5f;
             _maxSpeed = 20f;
         }
 

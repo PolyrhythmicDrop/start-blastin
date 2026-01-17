@@ -9,6 +9,7 @@
 [sub_resource type="Resource" id="Resource_00ga0"]
 script = ExtResource("1_l12pr")
 EnemyType = ExtResource("2_cdlrp")
+Quantity = 4
 SpawnPosition = 0.5
 metadata/_custom_type_script = "uid://ci68p6xph38co"
 

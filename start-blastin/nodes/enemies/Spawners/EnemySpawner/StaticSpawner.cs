@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Autoloads;
 using Events;
@@ -152,15 +153,29 @@ namespace Enemies.Spawners
             foreach (SpawnStep step in steps)
             {
                 DebugLogger.LogMessage($"Spawning enemy!", true);
-                // Duplicate the enemy resource.
-                EnemyResource resource = (EnemyResource)
-                    step.EnemyType.DuplicateDeep(Resource.DeepDuplicateMode.All);
 
-                // Set the progress ratio to the step's progress ratio so the spawn point is in the correct location for spawning.
-                _pathFollow.ProgressRatio = step.SpawnPosition;
+                for (int i = 0; i < step.Quantity; i++)
+                {
+                    // Duplicate the enemy resource for each new enemy.
+                    EnemyResource resource = (EnemyResource)
+                        step.EnemyType.DuplicateDeep(Resource.DeepDuplicateMode.All);
 
-                // Pass it to the base SpawnEnemy method
-                base.SpawnEnemy(resource);
+                    // Set the progress ratio to the step's progress ratio so the spawn point is in the correct location for spawning.
+                    if (i == 0)
+                    {
+                        _pathFollow.ProgressRatio = step.SpawnPosition;
+                    }
+                    else
+                    {
+                        // If we're spawning more than one enemy on this step, offset each enemy's position by a small random value so they don't all spawn on top of each other.
+                        float rand = (float)RNG.GetRandomDouble(-0.05f, 0.05f);
+                        float newRatio = Math.Clamp(step.SpawnPosition + rand, 0, 1.0f);
+                        _pathFollow.ProgressRatio = newRatio;
+                    }
+
+                    // Pass it to the base SpawnEnemy method
+                    base.SpawnEnemy(resource);
+                }
             }
         }
 

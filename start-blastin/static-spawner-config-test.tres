@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="StaticSpawnerConfig" load_steps=5 format=3 uid="uid://dhnabj3qveqvn"]
+
+[ext_resource type="Script" uid="uid://ci68p6xph38co" path="res://nodes/enemies/Spawners/SpawnStep.cs" id="1_h4o7a"]
+[ext_resource type="Resource" uid="uid://lv3xojj0ktlw" path="res://resources/enemies/salvo.tres" id="2_nd5ua"]
+[ext_resource type="Script" uid="uid://bneh110nwl6dl" path="res://nodes/enemies/Spawners/StaticSpawnerConfig.cs" id="2_p7pc8"]
+
+[sub_resource type="Resource" id="Resource_kgqf5"]
+script = ExtResource("1_h4o7a")
+EnemyType = ExtResource("2_nd5ua")
+Quantity = 1
+SpawnPosition = 0.5
+metadata/_custom_type_script = "uid://ci68p6xph38co"
+
+[resource]
+script = ExtResource("2_p7pc8")
+SpawnPlan = Array[ExtResource("1_h4o7a")]([SubResource("Resource_kgqf5")])
+metadata/_custom_type_script = "uid://bneh110nwl6dl"

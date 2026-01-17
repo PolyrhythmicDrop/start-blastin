@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autoloads;
 using Enemies.Spawners;
+using Factories;
 using FileIO;
 using Godot;
 using SafeResourcePicker;
@@ -17,17 +18,13 @@ namespace WaveManagement
     [GlobalClass]
     public partial class ScaleManager : Node
     {
-        private PackedScene _spawnerScene = GD.Load<PackedScene>(
-            "res://nodes/enemies/Spawners/EnemySpawner/enemy-spawner.tscn"
-        );
-
         private string _defaultEnemyScaler =
             "res://resources/wave-scalers/enemy-scalers/default-enemy-scaler.tres";
 
         private string _defaultSpawnerScaler =
             "res://resources/wave-scalers/spawner-scalers/default-spawner-scaler.tres";
         private string _defaultFormation =
-            "res://resources/wave-scalers/spawner-formations/default-spawner-formation.tres";
+            "res://resources/wave-scalers/spawner-formations/tier1/level-one-formation.tres";
 
         private EnemyScaler _currentEnemyScaler;
         private EnemyScaler _previousEnemyScaler;
@@ -263,13 +260,17 @@ namespace WaveManagement
                 currentWave
             );
 
-            spawner.SetEnemyScaler(adjustedEnemyScaler);
-            spawner.ApplySpawnerScaling(
-                currentWave,
-                config.SpawnPool,
-                adjustedSpawnerScaler.SpawnIntervalModifier,
-                adjustedSpawnerScaler.MoveDurationModifier
-            );
+            // Account for spawner config changes
+            if (config is RandomSpawnerConfig randConfig)
+            {
+                spawner.SetEnemyScaler(adjustedEnemyScaler);
+                spawner.ApplySpawnerScaling(
+                    currentWave,
+                    randConfig.SpawnPool,
+                    adjustedSpawnerScaler.SpawnIntervalModifier,
+                    adjustedSpawnerScaler.MoveDurationModifier
+                );
+            }
 
             EventBus.Instance.RaiseSpawnersReady();
         }
@@ -321,7 +322,15 @@ namespace WaveManagement
 
             foreach (SpawnerConfig config in configs)
             {
-                EnemySpawner spawner = _spawnerScene.Instantiate<EnemySpawner>();
+                // EnemySpawner spawner = _spawnerScene.Instantiate<EnemySpawner>();
+
+                // Use the factory instead of direct instantiation.
+                var spawner = config switch
+                {
+                    RandomSpawnerConfig => SpawnerFactory.CreateSpawner<RandomSpawner>(),
+                    _ => SpawnerFactory.CreateSpawner<RandomSpawner>(),
+                };
+
                 config.ConfigureSpawner(spawner, _waveManager.WaveTime);
                 ScaleSpawner(spawner, config);
 

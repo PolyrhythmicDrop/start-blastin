@@ -82,14 +82,18 @@ namespace WaveManagement
                 [SpawnerLocation.Right] = new(),
             };
             _waveManager = waveManager;
+
+            // Initialize enemy scalers
             _currentEnemyScaler = ResourceLoader.Load<EnemyScaler>(_defaultEnemyScaler);
             _previousEnemyScaler = _currentEnemyScaler;
 
+            // Initialize formation scalers
             _currentFormationScaler = ResourceLoader.Load<SpawnerFormationScaler>(
                 LevelOneFormation
             );
             _previousFormationScaler = _currentFormationScaler;
 
+            // Initialize spawner scalers
             _currentSpawnerScaler = ResourceLoader.Load<SpawnerScaler>(_defaultSpawnerScaler);
             _previousSpawnerScaler = _currentSpawnerScaler;
         }
@@ -245,36 +249,6 @@ namespace WaveManagement
             }
         }
 
-        public void ScaleSpawner(EnemySpawner spawner, SpawnerConfig config)
-        {
-            int currentWave = _waveManager.Wave;
-            float difficultyMod = _waveManager.DifficultyModifier;
-
-            EnemyScaler adjustedEnemyScaler = _currentEnemyScaler.GetAdjustedScaler(
-                difficultyMod,
-                currentWave
-            );
-
-            SpawnerScaler adjustedSpawnerScaler = _currentSpawnerScaler.GetAdjustedScaler(
-                difficultyMod,
-                currentWave
-            );
-
-            // Account for spawner config changes
-            if (config is RandomSpawnerConfig randConfig)
-            {
-                spawner.SetEnemyScaler(adjustedEnemyScaler);
-                spawner.ApplySpawnerScaling(
-                    currentWave,
-                    randConfig.SpawnPool,
-                    adjustedSpawnerScaler.SpawnIntervalModifier,
-                    adjustedSpawnerScaler.MoveDurationModifier
-                );
-            }
-
-            EventBus.Instance.RaiseSpawnersReady();
-        }
-
         #endregion
 
         #region Formations
@@ -289,6 +263,8 @@ namespace WaveManagement
 
             // Add spawners for each SpawnerConfig in the current formation.
             await AddSpawners([.. _currentFormationScaler.Formation]);
+
+            EventBus.Instance.RaiseSpawnersReady();
         }
 
         /// <summary>
@@ -322,12 +298,11 @@ namespace WaveManagement
 
             foreach (SpawnerConfig config in configs)
             {
-                // EnemySpawner spawner = _spawnerScene.Instantiate<EnemySpawner>();
-
-                // Use the factory instead of direct instantiation.
-                var spawner = config switch
+                // Create the correct type of spawner based on the config.
+                EnemySpawner spawner = config switch
                 {
                     RandomSpawnerConfig => SpawnerFactory.CreateSpawner<RandomSpawner>(),
+                    StaticSpawnerConfig => SpawnerFactory.CreateSpawner<StaticSpawner>(),
                     _ => SpawnerFactory.CreateSpawner<RandomSpawner>(),
                 };
 
@@ -337,6 +312,40 @@ namespace WaveManagement
                 _activeSpawners[config.Location].Add(spawner);
                 levelNode.CallDeferred(MethodName.AddChild, spawner);
                 await ToSignal(spawner, Node.SignalName.Ready);
+            }
+        }
+
+        /// <summary>
+        /// Scales created spawners according to a passed <see cref="SpawnerConfig"/> object.
+        /// </summary>
+        /// <param name="spawner">The EnemySpawner to scale.</param>
+        /// <param name="config">The configuration object to use to scale the spawner.</param>
+        public void ScaleSpawner(EnemySpawner spawner, SpawnerConfig config)
+        {
+            int currentWave = _waveManager.Wave;
+            float difficultyMod = _waveManager.DifficultyModifier;
+
+            EnemyScaler adjustedEnemyScaler = _currentEnemyScaler.GetAdjustedScaler(
+                difficultyMod,
+                currentWave
+            );
+
+            SpawnerScaler adjustedSpawnerScaler = _currentSpawnerScaler.GetAdjustedScaler(
+                difficultyMod,
+                currentWave
+            );
+
+            // Account for spawner config changes
+            spawner.SetEnemyScaler(adjustedEnemyScaler);
+
+            // Adjust the spawn interval and move duration if the spawner is a random one.
+            if (spawner is RandomSpawner randomSpawner)
+            {
+                randomSpawner.ApplySpawnerScaling(
+                    currentWave,
+                    adjustedSpawnerScaler.SpawnIntervalModifier,
+                    adjustedSpawnerScaler.MoveDurationModifier
+                );
             }
         }
 

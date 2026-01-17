@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Autoloads;
 using Godot;
@@ -13,7 +14,7 @@ namespace WaveManagement
         private int _wave = 1;
         private float _difficultyModifier = 0.1f;
         private Timer _waveTimer;
-        private double _waveTime;
+        private static double _waveTime;
 
         private ScaleManager _scaleManager;
 
@@ -204,6 +205,11 @@ namespace WaveManagement
         }
 
         #endregion
+
+        public static double GetNextWaveTime()
+        {
+            return _waveTime;
+        }
 
         public override void _ExitTree()
         {

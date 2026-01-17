@@ -92,6 +92,8 @@ namespace Enemies.Spawners
             spawner.SpawnImmediately = SpawnImmediately;
             spawner.StartMoveOnSpawnTimer = StartMoveOnSpawnTimer;
             spawner.InitialProgressRatio = InitialProgressRatio;
+            spawner.SpawnPool = SpawnPool;
+
             // Set spawn offset
             if (EnableSpawnTimerDelay && waveTime != null)
             {

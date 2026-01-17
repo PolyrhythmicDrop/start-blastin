@@ -3,12 +3,13 @@ using Components;
 using Events;
 using Factories;
 using Godot;
+using Interfaces;
 using Utility;
 
 namespace Enemies.Spawners
 {
     [GlobalClass]
-    public partial class RandomSpawner : EnemySpawner
+    public partial class RandomSpawner : EnemySpawner, IListener
     {
         private float _pointMoveDuration = 4.0f;
         private float _spawnInterval = 1.6f;
@@ -49,7 +50,11 @@ namespace Enemies.Spawners
         /// <summary>
         /// Weighted pool of enemies that the spawn point can spawn. The key is the type of enemy, the value is the weighted value of that enemy.
         /// </summary>
-        public SpawnPool SpawnPool => _spawnPool;
+        public SpawnPool SpawnPool
+        {
+            get => _spawnPool;
+            set => _spawnPool = value;
+        }
 
         public override void _Ready()
         {
@@ -67,13 +72,13 @@ namespace Enemies.Spawners
             }
         }
 
-        private void ConnectSignals()
+        public void ConnectSignals()
         {
             EventBus.Instance.WaveStarted += OnWaveStarted;
             EventBus.Instance.WaveTimerEnded += OnWaveTimerEnded;
         }
 
-        private void DisconnectSignals()
+        public void DisconnectSignals()
         {
             EventBus.Instance.WaveStarted -= OnWaveStarted;
             EventBus.Instance.WaveTimerEnded -= OnWaveTimerEnded;
@@ -188,13 +193,12 @@ namespace Enemies.Spawners
         /// <param name="wave">The current wave. Used to adjust the wave multiplier of the scaling.</param>
         public override void ApplySpawnerScaling(
             int wave,
-            SpawnPool spawnPool,
             float spawnIntervalMod,
             float moveDurationMod
         )
         {
             float waveMultiplier = Mathf.Log(1 + wave);
-            _spawnPool = spawnPool;
+            // _spawnPool = spawnPool;
 
             // Don't apply scaling on the first wave.
             if (wave == 1)
@@ -217,7 +221,7 @@ namespace Enemies.Spawners
         /// Creates and sets the path for the enemy using the enemy resource's <see cref="EnemyResource.PathCurve"/> and the spawner's <see cref="_location"/> variable.
         /// Adds the enemy and the new <see cref="EntityPath"/> to the scene tree.
         /// </summary>
-        protected override void SpawnEnemy()
+        protected void SpawnEnemy()
         {
             if (!_waveTimerActive)
             {
@@ -228,49 +232,7 @@ namespace Enemies.Spawners
             EnemyResource enemyResource = (EnemyResource)
                 GetEnemyFromPool()?.DuplicateDeep(Resource.DeepDuplicateMode.All);
 
-            if (enemyResource?.WeaponStats == null)
-            {
-                DebugLogger.LogMessage($"WeaponStats for {enemyResource} is null!", true, true);
-            }
-
-            // Create an enemy from the factory and apply the current wave scaling.
-            EnemyNode enemy = EnemyFactory.CreateEnemy(enemyResource);
-            enemy.ApplyWaveScaling(_enemyScaler, _currentWave);
-
-            // Create a new path scene for the new EnemyNode to follow.
-            EntityPath entityPath = GD.Load<PackedScene>(EntityPath.ScenePath)
-                .Instantiate<EntityPath>();
-            entityPath.Curve = enemyResource.PathCurve;
-            entityPath.GlobalPosition = _spawnPoint.GlobalPosition;
-
-            switch (_location)
-            {
-                default:
-                case SpawnerLocation.Top:
-                    entityPath.RotationDegrees = 0;
-                    break;
-                case SpawnerLocation.Left:
-                    entityPath.RotationDegrees = 270;
-                    break;
-                case SpawnerLocation.Right:
-                    entityPath.RotationDegrees = 90;
-                    break;
-                case SpawnerLocation.Bottom:
-                    entityPath.RotationDegrees = 180;
-                    break;
-            }
-
-            enemy.SetPath(entityPath);
-
-            _spawnParent.AddChild(entityPath);
-
-            entityPath.PathFollow.AddChild(enemy);
-
-            // Free the path after its associated enemy has left the tree/been despawned.
-            enemy.TreeExited += entityPath.QueueFree;
-
-            // Add the enemy to the enemy finder list
-            EnemyFinder.AddEnemy(enemy);
+            base.SpawnEnemy(enemyResource);
         }
 
         /// <summary>

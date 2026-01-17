@@ -10,6 +10,10 @@ namespace Factories
             "uid://b5ki3kbchln2j"
         );
 
+        private static PackedScene _staticSpawnerScene = GD.Load<PackedScene>(
+            "uid://bf5cbva4lwwhu"
+        );
+
         public static T CreateSpawner<T>()
             where T : EnemySpawner
         {
@@ -18,6 +22,8 @@ namespace Factories
             {
                 Type t when t == typeof(RandomSpawner) =>
                     _randomSpawnerScene.Instantiate<RandomSpawner>(),
+                Type t when t == typeof(StaticSpawner) =>
+                    _staticSpawnerScene.Instantiate<StaticSpawner>(),
                 _ => _randomSpawnerScene.Instantiate<RandomSpawner>(),
             };
 

@@ -25,3 +25,4 @@ unique_name_in_owner = true
 
 [node name="SpawnTimer" type="Timer" parent="."]
 unique_name_in_owner = true
+process_mode = 1

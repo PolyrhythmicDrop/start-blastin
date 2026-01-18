@@ -1,25 +1,96 @@
-[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=7 format=3 uid="uid://cnm7xass0emcm"]
+[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=20 format=3 uid="uid://cnm7xass0emcm"]
 
 [ext_resource type="Script" uid="uid://b40t8najievo0" path="res://nodes/wave-management/wave-scalers/SpawnerFormationScaler.cs" id="1_7e0hc"]
 [ext_resource type="Script" uid="uid://ci68p6xph38co" path="res://nodes/enemies/Spawners/SpawnStep.cs" id="1_l12pr"]
+[ext_resource type="Script" uid="uid://85wl5t25bsmt" path="res://nodes/enemies/Spawners/RandomSpawnerConfig.cs" id="1_o8o4f"]
+[ext_resource type="Script" uid="uid://ddqpubpood8vs" path="res://nodes/enemies/Spawners/SquadronLayout.cs" id="2_cdlrp"]
 [ext_resource type="Resource" uid="uid://byt6t31ml7i1u" path="res://resources/enemies/squadron-layouts/filled-diamond.tres" id="2_l12pr"]
 [ext_resource type="Script" uid="uid://bneh110nwl6dl" path="res://nodes/enemies/Spawners/StaticSpawnerConfig.cs" id="3_4ba7f"]
+[ext_resource type="Script" uid="uid://dyer2c2n8y1v4" path="res://nodes/enemies/Spawners/SpawnData.cs" id="3_cdlrp"]
 
-[sub_resource type="Resource" id="Resource_cdlrp"]
-script = ExtResource("1_l12pr")
-SpawnPosition = 0.5
+[sub_resource type="Resource" id="Resource_l12pr"]
+script = ExtResource("3_cdlrp")
 EnemyType = "uid://vfsjsr1mvlk1"
 SquadEnabled = true
-SplitPoint = 0.08
 Squadron = ExtResource("2_l12pr")
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_cdlrp"]
+script = ExtResource("3_cdlrp")
+EnemyType = "uid://b6vj8iih7r25c"
+SquadEnabled = true
+SplitPoint = 0.2
+Squadron = ExtResource("2_l12pr")
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_ury1s"]
+script = ExtResource("1_o8o4f")
+SpawnImmediately = true
+StartMoveOnSpawnTimer = true
+SpawnPool = Dictionary[Object, int]({
+SubResource("Resource_l12pr"): 1,
+SubResource("Resource_cdlrp"): 1
+})
+InitialProgressRatio = 0.5
+metadata/_custom_type_script = "uid://85wl5t25bsmt"
+
+[sub_resource type="Resource" id="Resource_00ga0"]
+script = ExtResource("3_cdlrp")
+EnemyType = "uid://b6vj8iih7r25c"
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_p01gj"]
+script = ExtResource("1_l12pr")
+SpawnPosition = 0.5
+Data = SubResource("Resource_00ga0")
 metadata/_custom_type_script = "uid://ci68p6xph38co"
 
-[sub_resource type="Resource" id="Resource_4ba7f"]
+[sub_resource type="Resource" id="Resource_0wycp"]
+script = ExtResource("2_cdlrp")
+Offsets = Array[Vector2]([Vector2(150, 0), Vector2(-150, 0)])
+metadata/_custom_type_script = "uid://ddqpubpood8vs"
+
+[sub_resource type="Resource" id="Resource_c0qiq"]
+script = ExtResource("3_cdlrp")
+EnemyType = "uid://lv3xojj0ktlw"
+SquadEnabled = true
+Squadron = SubResource("Resource_0wycp")
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_llf3j"]
+script = ExtResource("1_l12pr")
+WaveTimeRatio = 0.2
+SpawnPosition = 0.3
+Data = SubResource("Resource_c0qiq")
+metadata/_custom_type_script = "uid://ci68p6xph38co"
+
+[sub_resource type="Resource" id="Resource_h456r"]
 script = ExtResource("3_4ba7f")
-SpawnSteps = Array[ExtResource("1_l12pr")]([SubResource("Resource_cdlrp")])
+SpawnSteps = Array[ExtResource("1_l12pr")]([SubResource("Resource_p01gj"), SubResource("Resource_llf3j")])
+metadata/_custom_type_script = "uid://bneh110nwl6dl"
+
+[sub_resource type="Resource" id="Resource_8xtgu"]
+script = ExtResource("3_cdlrp")
+EnemyType = "uid://b6vj8iih7r25c"
+SquadEnabled = true
+SplitPoint = 0.2
+Squadron = ExtResource("2_l12pr")
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_oa3rl"]
+script = ExtResource("1_l12pr")
+WaveTimeRatio = 0.7
+SpawnPosition = 0.7
+Data = SubResource("Resource_8xtgu")
+metadata/_custom_type_script = "uid://ci68p6xph38co"
+
+[sub_resource type="Resource" id="Resource_2or63"]
+script = ExtResource("3_4ba7f")
+SpawnSteps = Array[ExtResource("1_l12pr")]([SubResource("Resource_oa3rl")])
+Location = 3
 metadata/_custom_type_script = "uid://bneh110nwl6dl"
 
 [resource]
 script = ExtResource("1_7e0hc")
-FormationGD = Array[Object]([SubResource("Resource_4ba7f")])
+FormationGD = Array[Object]([SubResource("Resource_ury1s"), SubResource("Resource_h456r"), SubResource("Resource_2or63")])
 metadata/_custom_type_script = "uid://b40t8najievo0"

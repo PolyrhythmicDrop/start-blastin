@@ -65,69 +65,65 @@ namespace Enemies.Spawners
         }
 
         /// <summary>
-        /// Spawns an enemy from an enemy resource in the spawner's enemy pool.
+        /// Spawns an enemy from spawn data.
         /// Applies wave scaling to the spawned enemy.
         /// Creates and sets the path for the enemy using the enemy resource's <see cref="EnemyResource.PathCurve"/> and the spawner's <see cref="_location"/> variable.
         /// Adds the enemy and the new <see cref="EntityPath"/> to the scene tree.
         /// </summary>
-        protected virtual EnemyNode SpawnEnemy(
-            EnemyResource enemyResource,
-            Vector2? squadPos = null,
-            float splitPoint = 0
-        )
+        protected virtual void SpawnEnemy(SpawnData spawnData)
         {
-            if (enemyResource?.WeaponStats == null)
+            EnemyResource enemyResource = (EnemyResource)
+                ResourceLoader.Load<EnemyResource>(spawnData.EnemyType).Duplicate(true);
+
+            // Determine number of enemies to spawn based on whether we're in a squadron or not.
+            int condition = spawnData.SquadEnabled ? spawnData.Squadron.Offsets.Count : 1;
+
+            for (int i = 0; i < condition; i++)
             {
-                DebugLogger.LogMessage($"WeaponStats for {enemyResource} is null!", true, true);
+                // Create an enemy from the factory and apply the current wave scaling.
+                EnemyNode enemy = EnemyFactory.CreateEnemy(enemyResource);
+                enemy.ApplyWaveScaling(_enemyScaler, _currentWave);
+
+                if (spawnData.SquadEnabled)
+                {
+                    enemy.InSquadron = true;
+                    enemy.SplitPoint = spawnData.SplitPoint;
+                    enemy.SquadronPosition = spawnData.Squadron.Offsets[i];
+                }
+                // Create a new path scene for the new EnemyNode to follow.
+                EntityPath entityPath = _pathScene.Instantiate<EntityPath>();
+                entityPath.Curve = enemyResource.PathCurve;
+                entityPath.GlobalPosition = _spawnPoint.GlobalPosition;
+
+                switch (_location)
+                {
+                    default:
+                    case SpawnerLocation.Top:
+                        entityPath.RotationDegrees = 0;
+                        break;
+                    case SpawnerLocation.Left:
+                        entityPath.RotationDegrees = 270;
+                        break;
+                    case SpawnerLocation.Right:
+                        entityPath.RotationDegrees = 90;
+                        break;
+                    case SpawnerLocation.Bottom:
+                        entityPath.RotationDegrees = 180;
+                        break;
+                }
+
+                enemy.SetPath(entityPath);
+
+                _spawnParent.AddChild(entityPath);
+
+                entityPath.PathFollow.AddChild(enemy);
+
+                // Free the path after its associated enemy has left the tree/been despawned.
+                enemy.TreeExited += entityPath.QueueFree;
+
+                // Add the enemy to the enemy finder list
+                EnemyFinder.AddEnemy(enemy);
             }
-
-            // Create an enemy from the factory and apply the current wave scaling.
-            EnemyNode enemy = EnemyFactory.CreateEnemy(enemyResource);
-            enemy.ApplyWaveScaling(_enemyScaler, _currentWave);
-            enemy.SplitPoint = splitPoint;
-
-            // Create a new path scene for the new EnemyNode to follow.
-            EntityPath entityPath = _pathScene.Instantiate<EntityPath>();
-            entityPath.Curve = enemyResource.PathCurve;
-            entityPath.GlobalPosition = _spawnPoint.GlobalPosition;
-
-            switch (_location)
-            {
-                default:
-                case SpawnerLocation.Top:
-                    entityPath.RotationDegrees = 0;
-                    break;
-                case SpawnerLocation.Left:
-                    entityPath.RotationDegrees = 270;
-                    break;
-                case SpawnerLocation.Right:
-                    entityPath.RotationDegrees = 90;
-                    break;
-                case SpawnerLocation.Bottom:
-                    entityPath.RotationDegrees = 180;
-                    break;
-            }
-
-            enemy.SetPath(entityPath);
-
-            _spawnParent.AddChild(entityPath);
-
-            // Set the offsets from the layout, if any.
-            if (squadPos != null)
-            {
-                enemy.InSquadron = true;
-                enemy.SquadronPosition = squadPos;
-            }
-
-            entityPath.PathFollow.AddChild(enemy);
-
-            // Free the path after its associated enemy has left the tree/been despawned.
-            enemy.TreeExited += entityPath.QueueFree;
-
-            // Add the enemy to the enemy finder list
-            EnemyFinder.AddEnemy(enemy);
-
-            return enemy;
         }
 
         public void SetEnemyScaler(EnemyScaler scaler)

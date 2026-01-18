@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Autoloads;
 using Components;
 using Events;
@@ -19,8 +21,6 @@ namespace Enemies.Spawners
         private float _baseSpawnInterval = 1.6f;
 
         private Timer _spawnTimer;
-
-        private SpawnPool _spawnPool = new();
 
         public bool SpawnImmediately = false;
 
@@ -47,10 +47,8 @@ namespace Enemies.Spawners
         /// </remarks>
         public float SpawnPointMoveDuration => _pointMoveDuration;
 
-        /// <summary>
-        /// Weighted pool of enemies that the spawn point can spawn. The key is the type of enemy, the value is the weighted value of that enemy.
-        /// </summary>
-        public SpawnPool SpawnPool
+        private Dictionary<SpawnData, int> _spawnPool;
+        public Dictionary<SpawnData, int> SpawnPool
         {
             get => _spawnPool;
             set => _spawnPool = value;
@@ -154,7 +152,7 @@ namespace Enemies.Spawners
         /// <summary>
         /// Retrieves an enemy resource from the current <see cref="SpawnPool"/>.
         /// </summary>
-        private EnemyResource GetEnemyFromPool()
+        private SpawnData GetSpawnDataFromPool()
         {
             if (_spawnPool == null || _spawnPool.Count == 0)
             {
@@ -162,28 +160,28 @@ namespace Enemies.Spawners
                 return null;
             }
 
-            // Calculate total weight
+            // Calculate total weight using the values of the spawn pool.
             int totalWeight = 0;
-            foreach (SpawnData data in _spawnPool)
+            foreach (int weight in _spawnPool.Values)
             {
-                totalWeight += data.Weight;
+                totalWeight += weight;
             }
 
             // Generate random number within total weight
             int randomValue = RNG.GetRandomInt(0, totalWeight - 1);
 
-            // Find the enemy that corresponds to this weight
+            // Find the spawn data that corresponds to this weight
             int currentWeight = 0;
-            foreach (SpawnData data in _spawnPool)
+            foreach (KeyValuePair<SpawnData, int> kvp in _spawnPool)
             {
-                currentWeight += data.Weight;
+                currentWeight += kvp.Value;
                 if (randomValue < currentWeight)
                 {
-                    return data.EnemyResource;
+                    return kvp.Key;
                 }
             }
             // If you can't find an enemy to return, simply return the first enemy in the pool.
-            return _spawnPool[0].EnemyResource;
+            return _spawnPool.First().Key;
         }
 
         /// <summary>
@@ -228,11 +226,8 @@ namespace Enemies.Spawners
                 return;
             }
 
-            // Duplicate the enemy resource and create a new EnemyNode based on it.
-            EnemyResource enemyResource = (EnemyResource)
-                GetEnemyFromPool()?.DuplicateDeep(Resource.DeepDuplicateMode.All);
-
-            base.SpawnEnemy(enemyResource);
+            // Get spawn data from the pool.
+            base.SpawnEnemy(GetSpawnDataFromPool());
         }
 
         /// <summary>

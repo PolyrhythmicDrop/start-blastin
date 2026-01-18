@@ -1,3 +1,4 @@
+using System.Linq;
 using Autoloads;
 using Godot;
 using NanoidDotNet;
@@ -10,10 +11,6 @@ namespace Enemies.Spawners
     [GlobalClass]
     public partial class RandomSpawnerConfig : SpawnerConfig
     {
-        private SpawnPool _spawnPool;
-
-        private Godot.Collections.Array<SpawnData> _spawnPoolGD;
-
         private float _minSpawnDelay;
         private float _maxSpawnDelay;
 
@@ -29,6 +26,9 @@ namespace Enemies.Spawners
         /// </summary>
         [Export]
         public bool StartMoveOnSpawnTimer { get; set; } = false;
+
+        [Export]
+        public Godot.Collections.Dictionary<SpawnData, int> SpawnPool { get; set; }
 
         /// <summary>
         /// The progress ratio the EnemySpawner begins at, or the point along its path that it begins.
@@ -61,20 +61,6 @@ namespace Enemies.Spawners
             set => _maxSpawnDelay = value;
         }
 
-        public SpawnPool SpawnPool => _spawnPool;
-
-        [ExportGroup("Spawn Pool")]
-        [Export]
-        public Godot.Collections.Array<SpawnData> SpawnPoolGD
-        {
-            get => _spawnPoolGD;
-            set
-            {
-                _spawnPool = [.. value];
-                _spawnPoolGD = value;
-            }
-        }
-
         public override void ConfigureSpawner(EnemySpawner spawner, double? waveTime = null)
         {
             if (spawner is not RandomSpawner randomSpawner)
@@ -83,7 +69,6 @@ namespace Enemies.Spawners
             }
 
             base.ConfigureSpawner(randomSpawner, waveTime);
-
             ConfigureRandomSpawner(randomSpawner, waveTime);
         }
 
@@ -92,7 +77,7 @@ namespace Enemies.Spawners
             spawner.SpawnImmediately = SpawnImmediately;
             spawner.StartMoveOnSpawnTimer = StartMoveOnSpawnTimer;
             spawner.InitialProgressRatio = InitialProgressRatio;
-            spawner.SpawnPool = SpawnPool;
+            spawner.SpawnPool = SpawnPool.ToDictionary();
 
             // Set spawn offset
             if (EnableSpawnTimerDelay && waveTime != null)

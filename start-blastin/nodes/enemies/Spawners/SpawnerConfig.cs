@@ -12,7 +12,7 @@ namespace Enemies.Spawners
     }
 
     /// <summary>
-    /// Configuration for an EnemySpawner object, including the spawner's location and <see cref="SpawnPool"/>,
+    /// Base class for configuring an EnemySpawner object.
     /// Used by a SpawnerFormationScaler and the ScaleManager to generate spawners.
     /// </summary>
     [GlobalClass]

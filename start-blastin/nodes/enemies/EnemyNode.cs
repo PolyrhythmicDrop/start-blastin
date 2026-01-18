@@ -92,6 +92,10 @@ namespace Enemies
 
         public Vector2? PathOffset { get; set; }
 
+        private const float SPLIT_POINT = 0.05f;
+
+        private bool _split = false;
+
         #endregion
 
         public WeaponNode Weapon => _weapon;
@@ -196,11 +200,11 @@ namespace Enemies
             _healthBar = GetNode<OverheadHealthBar>("%OverheadHealthBar");
             _healthBar.Initialize(this);
 
-            // Tween the squadron position if we're in a squadron.
-            if (InSquadron && PathOffset != null)
-            {
-                TweenSquadronOffset((Vector2)PathOffset);
-            }
+            // // Tween the squadron position if we're in a squadron.
+            // if (InSquadron && PathOffset != null)
+            // {
+            //     TweenSquadronOffset((Vector2)PathOffset);
+            // }
 
             ConnectSignals();
         }
@@ -486,6 +490,19 @@ namespace Enemies
         public override void _Process(double delta)
         {
             SetHealthBarPosition();
+            if (_split)
+            {
+                return;
+            }
+
+            if (InSquadron)
+            {
+                if (_path.PathFollow.ProgressRatio > SPLIT_POINT)
+                {
+                    _split = true;
+                    TweenSquadronOffset((Vector2)PathOffset);
+                }
+            }
         }
 
         /// <summary>

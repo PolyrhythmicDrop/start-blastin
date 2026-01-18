@@ -20,10 +20,14 @@ namespace Enemies.Spawners
 
         protected bool _waveTimerActive = false;
 
-        // Position-less Node. Add enemies as the child of this node so that their position is not relative to the spawner.
+        /// <summary>
+        /// Position-less Node. Add enemies as the child of this node so that their position is not relative to the spawner.
+        /// </summary>
         protected Node _spawnParent;
 
-        // Point where the enemies spawn from. Should be the child of _path.
+        /// <summary>
+        /// Point where the enemies spawn from. Should be the child of _path.
+        /// </summary>
         protected Node2D _spawnPoint;
 
         protected EnemyScaler _enemyScaler;
@@ -67,7 +71,7 @@ namespace Enemies.Spawners
         /// </summary>
         protected virtual EnemyNode SpawnEnemy(
             EnemyResource enemyResource,
-            Vector2? pathOffset = null
+            Vector2? squadPos = null
         )
         {
             if (enemyResource?.WeaponStats == null)
@@ -107,16 +111,10 @@ namespace Enemies.Spawners
             _spawnParent.AddChild(entityPath);
 
             // Set the offsets from the layout, if any.
-            // if (pathOffset != null)
-            // {
-            //     entityPath.PathFollow.HOffset = ((Vector2)pathOffset).X;
-            //     entityPath.PathFollow.VOffset = ((Vector2)pathOffset).Y;
-            // }
-
-            if (pathOffset != null)
+            if (squadPos != null)
             {
                 enemy.InSquadron = true;
-                enemy.PathOffset = pathOffset;
+                enemy.SquadronPosition = squadPos;
             }
 
             entityPath.PathFollow.AddChild(enemy);

@@ -90,7 +90,7 @@ namespace Enemies
 
         public bool InSquadron { get; set; } = false;
 
-        public Vector2? PathOffset { get; set; }
+        public Vector2? SquadronPosition { get; set; }
 
         private const float SPLIT_POINT = 0.05f;
 
@@ -200,25 +200,21 @@ namespace Enemies
             _healthBar = GetNode<OverheadHealthBar>("%OverheadHealthBar");
             _healthBar.Initialize(this);
 
-            // // Tween the squadron position if we're in a squadron.
-            // if (InSquadron && PathOffset != null)
-            // {
-            //     TweenSquadronOffset((Vector2)PathOffset);
-            // }
-
             ConnectSignals();
         }
 
-        public void TweenSquadronOffset(Vector2 offset)
+        public void TweenSquadronPosition(Vector2 offset)
         {
-            Tween tween = CreateTween();
-            float pathX = offset.X;
-            float pathY = offset.Y;
+            Tween tween = _path.CreateTween();
+            // float pathX = offset.X;
+            // float pathY = offset.Y;
+            Vector2 finalPos = _path.Position + offset;
 
             tween.SetTrans(Tween.TransitionType.Cubic).SetEase(Tween.EaseType.Out);
-            tween.SetParallel(true);
-            tween.TweenProperty(_path.PathFollow, "h_offset", pathX, 1.5f);
-            tween.TweenProperty(_path.PathFollow, "v_offset", pathY, 1.5f);
+            tween.TweenProperty(_path, "position", finalPos, 1.5f);
+            // tween.SetParallel(true);
+            // tween.TweenProperty(_path.PathFollow, "h_offset", pathX, 1.5f);
+            // tween.TweenProperty(_path.PathFollow, "v_offset", pathY, 1.5f);
         }
 
         public virtual void ConnectSignals()
@@ -495,12 +491,12 @@ namespace Enemies
                 return;
             }
 
-            if (InSquadron)
+            if (InSquadron && SquadronPosition != null)
             {
                 if (_path.PathFollow.ProgressRatio > SPLIT_POINT)
                 {
                     _split = true;
-                    TweenSquadronOffset((Vector2)PathOffset);
+                    TweenSquadronPosition((Vector2)SquadronPosition);
                 }
             }
         }

@@ -4,7 +4,7 @@ using Utility;
 namespace Enemies.Spawners
 {
     [GlobalClass]
-    [Tool]
+    // [Tool]
     public partial class SquadronLayout : Resource
     {
         private Godot.Collections.Array<Vector2> _offsets;
@@ -16,7 +16,7 @@ namespace Enemies.Spawners
             set
             {
                 _offsets = value;
-                EmitChanged();
+                // EmitChanged();
             }
         }
     }

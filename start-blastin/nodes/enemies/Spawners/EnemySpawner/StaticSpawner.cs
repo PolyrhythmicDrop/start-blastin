@@ -153,16 +153,15 @@ namespace Enemies.Spawners
             foreach (SpawnStep step in steps)
             {
                 _pathFollow.ProgressRatio = step.SpawnPosition;
+                int condition = step.SquadEnabled ? step.Squadron.Offsets.Count : 1;
 
-                for (int i = 0; i < step.Quantity; i++)
+                for (int i = 0; i < condition; i++)
                 {
                     // Duplicate the enemy resource for each new enemy.
                     EnemyResource resource = (EnemyResource)
                         ResourceLoader
                             .Load<EnemyResource>(step.EnemyType)
                             .DuplicateDeep(Resource.DeepDuplicateMode.All);
-                    // EnemyResource resource = (EnemyResource)
-                    //     step.EnemyType.DuplicateDeep(Resource.DeepDuplicateMode.All);
 
                     if (step.SquadEnabled)
                     {

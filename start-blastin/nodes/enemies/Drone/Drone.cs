@@ -32,7 +32,7 @@ namespace Enemies
 
             SetHealthBarSize();
 
-            FollowPath(_path, _followSpeed);
+            FollowPath(_followSpeed);
         }
 
         protected override void SetHealthBarSize()
@@ -91,9 +91,9 @@ namespace Enemies
             }
         }
 
-        protected override void FollowPath(EntityPath path, float speed)
+        protected override void FollowPath(float speed)
         {
-            float pathLength = path.Curve.GetBakedLength();
+            float pathLength = _followPath.Curve.GetBakedLength();
             float stepDuration = Mathf.Max((pathLength / speed) * 0.5f, 0.1f);
 
             if (_followTween != null)
@@ -103,10 +103,15 @@ namespace Enemies
 
             _followTween = CreateTween();
             _followTween
-                .TweenProperty(path.PathFollow, "progress_ratio", 0.5, stepDuration)
+                .TweenProperty(_followPath, "FollowRatio", 0.5, stepDuration)
                 .SetTrans(Tween.TransitionType.Sine)
                 .SetEase(Tween.EaseType.In);
-            _followTween.TweenProperty(path.PathFollow, "progress_ratio", 1.0, stepDuration);
+            _followTween.TweenProperty(_followPath, "FollowRatio", 1.0, stepDuration);
+            // _followTween
+            //     .TweenProperty(_followPath.PathFollow, "progress_ratio", 0.5, stepDuration)
+            //     .SetTrans(Tween.TransitionType.Sine)
+            //     .SetEase(Tween.EaseType.In);
+            // _followTween.TweenProperty(_followPath.PathFollow, "progress_ratio", 1.0, stepDuration);
         }
 
         protected override void FireWeapon()

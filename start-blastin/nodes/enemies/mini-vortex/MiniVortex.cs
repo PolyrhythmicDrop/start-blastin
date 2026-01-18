@@ -21,7 +21,7 @@ namespace Enemies
 
             SetHealthBarSize();
 
-            FollowPath(_path, _followSpeed);
+            FollowPath(_followSpeed);
         }
 
         protected override void SetHealthBarSize()
@@ -59,7 +59,7 @@ namespace Enemies
             }
         }
 
-        protected override void FollowPath(EntityPath path, float speed)
+        protected override void FollowPath(float speed)
         {
             // Stop the fire timer until we get to our spinning fire position.
             if (!_weapon.FireTimer.IsStopped())
@@ -67,7 +67,7 @@ namespace Enemies
                 _weapon.FireTimer.Stop();
             }
 
-            float pathLength = path.Curve.GetBakedLength();
+            float pathLength = _followPath.Curve.GetBakedLength();
             float totalDuration = MathF.Max(pathLength / speed, 0.1f);
             float stepDuration = MathF.Round(totalDuration / 5, 2);
 
@@ -78,7 +78,7 @@ namespace Enemies
 
             _followTween = CreateTween();
             _followTween
-                .TweenProperty(path.PathFollow, "progress_ratio", 0.2f, stepDuration)
+                .TweenProperty(_followPath.PathFollow, "progress_ratio", 0.2f, stepDuration)
                 .SetTrans(Tween.TransitionType.Quad)
                 .SetEase(Tween.EaseType.Out);
             ;
@@ -114,7 +114,7 @@ namespace Enemies
                 })
             );
             _followTween
-                .TweenProperty(path.PathFollow, "progress_ratio", 1.0f, stepDuration)
+                .TweenProperty(_followPath.PathFollow, "progress_ratio", 1.0f, stepDuration)
                 .SetTrans(Tween.TransitionType.Circ)
                 .SetEase(Tween.EaseType.In);
         }

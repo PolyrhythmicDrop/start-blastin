@@ -163,9 +163,12 @@ namespace WaveManagement
         /// <returns></returns>
         private async Task<bool> WaitForEnemiesToClear()
         {
-            int enemyCount = EnemyFinder.GetAllEnemies().Count();
+            // int enemyCount = EnemyFinder.GetAllEnemies().Count();
+            // int prevEnemyCount = enemyCount;
+            // while ((enemyCount = EnemyFinder.GetAllEnemies().Count()) > 0)
+            int enemyCount = EnemyFinder.GetOnScreenEnemies(true).Count();
             int prevEnemyCount = enemyCount;
-            while ((enemyCount = EnemyFinder.GetAllEnemies().Count()) > 0)
+            while ((enemyCount = EnemyFinder.GetOnScreenEnemies(true).Count()) > 0)
             {
                 if (enemyCount != prevEnemyCount)
                 {

@@ -13,6 +13,7 @@ namespace Enemies.Spawners
     [GlobalClass]
     public partial class EnemySpawner : Node2D
     {
+        private PackedScene _pathScene = GD.Load<PackedScene>("uid://da7sqkjhcrp8a");
         protected Path2D _path;
         protected PathFollow2D _pathFollow;
         protected Curve2D _curve;
@@ -84,8 +85,7 @@ namespace Enemies.Spawners
             enemy.ApplyWaveScaling(_enemyScaler, _currentWave);
 
             // Create a new path scene for the new EnemyNode to follow.
-            EntityPath entityPath = GD.Load<PackedScene>(EntityPath.ScenePath)
-                .Instantiate<EntityPath>();
+            EntityPath entityPath = _pathScene.Instantiate<EntityPath>();
             entityPath.Curve = enemyResource.PathCurve;
             entityPath.GlobalPosition = _spawnPoint.GlobalPosition;
 

@@ -10,6 +10,7 @@ using Godot;
 using Interfaces;
 using Stats;
 using UI;
+using Utility;
 using WaveManagement;
 using Weapons;
 
@@ -33,10 +34,12 @@ namespace Enemies
 
         protected CollisionShape2D _shape;
 
+        public VisibleOnScreenNotifier2D VisibleNotifier;
+
         /// <summary>
-        /// The path the enemy follows.
+        /// The main path the enemy follows. When they reach the end of this path, the enemy despawns.
         /// </summary>
-        protected EntityPath _path;
+        protected EntityPath _followPath;
 
         protected AudioComponent _audioComponent;
 
@@ -92,6 +95,8 @@ namespace Enemies
 
         public Vector2? SquadronPosition { get; set; }
 
+        public bool OnScreen { get; set; }
+
         private const float SPLIT_POINT = 0.05f;
 
         private bool _split = false;
@@ -99,7 +104,7 @@ namespace Enemies
         #endregion
 
         public WeaponNode Weapon => _weapon;
-        public EntityPath Path => _path;
+        public EntityPath Path => _followPath;
 
         #region Health
         public float CurrentHealth
@@ -183,6 +188,7 @@ namespace Enemies
             AddToGroup("enemies");
 
             _shape = GetNode<CollisionShape2D>("%CollisionShape2D");
+            InitVisibleNotifier();
 
             AddChild(_weapon);
 
@@ -203,18 +209,19 @@ namespace Enemies
             ConnectSignals();
         }
 
+        protected void InitVisibleNotifier()
+        {
+            VisibleNotifier = new() { Rect = _shape.Shape.GetRect() };
+            AddChild(VisibleNotifier);
+        }
+
         public void TweenSquadronPosition(Vector2 offset)
         {
-            Tween tween = _path.CreateTween();
-            // float pathX = offset.X;
-            // float pathY = offset.Y;
-            Vector2 finalPos = _path.Position + offset;
+            Tween tween = _followPath.CreateTween();
+            Vector2 finalPos = _followPath.Position + offset;
 
             tween.SetTrans(Tween.TransitionType.Cubic).SetEase(Tween.EaseType.Out);
-            tween.TweenProperty(_path, "position", finalPos, 1.5f);
-            // tween.SetParallel(true);
-            // tween.TweenProperty(_path.PathFollow, "h_offset", pathX, 1.5f);
-            // tween.TweenProperty(_path.PathFollow, "v_offset", pathY, 1.5f);
+            tween.TweenProperty(_followPath, "position", finalPos, 1.5f);
         }
 
         public virtual void ConnectSignals()
@@ -223,16 +230,47 @@ namespace Enemies
             {
                 _stats.StatUpdated += OnStatUpdated;
             }
+
+            // Connect path end signal
+            if (_followPath != null)
+            {
+                _followPath.PathComplete += OnPathComplete;
+            }
+
+            if (VisibleNotifier != null)
+            {
+                VisibleNotifier.ScreenEntered += OnScreenEntered;
+                VisibleNotifier.ScreenExited += OnScreenExited;
+            }
         }
 
         public virtual void DisconnectSignals()
         {
             _stats.StatUpdated -= OnStatUpdated;
+            _followPath.PathComplete -= OnPathComplete;
+            // VisibleNotifier.ScreenEntered -= OnScreenEntered;
+            // VisibleNotifier.ScreenExited -= OnScreenExited;
+        }
+
+        public virtual void OnScreenEntered()
+        {
+            OnScreen = true;
+        }
+
+        public virtual void OnScreenExited()
+        {
+            OnScreen = false;
         }
 
         public void SetPath(EntityPath path)
         {
-            _path = path;
+            _followPath = path;
+        }
+
+        public virtual void OnPathComplete()
+        {
+            DebugLogger.LogMessage($"{Name} path complete!");
+            Die();
         }
 
         #endregion
@@ -271,7 +309,7 @@ namespace Enemies
                     }
                     else
                     {
-                        FollowPath(_path, _followSpeed);
+                        FollowPath(_followSpeed);
                     }
                     break;
                 default:
@@ -284,14 +322,14 @@ namespace Enemies
         /// </summary>
         protected virtual void AdjustFollowSpeed()
         {
-            if (_path?.PathFollow == null || _followTween == null)
+            if (_followPath?.PathFollow == null || _followTween == null)
             {
                 return;
             }
 
             // Get the current progress and calculate the remaining distance
-            float currentProgress = _path.PathFollow.ProgressRatio;
-            float pathLength = _path.Curve.GetBakedLength();
+            float currentProgress = _followPath.PathFollow.ProgressRatio;
+            float pathLength = _followPath.Curve.GetBakedLength();
             float remainingDistance = pathLength * (1.0f - currentProgress);
 
             // Calculate the new duration based on the current _followSpeed.
@@ -304,7 +342,7 @@ namespace Enemies
             _followTween.Kill();
 
             _followTween = CreateTween();
-            _followTween.TweenProperty(_path.PathFollow, "progress_ratio", 1.0, duration);
+            _followTween.TweenProperty(_followPath.PathFollow, "progress_ratio", 1.0, duration);
 
             // Pause the new tween if the original tween was paused.
             if (wasPaused)
@@ -493,7 +531,7 @@ namespace Enemies
 
             if (InSquadron && SquadronPosition != null)
             {
-                if (_path.PathFollow.ProgressRatio > SPLIT_POINT)
+                if (_followPath.PathFollow.ProgressRatio > SPLIT_POINT)
                 {
                     _split = true;
                     TweenSquadronPosition((Vector2)SquadronPosition);
@@ -504,11 +542,9 @@ namespace Enemies
         /// <summary>
         /// Follows an EntityPath at a set speed.
         /// </summary>
-        /// <param name="path"></param>
-        /// <param name="speed"></param>
-        protected virtual void FollowPath(EntityPath path, float speed)
+        protected virtual void FollowPath(float speed)
         {
-            float pathLength = path.Curve.GetBakedLength();
+            float pathLength = _followPath.Curve.GetBakedLength();
             float duration = Mathf.Max(pathLength / speed, 0.1f);
 
             if (_followTween != null)
@@ -517,7 +553,8 @@ namespace Enemies
             }
 
             _followTween = CreateTween();
-            _followTween.TweenProperty(path.PathFollow, "progress_ratio", 1.0, duration);
+            _followTween.TweenProperty(_followPath, "FollowRatio", 1.0, duration);
+            // _followTween.TweenProperty(_followPath, StringName., 1.0, duration);
         }
 
         /// <summary>

@@ -7,13 +7,13 @@
 
 [sub_resource type="Resource" id="Resource_cdlrp"]
 script = ExtResource("2_cdlrp")
-Offsets = Array[Vector2]([Vector2(0, 0), Vector2(-100, 0), Vector2(100, 0), Vector2(0, 100), Vector2(0, -300)])
+Offsets = Array[Vector2]([Vector2(0, 0), Vector2(-100, 0), Vector2(100, 0), Vector2(300, 100), Vector2(-300, 100)])
 metadata/_custom_type_script = "uid://ddqpubpood8vs"
 
 [sub_resource type="Resource" id="Resource_ury1s"]
 script = ExtResource("1_l12pr")
 SpawnPosition = 0.5
-EnemyType = "uid://oepg1yh64jk4"
+EnemyType = "uid://lv3xojj0ktlw"
 SquadEnabled = true
 Squadron = SubResource("Resource_cdlrp")
 metadata/_custom_type_script = "uid://ci68p6xph38co"

@@ -44,11 +44,31 @@ namespace Utility
             }
         }
 
+        /// <summary>
+        /// Gets all the enemies currently active in the scene tree.
+        /// </summary>
+        /// <returns></returns>
         public static IEnumerable<EnemyNode> GetAllEnemies()
         {
             foreach (EnemyNode enemy in _enemies)
             {
                 yield return enemy;
+            }
+        }
+
+        /// <summary>
+        /// Gets all the enemies currently on or off the screen.
+        /// </summary>
+        /// <param name="onScreen">True to get all enemies on the screen, false to get all enemies off the screen.</param>
+        /// <returns></returns>
+        public static IEnumerable<EnemyNode> GetOnScreenEnemies(bool onScreen)
+        {
+            foreach (EnemyNode enemy in _enemies)
+            {
+                if (enemy.OnScreen == onScreen)
+                {
+                    yield return enemy;
+                }
             }
         }
 

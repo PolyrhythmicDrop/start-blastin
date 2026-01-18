@@ -65,7 +65,10 @@ namespace Enemies.Spawners
         /// Creates and sets the path for the enemy using the enemy resource's <see cref="EnemyResource.PathCurve"/> and the spawner's <see cref="_location"/> variable.
         /// Adds the enemy and the new <see cref="EntityPath"/> to the scene tree.
         /// </summary>
-        protected virtual EnemyNode SpawnEnemy(EnemyResource enemyResource)
+        protected virtual EnemyNode SpawnEnemy(
+            EnemyResource enemyResource,
+            Vector2? pathOffset = null
+        )
         {
             if (enemyResource?.WeaponStats == null)
             {
@@ -102,6 +105,19 @@ namespace Enemies.Spawners
             enemy.SetPath(entityPath);
 
             _spawnParent.AddChild(entityPath);
+
+            // Set the offsets from the layout, if any.
+            // if (pathOffset != null)
+            // {
+            //     entityPath.PathFollow.HOffset = ((Vector2)pathOffset).X;
+            //     entityPath.PathFollow.VOffset = ((Vector2)pathOffset).Y;
+            // }
+
+            if (pathOffset != null)
+            {
+                enemy.InSquadron = true;
+                enemy.PathOffset = pathOffset;
+            }
 
             entityPath.PathFollow.AddChild(enemy);
 

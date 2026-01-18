@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Autoloads;
 using Components;
+using Enemies.Spawners;
 using Entities;
 using Events;
 using Factories;
@@ -31,6 +32,10 @@ namespace Enemies
         protected WeaponNode _weapon;
 
         protected CollisionShape2D _shape;
+
+        /// <summary>
+        /// The path the enemy follows.
+        /// </summary>
         protected EntityPath _path;
 
         protected AudioComponent _audioComponent;
@@ -77,6 +82,15 @@ namespace Enemies
         protected bool _alive = true;
 
         public bool DeflectActive { get; set; }
+
+        /// <summary>
+        /// Whether or not the enemy is spawning. Set to false automatically after the enemy leaves the OOB area for the first time.
+        /// </summary>
+        public bool Spawning { get; set; } = true;
+
+        public bool InSquadron { get; set; } = false;
+
+        public Vector2? PathOffset { get; set; }
 
         #endregion
 
@@ -182,7 +196,25 @@ namespace Enemies
             _healthBar = GetNode<OverheadHealthBar>("%OverheadHealthBar");
             _healthBar.Initialize(this);
 
+            // Tween the squadron position if we're in a squadron.
+            if (InSquadron && PathOffset != null)
+            {
+                TweenSquadronOffset((Vector2)PathOffset);
+            }
+
             ConnectSignals();
+        }
+
+        public void TweenSquadronOffset(Vector2 offset)
+        {
+            Tween tween = CreateTween();
+            float pathX = offset.X;
+            float pathY = offset.Y;
+
+            tween.SetTrans(Tween.TransitionType.Cubic).SetEase(Tween.EaseType.Out);
+            tween.SetParallel(true);
+            tween.TweenProperty(_path.PathFollow, "h_offset", pathX, 1.5f);
+            tween.TweenProperty(_path.PathFollow, "v_offset", pathY, 1.5f);
         }
 
         public virtual void ConnectSignals()

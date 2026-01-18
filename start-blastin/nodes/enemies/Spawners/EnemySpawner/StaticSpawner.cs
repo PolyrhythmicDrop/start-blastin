@@ -152,29 +152,28 @@ namespace Enemies.Spawners
             // Spawn enemies according to the current step.
             foreach (SpawnStep step in steps)
             {
-                DebugLogger.LogMessage($"Spawning enemy!", true);
+                _pathFollow.ProgressRatio = step.SpawnPosition;
 
                 for (int i = 0; i < step.Quantity; i++)
                 {
                     // Duplicate the enemy resource for each new enemy.
                     EnemyResource resource = (EnemyResource)
-                        step.EnemyType.DuplicateDeep(Resource.DeepDuplicateMode.All);
+                        ResourceLoader
+                            .Load<EnemyResource>(step.EnemyType)
+                            .DuplicateDeep(Resource.DeepDuplicateMode.All);
+                    // EnemyResource resource = (EnemyResource)
+                    //     step.EnemyType.DuplicateDeep(Resource.DeepDuplicateMode.All);
 
-                    // Set the progress ratio to the step's progress ratio so the spawn point is in the correct location for spawning.
-                    if (i == 0)
+                    if (step.SquadEnabled)
                     {
-                        _pathFollow.ProgressRatio = step.SpawnPosition;
+                        Vector2 offset = step.Squadron.Offsets[i];
+                        // Pass it to the base SpawnEnemy method
+                        base.SpawnEnemy(resource, offset);
                     }
                     else
                     {
-                        // If we're spawning more than one enemy on this step, offset each enemy's position by a small random value so they don't all spawn on top of each other.
-                        float rand = (float)RNG.GetRandomDouble(-0.05f, 0.05f);
-                        float newRatio = Math.Clamp(step.SpawnPosition + rand, 0, 1.0f);
-                        _pathFollow.ProgressRatio = newRatio;
+                        base.SpawnEnemy(resource);
                     }
-
-                    // Pass it to the base SpawnEnemy method
-                    base.SpawnEnemy(resource);
                 }
             }
         }

@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="SquadronLayout" load_steps=2 format=3 uid="uid://byt6t31ml7i1u"]
+
+[ext_resource type="Script" uid="uid://ddqpubpood8vs" path="res://nodes/enemies/Spawners/SquadronLayout.cs" id="1_ln37p"]
+
+[resource]
+script = ExtResource("1_ln37p")
+Offsets = Array[Vector2]([Vector2(0, 0), Vector2(150, 0), Vector2(-150, 0), Vector2(0, 150), Vector2(0, -150)])
+metadata/_custom_type_script = "uid://ddqpubpood8vs"

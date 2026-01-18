@@ -167,7 +167,7 @@ namespace Enemies.Spawners
                     {
                         Vector2 offset = step.Squadron.Offsets[i];
                         // Pass it to the base SpawnEnemy method
-                        base.SpawnEnemy(resource, offset);
+                        base.SpawnEnemy(resource, offset, step.SplitPoint);
                     }
                     else
                     {

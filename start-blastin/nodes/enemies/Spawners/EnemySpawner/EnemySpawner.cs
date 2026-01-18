@@ -72,7 +72,8 @@ namespace Enemies.Spawners
         /// </summary>
         protected virtual EnemyNode SpawnEnemy(
             EnemyResource enemyResource,
-            Vector2? squadPos = null
+            Vector2? squadPos = null,
+            float splitPoint = 0
         )
         {
             if (enemyResource?.WeaponStats == null)
@@ -83,6 +84,7 @@ namespace Enemies.Spawners
             // Create an enemy from the factory and apply the current wave scaling.
             EnemyNode enemy = EnemyFactory.CreateEnemy(enemyResource);
             enemy.ApplyWaveScaling(_enemyScaler, _currentWave);
+            enemy.SplitPoint = splitPoint;
 
             // Create a new path scene for the new EnemyNode to follow.
             EntityPath entityPath = _pathScene.Instantiate<EntityPath>();

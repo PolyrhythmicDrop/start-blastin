@@ -97,7 +97,7 @@ namespace Enemies
 
         public bool OnScreen { get; set; }
 
-        private const float SPLIT_POINT = 0.05f;
+        public float SplitPoint;
 
         private bool _split = false;
 
@@ -531,7 +531,7 @@ namespace Enemies
 
             if (InSquadron && SquadronPosition != null)
             {
-                if (_followPath.PathFollow.ProgressRatio > SPLIT_POINT)
+                if (_followPath.PathFollow.ProgressRatio > SplitPoint)
                 {
                     _split = true;
                     TweenSquadronPosition((Vector2)SquadronPosition);

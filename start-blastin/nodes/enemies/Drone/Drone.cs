@@ -94,7 +94,7 @@ namespace Enemies
         protected override void FollowPath(float speed)
         {
             float pathLength = _followPath.Curve.GetBakedLength();
-            float stepDuration = Mathf.Max((pathLength / speed) * 0.5f, 0.1f);
+            float stepDuration = Mathf.Max((pathLength / speed) * 0.5f, MIN_FOLLOW_TWEEN_DURATION);
 
             if (_followTween != null)
             {
@@ -107,11 +107,6 @@ namespace Enemies
                 .SetTrans(Tween.TransitionType.Sine)
                 .SetEase(Tween.EaseType.In);
             _followTween.TweenProperty(_followPath, "FollowRatio", 1.0, stepDuration);
-            // _followTween
-            //     .TweenProperty(_followPath.PathFollow, "progress_ratio", 0.5, stepDuration)
-            //     .SetTrans(Tween.TransitionType.Sine)
-            //     .SetEase(Tween.EaseType.In);
-            // _followTween.TweenProperty(_followPath.PathFollow, "progress_ratio", 1.0, stepDuration);
         }
 
         protected override void FireWeapon()
@@ -134,7 +129,6 @@ namespace Enemies
             _engine.Visible = false;
 
             // Play the destruction sound
-            // AudioService.Instance.PlaySound(_sounds?.Destruction, this, 1, volume: -4);
             _audioComponent.PlayDestructionSound();
             _destruction.Visible = true;
             _destruction.Play();

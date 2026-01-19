@@ -1,4 +1,7 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Autoloads;
 using Components;
@@ -45,6 +48,9 @@ namespace Enemies
 
         protected OverheadHealthBar _healthBar;
 
+        public WeaponNode Weapon => _weapon;
+        public EntityPath Path => _followPath;
+
         #endregion
 
 
@@ -59,9 +65,6 @@ namespace Enemies
 
         #region Stats
 
-        // current stats
-        protected float _currentHealth;
-        protected float _maxHealth => _stats.GetStat(StatType.MaxHealth).CurrentValue;
 
         /// <summary>
         /// The speed at which this enemy follows its assigned path.
@@ -91,41 +94,83 @@ namespace Enemies
         /// </summary>
         public bool Spawning { get; set; } = true;
 
+        /// <summary>
+        /// Whether or not the enemy is part of a squadron. Enables squadron behavior, like tweening out of the formation at a set time.
+        /// </summary>
         public bool InSquadron { get; set; } = false;
 
+        /// <summary>
+        /// If the enemy is part of a squadron, this is the final relative position of the enemy after splitting.
+        /// </summary>
         public Vector2? SquadronPosition { get; set; }
 
+        /// <summary>
+        /// Whether or not the enemy is currently visible on the screen.
+        /// </summary>
         public bool OnScreen { get; set; }
 
+        /// <summary>
+        /// The point in the enemy's path at which they split off from the main squadron point into their <see cref="SquadronPosition"/>.
+        /// </summary>
         public float SplitPoint;
 
+        /// <summary>
+        /// If part of a squadron, whether or not the enemy has split from the squadron.
+        /// </summary>
         private bool _split = false;
 
         #endregion
 
-        public WeaponNode Weapon => _weapon;
-        public EntityPath Path => _followPath;
 
         #region Health
+
+        // current stats
+        protected float _currentHealth;
+        protected float _maxHealth => _stats.GetStat(StatType.MaxHealth).CurrentValue;
         public float CurrentHealth
         {
             get => _currentHealth;
             private set
             {
                 _currentHealth = value;
-                _healthBar?.SetValues(value, _maxHealth);
+                _healthBar?.SetValues(_maxHealth, _currentHealth);
             }
         }
 
-        public float MaxHealth => _maxHealth;
+        public float MaxHealth
+        {
+            get => _maxHealth;
+            set
+            {
+                _stats.UpdateStat(StatType.MaxHealth, Mathf.Max(1, value));
+                _healthBar?.SetValues(_maxHealth, _currentHealth);
+            }
+        }
 
+        #region Constants
+
+        protected const float MIN_FOLLOW_TWEEN_DURATION = 0.1f;
+        protected const float SQUADRON_TWEEN_DURATION = 1.5f;
+        protected const float DAMAGE_ANIM_DURATION = 0.5f;
+
+        #endregion
+
+        /// <summary>
+        /// Sets the position of the health bar based on the enemy's current position.
+        /// </summary>
         protected virtual void SetHealthBarPosition()
         {
             _healthBar.SetPosition(_currentGlobalPosition);
         }
 
+        /// <summary>
+        /// Sets the size of the enemy's health bar based on the size of the enemy's sprite. Override in derived classes.
+        /// </summary>
         protected virtual void SetHealthBarSize() { }
 
+        /// <summary>
+        /// Turn the health bar on and off.
+        /// </summary>
         public virtual void ToggleHealthBarActive()
         {
             _healthBar.ToggleActive();
@@ -221,7 +266,7 @@ namespace Enemies
             Vector2 finalPos = _followPath.Position + offset;
 
             tween.SetTrans(Tween.TransitionType.Cubic).SetEase(Tween.EaseType.Out);
-            tween.TweenProperty(_followPath, "position", finalPos, 1.5f);
+            tween.TweenProperty(_followPath, "position", finalPos, SQUADRON_TWEEN_DURATION);
         }
 
         public virtual void ConnectSignals()
@@ -246,10 +291,14 @@ namespace Enemies
 
         public virtual void DisconnectSignals()
         {
-            _stats.StatUpdated -= OnStatUpdated;
-            _followPath.PathComplete -= OnPathComplete;
-            // VisibleNotifier.ScreenEntered -= OnScreenEntered;
-            // VisibleNotifier.ScreenExited -= OnScreenExited;
+            if (_stats != null)
+            {
+                _stats.StatUpdated -= OnStatUpdated;
+            }
+            if (_followPath != null)
+            {
+                _followPath.PathComplete -= OnPathComplete;
+            }
         }
 
         public virtual void OnScreenEntered()
@@ -269,7 +318,6 @@ namespace Enemies
 
         public virtual void OnPathComplete()
         {
-            DebugLogger.LogMessage($"{Name} path complete!");
             Die();
         }
 
@@ -301,7 +349,7 @@ namespace Enemies
                 case StatType.Damage:
                 case StatType.ProjectileSpeed:
                     Weapon.UpdateWeaponStats(args.StatType, args.Stat);
-                    break;
+                    return;
                 case StatType.Speed:
                     if (_followTween != null && _followTween.IsValid())
                     {
@@ -311,7 +359,7 @@ namespace Enemies
                     {
                         FollowPath(_followSpeed);
                     }
-                    break;
+                    return;
                 default:
                     return;
             }
@@ -333,7 +381,7 @@ namespace Enemies
             float remainingDistance = pathLength * (1.0f - currentProgress);
 
             // Calculate the new duration based on the current _followSpeed.
-            float duration = Math.Max(remainingDistance / _followSpeed, 0.1f);
+            float duration = Math.Max(remainingDistance / _followSpeed, MIN_FOLLOW_TWEEN_DURATION);
 
             // Store whether the current tween was paused so we can re-pause it after creating the new one.
             bool wasPaused = !_followTween.IsRunning();
@@ -391,7 +439,6 @@ namespace Enemies
             float waveExpoMultiplier = Mathf.Pow(0.95f, wave * scaler.FireRateModifier);
             // Fire rate should be decreased, since lower fire rates result in faster firing.
             float newFireRate = Mathf.Max(0.1f, _baseFireRate * waveExpoMultiplier);
-            // _weapon.Stats.FireRate = Mathf.Max(0.1f, _baseFireRate * waveExpoMultiplier);
             SetStat(StatType.FireRate, newFireRate);
         }
 
@@ -423,13 +470,13 @@ namespace Enemies
                     GlobalPosition,
                     parent: this
                 );
-                _currentHealth -= damage;
+                CurrentHealth -= damage;
 
-                _healthBar.SetValues(MaxHealth, CurrentHealth);
+                // _healthBar.SetValues(MaxHealth, CurrentHealth);
 
                 if (_currentHealth <= 0)
                 {
-                    _currentHealth = 0;
+                    CurrentHealth = 0;
                     Die(playerId);
                 }
             }
@@ -442,9 +489,7 @@ namespace Enemies
             {
                 return;
             }
-            _currentHealth = Mathf.Min(_currentHealth + healAmount, _maxHealth);
-
-            _healthBar.SetValues(MaxHealth, CurrentHealth);
+            CurrentHealth = Mathf.Min(_currentHealth + healAmount, MaxHealth);
         }
 
         protected virtual void FireWeapon()
@@ -467,10 +512,10 @@ namespace Enemies
                 EventBus.Instance.RaiseEnemyKilled(args);
             }
             // Queue free after all child projectiles die and all child audio nodes stop playing
-            bool soundsFinished = await WaitForAudioEnd();
+            await WaitForAudioEnd();
             bool projectilesDisabled = await _weapon.WaitForAllProjectilesDisabled();
 
-            if (projectilesDisabled && soundsFinished)
+            if (projectilesDisabled)
             {
                 QueueFree();
             }
@@ -493,7 +538,7 @@ namespace Enemies
                     ),
                     0,
                     30,
-                    0.5
+                    DAMAGE_ANIM_DURATION
                 );
                 tween.TweenCallback(
                     Callable.From(() => shaderMaterial.SetShaderParameter(mixRatioPath, 0))
@@ -523,7 +568,11 @@ namespace Enemies
 
         public override void _Process(double delta)
         {
-            SetHealthBarPosition();
+            if (_motion != Vector2.Zero)
+            {
+                SetHealthBarPosition();
+            }
+
             if (_split)
             {
                 return;
@@ -545,7 +594,7 @@ namespace Enemies
         protected virtual void FollowPath(float speed)
         {
             float pathLength = _followPath.Curve.GetBakedLength();
-            float duration = Mathf.Max(pathLength / speed, 0.1f);
+            float duration = Mathf.Max(pathLength / speed, MIN_FOLLOW_TWEEN_DURATION);
 
             if (_followTween != null)
             {
@@ -561,27 +610,39 @@ namespace Enemies
         /// Finds any AudioStreamPlayer2D nodes in the enemy's scene tree and waits for their playback to finish before returning.
         /// </summary>
         /// <returns></returns>
-        private async Task<bool> WaitForAudioEnd()
+        private async Task WaitForAudioEnd()
         {
-            var children = GetChildren();
-            foreach (Node node in children)
-            {
-                if (node is not AudioStreamPlayer2D audioStream)
-                {
-                    continue;
-                }
+            var audioSignals = FindChildren("*", "AudioStreamPlayer2D", owned: false)
+                .OfType<AudioStreamPlayer2D>()
+                .Where(audio => audio.Playing)
+                .Select(audio => ToSignal(audio, AudioStreamPlayer2D.SignalName.Finished));
 
-                if (!audioStream.Playing)
-                {
-                    continue;
-                }
-                else
-                {
-                    await ToSignal(audioStream, AudioStreamPlayer2D.SignalName.Finished);
-                    continue;
-                }
+            List<Task> audioTasks = new();
+            foreach (SignalAwaiter awaiter in audioSignals)
+            {
+                audioTasks.Add(UtilityMethods.SignalAwaiterToTask(awaiter));
             }
-            return true;
+
+            await Task.WhenAll(audioTasks);
+            // var children = GetChildren();
+            // foreach (Node node in children)
+            // {
+            //     if (node is not AudioStreamPlayer2D audioStream)
+            //     {
+            //         continue;
+            //     }
+
+            //     if (!audioStream.Playing)
+            //     {
+            //         continue;
+            //     }
+            //     else
+            //     {
+            //         await ToSignal(audioStream, AudioStreamPlayer2D.SignalName.Finished);
+            //         continue;
+            //     }
+            // }
+            // return true;
         }
 
         public override void _ExitTree()

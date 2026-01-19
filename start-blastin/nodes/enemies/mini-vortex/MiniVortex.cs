@@ -68,7 +68,7 @@ namespace Enemies
             }
 
             float pathLength = _followPath.Curve.GetBakedLength();
-            float totalDuration = MathF.Max(pathLength / speed, 0.1f);
+            float totalDuration = MathF.Max(pathLength / speed, MIN_FOLLOW_TWEEN_DURATION);
             float stepDuration = MathF.Round(totalDuration / 5, 2);
 
             if (_followTween != null)
@@ -125,7 +125,6 @@ namespace Enemies
             _weapon.FireTimer.Stop();
             _shape.Disabled = true;
 
-            // AudioService.Instance.PlaySound(_sounds?.Destruction, this, 1, volume: -4);
             _audioComponent.PlayDestructionSound();
             _sprite.Play("destruction");
 

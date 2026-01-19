@@ -84,18 +84,6 @@ namespace Enemies.Spawners
             ConnectSignals();
         }
 
-        public void ConnectSignals()
-        {
-            EventBus.Instance.WaveStarted += OnWaveStarted;
-            EventBus.Instance.WaveTimerEnded += OnWaveTimerEnded;
-        }
-
-        public void DisconnectSignals()
-        {
-            EventBus.Instance.WaveStarted -= OnWaveStarted;
-            EventBus.Instance.WaveTimerEnded -= OnWaveTimerEnded;
-        }
-
         protected override void OnWaveStarted(object sender, WaveStartedEventArgs args)
         {
             _waveTimerActive = true;
@@ -130,7 +118,6 @@ namespace Enemies.Spawners
             {
                 if (timer.WaitTime != IMMEDIATE_SPAWN_ID)
                 {
-                    DebugLogger.LogMessage($"Starting {timer.Name}...", true);
                     timer.Start();
                 }
                 // If the timer's wait time is 0, spawn all its steps immediately instead of starting the timer.

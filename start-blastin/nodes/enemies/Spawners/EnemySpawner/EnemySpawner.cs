@@ -1,3 +1,4 @@
+using Autoloads;
 using Components;
 using Events;
 using Factories;
@@ -13,12 +14,34 @@ namespace Enemies.Spawners
     [GlobalClass]
     public partial class EnemySpawner : Node2D
     {
+        /// <summary>
+        /// Cached scene for the EntityPath node that spawned enemies will follow.
+        /// </summary>
         private PackedScene _pathScene = GD.Load<PackedScene>("uid://da7sqkjhcrp8a");
+
+        /// <summary>
+        /// The path of the spawner.
+        /// </summary>
         protected Path2D _path;
+
+        /// <summary>
+        /// The PathFollow2D node the spawner is a child of.
+        /// </summary>
         protected PathFollow2D _pathFollow;
+
+        /// <summary>
+        /// The curve of the <see cref="_path"/> that the spawner follows.
+        /// </summary>
         protected Curve2D _curve;
+
+        /// <summary>
+        /// The location of the EnemySpawner, used to set the rotation of enemies it spawns.
+        /// </summary>
         protected SpawnerLocation _location;
 
+        /// <summary>
+        /// Whether or not a wave is currently running.
+        /// </summary>
         protected bool _waveTimerActive = false;
 
         /// <summary>
@@ -31,8 +54,14 @@ namespace Enemies.Spawners
         /// </summary>
         protected Node2D _spawnPoint;
 
+        /// <summary>
+        /// The Scaler resource used to scale enemies spawned from this spawner.
+        /// </summary>
         protected EnemyScaler _enemyScaler;
 
+        /// <summary>
+        /// The current wave number, used to scale enemies and the spawner appropriately.
+        /// </summary>
         protected int _currentWave;
 
         /// <summary>
@@ -64,11 +93,23 @@ namespace Enemies.Spawners
             _spawnParent = GetNode<Node>("%SpawnParent");
         }
 
+        public void ConnectSignals()
+        {
+            EventBus.Instance.WaveStarted += OnWaveStarted;
+            EventBus.Instance.WaveTimerEnded += OnWaveTimerEnded;
+        }
+
+        public void DisconnectSignals()
+        {
+            EventBus.Instance.WaveStarted -= OnWaveStarted;
+            EventBus.Instance.WaveTimerEnded -= OnWaveTimerEnded;
+        }
+
         /// <summary>
-        /// Spawns an enemy from spawn data.
+        /// Spawns an enemy (or enemies, if <see cref="SpawnData.SquadEnabled"/> is true) from spawn data.
         /// Applies wave scaling to the spawned enemy.
         /// Creates and sets the path for the enemy using the enemy resource's <see cref="EnemyResource.PathCurve"/> and the spawner's <see cref="_location"/> variable.
-        /// Adds the enemy and the new <see cref="EntityPath"/> to the scene tree.
+        /// Adds the enemy and the new <see cref="EntityPath"/> to the scene tree and to the <see cref="EnemyFinder"/> collection.
         /// </summary>
         protected virtual void SpawnEnemy(SpawnData spawnData)
         {
@@ -126,6 +167,10 @@ namespace Enemies.Spawners
             }
         }
 
+        /// <summary>
+        /// Sets the current enemy scaler for scaling enemies.
+        /// </summary>
+        /// <param name="scaler"></param>
         public void SetEnemyScaler(EnemyScaler scaler)
         {
             _enemyScaler = scaler;

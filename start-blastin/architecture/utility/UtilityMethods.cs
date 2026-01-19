@@ -1,5 +1,6 @@
 using System;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Godot;
 
 namespace Utility
@@ -89,6 +90,17 @@ namespace Utility
             }
 
             return scaledCurve;
+        }
+
+        /// <summary>
+        /// Converts a Godot <see cref="SignalAwaiter"/> object (commonly returned by the <see cref="GodotObject.ToSignal"/> method) into a C# Task.
+        /// </summary>
+        /// <param name="signalAwaiter"></param>
+        /// <returns></returns>
+        public static Task SignalAwaiterToTask(SignalAwaiter signalAwaiter)
+        {
+            var task = Task.Run(async () => await signalAwaiter);
+            return task;
         }
     }
 }

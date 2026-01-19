@@ -70,18 +70,6 @@ namespace Enemies.Spawners
             }
         }
 
-        public void ConnectSignals()
-        {
-            EventBus.Instance.WaveStarted += OnWaveStarted;
-            EventBus.Instance.WaveTimerEnded += OnWaveTimerEnded;
-        }
-
-        public void DisconnectSignals()
-        {
-            EventBus.Instance.WaveStarted -= OnWaveStarted;
-            EventBus.Instance.WaveTimerEnded -= OnWaveTimerEnded;
-        }
-
         protected override void OnWaveStarted(object sender, WaveStartedEventArgs args)
         {
             _waveTimerActive = true;
@@ -214,10 +202,7 @@ namespace Enemies.Spawners
         }
 
         /// <summary>
-        /// Spawns an enemy from an enemy resource in the spawner's enemy pool.
-        /// Applies wave scaling to the spawned enemy.
-        /// Creates and sets the path for the enemy using the enemy resource's <see cref="EnemyResource.PathCurve"/> and the spawner's <see cref="_location"/> variable.
-        /// Adds the enemy and the new <see cref="EntityPath"/> to the scene tree.
+        /// Pulls a semi-random set of <see cref="SpawnData"/> from the spawn pool and passes it to the base <see cref="EnemySpawner.SpawnEnemy(SpawnData)"/> method.
         /// </summary>
         protected void SpawnEnemy()
         {

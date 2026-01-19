@@ -29,7 +29,7 @@ SpawnImmediately = true
 StartMoveOnSpawnTimer = true
 SpawnPool = Dictionary[Object, int]({
 SubResource("Resource_l12pr"): 1,
-SubResource("Resource_cdlrp"): 1
+SubResource("Resource_cdlrp"): 2
 })
 InitialProgressRatio = 0.5
 metadata/_custom_type_script = "uid://85wl5t25bsmt"

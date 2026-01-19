@@ -161,7 +161,7 @@ public partial class Salvo : EnemyNode
         _weapon.FireTimer.Stop();
 
         float pathLength = _followPath.Curve.GetBakedLength();
-        float duration = Mathf.Max(pathLength / speed, 0.1f);
+        float duration = Mathf.Max(pathLength / speed, MIN_FOLLOW_TWEEN_DURATION);
 
         if (_followTween != null)
         {

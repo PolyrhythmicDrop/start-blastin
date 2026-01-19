@@ -1,5 +1,5 @@
 using System;
-using Enemies;
+using Components;
 using Godot;
 
 namespace Enemies
@@ -19,7 +19,20 @@ namespace Enemies
             _currentGlobalPosition = GlobalPosition;
             _lastGlobalPosition = _currentGlobalPosition;
 
-            FollowPath(_path, _followSpeed);
+            SetHealthBarSize();
+
+            FollowPath(_followSpeed);
+        }
+
+        protected override void SetHealthBarSize()
+        {
+            // Get size of the base sprite
+            SpriteFrames sprite = _sprite.SpriteFrames ?? null;
+            if (sprite != null)
+            {
+                Rect2I usedRect = sprite.GetFrameTexture("default", 0).GetImage().GetUsedRect();
+                _healthBar.SetSize(usedRect.Size);
+            }
         }
 
         public override void _Process(double delta)
@@ -46,7 +59,7 @@ namespace Enemies
             }
         }
 
-        protected override void FollowPath(EntityPath path, float speed)
+        protected override void FollowPath(float speed)
         {
             // Stop the fire timer until we get to our spinning fire position.
             if (!_weapon.FireTimer.IsStopped())
@@ -54,8 +67,8 @@ namespace Enemies
                 _weapon.FireTimer.Stop();
             }
 
-            float pathLength = path.Curve.GetBakedLength();
-            float totalDuration = MathF.Max(pathLength / speed, 0.1f);
+            float pathLength = _followPath.Curve.GetBakedLength();
+            float totalDuration = MathF.Max(pathLength / speed, MIN_FOLLOW_TWEEN_DURATION);
             float stepDuration = MathF.Round(totalDuration / 5, 2);
 
             if (_followTween != null)
@@ -65,7 +78,7 @@ namespace Enemies
 
             _followTween = CreateTween();
             _followTween
-                .TweenProperty(path.PathFollow, "progress_ratio", 0.2f, stepDuration)
+                .TweenProperty(_followPath.PathFollow, "progress_ratio", 0.2f, stepDuration)
                 .SetTrans(Tween.TransitionType.Quad)
                 .SetEase(Tween.EaseType.Out);
             ;
@@ -101,7 +114,7 @@ namespace Enemies
                 })
             );
             _followTween
-                .TweenProperty(path.PathFollow, "progress_ratio", 1.0f, stepDuration)
+                .TweenProperty(_followPath.PathFollow, "progress_ratio", 1.0f, stepDuration)
                 .SetTrans(Tween.TransitionType.Circ)
                 .SetEase(Tween.EaseType.In);
         }
@@ -112,6 +125,7 @@ namespace Enemies
             _weapon.FireTimer.Stop();
             _shape.Disabled = true;
 
+            _audioComponent.PlayDestructionSound();
             _sprite.Play("destruction");
 
             _sprite.AnimationFinished += () =>

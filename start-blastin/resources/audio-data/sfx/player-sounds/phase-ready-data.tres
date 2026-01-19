@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="AudioData" load_steps=2 format=3 uid="uid://d2vlkp1h8v08y"]
+
+[ext_resource type="Script" uid="uid://cx2eehu1aj48f" path="res://architecture/data-structures/AudioData.cs" id="1_w6waj"]
+
+[resource]
+script = ExtResource("1_w6waj")
+Sound = "uid://ip2rmkv248df"
+metadata/_custom_type_script = "uid://cx2eehu1aj48f"

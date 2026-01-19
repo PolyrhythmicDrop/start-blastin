@@ -1,13 +1,14 @@
-[gd_resource type="Resource" script_class="WeaponPlugin" load_steps=6 format=3 uid="uid://cfbrihynipg38"]
+[gd_resource type="Resource" script_class="WeaponPlugin" load_steps=9 format=3 uid="uid://cfbrihynipg38"]
 
 [ext_resource type="Script" uid="uid://e8ufr3v1a1f" path="res://architecture/items/plugins/WeaponPlugin.cs" id="1_jxmcs"]
 [ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="1_qwm1n"]
 [ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="2_7esar"]
+[ext_resource type="Script" uid="uid://cx2eehu1aj48f" path="res://architecture/data-structures/AudioData.cs" id="2_bx3ir"]
 
 [sub_resource type="Resource" id="Resource_7esar"]
 script = ExtResource("1_qwm1n")
 Type = 8
-Value = 300.0
+Value = 400.0
 metadata/_custom_type_script = "uid://bmeda5w63vsw7"
 
 [sub_resource type="Resource" id="Resource_lyair"]
@@ -16,13 +17,30 @@ Type = 6
 Value = 1.0
 metadata/_custom_type_script = "uid://bmeda5w63vsw7"
 
+[sub_resource type="Resource" id="Resource_c1xy0"]
+script = ExtResource("1_qwm1n")
+Type = 7
+Value = -1.75
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[sub_resource type="Resource" id="Resource_euvoc"]
+script = ExtResource("2_bx3ir")
+Sound = "uid://64mdtodu7eei"
+MaxPolyphony = 10
+Positional = true
+Randomized = true
+RandomPitch = 1.05
+RandomVolume = 0.3
+metadata/_custom_type_script = "uid://cx2eehu1aj48f"
+
 [resource]
 script = ExtResource("1_jxmcs")
 ProjectileType = 1
+FireSound = SubResource("Resource_euvoc")
 Name = &"Missile"
 Description = &"Homing missile that tracks down the nearest target."
 Icon = ExtResource("2_7esar")
 Rarity = 8
 ByteCost = 750
-Effects = Array[Object]([SubResource("Resource_7esar"), SubResource("Resource_lyair")])
+Effects = Array[Object]([SubResource("Resource_7esar"), SubResource("Resource_lyair"), SubResource("Resource_c1xy0")])
 metadata/_custom_type_script = "uid://e8ufr3v1a1f"

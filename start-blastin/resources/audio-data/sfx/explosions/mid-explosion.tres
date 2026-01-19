@@ -1,0 +1,9 @@
+[gd_resource type="AudioStreamRandomizer" load_steps=2 format=3 uid="uid://c5npnitq6tajp"]
+
+[ext_resource type="AudioStream" uid="uid://dc5wipp6uln75" path="res://audio/sfx/explosions/explosion-mid.wav" id="1_osp0h"]
+
+[resource]
+random_pitch = 1.01
+random_volume_offset_db = 0.1
+streams_count = 1
+stream_0/stream = ExtResource("1_osp0h")

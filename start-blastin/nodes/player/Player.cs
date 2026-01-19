@@ -1,16 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Autoloads;
+using Components;
 using Effects;
-using Enemies;
 using Events;
 using Factories;
 using Godot;
 using Interfaces;
 using Items;
 using PlayerComponents;
-using Projectiles;
 using Services;
 using Stats;
 using Utility;
@@ -33,24 +31,38 @@ namespace Entities
         #region Components
         private PlayerService _service = ServiceManager.Instance.GetService<PlayerService>();
         private StatManager _stats = new();
+        private InventoryComponent _inventory;
+        private PlayerAudioComponent _audioComponent;
         private AnimationComponent _animationComponent;
         private MovementComponent _movementComponent;
         private WeaponComponent _weaponComponent;
-        private CollisionShape2D _hitBox;
+        private PlayerStateComponent _stateComponent;
         private PlayerController _controller;
-        private List<Modifier> _modifiers = new();
-        private List<Plugin> _plugins = new();
-        private WeaponPlugin _weaponPlugin;
-        private Shield _shield;
 
-        private AudioStreamPlayer2D _bulletShot;
+        private CollisionShape2D _hitBox;
 
-        public AudioStreamPlayer2D BulletShot => _bulletShot;
-
-        private WeaponPlugin _defaultWeaponPlugin =>
-            ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
+        public InventoryComponent Inventory => _inventory;
+        public MovementComponent Movement => _movementComponent;
+        public WeaponComponent WeaponComp => _weaponComponent;
+        public WeaponNode Weapon => _weaponComponent.Weapon;
+        public AnimationComponent Animation => _animationComponent;
+        public PlayerAudioComponent Audio => _audioComponent;
+        public PlayerController Controller => _controller;
 
         #endregion
+
+        #region State
+        public PlayerStateComponent State => _stateComponent;
+
+        public bool DeflectActive
+        {
+            get => _stateComponent.DeflectActive;
+            set => _stateComponent.DeflectActive = value;
+        }
+
+        #endregion
+
+
         #region Stats
 
         private float _maxHealth => _stats.GetStat(StatType.MaxHealth).CurrentValue;
@@ -76,19 +88,6 @@ namespace Entities
         private int _bytes = 0;
         private int _flux = 0;
 
-        #endregion
-
-        #region State
-
-        private bool _isPhasing = false;
-        private bool _phaseReady => _movementComponent.PhaseReady;
-        private bool _isDying = false;
-        private bool _deflectEnabled;
-
-        public bool DeflectActive { get; set; }
-
-        #endregion
-
         public int PlayerId => _playerId;
 
         [Export(PropertyHint.Range, "1,100,1,or_greater")]
@@ -106,11 +105,13 @@ namespace Entities
                 if (_currentHealth != value)
                 {
                     float diff = value - _currentHealth;
+                    float percent = value / _maxHealth;
                     _currentHealth = MathF.Round(value, 2);
                     EventBus.Instance.RaisePlayerCurrentHealthChanged(
                         _playerId,
                         _currentHealth,
-                        diff
+                        diff,
+                        percent
                     );
                 }
             }
@@ -153,16 +154,12 @@ namespace Entities
         }
 
         [ExportGroup("Weapon Stats")]
-        [Export]
-        public WeaponPlugin WeaponPlugin
-        {
-            get => _weaponPlugin;
-            set => _weaponPlugin = value;
-        }
-
         /// <summary>
         /// The damage done by the player's weapon.
         /// </summary>
+        /// <remarks>
+        /// This value is augmented or decreased by the player's equipped WeaponPlugin.
+        /// </remarks>
         [Export]
         public float Damage
         {
@@ -184,7 +181,10 @@ namespace Entities
         /// Rate of fire for the weapon, used in the FireTimer.
         /// Lower values mean a faster fire rate.
         /// </summary>
-        [Export]
+        /// <remarks>
+        /// This value is augmented or decreased by the player's equipped WeaponPlugin.
+        /// </remarks>
+        [Export(PropertyHint.Range, "0.05,5,0.01,greater_than")]
         public float FireRate
         {
             get => _fireRate;
@@ -193,12 +193,12 @@ namespace Entities
 
         /// <summary>
         /// The base speed of any projectile coming out of the player's weapon.
-        /// The player's WeaponPlugin can modify this value.
+        /// Projectile speed is augmented by the firing object's speed.
         /// </summary>
         /// <remarks>
-        /// Projectile speed is augmented by the firing object's speed.
+        /// This value is augmented or decreased by the player's equipped WeaponPlugin.
         /// </remarks>
-        [Export]
+        [Export(PropertyHint.Range, "0,10000,greater_than")]
         public float ProjectileSpeed
         {
             get => _projectileSpeed;
@@ -215,12 +215,6 @@ namespace Entities
             get => _pluginSlots;
             set => _stats.UpdateStat(StatType.PluginSlots, value);
         }
-
-        /// <summary>
-        /// The player's initial set of equipped plugins. Used for debugging.
-        /// </summary>
-        [Export]
-        public Godot.Collections.Array<Plugin> InitialPlugins { get; set; } = new();
 
         [ExportGroup("Currency")]
         [Export(PropertyHint.Range, "0,10000,10,greater_than")]
@@ -257,35 +251,32 @@ namespace Entities
             }
         }
 
-        public WeaponNode Weapon => _weaponComponent.Weapon;
+        #endregion
 
-        [Signal]
-        public delegate void PlayerDiedEventHandler();
-
-        public bool Dying => _isDying;
-        public bool Dodging => _isPhasing;
-
-        public void Fire() => _weaponComponent.FireWeapon();
-
-        public void StopFire() => _weaponComponent.StopWeapon();
+        #region Initialization
 
         public Vector2 GetCurrentVelocity()
         {
             return Velocity;
         }
 
-        public StatManager GetStatManager() => _stats;
-
         public void SetPlayerId(int id)
         {
             _playerId = id;
         }
 
-        #region Initialization
-
         public override void _Ready()
         {
+            CurrentHealth = _maxHealth;
+
+            // Set component node variables
+            _audioComponent = GetNode<PlayerAudioComponent>("%AudioComponent");
             _animationComponent = GetNode<AnimationComponent>("%AnimationComponent");
+            _movementComponent = GetNode<MovementComponent>("%MovementComponent");
+            _controller = GetNode<PlayerController>("%PlayerController");
+            _stateComponent = GetNode<PlayerStateComponent>("%PlayerStateComponent");
+            _inventory = GetNode<InventoryComponent>("%InventoryComponent");
+            _weaponComponent = GetNode<WeaponComponent>("%WeaponComponent");
 
             _hitBox = GetNode<CollisionShape2D>("%HitBox");
             if (_hitBox.Shape is ConvexPolygonShape2D convex)
@@ -293,33 +284,21 @@ namespace Entities
                 convex.SetPointCloud(convex.Points);
             }
 
-            _shield = GetNode<Shield>("%Shield");
-            _bulletShot = GetNode<AudioStreamPlayer2D>("%ShotAudio");
-
-            _movementComponent = GetNode<MovementComponent>("%MovementComponent");
-            _controller = GetNode<PlayerController>("%PlayerController");
-            _weaponComponent = GetNode<WeaponComponent>("%WeaponComponent");
-            CurrentHealth = _maxHealth;
-
             ConnectSignals();
             InitializeComponents();
-
-            // Apply initial equipment
-            EquipPlugin([.. InitialPlugins]);
         }
 
         private void InitializeComponents()
         {
+            _audioComponent.Initialize(this);
             _animationComponent.Initialize(this);
             _movementComponent.Initialize(this);
             _controller.Initialize(this);
+            _stateComponent.Initialize(this);
+            _inventory.Initialize(this);
             _weaponComponent.Initialize(this);
 
-            if (_weaponPlugin != _defaultWeaponPlugin)
-            {
-                _weaponComponent.SetWeaponProjectile(_weaponPlugin.ProjectileType);
-            }
-            _plugins.Capacity = (int)_stats.GetStat(StatType.PluginSlots).CurrentValue;
+            _inventory.EquipInitialPlugins();
         }
 
         private void ConnectSignals()
@@ -338,34 +317,14 @@ namespace Entities
             EventBus.Instance.EnemyKilled -= OnEnemyKilled;
         }
 
-        /// <summary>
-        /// Callback for special processing when a stat is updated.
-        /// </summary>
-        /// <param name="source">The entity's StatManager instance.</param>
-        /// <param name="args">Arguments from the event.</param>
-        public void OnStatUpdated(object source, StatUpdatedEventArgs args)
-        {
-            switch (args.StatType)
-            {
-                case StatType.FireRate:
-                case StatType.Damage:
-                case StatType.ProjectileSpeed:
-                    _weaponComponent.Weapon.UpdateWeaponStats(args.StatType, args.Stat);
-                    break;
-                case StatType.MaxHealth:
-                    EventBus.Instance.RaisePlayerMaxHealthChanged(
-                        _playerId,
-                        args.Stat.CurrentValue
-                    );
-                    break;
-                case StatType.PhaseCooldown:
-                    EventBus.Instance.RaisePlayerPhaseCooldownChanged(
-                        _playerId,
-                        args.Stat.CurrentValue
-                    );
-                    break;
-            }
-        }
+        #endregion
+
+
+        #region Weapons
+
+        public void Fire() => _weaponComponent.FireWeapon();
+
+        public void StopFire() => _weaponComponent.StopWeapon();
 
         #endregion
 
@@ -373,86 +332,40 @@ namespace Entities
         public override void _Process(double delta)
         {
             Move(delta);
-            if (_shield.Enabled)
-            {
-                SetShieldVelocity();
-            }
+            // if (_shield.Enabled)
+            // {
+            //     SetShieldVelocity();
+            // }
         }
 
-        public void Move(double delta)
-        {
-            Velocity = _movementComponent.SetVelocity(
-                _controller.xDirection,
-                _controller.yDirection,
-                delta
-            );
+        public void Move(double delta) =>
+            _movementComponent.Move(delta, _controller.xDirection, _controller.yDirection);
 
-            MoveAndSlide();
-        }
+        public void StartPhase() => _movementComponent.StartPhase();
 
-        public void StartPhase()
-        {
-            if (CanPhase())
-            {
-                _isPhasing = true;
-                Speed += PhaseSpeed;
+        public void EndPhase() => _movementComponent.EndPhase();
 
-                // Set collision
-                SetCollisionMaskValue(3, false);
-                SetCollisionMaskValue(5, false);
-                Godot.Collections.Array<Node> enemies = GetTree().GetNodesInGroup("enemies");
-                foreach (EnemyNode enemy in enemies)
-                {
-                    enemy.SetCollisionMaskValue(1, false);
-                }
-
-                _movementComponent.StartPhase();
-                _animationComponent.TogglePhaseAnimation(true);
-            }
-        }
-
-        public void EndPhase()
-        {
-            _isPhasing = false;
-            Speed -= PhaseSpeed;
-
-            // Set collision
-            SetCollisionMaskValue(3, true);
-            SetCollisionMaskValue(5, true);
-            Godot.Collections.Array<Node> enemies = GetTree().GetNodesInGroup("enemies");
-            foreach (EnemyNode enemy in enemies)
-            {
-                enemy.SetCollisionMaskValue(1, true);
-            }
-
-            _movementComponent.EndPhase();
-            _animationComponent.TogglePhaseAnimation(false);
-        }
-
-        private bool CanPhase()
-        {
-            return !_isPhasing && !_isDying && _phaseReady;
-        }
-
-        public void OnPhaseReady()
-        {
-            _animationComponent.PlayPhaseReadyEffect();
-            _movementComponent.PhaseReady = true;
-        }
         #endregion
 
         #region Health
 
         public void TakeDamage(float damage, int? playerId = null)
         {
+            // Play sound and animation
+            _audioComponent.PlayHitSound();
             _animationComponent.PlayDamageAnimation();
+
+            // Deal the damage
             CurrentHealth -= damage;
 
+            // Create and display an indicator
             IndicatorFactory.CreateTextIndicator(
                 (MathF.Round(damage, 1) * -1).ToString(),
-                new Vector2(GlobalPosition.X + 15, GlobalPosition.Y),
+                new Vector2(GlobalPosition.X + GD.RandRange(-20, 20), GlobalPosition.Y),
                 parent: this
             );
+
+            EventBus.Instance.RaisePlayerTakeDamage(PlayerId, damage, this);
 
             if (_currentHealth <= 0)
             {
@@ -479,14 +392,13 @@ namespace Entities
         public void Die(int? playerId = null)
         {
             _controller.Enabled = false;
-            _isDying = true;
+            _stateComponent.Dying = true;
             _hitBox.Disabled = true;
             _animationComponent.PlayDieAnimation();
         }
 
         public void Despawn()
         {
-            EmitSignal(SignalName.PlayerDied);
             QueueFree();
         }
 
@@ -498,19 +410,7 @@ namespace Entities
         /// </summary>
         /// <param name="item">The item to check for.</param>
         /// <returns>True if the player is able to buy and equip the item, false if not.</returns>
-        public bool CanBuyItem(Item item)
-        {
-            bool canAfford = CanAffordItem(item);
-            // bool noDupePlugins = _plugins.Contains(item) ? false : true;
-            bool noDupePlugins =
-                _plugins.Find(plugin => plugin.ResourceName == item.ResourceName) == null
-                    ? true
-                    : false;
-            bool noDupeWeapon = _weaponPlugin != item;
-            bool freeSlot = (_plugins.Count + 1) <= _pluginSlots;
-
-            return canAfford && noDupePlugins && noDupeWeapon && freeSlot;
-        }
+        public bool CanBuyItem(Item item) => _stateComponent.CanBuyItem(item);
 
         /// <summary>
         /// Checks to see if the player can scrap the passed item.
@@ -518,10 +418,7 @@ namespace Entities
         /// </summary>
         /// <param name="item">The item to check.</param>
         /// <returns>True if the player can scrap the item, false if not.</returns>
-        public bool CanScrapItem(Item item)
-        {
-            return item is not Modifier && item.Scrappable;
-        }
+        public bool CanScrapItem(Item item) => _stateComponent.CanScrapItem(item);
 
         /// <summary>
         /// Checks to see if the player can purchase the passed item based on its flux and byte cost.
@@ -530,27 +427,15 @@ namespace Entities
         /// <param name="flux">Output that indicates whether or not the player has enough flux.</param>
         /// <param name="bytes">Output that indicates whether or not the player has enough bytes.</param>
         /// <returns>True if the player is able to buy and equip the item, false if not.</returns>
-        public bool CanAffordItem(Item item, out bool flux, out bool bytes)
-        {
-            flux = item.FluxCost <= Flux;
-            bytes = item.ByteCost <= Bytes;
-            return flux && bytes;
-        }
+        public bool CanAffordItem(Item item, out bool flux, out bool bytes) =>
+            _stateComponent.CanAffordItem(item, out flux, out bytes);
 
         /// <summary>
         /// Checks if the player can afford an item based on its flux and byte cost.
         /// </summary>
         /// <param name="item">The item to check.</param>
         /// <returns>True if the player can afford the item, false if not.</returns>
-        public bool CanAffordItem(Item item)
-        {
-            return item.FluxCost <= _flux && item.ByteCost <= _bytes;
-        }
-
-        private void OnItemBought(object sender, ItemBoughtEventArgs args)
-        {
-            BuyItem(args.Item);
-        }
+        public bool CanAffordItem(Item item) => _stateComponent.CanAffordItem(item);
 
         /// <summary>
         /// Buys and equips an item from the store.
@@ -565,7 +450,7 @@ namespace Entities
             switch (item)
             {
                 case Modifier modifier:
-                    AddModifier(modifier);
+                    EquipModifier(modifier);
                     break;
                 case Plugin plugin:
                     EquipPlugin(plugin);
@@ -577,147 +462,30 @@ namespace Entities
 
         #region Inventory
 
-        private void OnItemScrapped(object sender, ItemScrappedEventArgs args)
-        {
-            ScrapItem(args.Item);
-        }
 
-        private void ScrapItem(Item item)
-        {
-            // Add to the player's byte count.
-            // TODO: consider adding an item that lets you scrap stuff for flux, or both currencies.
-            Bytes += item.ScrapValue;
+        private void ScrapItem(Item item) => _inventory.ScrapItem(item);
 
-            // Remove the item from the player's equipment.
-            if (item is Plugin plugin)
-            {
-                UnequipPlugin(plugin);
-            }
+        public void UnequipPlugin(Plugin plugin) => _inventory.UnequipPlugin(plugin);
 
-            // Apply stat effects based on the new loadout.
-            ApplyEquipStatEffects();
-        }
+        private void DisablePluginEffects(Plugin plugin) => _inventory.DisablePluginEffects(plugin);
 
-        public void UnequipPlugin(Plugin plugin)
-        {
-            DebugLogger.LogMessage($"Unequipping {plugin.ResourceName}!", true);
+        public void EquipModifier(params Modifier[] modifiers) =>
+            _inventory.EquipModifier(modifiers);
 
-            DisablePluginEffects(plugin);
+        public void EquipPlugin(params Plugin[] plugins) => _inventory.EquipPlugin(plugins);
 
-            if (plugin is WeaponPlugin)
-            {
-                // Revert to the basic bullet if you sell a weapon plugin.
-                ResetWeaponPlugin();
-            }
-            else if (_plugins.Contains(plugin))
-            {
-                _plugins.Remove(plugin);
-                EventBus.Instance.RaisePlayerItemRemoved(_playerId, plugin);
-            }
-        }
+        public void SwapWeaponPlugin(WeaponPlugin weaponPlugin) =>
+            _inventory.EquipWeaponPlugin(weaponPlugin);
 
-        private void DisablePluginEffects(Plugin plugin)
-        {
-            DebugLogger.LogMessage($"Removing effects of {plugin.ResourceName}!", true);
-            foreach (Effect effect in plugin.GetEffectList())
-            {
-                if (effect is ChainEffect chainEffect)
-                {
-                    foreach (Effect nestedEffect in chainEffect.GetAllEffects())
-                    {
-                        nestedEffect.Disable(this);
-                    }
-                }
-                effect.Disable(this);
-            }
-        }
+        public IReadOnlyList<Plugin> GetPlugins() => _inventory.EquippedPlugins;
 
-        public void AddModifier(params Modifier[] modifiers)
-        {
-            if (_modifiers != null)
-            {
-                _modifiers.AddRange(modifiers);
-                ApplyEquipStatEffects();
-            }
-        }
-
-        public void EquipPlugin(params Plugin[] plugins)
-        {
-            foreach (Plugin plugin in plugins)
-            {
-                // Add the plugin to the plugins list and raise the PlayerPluginEquipped event for this particular plugin
-                if (_plugins.Count <= _pluginSlots && plugin is not Items.WeaponPlugin)
-                {
-                    _plugins.Add(plugin);
-                    EventBus.Instance.RaisePlayerPluginEquipped(_playerId, plugin);
-                }
-                // Swap out any weapon plugins
-                else if (plugin is WeaponPlugin weaponPlugin)
-                {
-                    SwapWeaponPlugin(weaponPlugin);
-                    EventBus.Instance.RaisePlayerWeaponChanged(_playerId, _weaponPlugin);
-                }
-                else
-                {
-                    DebugLogger.LogMessage(
-                        $"Cannot add {plugin.ResourceName} to plugin list! Equipped plugin count cannot exceed plugin slots. Slots: {_pluginSlots} | Current equipped plugins: {_plugins.Count}",
-                        true,
-                        true
-                    );
-                }
-            }
-
-            EnablePluginEffects(plugins);
-
-            // Apply equip effects
-            ApplyEquipStatEffects();
-        }
-
-        public void EnablePluginEffects(params Plugin[] plugins)
-        {
-            foreach (Plugin plugin in plugins)
-            {
-                // Only enable the top-level effects in the plugin.
-                // Nested effects are enabled by the parent ChainEffect.
-                foreach (Effect effect in plugin.GetEffectList())
-                {
-                    effect.Enable(this);
-                }
-            }
-        }
-
-        public void SwapWeaponPlugin(WeaponPlugin weaponPlugin)
-        {
-            _weaponPlugin = weaponPlugin;
-            _weaponComponent.SetWeaponProjectile(weaponPlugin.ProjectileType);
-            EventBus.Instance.RaisePlayerWeaponChanged(_playerId, _weaponPlugin);
-        }
-
-        /// <summary>
-        /// Resets the player's projectile type to the base projectile.
-        /// </summary>
-        private void ResetWeaponPlugin()
-        {
-            _weaponPlugin = ResourceLoader.Load<WeaponPlugin>("uid://dmulsmpa1tm6h");
-            _weaponComponent.SetWeaponProjectile(_weaponPlugin.ProjectileType);
-            // EventBus.Instance.RaisePlayerWeaponChanged(_playerId, _weaponPlugin);
-        }
-
-        public IReadOnlyList<Plugin> GetPlugins()
-        {
-            return _plugins.AsReadOnly();
-        }
-
-        public bool HasPlugin(Plugin plugin)
-        {
-            bool hasWeapon = _weaponPlugin?.Equals(plugin) ?? false;
-            bool hasPlugin = _plugins.Find(eqPlugin => eqPlugin.Equals(plugin)) != null;
-            return hasWeapon || hasPlugin;
-        }
+        public bool HasPlugin(Plugin plugin) => _inventory.HasPlugin(plugin);
 
         #endregion
 
-        #region Equipment Effects
+        #region Stats and Effects
+
+        public StatManager GetStatManager() => _stats;
 
         /// <summary>
         /// Sets a stat value based on a passed StatType.
@@ -773,81 +541,7 @@ namespace Entities
             }
         }
 
-        private void ApplyEquipEffects(Plugin plugin)
-        {
-            foreach (Effect effect in plugin.GetEffectList())
-            {
-                foreach (Effect nestedEffect in effect.GetAllEffects())
-                {
-                    // Don't apply equip effects if it's a StatEffect, since those are handled all together by ApplyEquipStatEffects
-                    // Otherwise apply effects from Equip + Self effects.
-                    if (
-                        nestedEffect is not StatEffect
-                        && nestedEffect.Trigger == Trigger.Equip
-                        && nestedEffect.Target == TargetType.Self
-                    )
-                    {
-                        nestedEffect.ApplyEffect(this);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Applies StatEffects from all equipped items, starting with addition operations and ending with multiplicative operations.
-        /// Starts with base values of all stats and applies the changes to each stat's current values.
-        /// </summary>
-        private void ApplyEquipStatEffects()
-        {
-            // Sort the StatEffects by operation
-            List<StatEffect> addStatEffects = new();
-            List<StatEffect> multiplyStatEffects = new();
-
-            foreach (Modifier modifier in _modifiers)
-            {
-                SortEffects(modifier.Effects, addStatEffects, multiplyStatEffects);
-            }
-
-            foreach (Plugin plugin in _plugins)
-            {
-                List<Effect> equipEffects = plugin
-                    .GetEffectList()
-                    .FindAll(effect => effect.Trigger == Trigger.Equip);
-                SortEffects(equipEffects, addStatEffects, multiplyStatEffects);
-            }
-
-            // Add the weapon plugin to the mix
-            List<Effect> weapEffects = _weaponPlugin
-                .GetEffectList()
-                .FindAll(effect => effect.Trigger == Trigger.Equip);
-            SortEffects(weapEffects, addStatEffects, multiplyStatEffects);
-
-            UpdateStatsWithEffects(addStatEffects, multiplyStatEffects);
-        }
-
-        private void SortEffects(
-            IEnumerable<Effect> effects,
-            List<StatEffect> addEffects,
-            List<StatEffect> multiplyEffects
-        )
-        {
-            foreach (Effect effect in effects)
-            {
-                if (effect is StatEffect statEffect)
-                {
-                    if (statEffect.Operation == Operation.Add)
-                    {
-                        addEffects.Add(statEffect);
-                    }
-                    else if (statEffect.Operation == Operation.Multiply)
-                    {
-                        multiplyEffects.Add(statEffect);
-                    }
-                }
-            }
-        }
-
-        private void UpdateStatsWithEffects(
+        public void UpdateStatsWithEffects(
             List<StatEffect> addEffects,
             List<StatEffect> multiplyEffects
         )
@@ -902,6 +596,42 @@ namespace Entities
 
         #endregion
 
+        #region Event Handlers
+
+        /// <summary>
+        /// Callback for special processing when a stat is updated.
+        /// </summary>
+        /// <param name="source">The entity's StatManager instance.</param>
+        /// <param name="args">Arguments from the event.</param>
+        public void OnStatUpdated(object source, StatUpdatedEventArgs args)
+        {
+            switch (args.StatType)
+            {
+                case StatType.FireRate:
+                case StatType.Damage:
+                case StatType.ProjectileSpeed:
+                    _weaponComponent.Weapon.UpdateWeaponStats(args.StatType, args.Stat);
+                    break;
+                case StatType.MaxHealth:
+                    EventBus.Instance.RaisePlayerMaxHealthChanged(
+                        _playerId,
+                        args.Stat.CurrentValue
+                    );
+                    break;
+                case StatType.PhaseCooldown:
+                    _movementComponent.OnPlayerPhaseCooldownChanged(
+                        args.Stat.CurrentValue,
+                        args.OriginalValue
+                    );
+                    EventBus.Instance.RaisePlayerPhaseCooldownChanged(
+                        _playerId,
+                        args.Stat.CurrentValue,
+                        args.OriginalValue
+                    );
+                    break;
+            }
+        }
+
         private void OnEnemyKilled(object sender, EnemyKilledEventArgs args)
         {
             if (args.PlayerId == _playerId)
@@ -911,32 +641,44 @@ namespace Entities
             }
         }
 
+        private void OnItemBought(object sender, ItemBoughtEventArgs args)
+        {
+            BuyItem(args.Item);
+        }
+
+        private void OnItemScrapped(object sender, ItemScrappedEventArgs args)
+        {
+            ScrapItem(args.Item);
+        }
+
         public override void _ExitTree()
         {
             DisconnectSignals();
             base._ExitTree();
         }
 
-        #region Shield
-
-        public void Block()
-        {
-            if (!_shield.Enabled)
-            {
-                _shield.Enable();
-            }
-        }
-
-        public void EndBlock()
-        {
-            _shield.Disable();
-        }
-
-        private void SetShieldVelocity()
-        {
-            _shield.ConstantLinearVelocity = Velocity;
-        }
-
         #endregion
+
+        // #region Shield
+
+        // public void Block()
+        // {
+        //     if (!_shield.Enabled)
+        //     {
+        //         _shield.Enable();
+        //     }
+        // }
+
+        // public void EndBlock()
+        // {
+        //     _shield.Disable();
+        // }
+
+        // private void SetShieldVelocity()
+        // {
+        //     _shield.ConstantLinearVelocity = Velocity;
+        // }
+
+        // #endregion
     }
 }

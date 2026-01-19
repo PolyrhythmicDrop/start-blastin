@@ -12,10 +12,7 @@ namespace Factories
     /// </summary>
     public static class ItemDisplayFactory
     {
-        // public static PackedScene _pluginSlotScene => GD.Load<PackedScene>("uid://c122xo53cyce1");
-        // public static PackedScene _weaponSlotScene => GD.Load<PackedScene>("uid://ccw803f7gjifl");
-
-        public static PackedScene _itemDisplayScene => GD.Load<PackedScene>("uid://b38bjsfdg17o2");
+        public static PackedScene _itemDisplayScene = GD.Load<PackedScene>("uid://b38bjsfdg17o2");
 
         /// <summary>
         /// Creates an ItemSlot of a particular type based on the passed Item.
@@ -37,31 +34,5 @@ namespace Factories
         {
             return _itemDisplayScene.Instantiate<ItemDisplay>();
         }
-
-        // public static WeaponSlot CreateWeaponSlot() => CreateItemSlot<WeaponSlot>();
-
-        // public static PluginSlot CreatePluginSlot() => CreateItemSlot<PluginSlot>();
-
-        // public static T CreateItemSlot<T>()
-        //     where T : ItemDisplay
-        // {
-        //     if (typeof(T) == typeof(PluginSlot))
-        //     {
-        //         return _pluginSlotScene.Instantiate<PluginSlot>() as T;
-        //     }
-        //     else if (typeof(T) == typeof(WeaponSlot))
-        //     {
-        //         return _weaponSlotScene.Instantiate<WeaponSlot>() as T;
-        //     }
-        //     else
-        //     {
-        //         DebugLogger.LogMessage(
-        //             $"Could not create item slot because {typeof(T)} is not an accepted type!",
-        //             true,
-        //             true
-        //         );
-        //         return null;
-        //     }
-        // }
     }
 }

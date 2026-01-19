@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="AudioData" load_steps=2 format=3 uid="uid://c86hwny0l2bri"]
+
+[ext_resource type="Script" uid="uid://cx2eehu1aj48f" path="res://architecture/data-structures/AudioData.cs" id="1_fksvm"]
+
+[resource]
+script = ExtResource("1_fksvm")
+Sound = "uid://dc233os2xrmsn"
+Volume = -0.5
+Positional = true
+Randomized = true
+RandomPitch = 1.1
+RandomVolume = 0.3
+metadata/_custom_type_script = "uid://cx2eehu1aj48f"

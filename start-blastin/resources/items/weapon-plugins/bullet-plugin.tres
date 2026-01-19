@@ -1,23 +1,48 @@
-[gd_resource type="Resource" script_class="WeaponPlugin" load_steps=5 format=3 uid="uid://dmulsmpa1tm6h"]
+[gd_resource type="Resource" script_class="WeaponPlugin" load_steps=9 format=3 uid="uid://dmulsmpa1tm6h"]
 
 [ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="1_df5m8"]
+[ext_resource type="Script" uid="uid://cx2eehu1aj48f" path="res://architecture/data-structures/AudioData.cs" id="2_bjuxx"]
 [ext_resource type="Texture2D" uid="uid://cr72gwqck8b8v" path="res://assets/icons/item-icons/projectiles/bullet-icon.png" id="2_oanpf"]
 [ext_resource type="Script" uid="uid://e8ufr3v1a1f" path="res://architecture/items/plugins/WeaponPlugin.cs" id="3_bjuxx"]
 
 [sub_resource type="Resource" id="Resource_c7qc0"]
 script = ExtResource("1_df5m8")
 Type = 8
-Value = 800.0
+Value = 1100.0
 metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[sub_resource type="Resource" id="Resource_df5m8"]
+script = ExtResource("1_df5m8")
+Type = 7
+Value = -1.85
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[sub_resource type="Resource" id="Resource_oanpf"]
+script = ExtResource("1_df5m8")
+Type = 6
+Value = -0.5
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[sub_resource type="Resource" id="Resource_pi3p1"]
+script = ExtResource("2_bjuxx")
+Sound = "uid://crg6jk03jt6od"
+Volume = -4.0
+MaxPolyphony = 10
+Positional = true
+Randomized = true
+RandomPitch = 1.05
+RandomVolume = 0.3
+metadata/_custom_type_script = "uid://cx2eehu1aj48f"
 
 [resource]
 resource_local_to_scene = true
 resource_name = "bullet-plugin"
 script = ExtResource("3_bjuxx")
+FireSound = SubResource("Resource_pi3p1")
 Name = &"Bullet"
 Description = &"Regular \'ol bullet"
 Icon = ExtResource("2_oanpf")
 Scrappable = false
 AppearsInShop = false
-Effects = Array[Object]([SubResource("Resource_c7qc0")])
+Effects = Array[Object]([SubResource("Resource_c7qc0"), SubResource("Resource_df5m8"), SubResource("Resource_oanpf")])
 metadata/_custom_type_script = "uid://e8ufr3v1a1f"

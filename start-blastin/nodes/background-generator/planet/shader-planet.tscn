@@ -1,0 +1,23 @@
+[gd_scene load_steps=6 format=3 uid="uid://bbf5wq6yjahti"]
+
+[ext_resource type="Shader" uid="uid://cbtt5p1bmw2yb" path="res://nodes/background-generator/planet/planet-shader.gdshader" id="1_qnmmi"]
+[ext_resource type="Texture2D" uid="uid://b1wgivtxpn2q2" path="res://resources/colors/bg-color-schemes/og-color-bg-scheme.tres" id="2_hmqu6"]
+[ext_resource type="Texture2D" uid="uid://j0ec8ky203m7" path="res://nodes/background-generator/planet/100x100.png" id="3_gcppf"]
+[ext_resource type="Script" uid="uid://pkdv2e40mfrt" path="res://nodes/background-generator/planet/ShaderPlanet.cs" id="4_5scaq"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2y5pt"]
+shader = ExtResource("1_qnmmi")
+shader_parameter/size = 5.365
+shader_parameter/OCTAVES = 2
+shader_parameter/seed = 4.658000173755
+shader_parameter/pixels = 1000.0
+shader_parameter/colorscheme = ExtResource("2_hmqu6")
+shader_parameter/light_origin = Vector2(1.617, 0.637)
+
+[node name="ShaderPlanet" type="Node2D"]
+script = ExtResource("4_5scaq")
+
+[node name="ShaderPlanetSprite" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_2y5pt")
+texture = ExtResource("3_gcppf")

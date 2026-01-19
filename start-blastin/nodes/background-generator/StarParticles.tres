@@ -1,0 +1,40 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://0xakyc8h5c4h"]
+
+[ext_resource type="Shader" uid="uid://ccfhd8tmqskku" path="res://nodes/background-generator/star-particles-shader.gdshader" id="1_7ee8o"]
+[ext_resource type="Texture2D" uid="uid://b1wgivtxpn2q2" path="res://resources/colors/bg-color-schemes/og-color-bg-scheme.tres" id="2_ci75x"]
+
+[resource]
+shader = ExtResource("1_7ee8o")
+shader_parameter/direction = Vector3(1, 0, 0)
+shader_parameter/spread = 45.0
+shader_parameter/flatness = 0.0
+shader_parameter/initial_linear_velocity = 0.0
+shader_parameter/initial_angle = 0.0
+shader_parameter/angular_velocity = 0.0
+shader_parameter/orbit_velocity = 0.0
+shader_parameter/linear_accel = 0.0
+shader_parameter/radial_accel = 0.0
+shader_parameter/tangent_accel = 0.0
+shader_parameter/damping = 1.0
+shader_parameter/scale = 1.0
+shader_parameter/hue_variation = 0.5
+shader_parameter/anim_speed = 0.0
+shader_parameter/anim_offset = 1.0
+shader_parameter/initial_linear_velocity_random = 0.0
+shader_parameter/initial_angle_random = 0.0
+shader_parameter/angular_velocity_random = 0.0
+shader_parameter/orbit_velocity_random = 0.1
+shader_parameter/linear_accel_random = 0.0
+shader_parameter/radial_accel_random = 0.0
+shader_parameter/tangent_accel_random = 0.0
+shader_parameter/damping_random = 0.0
+shader_parameter/scale_random = 1.2
+shader_parameter/hue_variation_random = 0.5
+shader_parameter/anim_speed_random = 0.0
+shader_parameter/anim_offset_random = 0.0
+shader_parameter/lifetime_randomness = 0.0
+shader_parameter/emission_box_extents = Vector3(50, 50, 1)
+shader_parameter/color_value = Color(1.353256, 1.353256, 1.353256, 1)
+shader_parameter/trail_divisor = 1
+shader_parameter/gravity = Vector3(0, -1, 0)
+shader_parameter/colorscheme = ExtResource("2_ci75x")

@@ -1,6 +1,8 @@
 using System;
+using DataStructures;
 using Godot;
 using Projectiles;
+using SafeResourcePicker;
 
 namespace Items
 {
@@ -15,5 +17,8 @@ namespace Items
             get => _projectileType;
             set => _projectileType = value;
         }
+
+        [Export]
+        public AudioData FireSound { get; set; }
     }
 }

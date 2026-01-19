@@ -1,3 +1,4 @@
+using Components;
 using Entities;
 using Godot;
 
@@ -11,6 +12,8 @@ namespace Enemies
         private AnimatedSprite2D _base;
         private AnimatedSprite2D _engine;
         private AnimatedSprite2D _destruction;
+
+        // ~~ Sound Strings ~~ //
 
         public override void _Ready()
         {
@@ -27,7 +30,20 @@ namespace Enemies
             _currentGlobalPosition = GlobalPosition;
             _lastGlobalPosition = _currentGlobalPosition;
 
-            FollowPath(_path, _followSpeed);
+            SetHealthBarSize();
+
+            FollowPath(_followSpeed);
+        }
+
+        protected override void SetHealthBarSize()
+        {
+            // Get size of the base sprite
+            SpriteFrames sprite = _base.SpriteFrames ?? null;
+            if (sprite != null)
+            {
+                Rect2I usedRect = sprite.GetFrameTexture("default", 0).GetImage().GetUsedRect();
+                _healthBar.SetSize(usedRect.Size);
+            }
         }
 
         public override void _Process(double delta)
@@ -75,10 +91,10 @@ namespace Enemies
             }
         }
 
-        protected override void FollowPath(EntityPath path, float speed)
+        protected override void FollowPath(float speed)
         {
-            float pathLength = path.Curve.GetBakedLength();
-            float stepDuration = Mathf.Max((pathLength / speed) * 0.5f, 0.1f);
+            float pathLength = _followPath.Curve.GetBakedLength();
+            float stepDuration = Mathf.Max((pathLength / speed) * 0.5f, MIN_FOLLOW_TWEEN_DURATION);
 
             if (_followTween != null)
             {
@@ -87,10 +103,10 @@ namespace Enemies
 
             _followTween = CreateTween();
             _followTween
-                .TweenProperty(path.PathFollow, "progress_ratio", 0.5, stepDuration)
+                .TweenProperty(_followPath, "FollowRatio", 0.5, stepDuration)
                 .SetTrans(Tween.TransitionType.Sine)
                 .SetEase(Tween.EaseType.In);
-            _followTween.TweenProperty(path.PathFollow, "progress_ratio", 1.0, stepDuration);
+            _followTween.TweenProperty(_followPath, "FollowRatio", 1.0, stepDuration);
         }
 
         protected override void FireWeapon()
@@ -112,6 +128,8 @@ namespace Enemies
             _base.Visible = false;
             _engine.Visible = false;
 
+            // Play the destruction sound
+            _audioComponent.PlayDestructionSound();
             _destruction.Visible = true;
             _destruction.Play();
 

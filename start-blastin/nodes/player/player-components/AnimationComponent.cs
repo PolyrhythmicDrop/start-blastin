@@ -47,7 +47,7 @@ namespace PlayerComponents
 
         public override void _Process(double delta)
         {
-            if (!_player.Dying)
+            if (!_player.State.Dying)
             {
                 if (_player.Velocity != Vector2.Zero)
                 {

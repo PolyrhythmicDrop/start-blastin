@@ -1,52 +1,39 @@
-[gd_scene load_steps=13 format=3 uid="uid://cca75d2re7isj"]
+[gd_scene load_steps=11 format=3 uid="uid://cca75d2re7isj"]
 
-[ext_resource type="Texture2D" uid="uid://cilgl08og1qhy" path="res://nodes/backgrounds/background-purple-nebulae-stars.png" id="1_1iju8"]
 [ext_resource type="Script" uid="uid://bpw7egf87stew" path="res://architecture/utility/Debugger.cs" id="1_hxhdr"]
-[ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="2_gl8ah"]
+[ext_resource type="PackedScene" uid="uid://bq7imdtl082ko" path="res://nodes/background-generator/scrolling-background-test.tscn" id="1_jmnrl"]
+[ext_resource type="PackedScene" uid="uid://c66l16un13w80" path="res://nodes/ui/vignette-layer/vignette-layer.tscn" id="2_1iju8"]
 [ext_resource type="PackedScene" uid="uid://dl7j0usiolxux" path="res://nodes/environmental/play-area-border.tscn" id="2_hxhdr"]
-[ext_resource type="Texture2D" uid="uid://cr72gwqck8b8v" path="res://assets/icons/item-icons/projectiles/bullet-icon.png" id="3_4imkk"]
 [ext_resource type="PackedScene" uid="uid://nenl15kjphyb" path="res://nodes/player/player.tscn" id="3_gl8ah"]
-[ext_resource type="Script" uid="uid://e8ufr3v1a1f" path="res://architecture/items/plugins/WeaponPlugin.cs" id="4_avtic"]
 [ext_resource type="Script" uid="uid://cv3ev8ojysetw" path="res://nodes/environmental/DeflectorWall.cs" id="7_ald07"]
+[ext_resource type="Script" uid="uid://33wv8gl0qq4r" path="res://nodes/level/LevelCamera.cs" id="8_jmnrl"]
 [ext_resource type="PackedScene" uid="uid://bsyev7gatn1jy" path="res://nodes/environmental/oob-area.tscn" id="8_mybqq"]
 [ext_resource type="PackedScene" uid="uid://dxdlpe5yuamuy" path="res://nodes/wave-management/wave-manager/wave-manager.tscn" id="9_4usc6"]
 
-[sub_resource type="Resource" id="Resource_c7qc0"]
-script = ExtResource("2_gl8ah")
-Type = 8
-Value = 800.0
-metadata/_custom_type_script = "uid://bmeda5w63vsw7"
-
-[sub_resource type="Resource" id="Resource_1p5wi"]
-resource_local_to_scene = true
-resource_name = "bullet-plugin"
-script = ExtResource("4_avtic")
-Name = &"Bullet"
-Description = &"Regular \'ol bullet"
-Icon = ExtResource("3_4imkk")
-Scrappable = false
-AppearsInShop = false
-Effects = Array[Object]([SubResource("Resource_c7qc0")])
-metadata/_custom_type_script = "uid://e8ufr3v1a1f"
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_jmnrl"]
+noise_type = 3
+seed = 2
+frequency = 0.1347
+fractal_type = 0
+fractal_octaves = 3
 
 [node name="DebugLevel" type="Node" groups=["level"]]
 
+[node name="LevelCamera" type="Camera2D" parent="."]
+anchor_mode = 0
+limit_enabled = false
+limit_left = 0
+limit_top = 0
+script = ExtResource("8_jmnrl")
+Noise = SubResource("FastNoiseLite_jmnrl")
+
+[node name="VignetteLayer" parent="LevelCamera" instance=ExtResource("2_1iju8")]
+unique_name_in_owner = true
+
+[node name="ScrollingBackground" parent="." instance=ExtResource("1_jmnrl")]
+
 [node name="Player" parent="." instance=ExtResource("3_gl8ah")]
 position = Vector2(960, 882)
-WeaponPlugin = SubResource("Resource_1p5wi")
-
-[node name="TextureRect" type="TextureRect" parent="."]
-z_index = -100
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-texture = ExtResource("1_1iju8")
-expand_mode = 2
-stretch_mode = 5
 
 [node name="PlayAreaBorder" parent="." instance=ExtResource("2_hxhdr")]
 collision_mask = 9
@@ -56,9 +43,7 @@ script = ExtResource("7_ald07")
 
 [node name="WaveManager" parent="." instance=ExtResource("9_4usc6")]
 
-[node name="LevelCamera" type="Camera2D" parent="."]
-anchor_mode = 0
-
 [node name="Debugger" type="Node" parent="."]
+process_mode = 3
 script = ExtResource("1_hxhdr")
 metadata/_custom_type_script = "uid://bpw7egf87stew"

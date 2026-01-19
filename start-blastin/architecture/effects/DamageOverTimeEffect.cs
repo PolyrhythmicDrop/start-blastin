@@ -70,7 +70,7 @@ namespace Effects
             set => _damagePerTick = value;
         }
 
-        [Export(PropertyHint.Range, "0.05,5,0.1,greater_than")]
+        [Export(PropertyHint.Range, "0.05,5,greater_than")]
         public float Frequency
         {
             get => _frequency;

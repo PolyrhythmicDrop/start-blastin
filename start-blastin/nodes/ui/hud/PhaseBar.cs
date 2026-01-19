@@ -1,7 +1,5 @@
-using System.Runtime.Serialization.Formatters;
 using DataStructures;
 using Godot;
-using Utility;
 
 [GlobalClass]
 public partial class PhaseBar : PanelContainer
@@ -53,9 +51,14 @@ public partial class PhaseBar : PanelContainer
     /// Sets the max value of the phase progress bar to a cooldown value.
     /// </summary>
     /// <param name="totalCooldown">The new phase total cooldown value.</param>
-    public void SetTotalCooldown(float totalCooldown)
+    /// <param name="phaseReady">Whether or not the player's phase cooldown timer is currently active. If true, cooldown timer is inactive and phasing is ready.</param>
+    public void SetTotalCooldown(float totalCooldown, bool phaseReady)
     {
         _bar.MaxValue = totalCooldown;
+        if (phaseReady)
+        {
+            _bar.Value = _bar.MaxValue;
+        }
         TweenPhaseBar();
     }
 
@@ -63,9 +66,21 @@ public partial class PhaseBar : PanelContainer
     /// Updates the player's phase bar with the remaining cooldown time.
     /// </summary>
     /// <param name="timeLeft">The time left on the cooldown timer.</param>
-    public void SetPhaseTimeLeft(double timeLeft)
+    /// <param name="totalCooldown">The total time on the cooldown timer.</param>
+    public void SetPhaseCooldownTimeLeft(double timeLeft, double totalCooldown)
     {
+        // double barValue = _bar.MaxValue - timeLeft;
+        // if (barValue <= 0)
+        // {
+        //     barValue = _bar.MaxValue;
+        // }
+        // _bar.Value = _bar.MaxValue - timeLeft;
+        if (_bar.MaxValue != totalCooldown)
+        {
+            _bar.MaxValue = totalCooldown;
+        }
         _bar.Value = _bar.MaxValue - timeLeft;
+
         TweenPhaseBar();
     }
 

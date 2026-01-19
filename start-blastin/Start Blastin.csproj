@@ -9,6 +9,7 @@
     <Folder Include="nodes\utility\" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="LimboConsole.Sharp" Version="0.0.1-beta-010" />
     <PackageReference Include="Nanoid" Version="3.1.0" />
   </ItemGroup>
 </Project>

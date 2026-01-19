@@ -1,79 +1,19 @@
-[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=16 format=3 uid="uid://3bayun5b03eq"]
+[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=4 format=3 uid="uid://3bayun5b03eq"]
 
-[ext_resource type="Resource" uid="uid://vfsjsr1mvlk1" path="res://resources/enemies/drone.tres" id="1_mswl7"]
+[ext_resource type="Script" uid="uid://85wl5t25bsmt" path="res://nodes/enemies/Spawners/RandomSpawnerConfig.cs" id="1_p7ndr"]
 [ext_resource type="Script" uid="uid://b40t8najievo0" path="res://nodes/wave-management/wave-scalers/SpawnerFormationScaler.cs" id="1_tqbqd"]
-[ext_resource type="Script" uid="uid://dyer2c2n8y1v4" path="res://nodes/enemies/Spawners/SpawnData.cs" id="2_3dipg"]
-[ext_resource type="Resource" uid="uid://oepg1yh64jk4" path="res://resources/enemies/speedy-drone.tres" id="3_3dipg"]
-[ext_resource type="Script" uid="uid://c2ao0simwvpmt" path="res://nodes/wave-management/wave-scalers/SpawnerConfig.cs" id="3_7wn5a"]
-[ext_resource type="Resource" uid="uid://byx0853b2l38p" path="res://resources/enemies/drunk-drone.tres" id="5_7wn5a"]
-
-[sub_resource type="Resource" id="Resource_x3lrh"]
-script = ExtResource("2_3dipg")
-EnemyResource = ExtResource("1_mswl7")
-Weight = 5
-metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
 
 [sub_resource type="Resource" id="Resource_7wn5a"]
-script = ExtResource("2_3dipg")
-EnemyResource = ExtResource("3_3dipg")
-Weight = 2
-metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
-
-[sub_resource type="Resource" id="Resource_b07x4"]
-script = ExtResource("3_7wn5a")
-SpawnImmediately = true
-InitialProgressRatio = 0.5
-SpawnPoolGD = Array[Object]([SubResource("Resource_x3lrh"), SubResource("Resource_7wn5a")])
-metadata/_custom_type_script = "uid://c2ao0simwvpmt"
-
-[sub_resource type="Resource" id="Resource_lfof3"]
-script = ExtResource("2_3dipg")
-EnemyResource = ExtResource("1_mswl7")
-Weight = 5
-metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
-
-[sub_resource type="Resource" id="Resource_kl1hj"]
-script = ExtResource("2_3dipg")
-EnemyResource = ExtResource("3_3dipg")
-Weight = 2
-metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
-
-[sub_resource type="Resource" id="Resource_3dipg"]
-script = ExtResource("3_7wn5a")
-InitialProgressRatio = 0.3
-EnableSpawnTimerDelay = true
-MinDelay = 0.1
-MaxDelay = 0.3
-SpawnPoolGD = Array[Object]([SubResource("Resource_lfof3"), SubResource("Resource_kl1hj")])
-metadata/_custom_type_script = "uid://c2ao0simwvpmt"
-
-[sub_resource type="Resource" id="Resource_ikj08"]
-script = ExtResource("2_3dipg")
-EnemyResource = ExtResource("5_7wn5a")
-Weight = 10
-metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
-
-[sub_resource type="Resource" id="Resource_ic546"]
-script = ExtResource("2_3dipg")
-EnemyResource = ExtResource("1_mswl7")
-Weight = 4
-metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
-
-[sub_resource type="Resource" id="Resource_upek0"]
-script = ExtResource("3_7wn5a")
-Location = 2
+script = ExtResource("1_p7ndr")
 SpawnImmediately = true
 StartMoveOnSpawnTimer = true
-InitialProgressRatio = 0.4
-EnableSpawnTimerDelay = true
-MinDelay = 0.5
-MaxDelay = 0.7
-SpawnPoolGD = Array[Object]([SubResource("Resource_ikj08"), SubResource("Resource_ic546")])
-metadata/_custom_type_script = "uid://c2ao0simwvpmt"
+SpawnPool = null
+InitialProgressRatio = 0.5
+metadata/_custom_type_script = "uid://85wl5t25bsmt"
 
 [resource]
 resource_name = "level-one-formation"
 script = ExtResource("1_tqbqd")
-FormationGD = Array[Object]([SubResource("Resource_b07x4"), SubResource("Resource_3dipg"), SubResource("Resource_upek0")])
+FormationGD = Array[Object]([SubResource("Resource_7wn5a")])
 MaxWave = 1
 metadata/_custom_type_script = "uid://b40t8najievo0"

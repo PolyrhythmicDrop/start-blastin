@@ -162,31 +162,48 @@ size_flags_vertical = 6
 focus_neighbor_left = NodePath("../../../../../ItemSelection/MarginContainer/CenterContainer/GridContainer/ShopItemContainer3")
 focus_neighbor_top = NodePath("../../../../../ItemSelection/MarginContainer/CenterContainer/GridContainer/ShopItemContainer1")
 focus_neighbor_right = NodePath("../../NextWaveButton")
-focus_neighbor_bottom = NodePath("../Heal")
+focus_neighbor_bottom = NodePath("../HealButton")
 focus_next = NodePath("../../NextWaveButton")
 focus_previous = NodePath("../../../../../ItemSelection/MarginContainer/CenterContainer/GridContainer/ShopItemContainer3")
 text = "Refresh
 Items"
 
-[node name="Heal" type="Button" parent="VBoxContainer/WaveButtons/MarginContainer/HBoxContainer/VBoxContainer"]
+[node name="HealButton" type="Button" parent="VBoxContainer/WaveButtons/MarginContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(169, 104)
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 6
+size_flags_vertical = 3
 focus_neighbor_left = NodePath("../../../../../ItemSelection/MarginContainer/CenterContainer/GridContainer/ShopItemContainer3")
 focus_neighbor_top = NodePath("../RerollButton")
 focus_neighbor_right = NodePath("../../NextWaveButton")
 focus_neighbor_bottom = NodePath("../../../../../ItemSelection/MarginContainer/CenterContainer/GridContainer/ShopItemContainer1")
 focus_next = NodePath("../../NextWaveButton")
 focus_previous = NodePath("../RerollButton")
-text = "Heal"
+
+[node name="HealLabel" type="RichTextLabel" parent="VBoxContainer/WaveButtons/MarginContainer/HBoxContainer/VBoxContainer/HealButton"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/normal_font_size = 28
+bbcode_enabled = true
+text = "Heal
+[img]res://assets/icons/currency/flux-icon.png[/img]"
+autowrap_mode = 0
+shortcut_keys_enabled = false
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="NextWaveButton" type="Button" parent="VBoxContainer/WaveButtons/MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-focus_neighbor_left = NodePath("../VBoxContainer/Heal")
+focus_neighbor_left = NodePath("../VBoxContainer/HealButton")
 focus_neighbor_top = NodePath("../../../../ItemSelection/MarginContainer/CenterContainer/GridContainer/ShopItemContainer1")
 focus_neighbor_right = NodePath("../VBoxContainer/RerollButton")
 focus_neighbor_bottom = NodePath("../../../../ItemSelection/MarginContainer/CenterContainer/GridContainer/ShopItemContainer1")

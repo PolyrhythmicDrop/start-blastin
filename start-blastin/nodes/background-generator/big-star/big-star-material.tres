@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://8f1cf7tn2qej"]
+
+[ext_resource type="Shader" uid="uid://bo3621ff1i03d" path="res://nodes/background-generator/big-star/big-star-shader.gdshader" id="1_uxdfr"]
+[ext_resource type="Texture2D" uid="uid://b1wgivtxpn2q2" path="res://resources/colors/bg-color-schemes/og-color-bg-scheme.tres" id="2_6pa30"]
+
+[resource]
+resource_local_to_scene = true
+shader = ExtResource("1_uxdfr")
+shader_parameter/colorscheme = ExtResource("2_6pa30")

@@ -1,9 +1,10 @@
-[gd_scene load_steps=23 format=3 uid="uid://csgn11flcwe80"]
+[gd_scene load_steps=24 format=3 uid="uid://csgn11flcwe80"]
 
 [ext_resource type="Material" uid="uid://c2utwn3c0waxt" path="res://resources/materials/enemy-hit-effect.tres" id="1_7busk"]
 [ext_resource type="Script" uid="uid://dgl5eo10l8xi5" path="res://nodes/enemies/mini-vortex/MiniVortex.cs" id="1_v62ag"]
 [ext_resource type="Script" uid="uid://bekbgunrmk3ad" path="res://nodes/weapons/Barrel.cs" id="2_e0mk0"]
 [ext_resource type="Texture2D" uid="uid://bwf3cftii5aj" path="res://assets/enemies/mini-vortex/mini-vortex-64-sheet.png" id="3_04xer"]
+[ext_resource type="PackedScene" uid="uid://dyem7stdeqti4" path="res://nodes/ui/elements/overhead-health-bar.tscn" id="5_04xer"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7busk"]
 atlas = ExtResource("3_04xer")
@@ -164,3 +165,6 @@ script = ExtResource("2_e0mk0")
 Base = true
 DefaultActive = true
 metadata/_custom_type_script = "uid://bekbgunrmk3ad"
+
+[node name="OverheadHealthBar" parent="." instance=ExtResource("5_04xer")]
+unique_name_in_owner = true

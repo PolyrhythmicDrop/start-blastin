@@ -1,13 +1,16 @@
 using System;
 using Autoloads;
+using Enemies;
 using Entities;
+using Events;
 using Godot;
+using Interfaces;
 using Utility;
 
 namespace PlayerComponents
 {
     [GlobalClass]
-    public partial class MovementComponent : Node
+    public partial class MovementComponent : Node, IListener
     {
         private Player _player;
         private float _maxSpeed => _player.Speed;
@@ -22,11 +25,13 @@ namespace PlayerComponents
 
         public float CurrentSpeedX => _currentSpeedX;
         public float CurrentSpeedY => _currentSpeedY;
-        public bool PhaseReady;
 
+        // public bool PhaseReady;
+
+        #region Initialization
         public override void _Ready()
         {
-            PhaseReady = true;
+            // PhaseReady = true;
             _phaseTimer = GetNode<Timer>("%PhaseTimer");
             _phaseCooldownTimer = GetNode<Timer>("%PhaseCooldownTimer");
         }
@@ -40,21 +45,38 @@ namespace PlayerComponents
             ConnectSignals();
         }
 
-        private void ConnectSignals()
+        public void ConnectSignals()
         {
-            _phaseTimer.Timeout += _player.EndPhase;
-            _phaseCooldownTimer.Timeout += _player.OnPhaseReady;
+            _phaseTimer.Timeout += EndPhase;
+            _phaseCooldownTimer.Timeout += OnPhaseReady;
         }
+
+        public void DisconnectSignals()
+        {
+            _phaseTimer.Timeout -= EndPhase;
+            _phaseCooldownTimer.Timeout -= OnPhaseReady;
+        }
+
+        #endregion
 
         public override void _Process(double delta)
         {
             if (!_phaseCooldownTimer.IsStopped())
             {
-                EventBus.Instance.RaisePlayerPhaseTimeLeft(
+                EventBus.Instance.RaisePlayerPhaseCooldownTimeLeft(
                     _player.PlayerId,
-                    _phaseCooldownTimer.TimeLeft
+                    _phaseCooldownTimer.TimeLeft,
+                    _player.PhaseCooldown
                 );
             }
+        }
+
+        #region Movement
+
+        public void Move(double delta, float xDir, float yDir)
+        {
+            _player.Velocity = SetVelocity(xDir, yDir, delta);
+            _player.MoveAndSlide();
         }
 
         public Vector2 SetVelocity(float xInput, float yInput, double delta)
@@ -89,20 +111,7 @@ namespace PlayerComponents
             }
 
             return new Vector2(_currentSpeedX, _currentSpeedY);
-
-            // return new Vector2(xInput * _maxSpeed, yInput * _maxSpeed);
         }
-
-        // public void Accelerate(float xInput, float yInput, double delta)
-        // {
-        //     // Get the x and y speed based on inputs and current velocity
-        //     _currentSpeedX += ACCEL_PER_TICK * ((float)delta * xInput);
-        //     _currentSpeedY += ACCEL_PER_TICK * ((float)delta * yInput);
-
-        //     // Clamp to max speed
-        //     _currentSpeedX = Math.Clamp(_currentSpeedX, -_maxSpeed, _maxSpeed);
-        //     _currentSpeedY = Math.Clamp(_currentSpeedY, -_maxSpeed, _maxSpeed);
-        // }
 
         public void AccelerateX(float xInput, double delta)
         {
@@ -159,19 +168,106 @@ namespace PlayerComponents
                 }
             }
         }
+        #endregion
+
+        #region Phasing
+
+        public void OnPhaseReady()
+        {
+            // Reset the phase cooldown bar using the current PhaseCooldown stat.
+            EventBus.Instance.RaisePlayerPhaseCooldownTimeLeft(
+                _player.PlayerId,
+                0,
+                _player.PhaseCooldown
+            );
+            _player.Audio.PlayPhaseReadySound();
+            _player.Animation.PlayPhaseReadyEffect();
+            _player.State.PhaseReady = true;
+        }
+
+        /// <summary>
+        /// If the phase cooldown timer is running, adjusts its time to account for the new cooldown time.
+        /// </summary>
+        /// <param name="newCooldown"></param>
+        public void OnPlayerPhaseCooldownChanged(float newCooldown, float origCooldown)
+        {
+            if (_phaseCooldownTimer.IsStopped())
+            {
+                return;
+            }
+
+            // Adjust the time left based on the new cooldown
+            double timeElapsed = origCooldown - _phaseCooldownTimer.TimeLeft;
+            double newTimeRemaining = newCooldown - timeElapsed;
+            if (newTimeRemaining <= 0)
+            {
+                _phaseCooldownTimer.Stop();
+                _phaseCooldownTimer.EmitSignal(Timer.SignalName.Timeout);
+            }
+            else
+            {
+                _phaseCooldownTimer.Start(newTimeRemaining);
+            }
+        }
 
         public void StartPhase()
         {
-            PhaseReady = false;
+            if (!_player.State.CanPhase())
+            {
+                return;
+            }
+
+            _player.State.Phasing = true;
+            _player.Speed += _player.PhaseSpeed;
+
+            // Set collision
+            _player.SetCollisionMaskValue(3, false);
+            _player.SetCollisionMaskValue(5, false);
+            foreach (EnemyNode enemy in EnemyFinder.GetAllEnemies())
+            {
+                enemy.SetCollisionMaskValue(1, false);
+            }
+
+            _player.State.PhaseReady = false;
             _phaseTimer.Start(_player.PhaseDuration);
             EventBus.Instance.RaisePhaseStarted(_player.PlayerId);
-            EventBus.Instance.RaisePlayerPhaseTimeLeft(_player.PlayerId, _player.PhaseCooldown);
+
+            // Initialize the cooldown phase bar with the current cooldown stat.
+            EventBus.Instance.RaisePlayerPhaseCooldownTimeLeft(
+                _player.PlayerId,
+                _player.PhaseCooldown,
+                _player.PhaseCooldown
+            );
+
+            _player.Audio.PlayPhaseStartSound();
+            _player.Animation.TogglePhaseAnimation(true);
         }
 
         public void EndPhase()
         {
+            _player.State.Phasing = false;
+            _player.Speed -= _player.PhaseSpeed;
+
+            // Set collision
+            _player.SetCollisionMaskValue(3, true);
+            _player.SetCollisionMaskValue(5, true);
+            foreach (EnemyNode enemy in EnemyFinder.GetAllEnemies())
+            {
+                enemy.SetCollisionMaskValue(1, true);
+            }
+
             _phaseCooldownTimer.Start(_player.PhaseCooldown);
             EventBus.Instance.RaisePhaseEnded(_player.PlayerId);
+
+            _player.Animation.TogglePhaseAnimation(false);
+        }
+
+        #endregion
+
+        public override void _ExitTree()
+        {
+            DisconnectSignals();
+            base._ExitTree();
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Weapons
     /// Weapons can be used by both enemies and the player.
     /// </summary>
     /// <remarks>
-    /// WeaponNode objects are typically built in the <see cref="WeaponFactory"/> class using a base <see cref="WeaponResource"/> as its source of base stats.
+    /// WeaponNode objects are typically built in the <see cref="WeaponFactory"/> class using a base <see cref="WeaponStats"/> resource as its source of base stats.
     /// </remarks>
     [GlobalClass]
     public partial class WeaponNode : Node2D
@@ -34,7 +34,7 @@ namespace Weapons
         private IVelocityProvider _velocityProvider;
 
         /// <summary>
-        /// The weapon's base stats, inherited from its parent <see cref="WeaponResource"/>.
+        /// The weapon's base stats.
         /// </summary>
         public WeaponStats Stats => _stats;
 
@@ -232,7 +232,7 @@ namespace Weapons
             {
                 if (healthful is Player healthfulPlayer)
                 {
-                    if (!healthfulPlayer.Dodging)
+                    if (!healthfulPlayer.State.Phasing)
                     {
                         healthfulPlayer.TakeDamage(_stats.Damage);
                         EventBus.Instance.RaisePlayerHitByProjectile(

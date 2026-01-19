@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="SoundSet" load_steps=6 format=3 uid="uid://c2r5pw0qbvtfr"]
+
+[ext_resource type="Script" uid="uid://dt02kxv7k56mm" path="res://architecture/data-structures/SoundSet.cs" id="1_k2w0n"]
+[ext_resource type="Script" uid="uid://cx2eehu1aj48f" path="res://architecture/data-structures/AudioData.cs" id="1_t4xav"]
+[ext_resource type="Resource" uid="uid://c86hwny0l2bri" path="res://resources/audio-data/sfx/enemies/drone/drone-shots.tres" id="2_76i86"]
+
+[sub_resource type="Resource" id="Resource_t4xav"]
+script = ExtResource("1_t4xav")
+Sound = "uid://yodwmov7lmwe"
+MaxPolyphony = 1
+Positional = true
+Randomized = true
+RandomPitch = 0.5
+RandomVolume = 1.1
+metadata/_custom_type_script = "uid://cx2eehu1aj48f"
+
+[sub_resource type="Resource" id="Resource_toa20"]
+script = ExtResource("1_t4xav")
+Sound = "uid://cp718xmomrsxt"
+MaxPolyphony = 1
+Positional = true
+Randomized = true
+RandomPitch = 1.05
+RandomVolume = 0.1
+metadata/_custom_type_script = "uid://cx2eehu1aj48f"
+
+[resource]
+script = ExtResource("1_k2w0n")
+Fire = ExtResource("2_76i86")
+Destruction = SubResource("Resource_t4xav")
+Hit = SubResource("Resource_toa20")
+metadata/_custom_type_script = "uid://dt02kxv7k56mm"

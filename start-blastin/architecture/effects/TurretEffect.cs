@@ -106,7 +106,7 @@ namespace Effects
             }
         }
 
-        [Export(PropertyHint.Range, "0.1,10,0.1,greater_than")]
+        [Export(PropertyHint.Range, "0.1,10,greater_than")]
         public float RotateTime
         {
             get => _rotateTime;

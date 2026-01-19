@@ -5,7 +5,6 @@ using Events;
 using Godot;
 using Items;
 using Projectiles;
-using UI.HUD;
 
 namespace Autoloads
 {
@@ -56,9 +55,9 @@ namespace Autoloads
 
         public event EventHandler<PlayerIdEventArgs> PhaseEnded;
 
-        public event EventHandler<PlayerPhaseTimeLeftEventArgs> PlayerPhaseTimeLeft;
+        public event EventHandler<PlayerPhaseCooldownTimeLeftEventArgs> PlayerPhaseCooldownTimeLeft;
 
-        private PlayerPhaseTimeLeftEventArgs _phaseTimeLeftArgs = new();
+        private PlayerPhaseCooldownTimeLeftEventArgs _phaseCooldownTimeLeftArgs = new();
 
         public event EventHandler<PlayerPhaseCooldownChangedEventArgs> PlayerPhaseCooldownChanged;
 
@@ -77,6 +76,8 @@ namespace Autoloads
         #region Player Actions
 
         public event EventHandler<PlayerHitByProjectileEventArgs> PlayerHitByProjectile;
+
+        public event EventHandler<PlayerTakeDamageEventArgs> PlayerTakeDamage;
 
         #endregion
 
@@ -170,9 +171,19 @@ namespace Autoloads
             PlayerMaxHealthChanged?.Invoke(this, args);
         }
 
-        public void RaisePlayerCurrentHealthChanged(int playerId, float currentHealth, float diff)
+        public void RaisePlayerCurrentHealthChanged(
+            int playerId,
+            float currentHealth,
+            float diff,
+            float percentage
+        )
         {
-            PlayerCurrentHealthChangedEventArgs args = new(playerId, currentHealth, diff);
+            PlayerCurrentHealthChangedEventArgs args = new(
+                playerId,
+                currentHealth,
+                diff,
+                percentage
+            );
             PlayerCurrentHealthChanged?.Invoke(this, args);
         }
 
@@ -188,16 +199,25 @@ namespace Autoloads
             PhaseEnded?.Invoke(this, args);
         }
 
-        public void RaisePlayerPhaseTimeLeft(int playerId, double timeLeft)
+        public void RaisePlayerPhaseCooldownTimeLeft(
+            int playerId,
+            double timeLeft,
+            double totalTime
+        )
         {
-            _phaseTimeLeftArgs.PlayerId = playerId;
-            _phaseTimeLeftArgs.TimeLeft = timeLeft;
-            PlayerPhaseTimeLeft?.Invoke(this, _phaseTimeLeftArgs);
+            _phaseCooldownTimeLeftArgs.PlayerId = playerId;
+            _phaseCooldownTimeLeftArgs.TimeLeft = timeLeft;
+            _phaseCooldownTimeLeftArgs.TotalTime = totalTime;
+            PlayerPhaseCooldownTimeLeft?.Invoke(this, _phaseCooldownTimeLeftArgs);
         }
 
-        public void RaisePlayerPhaseCooldownChanged(int playerId, float cooldown)
+        public void RaisePlayerPhaseCooldownChanged(
+            int playerId,
+            float newCooldown,
+            float origCooldown
+        )
         {
-            PlayerPhaseCooldownChangedEventArgs args = new(playerId, cooldown);
+            PlayerPhaseCooldownChangedEventArgs args = new(playerId, newCooldown, origCooldown);
             PlayerPhaseCooldownChanged?.Invoke(this, args);
         }
 
@@ -247,6 +267,12 @@ namespace Autoloads
         {
             PlayerHitByProjectileEventArgs args = new(playerId, projectile);
             PlayerHitByProjectile?.Invoke(this, args);
+        }
+
+        public void RaisePlayerTakeDamage(int playerId, float damage, object source = null)
+        {
+            PlayerTakeDamageEventArgs args = new(playerId, damage);
+            PlayerTakeDamage?.Invoke(source ?? this, args);
         }
 
         public void RaiseEnemyKilled(EnemyKilledEventArgs args)

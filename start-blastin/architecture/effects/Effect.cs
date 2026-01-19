@@ -7,6 +7,7 @@ using Enemies;
 using Events;
 using Godot;
 using Services;
+using Stats;
 using Utility;
 
 namespace Effects
@@ -72,7 +73,9 @@ namespace Effects
             public int CurrentStacks
             {
                 get => _currentStacks;
-                set => _currentStacks = Math.Min(_parent._maxStacks, value);
+                set =>
+                    _currentStacks =
+                        _parent._maxStacks >= 0 ? Math.Min(_parent._maxStacks, value) : value;
             }
 
             /// <summary>
@@ -297,7 +300,7 @@ namespace Effects
 
         public virtual void Disable(GodotObject target = null)
         {
-            DebugLogger.LogMessage($"Calling Disable() on {target}...", true);
+            // DebugLogger.LogMessage($"Calling Disable() on {target}...", true);
             try
             {
                 switch (Trigger)
@@ -414,7 +417,7 @@ namespace Effects
         /// <param name="target"></param>
         private void OnTargetExitTree(GodotObject target)
         {
-            DebugLogger.LogMessage($"Target {target} exiting tree!");
+            // DebugLogger.LogMessage($"Target {target} exiting tree!");
 
             // Remove the target and effect state from the dictionary, if it exists
             if (target != null && _targetStates.TryGetValue(target, out EffectState state))
@@ -475,7 +478,7 @@ namespace Effects
 
         protected virtual void OnEffectTimerTimeout(GodotObject target)
         {
-            DebugLogger.LogMessage($"Effect timer timed out!");
+            // DebugLogger.LogMessage($"Effect timer timed out!");
             if (target != null && IsInstanceValid(target))
             {
                 RemoveEffectFromTarget(target);
@@ -508,10 +511,11 @@ namespace Effects
                     if (state.Timers == null)
                     {
                         state.Timers = new();
-                        if (_stacking)
-                        {
-                            state.Timers.Capacity = _maxStacks;
-                        }
+                        // if (_stacking)
+                        // {
+                        //     state.Timers.Capacity =
+                        //         _maxStacks <= 0 ? state.CurrentStacks + 1 : _maxStacks;
+                        // }
                     }
                     // Start the timer(s)
                     StartTimer(target, state);
@@ -679,6 +683,7 @@ namespace Effects
         /// <param name="target">The target to apply the effect to.</param>
         protected void ApplyEffectToTarget(GodotObject target)
         {
+            // DebugLogger.LogMessage($"Applying effect {GetType().Name} to {target}!");
             // Get the current effect state for this target or create a new one
             EffectState state = GetOrCreateEffectState(target);
 
@@ -769,7 +774,7 @@ namespace Effects
 
         protected void RemoveEffectFromTarget(GodotObject target)
         {
-            DebugLogger.LogMessage($"Removing {this.ResourceName} from {target}", true);
+            // DebugLogger.LogMessage($"Removing {this.ResourceName} from {target}", true);
 
             // Get the current EffectState, if any.
             try
@@ -813,13 +818,13 @@ namespace Effects
             bool stateActive = !_stacking && state.Active;
 
             // If stacking is enabled, there is at least one stack on the target.
-            bool noStacks = _stacking && state.CurrentStacks > 0;
+            bool activeStacks = _stacking && state.CurrentStacks > 0;
 
             // If infinite stacking is enabled, the effect is active on the target.
             bool infEffectActive =
                 _stacking && _maxStacks < 0 && (state.Active || state.CurrentStacks > 0);
 
-            return stateActive || noStacks || infEffectActive;
+            return stateActive || activeStacks || infEffectActive;
         }
 
         /// <summary>
@@ -839,7 +844,7 @@ namespace Effects
         /// <param name="target">The target to remove all effects from.</param>
         public void ClearTargetEffectState(GodotObject target)
         {
-            DebugLogger.LogMessage($"Removing all effect stacks from {this.ResourceName}!", true);
+            // DebugLogger.LogMessage($"Removing all effect stacks from {this.ResourceName}!", true);
 
             if (_targetStates.TryGetValue(target, out EffectState state))
             {

@@ -1,4 +1,6 @@
+using DataStructures;
 using Godot;
+using Utility;
 using Weapons;
 
 namespace Enemies
@@ -8,7 +10,7 @@ namespace Enemies
     {
         protected string _scenePath;
         protected float _maxHealth;
-        protected WeaponResource _weaponResource;
+        protected WeaponStats _weaponStats;
         protected Curve2D _pathCurve;
         protected float _speed;
         protected int _crashDamage;
@@ -44,10 +46,21 @@ namespace Enemies
         }
 
         [Export]
-        public WeaponResource WeaponResource
+        public WeaponStats WeaponStats
         {
-            get => _weaponResource;
-            set => _weaponResource = value;
+            get => _weaponStats;
+            set
+            {
+                if (value == null)
+                {
+                    DebugLogger.LogMessage(
+                        $"WeaponStats for {ResourceName} is being set to null!",
+                        true,
+                        true
+                    );
+                }
+                _weaponStats = value;
+            }
         }
 
         [Export]
@@ -71,28 +84,31 @@ namespace Enemies
             set => _byteReward = value;
         }
 
-        public EnemyResource()
-            : this(0, 1, null, "", 0, null, 0, 0) { }
+        [Export]
+        public SoundSet Sounds { get; set; }
 
-        public EnemyResource(
-            int crashDamage,
-            float maxHealth,
-            Curve2D pathCurve,
-            string scenePath,
-            float speed,
-            WeaponResource weaponResource,
-            int flux,
-            int bytes
-        )
-        {
-            _crashDamage = crashDamage;
-            _maxHealth = maxHealth;
-            _pathCurve = pathCurve;
-            _scenePath = scenePath;
-            _speed = speed;
-            _weaponResource = weaponResource;
-            _fluxReward = flux;
-            _byteReward = bytes;
-        }
+        // public EnemyResource()
+        //     : this(0, 1, null, "", 0, null, 0, 0) { }
+
+        // public EnemyResource(
+        //     int crashDamage,
+        //     float maxHealth,
+        //     Curve2D pathCurve,
+        //     string scenePath,
+        //     float speed,
+        //     WeaponStats weaponStats,
+        //     int flux,
+        //     int bytes
+        // )
+        // {
+        //     _crashDamage = crashDamage;
+        //     _maxHealth = maxHealth;
+        //     _pathCurve = pathCurve;
+        //     _scenePath = scenePath;
+        //     _speed = speed;
+        //     _weaponStats = weaponStats;
+        //     _fluxReward = flux;
+        //     _byteReward = bytes;
+        // }
     }
 }

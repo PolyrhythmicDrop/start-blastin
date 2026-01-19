@@ -90,7 +90,7 @@ namespace UI.Loadout
         #region Slot Management
         private void SetWeaponSlot()
         {
-            FillSlot(_weaponSlot, _service.GetPlayer(_playerId).WeaponPlugin);
+            FillSlot(_weaponSlot, _service.GetPlayer(_playerId).Inventory.WeaponPlugin);
         }
 
         private void AddSlot()

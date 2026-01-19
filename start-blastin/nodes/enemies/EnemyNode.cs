@@ -1,14 +1,18 @@
 using System;
-using System.Reflection;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Autoloads;
+using Components;
+using Enemies.Spawners;
 using Entities;
 using Events;
 using Factories;
 using Godot;
 using Interfaces;
-using Microsoft.VisualBasic;
-using Projectiles;
 using Stats;
+using UI;
 using Utility;
 using WaveManagement;
 using Weapons;
@@ -26,12 +30,29 @@ namespace Enemies
             IListener,
             IDeflector
     {
+        #region Nodes
         protected StatManager _stats;
 
         protected WeaponNode _weapon;
 
         protected CollisionShape2D _shape;
-        protected EntityPath _path;
+
+        public VisibleOnScreenNotifier2D VisibleNotifier;
+
+        /// <summary>
+        /// The main path the enemy follows. When they reach the end of this path, the enemy despawns.
+        /// </summary>
+        protected EntityPath _followPath;
+
+        protected AudioComponent _audioComponent;
+
+        protected OverheadHealthBar _healthBar;
+
+        public WeaponNode Weapon => _weapon;
+        public EntityPath Path => _followPath;
+
+        #endregion
+
 
         #region Position and Velocity
         protected Vector2 _currentGlobalPosition;
@@ -44,9 +65,6 @@ namespace Enemies
 
         #region Stats
 
-        // current stats
-        protected float _currentHealth;
-        protected float _maxHealth => _stats.GetStat(StatType.MaxHealth).CurrentValue;
 
         /// <summary>
         /// The speed at which this enemy follows its assigned path.
@@ -71,26 +89,151 @@ namespace Enemies
 
         public bool DeflectActive { get; set; }
 
+        /// <summary>
+        /// Whether or not the enemy is spawning. Set to false automatically after the enemy leaves the OOB area for the first time.
+        /// </summary>
+        public bool Spawning { get; set; } = true;
+
+        /// <summary>
+        /// Whether or not the enemy is part of a squadron. Enables squadron behavior, like tweening out of the formation at a set time.
+        /// </summary>
+        public bool InSquadron { get; set; } = false;
+
+        /// <summary>
+        /// If the enemy is part of a squadron, this is the final relative position of the enemy after splitting.
+        /// </summary>
+        public Vector2? SquadronPosition { get; set; }
+
+        /// <summary>
+        /// Whether or not the enemy is currently visible on the screen.
+        /// </summary>
+        public bool OnScreen { get; set; }
+
+        /// <summary>
+        /// The point in the enemy's path at which they split off from the main squadron point into their <see cref="SquadronPosition"/>.
+        /// </summary>
+        public float SplitPoint;
+
+        /// <summary>
+        /// If part of a squadron, whether or not the enemy has split from the squadron.
+        /// </summary>
+        private bool _split = false;
+
         #endregion
 
-        public WeaponNode Weapon => _weapon;
-        public EntityPath Path => _path;
 
+        #region Health
+
+        // current stats
+        protected float _currentHealth;
+        protected float _maxHealth => _stats.GetStat(StatType.MaxHealth).CurrentValue;
         public float CurrentHealth
         {
             get => _currentHealth;
-            private set => _currentHealth = value;
+            private set
+            {
+                _currentHealth = value;
+                _healthBar?.SetValues(_maxHealth, _currentHealth);
+            }
         }
 
-        public float MaxHealth => _maxHealth;
+        public float MaxHealth
+        {
+            get => _maxHealth;
+            set
+            {
+                _stats.UpdateStat(StatType.MaxHealth, Mathf.Max(1, value));
+                _healthBar?.SetValues(_maxHealth, _currentHealth);
+            }
+        }
+
+        #region Constants
+
+        protected const float MIN_FOLLOW_TWEEN_DURATION = 0.1f;
+        protected const float SQUADRON_TWEEN_DURATION = 1.5f;
+        protected const float DAMAGE_ANIM_DURATION = 0.5f;
+
+        #endregion
+
+        /// <summary>
+        /// Sets the position of the health bar based on the enemy's current position.
+        /// </summary>
+        protected virtual void SetHealthBarPosition()
+        {
+            _healthBar.SetPosition(_currentGlobalPosition);
+        }
+
+        /// <summary>
+        /// Sets the size of the enemy's health bar based on the size of the enemy's sprite. Override in derived classes.
+        /// </summary>
+        protected virtual void SetHealthBarSize() { }
+
+        /// <summary>
+        /// Turn the health bar on and off.
+        /// </summary>
+        public virtual void ToggleHealthBarActive()
+        {
+            _healthBar.ToggleActive();
+        }
+
+        #endregion
 
         #region Init
+
+        /// <summary>
+        /// Initializes the enemy node from an enemy resource.
+        /// Called from the EnemyFactory before the enemy is added to the scene tree, before _Ready().
+        /// </summary>
+        /// <param name="enemyResource">The resource used to create the enemy.</param>
+        public virtual void Initialize(EnemyResource enemyResource)
+        {
+            // Health
+            _baseMaxHealth = enemyResource.MaxHealth;
+            _currentHealth = _baseMaxHealth;
+
+            // Currency
+            _fluxReward = enemyResource.FluxReward;
+            _byteReward = enemyResource.ByteReward;
+
+            // Weapon initialization
+            _weapon = WeaponFactory.CreateWeapon(
+                enemyResource.WeaponStats,
+                velocityProvider: this,
+                owner: this
+            );
+            _baseFireRate = enemyResource.WeaponStats.FireRate;
+            _baseWeaponDamage = enemyResource.WeaponStats.Damage;
+            _baseSpeed = enemyResource.Speed;
+            _baseCrashDamage = enemyResource.CrashDamage;
+
+            // Sound initialization
+            _audioComponent = new() { Sounds = enemyResource.Sounds };
+            _audioComponent.Initialize(this);
+
+            InitializeStatManager();
+        }
+
+        /// <summary>
+        /// Initializes the enemy's stat manager and base stats.
+        /// Called after <see cref="Initialize"/>, before the enemy is added to the scene tree.
+        /// </summary>
+        public virtual void InitializeStatManager()
+        {
+            _stats = new();
+            _stats.AddStat(StatType.CrashDamage, _baseCrashDamage);
+            _stats.AddStat(StatType.Speed, _baseSpeed);
+            _stats.AddStat(StatType.FireRate, _baseFireRate);
+            _stats.AddStat(StatType.MaxHealth, _baseMaxHealth);
+            _stats.AddStat(StatType.Damage, _baseWeaponDamage);
+        }
+
         public override void _Ready()
         {
             base._Ready();
             AddToGroup("enemies");
 
             _shape = GetNode<CollisionShape2D>("%CollisionShape2D");
+            InitVisibleNotifier();
 
             AddChild(_weapon);
 
@@ -104,7 +247,26 @@ namespace Enemies
             // Initialize position tracking
             _lastFramePosition = GlobalPosition;
 
+            // Initialize the health bar.
+            _healthBar = GetNode<OverheadHealthBar>("%OverheadHealthBar");
+            _healthBar.Initialize(this);
+
             ConnectSignals();
+        }
+
+        protected void InitVisibleNotifier()
+        {
+            VisibleNotifier = new() { Rect = _shape.Shape.GetRect() };
+            AddChild(VisibleNotifier);
+        }
+
+        public void TweenSquadronPosition(Vector2 offset)
+        {
+            Tween tween = _followPath.CreateTween();
+            Vector2 finalPos = _followPath.Position + offset;
+
+            tween.SetTrans(Tween.TransitionType.Cubic).SetEase(Tween.EaseType.Out);
+            tween.TweenProperty(_followPath, "position", finalPos, SQUADRON_TWEEN_DURATION);
         }
 
         public virtual void ConnectSignals()
@@ -113,56 +275,50 @@ namespace Enemies
             {
                 _stats.StatUpdated += OnStatUpdated;
             }
+
+            // Connect path end signal
+            if (_followPath != null)
+            {
+                _followPath.PathComplete += OnPathComplete;
+            }
+
+            if (VisibleNotifier != null)
+            {
+                VisibleNotifier.ScreenEntered += OnScreenEntered;
+                VisibleNotifier.ScreenExited += OnScreenExited;
+            }
         }
 
         public virtual void DisconnectSignals()
         {
-            _stats.StatUpdated -= OnStatUpdated;
+            if (_stats != null)
+            {
+                _stats.StatUpdated -= OnStatUpdated;
+            }
+            if (_followPath != null)
+            {
+                _followPath.PathComplete -= OnPathComplete;
+            }
         }
 
-        /// <summary>
-        /// Initializes the enemy node from an enemey resource.
-        /// Called from the EnemyFactory before the enemy is added to the scene tree.
-        /// </summary>
-        /// <param name="enemyResource">The resource used to create the enemy.</param>
-        public virtual void Initialize(EnemyResource enemyResource)
+        public virtual void OnScreenEntered()
         {
-            _baseMaxHealth = enemyResource.MaxHealth;
-            _currentHealth = _baseMaxHealth;
-
-            _weapon = WeaponFactory.CreateWeapon(
-                enemyResource.WeaponResource,
-                velocityProvider: this,
-                owner: this
-            );
-            _baseFireRate = enemyResource.WeaponResource.Stats.FireRate;
-            _baseWeaponDamage = enemyResource.WeaponResource.Stats.Damage;
-            _baseSpeed = enemyResource.Speed;
-            _baseCrashDamage = enemyResource.CrashDamage;
-
-            _fluxReward = enemyResource.FluxReward;
-            _byteReward = enemyResource.ByteReward;
-
-            InitializeStats();
+            OnScreen = true;
         }
 
-        /// <summary>
-        /// Initializes the enemy's stat manager and base stats.
-        /// Called after <see cref="Initialize"/>, before the enemy is added to the scene tree.
-        /// </summary>
-        public virtual void InitializeStats()
+        public virtual void OnScreenExited()
         {
-            _stats = new();
-            _stats.AddStat(StatType.CrashDamage, _baseCrashDamage);
-            _stats.AddStat(StatType.Speed, _baseSpeed);
-            _stats.AddStat(StatType.FireRate, _baseFireRate);
-            _stats.AddStat(StatType.MaxHealth, _baseMaxHealth);
-            _stats.AddStat(StatType.Damage, _baseWeaponDamage);
+            OnScreen = false;
         }
 
         public void SetPath(EntityPath path)
         {
-            _path = path;
+            _followPath = path;
+        }
+
+        public virtual void OnPathComplete()
+        {
+            Die();
         }
 
         #endregion
@@ -193,7 +349,7 @@ namespace Enemies
                 case StatType.Damage:
                 case StatType.ProjectileSpeed:
                     Weapon.UpdateWeaponStats(args.StatType, args.Stat);
-                    break;
+                    return;
                 case StatType.Speed:
                     if (_followTween != null && _followTween.IsValid())
                     {
@@ -201,28 +357,31 @@ namespace Enemies
                     }
                     else
                     {
-                        FollowPath(_path, _followSpeed);
+                        FollowPath(_followSpeed);
                     }
-                    break;
+                    return;
                 default:
                     return;
             }
         }
 
+        /// <summary>
+        /// Adjusts the speed at which the enemy follows a path based on the enemy's speed.
+        /// </summary>
         protected virtual void AdjustFollowSpeed()
         {
-            if (_path?.PathFollow == null || _followTween == null)
+            if (_followPath?.PathFollow == null || _followTween == null)
             {
                 return;
             }
 
             // Get the current progress and calculate the remaining distance
-            float currentProgress = _path.PathFollow.ProgressRatio;
-            float pathLength = _path.Curve.GetBakedLength();
+            float currentProgress = _followPath.PathFollow.ProgressRatio;
+            float pathLength = _followPath.Curve.GetBakedLength();
             float remainingDistance = pathLength * (1.0f - currentProgress);
 
             // Calculate the new duration based on the current _followSpeed.
-            float duration = Math.Max(remainingDistance / _followSpeed, 0.1f);
+            float duration = Math.Max(remainingDistance / _followSpeed, MIN_FOLLOW_TWEEN_DURATION);
 
             // Store whether the current tween was paused so we can re-pause it after creating the new one.
             bool wasPaused = !_followTween.IsRunning();
@@ -231,7 +390,7 @@ namespace Enemies
             _followTween.Kill();
 
             _followTween = CreateTween();
-            _followTween.TweenProperty(_path.PathFollow, "progress_ratio", 1.0, duration);
+            _followTween.TweenProperty(_followPath.PathFollow, "progress_ratio", 1.0, duration);
 
             // Pause the new tween if the original tween was paused.
             if (wasPaused)
@@ -263,6 +422,9 @@ namespace Enemies
                 _baseMaxHealth * (1 + (scaler.MaxHealthModifier * waveLogMultiplier));
             SetStat(StatType.MaxHealth, newMaxHealth);
 
+            // Fill the enemy's health.
+            CurrentHealth = MaxHealth;
+
             float newCrashDamage =
                 _baseCrashDamage * (1 + (scaler.CrashDamageModifier * waveLogMultiplier));
             SetStat(StatType.CrashDamage, newCrashDamage);
@@ -277,7 +439,6 @@ namespace Enemies
             float waveExpoMultiplier = Mathf.Pow(0.95f, wave * scaler.FireRateModifier);
             // Fire rate should be decreased, since lower fire rates result in faster firing.
             float newFireRate = Mathf.Max(0.1f, _baseFireRate * waveExpoMultiplier);
-            // _weapon.Stats.FireRate = Mathf.Max(0.1f, _baseFireRate * waveExpoMultiplier);
             SetStat(StatType.FireRate, newFireRate);
         }
 
@@ -299,17 +460,23 @@ namespace Enemies
         {
             if (_alive)
             {
+                // Play the hit sound
+                // AudioService.Instance.PlaySound(_sounds?.Hit, this, volume: -6);
+                _audioComponent.PlayHitSound();
+
                 PlayDamageAnimation();
                 IndicatorFactory.CreateTextIndicator(
                     (MathF.Round(damage, 1) * -1).ToString(),
                     GlobalPosition,
                     parent: this
                 );
-                _currentHealth -= damage;
+                CurrentHealth -= damage;
+
+                // _healthBar.SetValues(MaxHealth, CurrentHealth);
 
                 if (_currentHealth <= 0)
                 {
-                    _currentHealth = 0;
+                    CurrentHealth = 0;
                     Die(playerId);
                 }
             }
@@ -322,16 +489,18 @@ namespace Enemies
             {
                 return;
             }
-            _currentHealth = Mathf.Min(_currentHealth + healAmount, _maxHealth);
+            CurrentHealth = Mathf.Min(_currentHealth + healAmount, MaxHealth);
         }
 
         protected virtual void FireWeapon()
         {
+            _audioComponent.PlayFireSound();
             _weapon.Fire();
         }
 
         public virtual async void Die(int? playerId = null)
         {
+            _healthBar.ToggleBarVisibility(false);
             if (playerId != null)
             {
                 EnemyKilledEventArgs args = new(
@@ -342,8 +511,10 @@ namespace Enemies
                 );
                 EventBus.Instance.RaiseEnemyKilled(args);
             }
-            // Queue free after all child projectiles die
+            // Queue free after all child projectiles die and all child audio nodes stop playing
+            await WaitForAudioEnd();
             bool projectilesDisabled = await _weapon.WaitForAllProjectilesDisabled();
+
             if (projectilesDisabled)
             {
                 QueueFree();
@@ -367,7 +538,7 @@ namespace Enemies
                     ),
                     0,
                     30,
-                    0.5
+                    DAMAGE_ANIM_DURATION
                 );
                 tween.TweenCallback(
                     Callable.From(() => shaderMaterial.SetShaderParameter(mixRatioPath, 0))
@@ -395,15 +566,35 @@ namespace Enemies
             _lastFramePosition = GlobalPosition;
         }
 
+        public override void _Process(double delta)
+        {
+            if (_motion != Vector2.Zero)
+            {
+                SetHealthBarPosition();
+            }
+
+            if (_split)
+            {
+                return;
+            }
+
+            if (InSquadron && SquadronPosition != null)
+            {
+                if (_followPath.PathFollow.ProgressRatio > SplitPoint)
+                {
+                    _split = true;
+                    TweenSquadronPosition((Vector2)SquadronPosition);
+                }
+            }
+        }
+
         /// <summary>
         /// Follows an EntityPath at a set speed.
         /// </summary>
-        /// <param name="path"></param>
-        /// <param name="speed"></param>
-        protected virtual void FollowPath(EntityPath path, float speed)
+        protected virtual void FollowPath(float speed)
         {
-            float pathLength = path.Curve.GetBakedLength();
-            float duration = Mathf.Max(pathLength / speed, 0.1f);
+            float pathLength = _followPath.Curve.GetBakedLength();
+            float duration = Mathf.Max(pathLength / speed, MIN_FOLLOW_TWEEN_DURATION);
 
             if (_followTween != null)
             {
@@ -411,7 +602,47 @@ namespace Enemies
             }
 
             _followTween = CreateTween();
-            _followTween.TweenProperty(path.PathFollow, "progress_ratio", 1.0, duration);
+            _followTween.TweenProperty(_followPath, "FollowRatio", 1.0, duration);
+            // _followTween.TweenProperty(_followPath, StringName., 1.0, duration);
+        }
+
+        /// <summary>
+        /// Finds any AudioStreamPlayer2D nodes in the enemy's scene tree and waits for their playback to finish before returning.
+        /// </summary>
+        /// <returns></returns>
+        private async Task WaitForAudioEnd()
+        {
+            var audioSignals = FindChildren("*", "AudioStreamPlayer2D", owned: false)
+                .OfType<AudioStreamPlayer2D>()
+                .Where(audio => audio.Playing)
+                .Select(audio => ToSignal(audio, AudioStreamPlayer2D.SignalName.Finished));
+
+            List<Task> audioTasks = new();
+            foreach (SignalAwaiter awaiter in audioSignals)
+            {
+                audioTasks.Add(UtilityMethods.SignalAwaiterToTask(awaiter));
+            }
+
+            await Task.WhenAll(audioTasks);
+            // var children = GetChildren();
+            // foreach (Node node in children)
+            // {
+            //     if (node is not AudioStreamPlayer2D audioStream)
+            //     {
+            //         continue;
+            //     }
+
+            //     if (!audioStream.Playing)
+            //     {
+            //         continue;
+            //     }
+            //     else
+            //     {
+            //         await ToSignal(audioStream, AudioStreamPlayer2D.SignalName.Finished);
+            //         continue;
+            //     }
+            // }
+            // return true;
         }
 
         public override void _ExitTree()

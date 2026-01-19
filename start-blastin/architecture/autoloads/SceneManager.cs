@@ -101,6 +101,7 @@ namespace Autoloads
         {
             // Add PlayerService
             ServiceManager.Instance.RegisterService(new PlayerService());
+            ServiceManager.Instance.RegisterService(AudioService.Instance);
         }
 
         private void InitializeEnemyFinder()

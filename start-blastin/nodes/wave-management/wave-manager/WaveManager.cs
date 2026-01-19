@@ -1,4 +1,6 @@
+using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Autoloads;
 using Godot;
@@ -12,7 +14,7 @@ namespace WaveManagement
         private int _wave = 1;
         private float _difficultyModifier = 0.1f;
         private Timer _waveTimer;
-        private double _waveTime;
+        private static double _waveTime;
 
         private ScaleManager _scaleManager;
 
@@ -150,6 +152,7 @@ namespace WaveManagement
             {
                 _waveTimer.Stop();
             }
+
             EndWave();
         }
 
@@ -160,9 +163,12 @@ namespace WaveManagement
         /// <returns></returns>
         private async Task<bool> WaitForEnemiesToClear()
         {
-            int enemyCount = GetTree().GetNodesInGroup("enemies").Count;
+            // int enemyCount = EnemyFinder.GetAllEnemies().Count();
+            // int prevEnemyCount = enemyCount;
+            // while ((enemyCount = EnemyFinder.GetAllEnemies().Count()) > 0)
+            int enemyCount = EnemyFinder.GetOnScreenEnemies(true).Count();
             int prevEnemyCount = enemyCount;
-            while ((enemyCount = GetTree().GetNodesInGroup("enemies").Count) > 0)
+            while ((enemyCount = EnemyFinder.GetOnScreenEnemies(true).Count()) > 0)
             {
                 if (enemyCount != prevEnemyCount)
                 {
@@ -202,6 +208,11 @@ namespace WaveManagement
         }
 
         #endregion
+
+        public static double GetNextWaveTime()
+        {
+            return _waveTime;
+        }
 
         public override void _ExitTree()
         {

@@ -16,7 +16,7 @@ namespace FileIO
         /// <param name="rootDirectory">The directory containing the resources of type <typeparamref name="T"/> to load.</param>
         /// <param name="recursive">Whether or not to load resources from subdirectories of the <paramref name="rootDirectory"/>.</param>
         public static void LoadResourcePool<T>(
-            List<T> pool,
+            ICollection<T> pool,
             string rootDirectory,
             bool recursive = false
         )
@@ -33,43 +33,20 @@ namespace FileIO
                 }
                 else
                 {
-                    // Sort the subdirectories from the resource names.
-                    List<string> rootResourceStrings = new();
-                    List<string> subdirectoryStrings = new();
-
-                    foreach (string str in directoryContents)
+                    foreach (string itemStr in directoryContents)
                     {
-                        if (str.EndsWith('/'))
+                        string fullPath = rootDirectory + itemStr;
+
+                        // If our item string is a subdirectory (ends with '/') and `recursive` is true,
+                        // call LoadResourcePool on the subdirectory.
+                        if (itemStr.EndsWith('/') && recursive)
                         {
-                            subdirectoryStrings.Add(str);
+                            LoadResourcePool(pool, fullPath, recursive);
                         }
+                        // Otherwise, it's a resource file, so load it and add it to the pool.
                         else
                         {
-                            rootResourceStrings.Add(str);
-                        }
-                    }
-
-                    foreach (string resourceName in rootResourceStrings)
-                    {
-                        string fullPath = rootDirectory + resourceName;
-                        pool.Add(ResourceLoader.Load<T>(fullPath));
-                    }
-
-                    // Now get resources from any sub-directories and load those too.
-                    if (recursive && subdirectoryStrings.Count > 0)
-                    {
-                        rootDirectory = rootDirectory.EndsWith('/')
-                            ? rootDirectory
-                            : rootDirectory + '/';
-                        foreach (string subDir in subdirectoryStrings)
-                        {
-                            string subDirPath = rootDirectory + subDir;
-                            string[] subDirResources = ResourceLoader.ListDirectory(subDirPath);
-                            foreach (string resourceName in subDirResources)
-                            {
-                                string fullPath = subDirPath + resourceName;
-                                pool.Add(ResourceLoader.Load<T>(fullPath));
-                            }
+                            pool.Add(ResourceLoader.Load<T>(fullPath));
                         }
                     }
                 }

@@ -1,0 +1,7 @@
+[gd_resource type="AudioStreamRandomizer" load_steps=2 format=3 uid="uid://ccw5lcude4k4h"]
+
+[ext_resource type="AudioStream" uid="uid://ip2rmkv248df" path="res://audio/sfx/player-sounds/phase-ready.wav" id="1_1p7ej"]
+
+[resource]
+streams_count = 1
+stream_0/stream = ExtResource("1_1p7ej")

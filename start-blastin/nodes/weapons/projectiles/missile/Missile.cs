@@ -1,21 +1,24 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using Enemies;
 using Entities;
 using Events;
 using Godot;
 using Interfaces;
 using Projectiles;
+using Utility;
 
 [GlobalClass]
 public partial class Missile : Projectile
 {
-    public static string ScenePath => "res://nodes/weapons/projectiles/missile/missile.tscn";
     private AnimatedSprite2D _sprite;
 
     /// <summary>
     /// Rotation speed per frame, in radians.
     /// </summary>
     private const float TURNRAD = 0.025f;
+
+    private ShapeCast2D _shapeCast;
 
     // Targeting variables
     private Area2D _targetingArea;
@@ -24,10 +27,12 @@ public partial class Missile : Projectile
 
     public override void _Ready()
     {
-        base._Ready();
         _sprite = GetNode<AnimatedSprite2D>("%Sprite");
         _targetingArea = GetNode<Area2D>("%TargetingArea");
+        _shapeCast = GetNode<ShapeCast2D>("%ShapeCast2D");
+
         _nullTargetCallable = Callable.From(RemoveCurrentTarget);
+        base._Ready();
 
         ConnectSignals();
     }
@@ -42,6 +47,72 @@ public partial class Missile : Projectile
     {
         // _targetingArea.BodyEntered -= OnTargetAreaEntered;
         // _targetingArea.BodyExited -= OnTargetAreaExited;
+    }
+
+    // Shapecast changes
+
+    public override void SetRayMask(Faction faction)
+    {
+        base.SetRayMask(faction);
+        if (_shapeCast != null && _ray != null)
+        {
+            _shapeCast.CollisionMask = _ray.CollisionMask;
+            // Disable the ray, since we're going to use the shapecast for collision instead.
+            _ray.Enabled = false;
+        }
+    }
+
+    protected override void CastRay(double delta)
+    {
+        _ray.Enabled = false;
+
+        Vector2 nextPos = GlobalPosition + GetTrajectory(delta);
+        _shapeCast.TargetPosition = ToLocal(nextPos);
+
+        if (_shapeCast.Enabled == false)
+        {
+            _shapeCast.Enabled = true;
+        }
+
+        _shapeCast.ForceShapecastUpdate();
+
+        if (_shapeCast.IsColliding())
+        {
+            for (int i = 0; i < _shapeCast.CollisionResult.Count; i++)
+            {
+                RaiseCollision(this, CalculateShapeCollisionData(delta, i));
+            }
+        }
+    }
+
+    protected CollisionEventArgs CalculateShapeCollisionData(double delta, int index)
+    {
+        Vector2 collNormal = _shapeCast.GetCollisionNormal(index);
+        Vector2 collPoint = _shapeCast.GetCollisionPoint(index);
+        GodotObject collider = _shapeCast.GetCollider(index);
+
+        // If we get a 0 normal (likely because the ray started inside the collider), calculate the normal manually.
+        if (collNormal == Vector2.Zero)
+        {
+            // Calculate normal from relative position for a Node2D
+            if (collider is Node2D collNode)
+            {
+                // Get the direction from the center of the collider to the Projectile.
+                Vector2 collDir = (GlobalPosition - collNode.GlobalPosition).Normalized();
+                collNormal = collDir;
+            }
+            else
+            {
+                // Otherwise, just use the opposite direction of the projectile
+                collNormal = Vector2.Right.Rotated(GlobalRotation).Normalized() * -1;
+            }
+        }
+        // else
+        // {
+        //     collNormal *= -1;
+        // }
+
+        return new CollisionEventArgs(collider, collPoint, collNormal);
     }
 
     protected override Vector2 GetTrajectory(double delta)
@@ -152,7 +223,6 @@ public partial class Missile : Projectile
             List<Node2D> bodies = [.. _targetingArea.GetOverlappingBodies()];
 
             // If the missile was fired from an enemy, see if any of the bodies are a player, then track that player.
-            // if (_sourceWeapon.EnemyOwned)
             if (_faction == Faction.Enemies || _faction == Faction.All)
             {
                 Node2D found = bodies.Find(body => body is Player);

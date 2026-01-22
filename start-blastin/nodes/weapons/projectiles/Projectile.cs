@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using Enemies;
 using Entities;
 using Events;
@@ -109,6 +108,11 @@ namespace Projectiles
 
         public event EventHandler<CollisionEventArgs> Collision;
 
+        protected void RaiseCollision(object source, CollisionEventArgs args)
+        {
+            Collision?.Invoke(source, args);
+        }
+
         /// <summary>
         /// Constructor for the Projectile. Initializes the <see cref="DeactivationTimer"/> and the <see cref="_deactivateCallable"/>.
         /// </summary>
@@ -161,7 +165,7 @@ namespace Projectiles
         /// Sets the collision masks for the targeting ray.
         /// </summary>
         /// <param name="faction">The Faction this projectile belongs to.</param>
-        public void SetRayMask(Faction faction)
+        public virtual void SetRayMask(Faction faction)
         {
             _ray?.SetCollisionMaskValue(8, true);
             switch (faction)
@@ -270,7 +274,7 @@ namespace Projectiles
         /// </summary>
         /// <param name="connect">True to connect the signal, false to disconnect the signal.</param>
         /// <exception cref="InvalidOperationException"></exception>
-        private void ToggleCollisionSignalConnection(bool connect)
+        protected virtual void ToggleCollisionSignalConnection(bool connect)
         {
             if (connect)
             {
@@ -308,20 +312,6 @@ namespace Projectiles
         #endregion
 
         #region Physics
-
-        /// <summary>
-        /// Adds a fraction of the firing object's velocity to the projectile if the projectile is going in the same direction as the firing object.
-        /// </summary>
-        public virtual void AddSourceVelocity()
-        {
-            // Add speed in projectile's firing direction only
-            float projectionMagnitude = _sourceVelocity.Dot(Vector2.Right.Rotated(GlobalRotation));
-
-            // Only add a fraction of the movement speed to projectile speed.
-            float extraVelocity = Mathf.Max(0, projectionMagnitude) * 0.6f;
-
-            _currentSpeed = _baseSpeed + extraVelocity;
-        }
 
         public virtual void AddSourceVelocity(Vector2 velocity)
         {
@@ -409,7 +399,7 @@ namespace Projectiles
 
         #region Collision
 
-        public void SetProjectileCollisionLayers(Faction faction)
+        public virtual void SetProjectileCollisionLayers(Faction faction)
         {
             // Enable aura detection (Layer 6) for both types
             SetCollisionMaskValue(6, true);
@@ -514,44 +504,112 @@ namespace Projectiles
             }
         }
 
+        /// <summary>
+        /// Deflects the projectile based off the position and velocity of a <paramref name="deflector"/> object and a collision normal.
+        /// Performs the deflection by adjusting the projectile's GlobalRotation, thus changing the direction and orientation of the projectile.
+        /// </summary>
+        /// <param name="deflector">The object the projectile has hit that is deflecting the projectile.</param>
+        /// <param name="args">Collision arguments packaged with the <see cref="Collision"/> event. This method uses the <see cref="CollisionEventArgs.CollisionNormal"/> to calculate the deflection.
+        /// If null, the deflected projectile rotates 180 degrees and continues on its way.</param>
         public virtual void Deflect(IDeflector deflector, CollisionEventArgs args = null)
         {
-            // if (deflector is Node node)
-            // {
-            //     DebugLogger.LogMessage($"{Name} deflected by {node.Name}!");
-            // }
             // Convert to the opposite faction of the current faction.
             if (deflector is Shield && _faction != Faction.Players)
             {
                 ConvertToNewFaction(Faction.Players);
             }
 
-            // Default naive deflection, 180deg from current rotation.
-            if (args == null || args?.CollisionNormal == Vector2.Zero)
-            {
-                GlobalRotation += MathF.PI;
-            }
-            // If we get a normal and some more advanced args, perform a bounce
-            else
-            {
-                // Get the current direction vector based on rotation
-                Vector2 currentDir = Vector2.Right.Rotated(GlobalRotation).Normalized();
-
-                // Bounce the direction vector off the collision's normal
-                Vector2 bounceDir = currentDir.Bounce(args.CollisionNormal);
-
-                // Convert the bounced direction to rotation.
-                GlobalRotation = bounceDir.Angle();
-            }
-
+            // Get the velocity of the deflector, if it's available
+            Vector2 deflectorVelocity = Vector2.Zero;
             if (deflector is IVelocityProvider velocitySource)
             {
-                AddDeflectionVelocity(velocitySource.GetCurrentVelocity());
+                // AddDeflectionVelocity(velocitySource.GetCurrentVelocity());
+                deflectorVelocity = velocitySource.GetCurrentVelocity();
             }
 
-            // Change the shader for easier detection
-            bool enemyFaction = _faction == Faction.Enemies ? true : false;
-            ProjectileFactory.SetProjectileShaderMaterial(this, enemyFaction);
+            // Get the projectile's current direction vector based on rotation
+            Vector2 currentDir = Vector2.Right.Rotated(GlobalRotation).Normalized();
+
+            // If we don't have arguments or if collision normal is zero,
+            // use default naive deflection, either with the velocity of the deflector or opposite deflected projectile movement.
+            if (args == null || args?.CollisionNormal == Vector2.Zero)
+            {
+                // If the magnitude of the deflector velocity is above a small threshold...
+                if (deflectorVelocity.LengthSquared() > 0.01f)
+                {
+                    // Set the global rotation of the projectile in the direction the deflector is moving
+                    GlobalRotation = deflectorVelocity.Angle();
+                }
+                else
+                {
+                    // Otherwise, just deflect in the opposite direction of the deflected projectile (180 degrees).
+                    GlobalRotation += MathF.PI;
+                }
+            }
+            else
+            {
+                // Check if the deflector is moving toward or away from the projectile by getting the dot product of the collision normal and the current direction of the deflected projectile.
+                float dot = currentDir.Dot(args.CollisionNormal);
+
+                // If the dot product is < 0, then the deflector and deflectee are going in different directions, and probably moving toward each other.
+                if (dot < 0)
+                {
+                    // Bounce the direction vector off the collision's normal
+                    Vector2 bounceDir = currentDir.Bounce(args.CollisionNormal);
+
+                    // Convert the bounced direction to rotation.
+                    GlobalRotation = bounceDir.Angle();
+                }
+                // Otherwise, the deflector and the normal are going in the same direction (one is moving away from the other)
+                // or are parallel, so use the deflector's velocity to determine a new direction.
+                else
+                {
+                    // If the deflector is moving, push the projectile in the direction the deflector is moving
+                    if (deflectorVelocity.LengthSquared() > 0.01f)
+                    {
+                        Vector2 deflectorDir = deflectorVelocity.Normalized();
+
+                        // Blend between the a direct bounce of the deflectee's direction and the direction of the deflector.
+                        Vector2 bounceDir = (-currentDir).Bounce(args.CollisionNormal);
+                        Vector2 blendedDir = (deflectorDir + bounceDir).Normalized();
+
+                        GlobalRotation = blendedDir.Angle();
+                    }
+                    // If the deflector is stationary (more or less), just do a naive deflection in the opposite direction.
+                    else
+                    {
+                        GlobalRotation = MathF.PI;
+                    }
+                }
+            }
+
+            // Old implementation
+            // // Default naive deflection, 180deg from current rotation.
+            // if (args == null || args?.CollisionNormal == Vector2.Zero)
+            // {
+            //     GlobalRotation += MathF.PI;
+            // }
+            // // If we get a normal and some more advanced args, perform a bounce
+            // else
+            // {
+            //     // Get the current direction vector based on rotation
+            //     Vector2 currentDir = Vector2.Right.Rotated(GlobalRotation).Normalized();
+
+            //     // Bounce the direction vector off the collision's normal
+            //     Vector2 bounceDir = currentDir.Bounce(args.CollisionNormal);
+
+            //     // Convert the bounced direction to rotation.
+            //     GlobalRotation = bounceDir.Angle();
+            // }
+
+            // if (deflector is IVelocityProvider velocitySource)
+            // {
+            //     AddDeflectionVelocity(velocitySource.GetCurrentVelocity());
+            // }
+
+            // // Change the shader for easier detection
+            // bool enemyFaction = _faction == Faction.Enemies ? true : false;
+            // ProjectileFactory.SetProjectileShaderMaterial(this, enemyFaction);
         }
 
         public void SetProjectileAuraDetection(bool areaDetect)

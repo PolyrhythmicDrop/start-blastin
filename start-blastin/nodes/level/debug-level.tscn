@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cca75d2re7isj"]
+[gd_scene load_steps=12 format=3 uid="uid://cca75d2re7isj"]
 
 [ext_resource type="Script" uid="uid://bpw7egf87stew" path="res://architecture/utility/Debugger.cs" id="1_hxhdr"]
 [ext_resource type="PackedScene" uid="uid://bq7imdtl082ko" path="res://nodes/background-generator/scrolling-background-test.tscn" id="1_jmnrl"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://33wv8gl0qq4r" path="res://nodes/level/LevelCamera.cs" id="8_jmnrl"]
 [ext_resource type="PackedScene" uid="uid://bsyev7gatn1jy" path="res://nodes/environmental/oob-area.tscn" id="8_mybqq"]
 [ext_resource type="PackedScene" uid="uid://dxdlpe5yuamuy" path="res://nodes/wave-management/wave-manager/wave-manager.tscn" id="9_4usc6"]
+[ext_resource type="PackedScene" uid="uid://c6bkea7amdoay" path="res://addons/runtime_debug_tools/scenes/remote_inspector.tscn" id="10_hxhdr"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_jmnrl"]
 noise_type = 3
@@ -47,3 +48,5 @@ script = ExtResource("7_ald07")
 process_mode = 3
 script = ExtResource("1_hxhdr")
 metadata/_custom_type_script = "uid://bpw7egf87stew"
+
+[node name="RemoteInspector" parent="." instance=ExtResource("10_hxhdr")]

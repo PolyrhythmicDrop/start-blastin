@@ -1,0 +1,39 @@
+[gd_scene load_steps=4 format=3 uid="uid://k6jtmcb31ro7"]
+
+[ext_resource type="Texture2D" uid="uid://cdro5m8x72u18" path="res://assets/shields/shield.png" id="1_et6lk"]
+[ext_resource type="Script" uid="uid://xtu1hpna512e" path="res://nodes/weapons/projectiles/shield/Shield.cs" id="1_jihpr"]
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_avtfy"]
+points = PackedVector2Array(-7, -24, -3.3884206, -30, 0.6115794, -30, 7.6115794, -5.000001, 7.6115794, 4.999999, 0.6115794, 30, -3.3884206, 30, -7, 24, -1, 0, 0, 0)
+
+[node name="Shield" type="Area2D"]
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("1_jihpr")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+texture = ExtResource("1_et6lk")
+region_enabled = true
+region_rect = Rect2(26, 2, 14, 60)
+region_filter_clip_enabled = true
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+unique_name_in_owner = true
+build_mode = 1
+polygon = PackedVector2Array(-7, -24, -3.3884206, -30, 0.6115794, -30, 7.6115794, -5.000001, 7.6115794, 4.999999, 0.6115794, 30, -3.3884206, 30, -7, 24, -1, 0, 0, 0)
+
+[node name="TrajRayCast" type="RayCast2D" parent="."]
+unique_name_in_owner = true
+target_position = Vector2(0, 0)
+collision_mask = 2
+hit_from_inside = true
+collide_with_areas = true
+
+[node name="ShapeCast2D" type="ShapeCast2D" parent="."]
+unique_name_in_owner = true
+shape = SubResource("ConvexPolygonShape2D_avtfy")
+target_position = Vector2(0, 0)
+max_results = 1
+collision_mask = 0
+collide_with_areas = true

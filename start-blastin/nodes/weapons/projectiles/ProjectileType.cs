@@ -6,5 +6,6 @@ namespace Projectiles
     {
         Bullet,
         Missile,
+        Shield,
     }
 }

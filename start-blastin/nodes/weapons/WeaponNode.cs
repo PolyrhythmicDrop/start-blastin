@@ -226,6 +226,14 @@ namespace Weapons
                 sourceProj.Deflect(deflector, args);
                 return;
             }
+            else if (sourceProj is IDeflector srcDeflector && srcDeflector.DeflectActive)
+            {
+                if (args.Collider is Projectile proj)
+                {
+                    proj.Deflect(srcDeflector, args);
+                    return;
+                }
+            }
 
             // IHealthful objects take damage.
             if (args.Collider is IHealthful healthful)

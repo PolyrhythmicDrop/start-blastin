@@ -11,8 +11,9 @@ namespace Factories
     public static class ProjectileFactory
     {
         // Cached scenes
-        private static PackedScene _bulletScene = GD.Load<PackedScene>(Bullet.ScenePath);
-        private static PackedScene _missileScene = GD.Load<PackedScene>(Missile.ScenePath);
+        private static PackedScene _bulletScene = GD.Load<PackedScene>("uid://07rkya3u10jt");
+        private static PackedScene _missileScene = GD.Load<PackedScene>("uid://cgh78hdll5s2h");
+        private static PackedScene _shieldScene = GD.Load<PackedScene>("uid://k6jtmcb31ro7");
 
         // Cached shaders
         private static ShaderMaterial _bulletPalette = ResourceLoader.Load<ShaderMaterial>(
@@ -39,11 +40,13 @@ namespace Factories
                 case ProjectileType.Missile:
                     ammo = _missileScene.Instantiate<Missile>();
                     break;
+                case ProjectileType.Shield:
+                    ammo = _shieldScene.Instantiate<Shield>();
+                    break;
             }
             ammo.SourceWeapon = weapon;
 
             SetProjectileShaderMaterial(ammo, ammo.SourceWeapon.EnemyOwned);
-            // ammo.SetProjectileCollisionLayers(ammo.SourceWeapon.EnemyOwned);
             ammo.CurrentFaction = ammo.SourceWeapon.EnemyOwned
                 ? Projectile.Faction.Enemies
                 : Projectile.Faction.Players;

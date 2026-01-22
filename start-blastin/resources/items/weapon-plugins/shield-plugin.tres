@@ -1,0 +1,47 @@
+[gd_resource type="Resource" script_class="WeaponPlugin" load_steps=9 format=3 uid="uid://dto7he15c83tj"]
+
+[ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="1_7aof5"]
+[ext_resource type="Script" uid="uid://e8ufr3v1a1f" path="res://architecture/items/plugins/WeaponPlugin.cs" id="1_f5ks6"]
+[ext_resource type="Script" uid="uid://cx2eehu1aj48f" path="res://architecture/data-structures/AudioData.cs" id="1_f8r8f"]
+
+[sub_resource type="Resource" id="Resource_ht07i"]
+script = ExtResource("1_7aof5")
+Type = 6
+Operation = 1
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[sub_resource type="Resource" id="Resource_hvart"]
+script = ExtResource("1_7aof5")
+Type = 8
+Value = 500.0
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[sub_resource type="Resource" id="Resource_lptsm"]
+script = ExtResource("1_7aof5")
+Type = 7
+Value = -1.7
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[sub_resource type="Resource" id="Resource_7aof5"]
+script = ExtResource("1_f8r8f")
+Sound = "uid://ip2rmkv248df"
+Volume = -2.0
+Positional = true
+Randomized = true
+RandomPitch = 1.001
+RandomVolume = 0.05
+metadata/_custom_type_script = "uid://cx2eehu1aj48f"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_lptsm"]
+load_path = "res://.godot/imported/shield.png-bdec6326262f1b3fad8758d7a35649f4.ctex"
+
+[resource]
+script = ExtResource("1_f5ks6")
+ProjectileType = 2
+FireSound = SubResource("Resource_7aof5")
+Name = &"Shield Cannon"
+Description = &"Does no direct damage, but reflects all projectiles it touches."
+Icon = SubResource("CompressedTexture2D_lptsm")
+Rarity = 8
+Effects = Array[Object]([SubResource("Resource_ht07i"), SubResource("Resource_hvart"), SubResource("Resource_lptsm")])
+metadata/_custom_type_script = "uid://e8ufr3v1a1f"

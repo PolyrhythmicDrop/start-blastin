@@ -51,13 +51,13 @@ namespace PlayerComponents
 
         #region Initialization
 
-        /// <summary>
-        /// Called before <see cref="Initialize"/>.
-        /// </summary>
-        public override void _Ready()
-        {
-            _shield = GetNode<Shield>("%Shield");
-        }
+        // /// <summary>
+        // /// Called before <see cref="Initialize"/>.
+        // /// </summary>
+        // public override void _Ready()
+        // {
+        //     _shield = GetNode<Shield>("%Shield");
+        // }
 
         /// <summary>
         /// Called after <see cref="_Ready"/>.
@@ -72,17 +72,11 @@ namespace PlayerComponents
             if (InitialWeaponPlugin != ResourceUid.PathToUid(_defaultWeaponPlugin.ResourcePath))
             {
                 _weaponPlugin = ResourceLoader.Load<WeaponPlugin>(InitialWeaponPlugin);
-                // EquipWeaponPlugin(ResourceLoader.Load<WeaponPlugin>(InitialWeaponPlugin));
             }
             else
             {
                 _weaponPlugin = _defaultWeaponPlugin;
-                // EquipWeaponPlugin(_defaultWeaponPlugin);
             }
-
-            // Equip any initial plugins.
-            // EquipPlugin([.. initPluginList]);
-            // EquipPlugin([.. ]);
         }
 
         public void EquipInitialPlugins()

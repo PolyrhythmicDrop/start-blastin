@@ -1,4 +1,7 @@
 using System;
+using Enemies;
+using Entities;
+using Environmental;
 using Events;
 using Godot;
 using Interfaces;
@@ -8,16 +11,30 @@ using Utility;
 [GlobalClass]
 public partial class Shield : Projectile, IDeflector, IVelocityProvider
 {
+    // Nodes //
     private Sprite2D _sprite;
     private CollisionPolygon2D _collPoly;
     private StaticBody2D _staticBody;
     private ShapeCast2D _shapeCast;
 
+    // Position and physics //
     private Vector2 _currentTrajectory = Vector2.Zero;
     private Vector2 _currentVelocity = Vector2.Zero;
     private Vector2 _nextPosition;
     private Vector2 _lastPosition;
 
+    // Shaders & Materials //
+    private ShaderMaterial _deflectHitFXMaterial = ResourceLoader.Load<ShaderMaterial>(
+        "uid://diss6xjfqle4y"
+    );
+
+    private ShaderMaterial _enemyPaletteMaterial = ResourceLoader.Load<ShaderMaterial>(
+        "uid://bqux6tvmprg1l"
+    );
+
+    private Tween _deflectTween;
+
+    // Public //
     public Sprite2D Sprite => _sprite;
     public CollisionPolygon2D Polygon => _collPoly;
 
@@ -26,6 +43,12 @@ public partial class Shield : Projectile, IDeflector, IVelocityProvider
     public override void _Ready()
     {
         _sprite = GetNode<Sprite2D>("%Sprite2D");
+        if (_faction == Faction.Enemies)
+        {
+            Material = _deflectHitFXMaterial;
+            _sprite.Material = _enemyPaletteMaterial;
+            _sprite.UseParentMaterial = false;
+        }
         _collPoly = GetNode<CollisionPolygon2D>("%CollisionPolygon2D");
         _shapeCast = GetNode<ShapeCast2D>("%ShapeCast2D");
         _lastPosition = GlobalPosition;
@@ -36,6 +59,18 @@ public partial class Shield : Projectile, IDeflector, IVelocityProvider
     {
         ProcessMode = ProcessModeEnum.Inherit;
         DeflectActive = active;
+
+        if (active)
+        {
+            if (_faction == Faction.Enemies && _sprite != null)
+            {
+                _sprite.UseParentMaterial = false;
+            }
+            if (Material is ShaderMaterial shader)
+            {
+                shader.SetShaderParameter("mix_ratio", 0);
+            }
+        }
 
         base.ToggleActive(active);
     }
@@ -56,6 +91,71 @@ public partial class Shield : Projectile, IDeflector, IVelocityProvider
     protected override void ToggleCollisionSignalConnection(bool connect)
     {
         base.ToggleCollisionSignalConnection(connect);
+        // if (connect)
+        // {
+        //     Collision += OnCollision;
+        // }
+        // else
+        // {
+        //     Collision -= OnCollision;
+        // }
+    }
+
+    public void OnCollision(CollisionEventArgs args)
+    {
+        if (args.Collider is EnemyNode or Player or Projectile)
+        {
+            PlayDeflectAnimation();
+        }
+    }
+
+    private void PlayDeflectAnimation()
+    {
+        // Material = _deflectHitFXMaterial;
+        if (_faction is Faction.Enemies)
+        {
+            _sprite.UseParentMaterial = true;
+        }
+
+        if (Material is ShaderMaterial shader)
+        {
+            if (_deflectTween != null && _deflectTween.IsValid())
+            {
+                _deflectTween.Kill();
+            }
+
+            shader.SetShaderParameter("mix_ratio", 1.0);
+
+            float startValue = GD.Randf() * 10;
+
+            _deflectTween = CreateTween();
+
+            _deflectTween.TweenMethod(
+                Callable.From(
+                    (int currentFrame) =>
+                    {
+                        shader.SetShaderParameter("current_frame", currentFrame);
+                    }
+                ),
+                startValue,
+                30,
+                0.4f
+            );
+            _deflectTween.TweenCallback(
+                Callable.From(() =>
+                {
+                    shader.SetShaderParameter("mix_ratio", 0.0);
+                })
+            );
+
+            _deflectTween.Finished += () =>
+            {
+                if (_faction == Faction.Enemies)
+                {
+                    _sprite.UseParentMaterial = false;
+                }
+            };
+        }
     }
 
     protected override Vector2 GetTrajectory(double delta)
@@ -104,7 +204,10 @@ public partial class Shield : Projectile, IDeflector, IVelocityProvider
         {
             for (int i = 0; i < _shapeCast.CollisionResult.Count; i++)
             {
-                RaiseCollision(this, CalculateShapeCollisionData(delta, i));
+                if (_shapeCast.GetCollider(i) is not OobArea)
+                {
+                    RaiseCollision(this, CalculateShapeCollisionData(delta, i));
+                }
             }
         }
     }

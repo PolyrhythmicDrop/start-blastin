@@ -23,6 +23,10 @@ namespace Factories
             "uid://cfd51ihwk3ior"
         );
 
+        private static ShaderMaterial _shieldPalette = ResourceLoader.Load<ShaderMaterial>(
+            "uid://bqux6tvmprg1l"
+        );
+
         /// <summary>
         /// Creates a new projectile appropriate for the passed weapon.
         /// </summary>
@@ -63,6 +67,7 @@ namespace Factories
                 {
                     Bullet => _bulletPalette,
                     Missile => _missilePalette,
+                    Shield => null,
                     _ => _bulletPalette,
                 };
             }

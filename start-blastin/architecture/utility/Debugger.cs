@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Threading.Tasks;
 using Enemies;
+using Enemies.Spawners;
 using Entities;
+using Factories;
 using FileIO;
 using Godot;
 using Interfaces;
@@ -31,9 +35,16 @@ namespace Utility
         private Dictionary<string, Modifier> _modifierDict = new();
         private Dictionary<string, Item> _itemDict = new();
 
+        // Key: UID, Value: Resource path
+        private Dictionary<string, string> _enemyResources = new();
+
         private Dictionary<Node2D, Label> _entityLabels = new();
 
         private bool _limboConsoleOpen = false;
+
+        // Paths and Resources
+
+        private HashSet<StaticSpawner> _generatedSpawners = new();
 
         public override void _Ready()
         {
@@ -44,6 +55,7 @@ namespace Utility
 
         private void LoadResourcePools()
         {
+            // Load items
             HashSet<Item> itemSet = new();
 
             PoolLoader.LoadResourcePool(itemSet, "res://resources/items/", true);
@@ -75,6 +87,17 @@ namespace Utility
                         break;
                     }
                 }
+            }
+
+            // Load enemy resources.
+            HashSet<EnemyResource> enemyResources = new();
+            PoolLoader.LoadResourcePool(enemyResources, "res://resources/enemies/", true);
+
+            // Store the UID and its associated resource to the dictionary.
+            foreach (EnemyResource resource in enemyResources)
+            {
+                string uid = ResourceUid.PathToUid(resource.ResourcePath);
+                _enemyResources[uid] = resource.ResourcePath;
             }
         }
 
@@ -459,6 +482,68 @@ namespace Utility
             {
                 enemy.ToggleHealthBarActive();
             }
+        }
+
+        [ConsoleCommand(
+            description: "Spawns an enemy (from a UID or file path) at the given location (top, bottom, left, or right) and position (ratio along the viewport at the location)."
+        )]
+        [AutoComplete(nameof(EnemyResourceNames), 0)]
+        [AutoComplete(nameof(SpawnerLocations), 1)]
+        private async void SpawnEnemy(string enemy, string spawnerLocation, float spawnPosition)
+        {
+            // Convert the spawner location string to be the proper enum
+            SpawnerLocation location = (SpawnerLocation)
+                Enum.Parse(typeof(SpawnerLocation), spawnerLocation);
+
+            // Convert the spawn position to be between 0 and 1.0
+            spawnPosition = Math.Clamp(spawnPosition, 0, 1.0f);
+
+            // Set names to UIDs if they're not already UID.
+            if (!enemy.StartsWith("uid://"))
+            {
+                // Find the dictionary entry that includes the file name
+                string foundPath = _enemyResources.Values.FirstOrDefault(path =>
+                    path.EndsWith(enemy)
+                );
+                if (!string.IsNullOrEmpty(foundPath))
+                {
+                    enemy = ResourceUid.PathToUid(foundPath);
+                }
+            }
+
+            using SpawnData data = new() { EnemyType = enemy };
+            using SpawnStep step = new() { SpawnPosition = spawnPosition, Data = data };
+
+            StaticSpawnerConfig config = new() { SpawnSteps = [step], Location = location };
+
+            ScaleManager scaleManager = (
+                (WaveManager)GetTree().GetFirstNodeInGroup("wave-manager")
+            ).ScaleManager;
+
+            Task<HashSet<EnemySpawner>> task = scaleManager.AddSpawners(config);
+            await task;
+            StaticSpawner spawner = (StaticSpawner)task.Result.FirstOrDefault();
+
+            spawner.DebugMode = true;
+
+            spawner.SpawnEnemy(step);
+        }
+
+        private string[] EnemyResourceNames()
+        {
+            List<string> fileNames = [];
+
+            foreach (string path in _enemyResources.Values)
+            {
+                fileNames.Add(System.IO.Path.GetFileName(path));
+            }
+
+            return [.. fileNames];
+        }
+
+        private string[] SpawnerLocations()
+        {
+            return Enum.GetNames(typeof(SpawnerLocation));
         }
     }
 }

@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://bqux6tvmprg1l"]
+
+[ext_resource type="Shader" uid="uid://dqd5mgfwuy3y7" path="res://resources/shaders/eye-dropper.gdshader" id="1_jpxxj"]
+
+[resource]
+resource_local_to_scene = true
+shader = ExtResource("1_jpxxj")
+shader_parameter/palette_array_size = 4
+shader_parameter/input_palette_array = PackedColorArray(0.33333334, 0.64705884, 0.6392157, 1, 0.91764706, 0.7058824, 0.5254902, 1, 0.11764706, 0.3019608, 0.34509805, 1, 0.54509807, 0.9882353, 0.93333334, 1)
+shader_parameter/output_palette_array = PackedColorArray(0.61960787, 0.39607844, 0.78431374, 1, 0.6901961, 0.80784315, 0, 1, 0.397642, 0.21531087, 0.5250462, 1, 1, 0.6901961, 1, 1)

@@ -1,30 +1,29 @@
-[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=7 format=3 uid="uid://3bayun5b03eq"]
+[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=8 format=3 uid="uid://3bayun5b03eq"]
 
-[ext_resource type="Resource" uid="uid://byt6t31ml7i1u" path="res://resources/enemies/squadron-layouts/filled-diamond.tres" id="1_mswl7"]
-[ext_resource type="Script" uid="uid://85wl5t25bsmt" path="res://nodes/enemies/Spawners/RandomSpawnerConfig.cs" id="1_p7ndr"]
+[ext_resource type="Script" uid="uid://ci68p6xph38co" path="res://nodes/enemies/Spawners/SpawnStep.cs" id="1_mswl7"]
 [ext_resource type="Script" uid="uid://b40t8najievo0" path="res://nodes/wave-management/wave-scalers/SpawnerFormationScaler.cs" id="1_tqbqd"]
 [ext_resource type="Script" uid="uid://dyer2c2n8y1v4" path="res://nodes/enemies/Spawners/SpawnData.cs" id="2_3dipg"]
-
-[sub_resource type="Resource" id="Resource_x3lrh"]
-script = ExtResource("2_3dipg")
-EnemyType = "uid://vfsjsr1mvlk1"
-Squadron = ExtResource("1_mswl7")
-metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+[ext_resource type="Script" uid="uid://bneh110nwl6dl" path="res://nodes/enemies/Spawners/StaticSpawnerConfig.cs" id="3_3dipg"]
 
 [sub_resource type="Resource" id="Resource_7wn5a"]
-script = ExtResource("1_p7ndr")
-SpawnImmediately = true
-StartMoveOnSpawnTimer = true
-SpawnPool = Dictionary[Object, int]({
-SubResource("Resource_x3lrh"): 1
-})
-InitialProgressRatio = 0.5
-Location = 1
-metadata/_custom_type_script = "uid://85wl5t25bsmt"
+script = ExtResource("2_3dipg")
+EnemyType = "uid://vfsjsr1mvlk1"
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_x3lrh"]
+script = ExtResource("1_mswl7")
+SpawnPosition = 0.5
+Data = SubResource("Resource_7wn5a")
+metadata/_custom_type_script = "uid://ci68p6xph38co"
+
+[sub_resource type="Resource" id="Resource_b07x4"]
+script = ExtResource("3_3dipg")
+SpawnSteps = Array[ExtResource("1_mswl7")]([SubResource("Resource_x3lrh")])
+metadata/_custom_type_script = "uid://bneh110nwl6dl"
 
 [resource]
 resource_name = "level-one-formation"
 script = ExtResource("1_tqbqd")
-FormationGD = Array[Object]([SubResource("Resource_7wn5a")])
+FormationGD = Array[Object]([SubResource("Resource_b07x4")])
 MinWave = -1
 metadata/_custom_type_script = "uid://b40t8najievo0"

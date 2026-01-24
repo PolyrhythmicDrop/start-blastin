@@ -1,6 +1,7 @@
 using System;
 using Enemies;
 using Entities;
+using Environmental;
 using Events;
 using Factories;
 using Godot;
@@ -349,8 +350,9 @@ namespace Projectiles
 
             Ray.ForceRaycastUpdate();
 
-            if (Ray.IsColliding())
+            if (Ray.IsColliding() && Ray.GetCollider() is not (OobArea or DeflectorWall))
             {
+                DebugLogger.LogMessage($"{Name} is colliding!");
                 Collision?.Invoke(this, CalculateRayCollisionData(delta));
             }
         }
@@ -496,6 +498,10 @@ namespace Projectiles
             SetProjectileCollisionLayers(newFaction);
             SetRayMask(newFaction);
 
+            // Change the palette to match the new faction
+            bool isEnemy = _faction == Faction.Enemies;
+            ProjectileFactory.SetProjectileShaderMaterial(this, isEnemy);
+
             // If this new faction is different from the initially-set faction...
             if (_factionInitialized)
             {
@@ -513,11 +519,19 @@ namespace Projectiles
         /// If null, the deflected projectile rotates 180 degrees and continues on its way.</param>
         public virtual void Deflect(IDeflector deflector, CollisionEventArgs args = null)
         {
-            // Convert to the opposite faction of the current faction.
-            if (deflector is Shield && _faction != Faction.Players)
+            // if (deflector is Shield && _faction != Faction.Players)
+            // {
+            //     ConvertToNewFaction(Faction.Players);
+            // }
+
+            if (deflector is Shield shield)
             {
-                ConvertToNewFaction(Faction.Players);
+                shield.OnCollision(args);
             }
+
+            // Convert to the opposite faction of the current faction.
+            Faction newFaction = _faction == Faction.Players ? Faction.Enemies : Faction.Players;
+            ConvertToNewFaction(newFaction);
 
             // Get the velocity of the deflector, if it's available
             Vector2 deflectorVelocity = Vector2.Zero;

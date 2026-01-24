@@ -1,5 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://k6jtmcb31ro7"]
+[gd_scene load_steps=5 format=3 uid="uid://k6jtmcb31ro7"]
 
+[ext_resource type="Material" uid="uid://diss6xjfqle4y" path="res://resources/shaders/deflect-hit-effect-shader.tres" id="1_2gl2q"]
 [ext_resource type="Texture2D" uid="uid://cdro5m8x72u18" path="res://assets/shields/shield.png" id="1_et6lk"]
 [ext_resource type="Script" uid="uid://xtu1hpna512e" path="res://nodes/weapons/projectiles/shield/Shield.cs" id="1_jihpr"]
 
@@ -7,6 +8,7 @@
 points = PackedVector2Array(-7, -24, -3.3884206, -30, 0.6115794, -30, 7.6115794, -5.000001, 7.6115794, 4.999999, 0.6115794, 30, -3.3884206, 30, -7, 24, -1, 0, 0, 0)
 
 [node name="Shield" type="Area2D"]
+material = ExtResource("1_2gl2q")
 collision_layer = 0
 collision_mask = 0
 script = ExtResource("1_jihpr")
@@ -32,6 +34,7 @@ collide_with_areas = true
 
 [node name="ShapeCast2D" type="ShapeCast2D" parent="."]
 unique_name_in_owner = true
+visible = false
 shape = SubResource("ConvexPolygonShape2D_avtfy")
 target_position = Vector2(0, 0)
 max_results = 1

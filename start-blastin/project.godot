@@ -251,6 +251,7 @@ limbo_console_search_history={
 2d_physics/layer_6="Auras"
 2d_physics/layer_8="Shields"
 2d_physics/layer_9="BackgroundObjects"
+2d_physics/layer_10="HUD"
 
 [rendering]
 

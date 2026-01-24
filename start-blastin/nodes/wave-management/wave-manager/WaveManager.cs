@@ -20,6 +20,8 @@ namespace WaveManagement
 
         public int Wave => _wave;
 
+        public ScaleManager ScaleManager => _scaleManager;
+
         /// <summary>
         /// Player-selected difficulty. Adjusts the difficulty modifier, which affects per-wave stat scaling.
         /// </summary>

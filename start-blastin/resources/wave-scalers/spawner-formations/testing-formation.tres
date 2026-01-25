@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=7 format=3 uid="uid://dmfihh0mab1le"]
+
+[ext_resource type="Resource" uid="uid://byt6t31ml7i1u" path="res://resources/enemies/squadron-layouts/filled-diamond.tres" id="1_3hp27"]
+[ext_resource type="Script" uid="uid://b40t8najievo0" path="res://nodes/wave-management/wave-scalers/SpawnerFormationScaler.cs" id="1_j161a"]
+[ext_resource type="Script" uid="uid://dyer2c2n8y1v4" path="res://nodes/enemies/Spawners/SpawnData.cs" id="2_fbohk"]
+[ext_resource type="Script" uid="uid://85wl5t25bsmt" path="res://nodes/enemies/Spawners/RandomSpawnerConfig.cs" id="3_fyoho"]
+
+[sub_resource type="Resource" id="Resource_ixsm8"]
+script = ExtResource("2_fbohk")
+EnemyType = "uid://vfsjsr1mvlk1"
+SquadEnabled = true
+Squadron = ExtResource("1_3hp27")
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_si8w4"]
+script = ExtResource("3_fyoho")
+SpawnImmediately = true
+StartMoveOnSpawnTimer = true
+SpawnPool = Dictionary[Object, int]({
+SubResource("Resource_ixsm8"): 0
+})
+metadata/_custom_type_script = "uid://85wl5t25bsmt"
+
+[resource]
+script = ExtResource("1_j161a")
+FormationGD = Array[Object]([SubResource("Resource_si8w4")])
+metadata/_custom_type_script = "uid://b40t8najievo0"

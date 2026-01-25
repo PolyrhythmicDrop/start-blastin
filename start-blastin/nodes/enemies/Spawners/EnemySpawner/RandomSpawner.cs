@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autoloads;
@@ -155,6 +156,7 @@ namespace Enemies.Spawners
                 totalWeight += weight;
             }
 
+            totalWeight = Math.Max(totalWeight, 1);
             // Generate random number within total weight
             int randomValue = RNG.GetRandomInt(0, totalWeight - 1);
 

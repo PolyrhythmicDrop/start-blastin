@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Enemies;
 using Entities;
 using Events;
@@ -253,9 +254,9 @@ public partial class Missile : Projectile
         base.ToggleActive(active);
     }
 
-    public override void Deflect(IDeflector deflector, CollisionEventArgs args = null)
+    public override async Task Deflect(IDeflector deflector, CollisionEventArgs args = null)
     {
-        base.Deflect(deflector, args);
+        await base.Deflect(deflector, args);
         RemoveCurrentTarget();
     }
 

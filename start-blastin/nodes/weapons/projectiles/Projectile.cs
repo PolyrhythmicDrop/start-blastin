@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Enemies;
 using Entities;
 using Environmental;
@@ -28,6 +29,7 @@ namespace Projectiles
         private bool _factionInitialized;
         private Callable _deactivateCallable;
         protected bool _active;
+        protected bool _isBeingDeflected = false;
         protected Faction _faction;
         protected Timer _deactivationTimer;
         protected float _baseSpeed;
@@ -64,6 +66,11 @@ namespace Projectiles
         {
             get => _active;
             set => _active = value;
+        }
+
+        public bool IsBeingDeflected
+        {
+            get => _isBeingDeflected;
         }
 
         /// <summary>
@@ -111,6 +118,10 @@ namespace Projectiles
 
         protected void RaiseCollision(object source, CollisionEventArgs args)
         {
+            if (args?.Collider is Node node)
+            {
+                DebugLogger.LogMessage($"{Name} is colliding with {node.Name}!");
+            }
             Collision?.Invoke(source, args);
         }
 
@@ -221,7 +232,7 @@ namespace Projectiles
             _currentSpeed = _baseSpeed;
         }
 
-        private void InitializeFaction(Faction faction)
+        protected virtual void InitializeFaction(Faction faction)
         {
             _faction = faction;
             SetProjectileCollisionLayers(faction);
@@ -352,7 +363,6 @@ namespace Projectiles
 
             if (Ray.IsColliding() && Ray.GetCollider() is not (OobArea or DeflectorWall))
             {
-                DebugLogger.LogMessage($"{Name} is colliding!");
                 Collision?.Invoke(this, CalculateRayCollisionData(delta));
             }
         }
@@ -407,6 +417,8 @@ namespace Projectiles
             SetCollisionMaskValue(6, true);
             // Enable shield collision detection
             SetCollisionMaskValue(8, true);
+            // Enable OOB area detection
+            SetCollisionMaskValue(2, true);
 
             switch (faction)
             {
@@ -500,7 +512,10 @@ namespace Projectiles
 
             // Change the palette to match the new faction
             bool isEnemy = _faction == Faction.Enemies;
-            ProjectileFactory.SetProjectileShaderMaterial(this, isEnemy);
+            if (this is not Shield)
+            {
+                ProjectileFactory.SetProjectileShaderMaterial(this, isEnemy);
+            }
 
             // If this new faction is different from the initially-set faction...
             if (_factionInitialized)
@@ -517,16 +532,25 @@ namespace Projectiles
         /// <param name="deflector">The object the projectile has hit that is deflecting the projectile.</param>
         /// <param name="args">Collision arguments packaged with the <see cref="Collision"/> event. This method uses the <see cref="CollisionEventArgs.CollisionNormal"/> to calculate the deflection.
         /// If null, the deflected projectile rotates 180 degrees and continues on its way.</param>
-        public virtual void Deflect(IDeflector deflector, CollisionEventArgs args = null)
+        public async virtual Task Deflect(IDeflector deflector, CollisionEventArgs args = null)
         {
-            if (deflector is Shield shield)
+            if (_isBeingDeflected)
             {
-                shield.OnCollision(args);
+                return;
             }
+
+            _isBeingDeflected = true;
 
             // Convert to the opposite faction of the current faction.
             Faction newFaction = _faction == Faction.Players ? Faction.Enemies : Faction.Players;
             ConvertToNewFaction(newFaction);
+
+            // Temporarily disable casting on this object
+            _ray.Enabled = false;
+            if (this is Shield shield)
+            {
+                shield.ShapeCast.Enabled = false;
+            }
 
             // Default naive deflection, 180deg from current rotation.
             if (args == null || args?.CollisionNormal == Vector2.Zero)
@@ -552,6 +576,34 @@ namespace Projectiles
                     // AddDeflectionVelocity(velocitySource.GetCurrentVelocity());
                     Vector2 deflectorVelocity = velocitySource.GetCurrentVelocity();
                     AddDeflectionVelocity(deflectorVelocity);
+                }
+            }
+
+            if (this is not IDeflector thisDeflector)
+            {
+                await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);
+                _isBeingDeflected = false;
+                _ray.Enabled = true;
+                return;
+            }
+            else
+            {
+                CollisionEventArgs newArgs = new(
+                    this,
+                    args.GlobalCollisionPoint,
+                    args.CollisionNormal * -1
+                );
+
+                if (deflector is Projectile proj)
+                {
+                    await proj.Deflect(thisDeflector, newArgs);
+                }
+
+                await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);
+                _isBeingDeflected = false;
+                if (this is Shield shield2)
+                {
+                    shield2.ShapeCast.Enabled = true;
                 }
             }
         }

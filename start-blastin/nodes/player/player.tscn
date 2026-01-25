@@ -75,7 +75,7 @@ points = PackedVector2Array(26, -5.999999, -10, -30, -24.999998, -30.000002, -25
 
 [node name="Player" type="CharacterBody2D" groups=["players"]]
 rotation = -1.5707964
-collision_mask = 518
+collision_mask = 582
 motion_mode = 1
 platform_on_leave = 2
 script = ExtResource("1_4j62c")

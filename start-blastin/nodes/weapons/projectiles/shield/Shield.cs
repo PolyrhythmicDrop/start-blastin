@@ -15,7 +15,10 @@ public partial class Shield : Projectile, IDeflector, IVelocityProvider
     private Sprite2D _sprite;
     private CollisionPolygon2D _collPoly;
     private StaticBody2D _staticBody;
+
     private ShapeCast2D _shapeCast;
+
+    public ShapeCast2D ShapeCast => _shapeCast;
 
     // Position and physics //
     private Vector2 _currentTrajectory = Vector2.Zero;
@@ -45,9 +48,13 @@ public partial class Shield : Projectile, IDeflector, IVelocityProvider
         _sprite = GetNode<Sprite2D>("%Sprite2D");
         if (_faction == Faction.Enemies)
         {
-            Material = _deflectHitFXMaterial;
-            _sprite.Material = _enemyPaletteMaterial;
+            // Material = _deflectHitFXMaterial;
+            // _sprite.Material = _enemyPaletteMaterial;
             _sprite.UseParentMaterial = false;
+        }
+        else
+        {
+            _sprite.UseParentMaterial = true;
         }
         _collPoly = GetNode<CollisionPolygon2D>("%CollisionPolygon2D");
         _shapeCast = GetNode<ShapeCast2D>("%ShapeCast2D");
@@ -91,23 +98,15 @@ public partial class Shield : Projectile, IDeflector, IVelocityProvider
     protected override void ToggleCollisionSignalConnection(bool connect)
     {
         base.ToggleCollisionSignalConnection(connect);
-        // if (connect)
-        // {
-        //     Collision += OnCollision;
-        // }
-        // else
-        // {
-        //     Collision -= OnCollision;
-        // }
     }
 
-    public void OnCollision(CollisionEventArgs args)
-    {
-        if (args.Collider is EnemyNode or Player or Projectile)
-        {
-            PlayDeflectAnimation();
-        }
-    }
+    // public void OnCollision(CollisionEventArgs args)
+    // {
+    //     // if (args.Collider is EnemyNode or Player or Projectile)
+    //     // {
+    //     //     PlayDeflectAnimation();
+    //     // }
+    // }
 
     private void PlayDeflectAnimation()
     {
@@ -147,14 +146,23 @@ public partial class Shield : Projectile, IDeflector, IVelocityProvider
                     shader.SetShaderParameter("mix_ratio", 0.0);
                 })
             );
-
-            _deflectTween.Finished += () =>
-            {
-                if (_faction == Faction.Enemies)
+            _deflectTween.TweenCallback(
+                Callable.From(() =>
                 {
-                    _sprite.UseParentMaterial = false;
-                }
-            };
+                    if (_faction == Faction.Enemies)
+                    {
+                        _sprite.UseParentMaterial = false;
+                    }
+                })
+            );
+
+            // _deflectTween.Finished += () =>
+            // {
+            //     if (_faction == Faction.Enemies)
+            //     {
+            //         _sprite.UseParentMaterial = false;
+            //     }
+            // };
         }
     }
 
@@ -200,14 +208,18 @@ public partial class Shield : Projectile, IDeflector, IVelocityProvider
 
         _shapeCast.ForceShapecastUpdate();
 
-        if (_shapeCast.IsColliding())
+        if (_shapeCast.IsColliding() && !_isBeingDeflected)
         {
             for (int i = 0; i < _shapeCast.CollisionResult.Count; i++)
             {
-                if (_shapeCast.GetCollider(i) is not OobArea)
+                GodotObject collider = _shapeCast.GetCollider(i);
+                // Don't raise the collision if we're colliding with a projectile that is in the process of being deflected.
+                if ((collider is Projectile proj && proj.IsBeingDeflected) || collider is OobArea)
                 {
-                    RaiseCollision(this, CalculateShapeCollisionData(delta, i));
+                    return;
                 }
+
+                RaiseCollision(this, CalculateShapeCollisionData(delta, i));
             }
         }
     }
@@ -236,6 +248,19 @@ public partial class Shield : Projectile, IDeflector, IVelocityProvider
         }
 
         return new CollisionEventArgs(collider, collPoint, collNormal);
+    }
+
+    public override void ConvertToNewFaction(Faction? faction = null)
+    {
+        base.ConvertToNewFaction(faction);
+        if (_faction == Faction.Enemies)
+        {
+            _sprite.UseParentMaterial = false;
+        }
+        else if (_faction == Faction.Players)
+        {
+            _sprite.UseParentMaterial = true;
+        }
     }
 
     public override void _ExitTree()

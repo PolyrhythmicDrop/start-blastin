@@ -318,7 +318,7 @@ namespace Enemies
 
         public virtual void OnPathComplete()
         {
-            Die();
+            FreeEnemy();
         }
 
         #endregion
@@ -500,7 +500,7 @@ namespace Enemies
 
         public virtual async void Die(int? playerId = null)
         {
-            _healthBar.ToggleBarVisibility(false);
+            // _healthBar.ToggleBarVisibility(false);
             if (playerId != null)
             {
                 EnemyKilledEventArgs args = new(
@@ -511,6 +511,21 @@ namespace Enemies
                 );
                 EventBus.Instance.RaiseEnemyKilled(args);
             }
+
+            FreeEnemy();
+            // // Queue free after all child projectiles die and all child audio nodes stop playing
+            // await WaitForAudioEnd();
+            // bool projectilesDisabled = await _weapon.WaitForAllProjectilesDisabled();
+
+            // if (projectilesDisabled)
+            // {
+            //     QueueFree();
+            // }
+        }
+
+        public async void FreeEnemy()
+        {
+            _healthBar.ToggleBarVisibility(false);
             // Queue free after all child projectiles die and all child audio nodes stop playing
             await WaitForAudioEnd();
             bool projectilesDisabled = await _weapon.WaitForAllProjectilesDisabled();

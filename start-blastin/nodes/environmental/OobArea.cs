@@ -41,9 +41,9 @@ namespace Environmental
         {
             if (area is Projectile projectile)
             {
-                DebugLogger.LogMessage(
-                    $"{projectile.Name} detected in OOB Area! Attempting to disable..."
-                );
+                // DebugLogger.LogMessage(
+                //     $"{projectile.Name} detected in OOB Area! Attempting to disable..."
+                // );
                 projectile.ToggleActive(false);
             }
         }

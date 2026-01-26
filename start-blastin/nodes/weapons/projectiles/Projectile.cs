@@ -568,7 +568,8 @@ namespace Projectiles
                 float normalRadians = roundColNormal.Angle();
 
                 // Set the deflectee's rotation to opposite of the collision normal angle.
-                GlobalRotation = normalRadians + MathF.PI;
+                // GlobalRotation = normalRadians + MathF.PI;
+                GlobalRotation = normalRadians;
 
                 // Add the velocity of the deflector to the deflectee's speed.
                 if (deflector is IVelocityProvider velocitySource)
@@ -586,7 +587,7 @@ namespace Projectiles
                 _ray.Enabled = true;
                 return;
             }
-            else
+            else if (thisDeflector.DeflectActive)
             {
                 CollisionEventArgs newArgs = new(
                     this,
@@ -594,7 +595,7 @@ namespace Projectiles
                     args.CollisionNormal * -1
                 );
 
-                if (deflector is Projectile proj)
+                if (deflector is Projectile proj && !proj.IsBeingDeflected)
                 {
                     await proj.Deflect(thisDeflector, newArgs);
                 }

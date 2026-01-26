@@ -230,7 +230,13 @@ namespace Weapons
             {
                 if (args.Collider is Projectile proj)
                 {
-                    proj.Deflect(srcDeflector, args);
+                    // Invert the arguments
+                    CollisionEventArgs invertedArgs = new(
+                        sourceProj,
+                        args.GlobalCollisionPoint,
+                        args.CollisionNormal * -1
+                    );
+                    proj.Deflect(srcDeflector, invertedArgs);
                     return;
                 }
             }

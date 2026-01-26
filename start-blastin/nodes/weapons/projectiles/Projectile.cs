@@ -340,7 +340,7 @@ namespace Projectiles
         {
             float magnitude = velocity.Dot(Vector2.Right.Rotated(GlobalRotation));
 
-            float extraVelocity = Mathf.Max(0, magnitude);
+            float extraVelocity = Mathf.Max(0, magnitude) * 0.3f;
 
             _currentSpeed += extraVelocity;
         }
@@ -568,16 +568,16 @@ namespace Projectiles
                 float normalRadians = roundColNormal.Angle();
 
                 // Set the deflectee's rotation to opposite of the collision normal angle.
-                // GlobalRotation = normalRadians + MathF.PI;
                 GlobalRotation = normalRadians;
 
-                // Add the velocity of the deflector to the deflectee's speed.
                 if (deflector is IVelocityProvider velocitySource)
                 {
                     // AddDeflectionVelocity(velocitySource.GetCurrentVelocity());
                     Vector2 deflectorVelocity = velocitySource.GetCurrentVelocity();
                     AddDeflectionVelocity(deflectorVelocity);
                 }
+
+                // Add the velocity of the deflector to the deflectee's speed.
             }
 
             if (this is not IDeflector thisDeflector)

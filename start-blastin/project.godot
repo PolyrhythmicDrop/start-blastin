@@ -21,19 +21,27 @@ resources_spreadsheet_view/fold_docks=true
 resources_spreadsheet_view/resource_cell_label_mode=1
 resources_spreadsheet_view/freeze_first_column=true
 
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
 [application]
 
 config/name="Start Blastin"
 run/main_scene="uid://die13kk7ig6uu"
-config/features=PackedStringArray("4.5", "C#", "Forward Plus")
+config/features=PackedStringArray("4.6", "C#", "Forward Plus")
 config/icon="res://icon.svg"
+
+[audio]
+
+buses/default_bus_layout="uid://b51uxt0ra5280"
 
 [autoload]
 
 EventBus="*res://architecture/autoloads/EventBus.cs"
 ServiceManager="*res://architecture/services/ServiceManager.cs"
 AudioService="*res://architecture/services/AudioService.cs"
-LimboConsole="*res://addons/limbo_console/limbo_console.gd"
+LimboConsole="*uid://dyxornv8vwibg"
 
 [debug]
 
@@ -260,7 +268,7 @@ anti_aliasing/quality/msaa_2d=2
 anti_aliasing/screen_space_roughness_limiter/enabled=false
 textures/decals/filter=0
 textures/light_projectors/filter=0
-environment/screen_space_reflection/roughness_quality=0
 environment/subsurface_scattering/subsurface_scattering_quality=0
 2d/snap/snap_2d_transforms_to_pixel=true
 2d/snap/snap_2d_vertices_to_pixel=true
+environment/screen_space_reflection/roughness_quality=0

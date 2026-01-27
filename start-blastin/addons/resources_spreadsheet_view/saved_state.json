@@ -22,6 +22,28 @@
         "visibility": 0.0
       }
     },
+    "res://resources/enemies/": {
+      "metadata/_custom_type_script": {
+        "visibility": 0
+      },
+      "resource_local_to_scene": {
+        "visibility": 0
+      },
+      "resource_name": {
+        "visibility": 0
+      }
+    },
+    "res://resources/enemies/squadron-layouts/": {
+      "metadata/_custom_type_script": {
+        "visibility": 0
+      },
+      "resource_local_to_scene": {
+        "visibility": 0
+      },
+      "resource_name": {
+        "visibility": 0
+      }
+    },
     "res://resources/items/": {
       "Icon": {
         "visibility": 0.0
@@ -94,7 +116,9 @@
     "res://resources/items/modifiers/",
     "res://resources/items/",
     "res://resources/items/plugins/",
-    "res://resources/wave-scalers/spawner-formations/"
+    "res://resources/wave-scalers/spawner-formations/",
+    "res://resources/enemies/squadron-layouts/",
+    "res://resources/enemies/"
   ],
   "table_functions": {
     "filter": [

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=7 format=3 uid="uid://dmfihh0mab1le"]
+[gd_resource type="Resource" script_class="SpawnerFormationScaler" format=3 uid="uid://dmfihh0mab1le"]
 
 [ext_resource type="Resource" uid="uid://byt6t31ml7i1u" path="res://resources/enemies/squadron-layouts/filled-diamond.tres" id="1_3hp27"]
 [ext_resource type="Script" uid="uid://b40t8najievo0" path="res://nodes/wave-management/wave-scalers/SpawnerFormationScaler.cs" id="1_j161a"]
@@ -8,6 +8,7 @@
 [sub_resource type="Resource" id="Resource_ixsm8"]
 script = ExtResource("2_fbohk")
 EnemyType = "uid://vfsjsr1mvlk1"
+SquadEnabled = true
 Squadron = ExtResource("1_3hp27")
 metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
 

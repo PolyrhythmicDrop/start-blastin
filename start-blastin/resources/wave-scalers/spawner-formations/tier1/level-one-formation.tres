@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="SpawnerFormationScaler" load_steps=8 format=3 uid="uid://3bayun5b03eq"]
+[gd_resource type="Resource" script_class="SpawnerFormationScaler" format=3 uid="uid://3bayun5b03eq"]
 
 [ext_resource type="Script" uid="uid://ci68p6xph38co" path="res://nodes/enemies/Spawners/SpawnStep.cs" id="1_mswl7"]
 [ext_resource type="Script" uid="uid://b40t8najievo0" path="res://nodes/wave-management/wave-scalers/SpawnerFormationScaler.cs" id="1_tqbqd"]

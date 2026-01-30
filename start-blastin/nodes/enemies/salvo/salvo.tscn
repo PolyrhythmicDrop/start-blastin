@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://ceskd66h14gf0"]
+[gd_scene format=3 uid="uid://ceskd66h14gf0"]
 
 [ext_resource type="Script" uid="uid://7vphrsrmft36" path="res://nodes/enemies/salvo/Salvo.cs" id="1_mymqi"]
 [ext_resource type="Material" uid="uid://c2utwn3c0waxt" path="res://resources/materials/enemy-hit-effect.tres" id="1_p7tmb"]
@@ -257,7 +257,7 @@ animations = [{
 radius = 37.0
 height = 90.0
 
-[node name="Salvo" type="AnimatableBody2D"]
+[node name="Salvo" type="AnimatableBody2D" unique_id=685964535]
 material = ExtResource("1_p7tmb")
 collision_layer = 4
 collision_mask = 11
@@ -265,11 +265,11 @@ sync_to_physics = false
 script = ExtResource("1_mymqi")
 metadata/_custom_type_script = "uid://7vphrsrmft36"
 
-[node name="SpriteContainer" type="Node2D" parent="."]
+[node name="SpriteContainer" type="Node2D" parent="." unique_id=815465689]
 unique_name_in_owner = true
 use_parent_material = true
 
-[node name="Engine" type="AnimatedSprite2D" parent="SpriteContainer"]
+[node name="Engine" type="AnimatedSprite2D" parent="SpriteContainer" unique_id=1222340291]
 unique_name_in_owner = true
 use_parent_material = true
 sprite_frames = SubResource("SpriteFrames_k6amw")
@@ -277,7 +277,7 @@ animation = &"strafe-right"
 autoplay = "idle"
 frame_progress = 0.4075819
 
-[node name="Body" type="AnimatedSprite2D" parent="SpriteContainer"]
+[node name="Body" type="AnimatedSprite2D" parent="SpriteContainer" unique_id=1581038798]
 unique_name_in_owner = true
 texture_filter = 1
 use_parent_material = true
@@ -307,44 +307,47 @@ metadata/_aseprite_wizard_config_ = {
 }
 metadata/_aseprite_wizard_source_file_hash_ = "380a6bfa89fa6c629079eaa3caeaba43"
 
-[node name="Rack" type="AnimatedSprite2D" parent="SpriteContainer"]
+[node name="Rack" type="AnimatedSprite2D" parent="SpriteContainer" unique_id=383658309]
 unique_name_in_owner = true
 use_parent_material = true
 sprite_frames = SubResource("SpriteFrames_rtdog")
 autoplay = "default"
 
-[node name="Destruction" type="AnimatedSprite2D" parent="SpriteContainer"]
+[node name="Destruction" type="AnimatedSprite2D" parent="SpriteContainer" unique_id=607459741]
 unique_name_in_owner = true
 visible = false
 sprite_frames = SubResource("SpriteFrames_ciqna")
 frame = 5
 frame_progress = 1.0
 
-[node name="Barrel1" type="Node2D" parent="."]
+[node name="Barrel1" type="Node2D" parent="." unique_id=1664227493]
 position = Vector2(31, 0)
 script = ExtResource("5_3pyoe")
 Base = true
+DefaultActive = true
 metadata/_custom_type_script = "uid://bekbgunrmk3ad"
 
-[node name="Barrel2" type="Node2D" parent="."]
+[node name="Barrel2" type="Node2D" parent="." unique_id=933933886]
 position = Vector2(27.999996, 26)
 rotation = 0.6981317
 script = ExtResource("5_3pyoe")
 Base = true
+DefaultActive = true
 Direction = 1
 metadata/_custom_type_script = "uid://bekbgunrmk3ad"
 
-[node name="Barrel3" type="Node2D" parent="."]
+[node name="Barrel3" type="Node2D" parent="." unique_id=1578997806]
 position = Vector2(27.999998, -25)
 rotation = 5.5850534
 script = ExtResource("5_3pyoe")
 Base = true
+DefaultActive = true
 Direction = 7
 metadata/_custom_type_script = "uid://bekbgunrmk3ad"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=729975900]
 unique_name_in_owner = true
 shape = SubResource("CapsuleShape2D_8tbgu")
 
-[node name="OverheadHealthBar" parent="." instance=ExtResource("8_sfe3p")]
+[node name="OverheadHealthBar" parent="." unique_id=471150608 instance=ExtResource("8_sfe3p")]
 unique_name_in_owner = true

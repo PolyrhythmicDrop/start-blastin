@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="SoundSet" load_steps=6 format=3 uid="uid://df6h5kagv14tp"]
+[gd_resource type="Resource" script_class="SoundSet" format=3 uid="uid://df6h5kagv14tp"]
 
 [ext_resource type="Script" uid="uid://dt02kxv7k56mm" path="res://architecture/data-structures/SoundSet.cs" id="1_6kt1h"]
 [ext_resource type="Script" uid="uid://cx2eehu1aj48f" path="res://architecture/data-structures/AudioData.cs" id="1_c53jh"]

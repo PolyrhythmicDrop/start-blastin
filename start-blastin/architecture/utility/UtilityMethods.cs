@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Godot;
@@ -101,6 +102,31 @@ namespace Utility
         {
             var task = Task.Run(async () => await signalAwaiter);
             return task;
+        }
+
+        /// <summary>
+        /// Recursively gets all children of a specified parent node, including nested nodes.
+        /// </summary>
+        /// <param name="parent">The node to get all children of.</param>
+        /// <returns>A List of child nodes.</returns>
+        public static List<Node> GetAllChildren(Node parent)
+        {
+            List<Node> children = [];
+
+            foreach (Node node in parent.GetChildren())
+            {
+                if (node.GetChildCount() > 0)
+                {
+                    children.Add(node);
+                    children.AddRange(GetAllChildren(node));
+                }
+                else
+                {
+                    children.Add(node);
+                }
+            }
+
+            return children;
         }
     }
 }

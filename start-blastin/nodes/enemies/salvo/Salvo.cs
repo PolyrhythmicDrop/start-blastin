@@ -66,7 +66,7 @@ public partial class Salvo : EnemyNode
         if (sprite != null)
         {
             Rect2I usedRect = sprite.GetFrameTexture("default", 0).GetImage().GetUsedRect();
-            _healthBar.SetSize(usedRect.Size);
+            _healthBar.SetSizeAndOffset(usedRect.Size);
         }
     }
 

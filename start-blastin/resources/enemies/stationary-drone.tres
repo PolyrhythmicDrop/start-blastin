@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="EnemyResource" load_steps=5 format=3 uid="uid://mva16r14sxrx"]
+[gd_resource type="Resource" script_class="EnemyResource" format=3 uid="uid://mva16r14sxrx"]
 
 [ext_resource type="Curve2D" uid="uid://d3m8xemmt4jsn" path="res://resources/curves/down-and-stop.tres" id="1_osf0i"]
 [ext_resource type="Script" uid="uid://bytfm61mpkr5u" path="res://nodes/weapons/WeaponStats.cs" id="2_ae1an"]

@@ -48,7 +48,7 @@ namespace UI
             ToggleBarVisibility(Active);
         }
 
-        public void SetSize(Vector2 spriteSize)
+        public void SetSizeAndOffset(Vector2 spriteSize)
         {
             // Get the width of the sprite
             float w = spriteSize.X;

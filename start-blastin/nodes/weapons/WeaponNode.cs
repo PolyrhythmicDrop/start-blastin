@@ -134,14 +134,20 @@ namespace Weapons
 
         public void SetBarrels()
         {
-            List<Node> children = [.. GetParent().GetChildren()];
+            // Get all the children of the parent node.
+            List<Node> children = UtilityMethods.GetAllChildren(GetParent());
+
             foreach (Barrel barrel in children.FindAll(child => child is Barrel))
             {
                 Barrels.Add(barrel);
+                if (barrel.DefaultActive == true)
+                {
+                    barrel.ToggleActive(true);
+                }
             }
 
-            // Activate the first barrel by default
-            Barrels.FirstOrDefault().ToggleActive(true);
+            // Activate all active default barrels
+            // Barrels.FirstOrDefault().ToggleActive(true);
         }
 
         /// <summary>

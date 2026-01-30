@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="EnemyResource" load_steps=5 format=3 uid="uid://c6gegbmdwn5ug"]
+[gd_resource type="Resource" script_class="EnemyResource" format=3 uid="uid://c6gegbmdwn5ug"]
 
 [ext_resource type="Script" uid="uid://bytfm61mpkr5u" path="res://nodes/weapons/WeaponStats.cs" id="1_8erdl"]
 [ext_resource type="Script" uid="uid://cf7pn6qd7aa15" path="res://nodes/enemies/EnemyResource.cs" id="1_e3536"]

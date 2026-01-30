@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="EnemyResource" load_steps=6 format=3 uid="uid://b6vj8iih7r25c"]
+[gd_resource type="Resource" script_class="EnemyResource" format=3 uid="uid://b6vj8iih7r25c"]
 
 [ext_resource type="Curve2D" uid="uid://bnvfjkrio8lfp" path="res://resources/curves/straight-down.tres" id="1_fllia"]
 [ext_resource type="Script" uid="uid://bytfm61mpkr5u" path="res://nodes/weapons/WeaponStats.cs" id="1_naq0v"]

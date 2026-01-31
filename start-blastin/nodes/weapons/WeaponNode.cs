@@ -225,7 +225,7 @@ namespace Weapons
                 playerId = player.PlayerId;
             }
 
-            // If the collidor has deflection active, deflect the projectile and return
+            // If the collider has deflection active, deflect the projectile and return
             if (args.Collider is IDeflector deflector && deflector.DeflectActive)
             {
                 // Deflect and then return.

@@ -1,12 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://da7sqkjhcrp8a"]
+[gd_scene format=3 uid="uid://da7sqkjhcrp8a"]
 
-[ext_resource type="Curve2D" uid="uid://d3m8xemmt4jsn" path="res://resources/curves/down-and-stop.tres" id="1_43c8p"]
 [ext_resource type="Script" uid="uid://dc7up85m78i4d" path="res://nodes/components/EntityPath.cs" id="1_g26qx"]
 
-[node name="Path2D" type="Path2D"]
-curve = ExtResource("1_43c8p")
+[node name="Path2D" type="Path2D" unique_id=750026838]
 script = ExtResource("1_g26qx")
 
-[node name="PathFollow2D" type="PathFollow2D" parent="."]
+[node name="PathFollow2D" type="PathFollow2D" parent="." unique_id=1259970568]
 unique_name_in_owner = true
-rotation = 1.5707964
+rotation = 1.7963291

@@ -318,7 +318,10 @@ namespace Enemies
 
         public virtual void OnPathComplete()
         {
-            FreeEnemy();
+            if (!VisibleNotifier.IsOnScreen())
+            {
+                FreeEnemy();
+            }
         }
 
         #endregion
@@ -495,8 +498,11 @@ namespace Enemies
 
         protected virtual void FireWeapon()
         {
-            _audioComponent.PlayFireSound();
-            _weapon.Fire();
+            if (VisibleNotifier.IsOnScreen())
+            {
+                _audioComponent.PlayFireSound();
+                _weapon.Fire();
+            }
         }
 
         public virtual async void Die(int? playerId = null)

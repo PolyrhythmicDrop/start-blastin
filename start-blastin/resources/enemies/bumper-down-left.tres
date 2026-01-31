@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="EnemyResource" format=3 uid="uid://dgbyy8tmc5fv0"]
 
-[ext_resource type="Curve2D" uid="uid://bnvfjkrio8lfp" path="res://resources/curves/straight-down.tres" id="1_67j8u"]
+[ext_resource type="Curve2D" uid="uid://dru8kloi28a1k" path="res://resources/curves/bend-down-left.tres" id="1_67j8u"]
 [ext_resource type="Script" uid="uid://cf7pn6qd7aa15" path="res://nodes/enemies/EnemyResource.cs" id="1_y6k7r"]
 [ext_resource type="Script" uid="uid://dt02kxv7k56mm" path="res://architecture/data-structures/SoundSet.cs" id="2_q44rd"]
 [ext_resource type="Script" uid="uid://bytfm61mpkr5u" path="res://nodes/weapons/WeaponStats.cs" id="3_e4ogo"]

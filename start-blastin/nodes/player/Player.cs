@@ -349,20 +349,22 @@ namespace Entities
         {
             // Play sound and animation
             _audioComponent.PlayHitSound();
-            _animationComponent.PlayDamageAnimation();
 
-            // Deal the damage
-            CurrentHealth -= damage;
+            if (damage != 0)
+            {
+                _animationComponent.PlayDamageAnimation();
+                // Deal the damage
+                CurrentHealth -= damage;
 
-            // Create and display an indicator
-            IndicatorFactory.CreateTextIndicator(
-                (MathF.Round(damage, 1) * -1).ToString(),
-                new Vector2(GlobalPosition.X + GD.RandRange(-20, 20), GlobalPosition.Y),
-                parent: this
-            );
+                // Create and display an indicator
+                IndicatorFactory.CreateTextIndicator(
+                    (MathF.Round(damage, 1) * -1).ToString(),
+                    new Vector2(GlobalPosition.X + GD.RandRange(-20, 20), GlobalPosition.Y),
+                    parent: this
+                );
 
-            EventBus.Instance.RaisePlayerTakeDamage(PlayerId, damage, this);
-
+                EventBus.Instance.RaisePlayerTakeDamage(PlayerId, damage, this);
+            }
             if (_currentHealth <= 0)
             {
                 CurrentHealth = 0;

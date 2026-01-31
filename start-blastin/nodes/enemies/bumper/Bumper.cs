@@ -13,8 +13,8 @@ public partial class Bumper : EnemyNode
     private AnimatedSprite2D _turretSprite;
     private AnimatedSprite2D _shieldGenSprite;
 
-    private StaticBody2D _shieldN;
-    private StaticBody2D _shieldS;
+    private StaticDeflector _deflectorN;
+    private StaticDeflector _deflectorS;
 
     // ~ Rotation Variables ~ //
 
@@ -50,8 +50,8 @@ public partial class Bumper : EnemyNode
         _rotator = _spriteContainer.GetNode<Node2D>("%Rotator");
         _turretSprite = _rotator.GetNode<AnimatedSprite2D>("%TurretSprite");
         _shieldGenSprite = _rotator.GetNode<AnimatedSprite2D>("%ShieldGenSprite");
-        _shieldN = _shieldGenSprite.GetNode<StaticDeflector>("%DeflectorN");
-        _shieldS = _shieldGenSprite.GetNode<StaticDeflector>("%DeflectorS");
+        _deflectorN = _shieldGenSprite.GetNode<StaticDeflector>("%DeflectorN");
+        _deflectorS = _shieldGenSprite.GetNode<StaticDeflector>("%DeflectorS");
 
         InitializeTimers();
 
@@ -129,6 +129,10 @@ public partial class Bumper : EnemyNode
     {
         _lastGlobalPosition = _currentGlobalPosition;
         _currentGlobalPosition = GlobalPosition;
+
+        // Set the velocities of the deflectors
+        _deflectorN.ConstantLinearVelocity = _currentVelocity;
+        _deflectorS.ConstantLinearVelocity = _currentVelocity;
 
         base._Process(delta);
         SetMoveAnimation();

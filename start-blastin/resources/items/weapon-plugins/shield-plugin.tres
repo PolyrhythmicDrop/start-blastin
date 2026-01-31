@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="WeaponPlugin" load_steps=9 format=3 uid="uid://dto7he15c83tj"]
+[gd_resource type="Resource" script_class="WeaponPlugin" format=3 uid="uid://dto7he15c83tj"]
 
 [ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="1_7aof5"]
 [ext_resource type="Script" uid="uid://e8ufr3v1a1f" path="res://architecture/items/plugins/WeaponPlugin.cs" id="1_f5ks6"]

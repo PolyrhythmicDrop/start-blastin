@@ -177,15 +177,15 @@ public partial class Shield : Projectile, IDeflector, IVelocityProvider
         base.SetProjectileCollisionLayers(faction);
 
         // Turn off collisions with enemies and player.
-        SetCollisionMaskValue(1, false);
-        SetCollisionMaskValue(3, false);
+        // SetCollisionMaskValue(1, false);
+        // SetCollisionMaskValue(3, false);
     }
 
     public override void SetRayMask(Faction faction)
     {
         base.SetRayMask(faction);
-        _ray?.SetCollisionMaskValue(1, false);
-        _ray?.SetCollisionMaskValue(3, false);
+        // _ray?.SetCollisionMaskValue(1, false);
+        // _ray?.SetCollisionMaskValue(3, false);
         if (_shapeCast != null && _ray != null)
         {
             _shapeCast.CollisionMask = _ray.CollisionMask;

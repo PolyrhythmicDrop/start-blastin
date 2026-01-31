@@ -12,7 +12,6 @@ points = PackedVector2Array(-7, -24, -4, -30, 0, -30, 7, -5, 7, 5, 0, 30, -4, 30
 material = ExtResource("1_2gl2q")
 collision_layer = 0
 collision_mask = 0
-monitoring = false
 script = ExtResource("1_jihpr")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1517501842]
@@ -30,7 +29,6 @@ polygon = PackedVector2Array(-7, -24, -4, -30, 0, -30, 7, -5, 7, 5, 0, 30, -4, 3
 
 [node name="TrajRayCast" type="RayCast2D" parent="." unique_id=1366944328]
 unique_name_in_owner = true
-visible = false
 target_position = Vector2(0, 0)
 collision_mask = 2
 hit_from_inside = true
@@ -38,7 +36,6 @@ collide_with_areas = true
 
 [node name="ShapeCast2D" type="ShapeCast2D" parent="." unique_id=1386143998]
 unique_name_in_owner = true
-visible = false
 shape = SubResource("ConvexPolygonShape2D_avtfy")
 target_position = Vector2(0, 0)
 max_results = 1

@@ -464,15 +464,16 @@ namespace Enemies
                 // AudioService.Instance.PlaySound(_sounds?.Hit, this, volume: -6);
                 _audioComponent.PlayHitSound();
 
-                PlayDamageAnimation();
-                IndicatorFactory.CreateTextIndicator(
-                    (MathF.Round(damage, 1) * -1).ToString(),
-                    GlobalPosition,
-                    parent: this
-                );
-                CurrentHealth -= damage;
-
-                // _healthBar.SetValues(MaxHealth, CurrentHealth);
+                if (damage != 0)
+                {
+                    PlayDamageAnimation();
+                    IndicatorFactory.CreateTextIndicator(
+                        (MathF.Round(damage, 1) * -1).ToString(),
+                        GlobalPosition,
+                        parent: this
+                    );
+                    CurrentHealth -= damage;
+                }
 
                 if (_currentHealth <= 0)
                 {

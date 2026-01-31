@@ -609,7 +609,6 @@ namespace Enemies
 
             _followTween = CreateTween();
             _followTween.TweenProperty(_followPath, "FollowRatio", 1.0, duration);
-            // _followTween.TweenProperty(_followPath, StringName., 1.0, duration);
         }
 
         /// <summary>

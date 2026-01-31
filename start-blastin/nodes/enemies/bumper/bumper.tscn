@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://0ochm3csb2ck"]
 
+[ext_resource type="Material" uid="uid://c2utwn3c0waxt" path="res://resources/materials/enemy-hit-effect.tres" id="1_lw7tk"]
 [ext_resource type="Script" uid="uid://bekbgunrmk3ad" path="res://nodes/weapons/Barrel.cs" id="1_na5rn"]
 [ext_resource type="Script" uid="uid://bvm0kxtbbb75a" path="res://nodes/enemies/bumper/Bumper.cs" id="1_w4umt"]
 [ext_resource type="Texture2D" uid="uid://cj364u0fo1386" path="res://assets/enemies/bumper/bumper-turrets.png" id="2_0thyw"]
 [ext_resource type="Texture2D" uid="uid://cyyfprpfg4wxs" path="res://assets/enemies/bumper/bumper-body.png" id="2_qq06v"]
 [ext_resource type="PackedScene" uid="uid://dyem7stdeqti4" path="res://nodes/ui/elements/overhead-health-bar.tscn" id="2_uelcb"]
 [ext_resource type="Texture2D" uid="uid://6a048ykfc0fj" path="res://assets/enemies/bumper/bumper-shield-nodes.png" id="3_0thyw"]
-[ext_resource type="Shader" uid="uid://dqd5mgfwuy3y7" path="res://resources/shaders/eye-dropper.gdshader" id="4_lw7tk"]
-[ext_resource type="Texture2D" uid="uid://cdro5m8x72u18" path="res://assets/shields/shield.png" id="5_0img3"]
+[ext_resource type="PackedScene" uid="uid://cpr6gjyj2y750" path="res://nodes/components/static-deflector.tscn" id="5_4fy3a"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_w4umt"]
 radius = 24.0
@@ -125,13 +125,6 @@ animations = [{
 "speed": 8.0
 }]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ahsab"]
-resource_local_to_scene = true
-shader = ExtResource("4_lw7tk")
-shader_parameter/palette_array_size = 4
-shader_parameter/input_palette_array = PackedColorArray(0.33333334, 0.64705884, 0.6392157, 1, 0.91764706, 0.7058824, 0.5254902, 1, 0.11764706, 0.3019608, 0.34509805, 1, 0.54509807, 0.9882353, 0.93333334, 1)
-shader_parameter/output_palette_array = PackedColorArray(0.61960787, 0.39607844, 0.78431374, 1, 0.6901961, 0.80784315, 0, 1, 0.397642, 0.21531087, 0.5250462, 1, 1, 0.6901961, 1, 1)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_lw7tk"]
 atlas = ExtResource("2_qq06v")
 region = Rect2(0, 288, 96, 96)
@@ -177,6 +170,7 @@ animations = [{
 }]
 
 [node name="Bumper" type="AnimatableBody2D" unique_id=196568354]
+material = ExtResource("1_lw7tk")
 collision_layer = 4
 collision_mask = 11
 sync_to_physics = false
@@ -193,9 +187,11 @@ scale = Vector2(1.0000001, 1.0000001)
 
 [node name="Rotator" type="Node2D" parent="SpriteContainer" unique_id=917360722]
 unique_name_in_owner = true
+use_parent_material = true
 
 [node name="TurretSprite" type="AnimatedSprite2D" parent="SpriteContainer/Rotator" unique_id=1973246124]
 unique_name_in_owner = true
+use_parent_material = true
 sprite_frames = SubResource("SpriteFrames_gqgpu")
 
 [node name="Barrel" type="Node2D" parent="SpriteContainer/Rotator/TurretSprite" unique_id=2109340898]
@@ -220,42 +216,23 @@ metadata/_custom_type_script = "uid://bekbgunrmk3ad"
 
 [node name="ShieldGenSprite" type="AnimatedSprite2D" parent="SpriteContainer/Rotator" unique_id=180335929]
 unique_name_in_owner = true
+use_parent_material = true
 sprite_frames = SubResource("SpriteFrames_f63gn")
 autoplay = "default"
 frame_progress = 0.47761202
 
-[node name="BumperShieldN" type="StaticBody2D" parent="SpriteContainer/Rotator/ShieldGenSprite" unique_id=2104255963]
+[node name="DeflectorN" parent="SpriteContainer/Rotator/ShieldGenSprite" unique_id=2099599118 instance=ExtResource("5_4fy3a")]
 unique_name_in_owner = true
 position = Vector2(49.999992, 0)
-collision_layer = 4
-collision_mask = 9
 
-[node name="Sprite2D-ShieldN" type="Sprite2D" parent="SpriteContainer/Rotator/ShieldGenSprite/BumperShieldN" unique_id=95270394]
-material = SubResource("ShaderMaterial_ahsab")
-texture = ExtResource("5_0img3")
-
-[node name="CollisionPolygon-ShieldN" type="CollisionPolygon2D" parent="SpriteContainer/Rotator/ShieldGenSprite/BumperShieldN" unique_id=1650443444]
-unique_name_in_owner = true
-position = Vector2(1.0000037, -1.1924925e-08)
-polygon = PackedVector2Array(-7, -24, -4, -30, 0, -30, 7, -5, 7, 5, 0, 30, -4, 30, -7, 24, -1, 5, -1, -5)
-
-[node name="BumperShieldS" type="StaticBody2D" parent="SpriteContainer/Rotator/ShieldGenSprite" unique_id=120468893]
+[node name="DeflectorS" parent="SpriteContainer/Rotator/ShieldGenSprite" unique_id=2048944256 instance=ExtResource("5_4fy3a")]
 unique_name_in_owner = true
 position = Vector2(-50, 0)
-rotation = -3.1415925
-collision_layer = 4
-collision_mask = 9
-
-[node name="Sprite2D-ShieldS" type="Sprite2D" parent="SpriteContainer/Rotator/ShieldGenSprite/BumperShieldS" unique_id=1582657090]
-material = SubResource("ShaderMaterial_ahsab")
-texture = ExtResource("5_0img3")
-
-[node name="CollisionPolygon-ShieldS" type="CollisionPolygon2D" parent="SpriteContainer/Rotator/ShieldGenSprite/BumperShieldS" unique_id=2071440429]
-position = Vector2(1.0000037, -1.1924925e-08)
-polygon = PackedVector2Array(-7, -24, -4, -30, 0, -30, 7, -5, 7, 5, 0, 30, -4, 30, -7, 24, -1, 5, -1, -5)
+rotation = 3.1415927
 
 [node name="BodySprite" type="AnimatedSprite2D" parent="SpriteContainer" unique_id=1708721288]
 unique_name_in_owner = true
+use_parent_material = true
 sprite_frames = SubResource("SpriteFrames_ahsab")
 
 [node name="OverheadHealthBar" parent="." unique_id=609393363 instance=ExtResource("2_uelcb")]

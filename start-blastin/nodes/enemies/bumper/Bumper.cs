@@ -1,4 +1,4 @@
-using System;
+using Components;
 using Enemies;
 using Godot;
 
@@ -50,8 +50,8 @@ public partial class Bumper : EnemyNode
         _rotator = _spriteContainer.GetNode<Node2D>("%Rotator");
         _turretSprite = _rotator.GetNode<AnimatedSprite2D>("%TurretSprite");
         _shieldGenSprite = _rotator.GetNode<AnimatedSprite2D>("%ShieldGenSprite");
-        _shieldN = _shieldGenSprite.GetNode<StaticBody2D>("%BumperShieldN");
-        _shieldS = _shieldGenSprite.GetNode<StaticBody2D>("%BumperShieldS");
+        _shieldN = _shieldGenSprite.GetNode<StaticDeflector>("%DeflectorN");
+        _shieldS = _shieldGenSprite.GetNode<StaticDeflector>("%DeflectorS");
 
         InitializeTimers();
 
@@ -151,5 +151,20 @@ public partial class Bumper : EnemyNode
         {
             _bodySprite.Play("default");
         }
+    }
+
+    public override void Die(int? playerId = null)
+    {
+        _alive = false;
+        _weapon.FireTimer.Stop();
+        _shape.Disabled = true;
+
+        // Make the base and engine sprites invisible.
+        _spriteContainer.Visible = false;
+
+        // Play the destruction sound
+        _audioComponent.PlayDestructionSound();
+
+        base.Die();
     }
 }

@@ -568,7 +568,7 @@ namespace Projectiles
                 float normalRadians = roundColNormal.Angle();
 
                 // Set the deflectee's rotation to opposite of the collision normal angle.
-                GlobalRotation = normalRadians;
+                GlobalRotation = normalRadians + MathF.PI;
 
                 if (deflector is IVelocityProvider velocitySource)
                 {

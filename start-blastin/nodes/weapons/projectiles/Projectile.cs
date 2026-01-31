@@ -512,7 +512,7 @@ namespace Projectiles
 
             // Change the palette to match the new faction
             bool isEnemy = _faction == Faction.Enemies;
-            if (this is not Shield)
+            if (this is not ShieldProjectile)
             {
                 ProjectileFactory.SetProjectileShaderMaterial(this, isEnemy);
             }
@@ -547,7 +547,7 @@ namespace Projectiles
 
             // Temporarily disable casting on this object
             _ray.Enabled = false;
-            if (this is Shield shield)
+            if (this is ShieldProjectile shield)
             {
                 shield.ShapeCast.Enabled = false;
             }
@@ -602,7 +602,7 @@ namespace Projectiles
 
                 await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);
                 _isBeingDeflected = false;
-                if (this is Shield shield2)
+                if (this is ShieldProjectile shield2)
                 {
                     shield2.ShapeCast.Enabled = true;
                 }

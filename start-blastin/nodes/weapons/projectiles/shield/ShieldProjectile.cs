@@ -9,7 +9,7 @@ using Projectiles;
 using Utility;
 
 [GlobalClass]
-public partial class Shield : Projectile, IDeflector, IVelocityProvider
+public partial class ShieldProjectile : Projectile, IDeflector, IVelocityProvider
 {
     // Nodes //
     private Sprite2D _sprite;

@@ -5,13 +5,18 @@ using Interfaces;
 namespace Components
 {
     [GlobalClass]
-    public partial class StaticDeflector : StaticBody2D, IDeflector
+    public partial class StaticDeflector : StaticBody2D, IDeflector, IVelocityProvider
     {
         private Sprite2D _sprite;
 
         private CollisionPolygon2D _collisionPoly;
 
         public bool DeflectActive { get; set; } = true;
+
+        public Vector2 GetCurrentVelocity()
+        {
+            return ConstantLinearVelocity;
+        }
 
         public override void _Ready()
         {

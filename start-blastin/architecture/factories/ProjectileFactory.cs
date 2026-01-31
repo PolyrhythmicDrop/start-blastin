@@ -45,7 +45,7 @@ namespace Factories
                     ammo = _missileScene.Instantiate<Missile>();
                     break;
                 case ProjectileType.Shield:
-                    ammo = _shieldScene.Instantiate<Shield>();
+                    ammo = _shieldScene.Instantiate<ShieldProjectile>();
                     break;
             }
             ammo.SourceWeapon = weapon;
@@ -67,7 +67,7 @@ namespace Factories
                 {
                     Bullet => _bulletPalette,
                     Missile => _missilePalette,
-                    Shield => null,
+                    ShieldProjectile => null,
                     _ => _bulletPalette,
                 };
             }

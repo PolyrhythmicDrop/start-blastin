@@ -19,7 +19,7 @@ namespace PlayerComponents
     {
         private Player _player;
 
-        private Shield _shield;
+        private ShieldProjectile _shield;
 
         private List<Modifier> _modifiers = new();
         private List<Plugin> _plugins = new();

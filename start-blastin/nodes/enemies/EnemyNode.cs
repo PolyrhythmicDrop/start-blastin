@@ -72,7 +72,7 @@ namespace Enemies
 
         protected float _crashDamage => _stats.GetStat(StatType.CrashDamage).CurrentValue;
 
-        protected Vector2? _terminalTrajectory = null;
+        protected Vector2 _terminalTrajectory = Vector2.Zero;
 
         // Base stats
         protected float _baseSpeed;
@@ -171,7 +171,20 @@ namespace Enemies
         /// <summary>
         /// Sets the size of the enemy's health bar based on the size of the enemy's sprite. Override in derived classes.
         /// </summary>
-        protected virtual void SetHealthBarSize() { }
+        protected virtual void SetHealthBarSize()
+        {
+            AnimatedSprite2D sprite = GetPrimarySprite();
+
+            // Get size of the base sprite
+            SpriteFrames frames = sprite.SpriteFrames ?? null;
+            if (sprite != null)
+            {
+                Rect2I usedRect = frames.GetFrameTexture("default", 0).GetImage().GetUsedRect();
+                _healthBar.SetSizeAndOffset(usedRect.Size);
+            }
+        }
+
+        protected virtual AnimatedSprite2D GetPrimarySprite() => null;
 
         /// <summary>
         /// Turn the health bar on and off.
@@ -249,15 +262,28 @@ namespace Enemies
             double delay = RNG.GetRandomDouble(max: _weapon.Stats.FireRate);
             _weapon.FireTimer.Start(delay);
 
-            // // Initialize position tracking
-            // _lastGlobalPosition = GlobalPosition;
+            // Initialize position tracking
+            _currentGlobalPosition = GlobalPosition;
+            _lastGlobalPosition = _currentGlobalPosition;
 
             // Initialize the health bar.
             _healthBar = GetNode<OverheadHealthBar>("%OverheadHealthBar");
             _healthBar.Initialize(this);
 
             ConnectSignals();
+
+            // Call the derived class's Ready steps.
+            OnBaseReadyComplete();
+
+            SetHealthBarSize();
+
+            FollowPath(_followSpeed);
         }
+
+        /// <summary>
+        /// Setup logic for derived classes. Called during <see cref="_Ready"/>, after base initialization, but before <see cref="SetHealthBarSize"/> and <see cref="FollowPath"/>.
+        /// </summary>
+        protected virtual void OnBaseReadyComplete() { }
 
         protected void InitVisibleNotifier()
         {
@@ -504,17 +530,50 @@ namespace Enemies
             CurrentHealth = Mathf.Min(_currentHealth + healAmount, MaxHealth);
         }
 
+        /// <summary>
+        /// Fires the enemy's weapon if the enemy is on the screen.
+        /// </summary>
         protected virtual void FireWeapon()
         {
-            if (VisibleNotifier.IsOnScreen())
+            // Don't fire if we're dead or not on screen.
+            if (!_alive || !VisibleNotifier.IsOnScreen())
             {
-                _audioComponent.PlayFireSound();
-                _weapon.Fire();
+                return;
             }
+
+            _audioComponent.PlayFireSound();
+            PlayFireAnimation();
+            _weapon.Fire();
         }
 
+        /// <summary>
+        /// Plays the enemy's fire animation. Must be implemented by the derived class.
+        /// </summary>
+        protected abstract void PlayFireAnimation();
+
+        /// <summary>
+        /// Kills the enemy. Raises the <see cref="EventBus.EnemyKilled"/> event if a Player killed the enemy.
+        /// </summary>
+        /// <param name="playerId">The ID of the player that killed the enemy, if any. This player gets the rewards for killing the enemy.</param>
+        /// <remarks>
+        /// If <paramref name="playerId"/> is null, the <see cref="EventBus.EnemyKilled"/> event is not raised.
         public virtual async void Die(int? playerId = null)
         {
+            // Don't die again if you're already dead.
+            if (!_alive)
+            {
+                return;
+            }
+
+            // Standardized death stuff
+            _alive = false;
+            _weapon.FireTimer.Stop();
+            _shape.Disabled = true;
+
+            // Derived class death stuff
+            await PlayDeathSequence();
+
+            // Raise the enemy killed event
             if (playerId != null)
             {
                 EnemyKilledEventArgs args = new(
@@ -526,15 +585,28 @@ namespace Enemies
                 EventBus.Instance.RaiseEnemyKilled(args);
             }
 
+            // Free the enemy from memory
             FreeEnemy();
         }
 
+        /// <summary>
+        /// Handles all class-specific death logic, including playing death animations and sounds, freeing related objects, and waiting for animations to complete.
+        /// Must be implemented by derived class.
+        /// </summary>
+        /// <returns></returns>
+        protected abstract Task PlayDeathSequence();
+
+        /// <summary>
+        /// Callback for when the enemy exits the screen after it has reached the end of its path.
+        /// </summary>
         private void OnScreenExit()
         {
-            DebugLogger.LogMessage($"OnScreenExit called for {Name}!");
             FreeEnemy();
         }
 
+        /// <summary>
+        /// Frees the enemy from memory after all its associated audio is finished playing and all its projectiles are disabled.
+        /// </summary>
         public async void FreeEnemy()
         {
             _healthBar.ToggleBarVisibility(false);
@@ -548,6 +620,9 @@ namespace Enemies
             }
         }
 
+        /// <summary>
+        /// Plays the enemy's damage animation using the damage shader.
+        /// </summary>
         public virtual void PlayDamageAnimation()
         {
             string mixRatioPath = "mix_ratio";
@@ -585,12 +660,15 @@ namespace Enemies
         public override void _PhysicsProcess(double delta)
         {
             base._PhysicsProcess(delta);
+
+            // Update position tracking
+            _lastGlobalPosition = _currentGlobalPosition;
+            _currentGlobalPosition = GlobalPosition;
+
             if (delta > 0)
             {
-                _currentVelocity = (GlobalPosition - _lastGlobalPosition) / (float)delta;
+                _currentVelocity = (_currentGlobalPosition - _lastGlobalPosition) / (float)delta;
             }
-
-            _lastGlobalPosition = GlobalPosition;
         }
 
         public override void _Process(double delta)
@@ -600,9 +678,21 @@ namespace Enemies
                 SetHealthBarPosition();
             }
 
+            // Pre-processing for derived classes
+            OnProcessUpdate(delta);
+
+            // Collision detection
+            KinematicCollision2D collision = MoveAndCollide(_motion, true);
+
+            if (collision != null)
+            {
+                OnCrash(collision);
+            }
+
             // Keep going along current motion of at path end and not dead
             if (_atPathEnd && _alive && OnScreen)
             {
+                // Connect to the screen exited signal for freeing if you're not already connected to it.
                 if (
                     !VisibleNotifier.IsConnected(
                         VisibleOnScreenNotifier2D.SignalName.ScreenExited,
@@ -612,18 +702,23 @@ namespace Enemies
                 {
                     ConnectPathEndScreenExited();
                 }
-                if (_terminalTrajectory == null || _terminalTrajectory == Vector2.Zero)
+                // Set your exiting trajectory if it's not already set.
+                if (_terminalTrajectory == Vector2.Zero)
                 {
                     SetTerminalTrajectory(delta);
                 }
-                MoveAndCollide(_terminalTrajectory ?? Vector2.Right.Rotated(GlobalRotation));
+
+                // Move along the terminal trajectory until you're off the screen.
+                MoveAndCollide(_terminalTrajectory);
             }
 
+            // If you've already split from the squadron (or not in a squadron), return.
             if (_split)
             {
                 return;
             }
 
+            // Split off from the squadron if we're part of one.
             if (InSquadron && SquadronPosition != null)
             {
                 if (_followPath.PathFollow.ProgressRatio > SplitPoint)
@@ -633,6 +728,12 @@ namespace Enemies
                 }
             }
         }
+
+        /// <summary>
+        /// Called during the base <see cref="_Process(double)"/> function. Implemented by derived classes for class-specific behavior during _Process.
+        /// </summary>
+        /// <param name="delta">The time between frames, retrieved from <see cref="_Process(double)"/>.</param>
+        protected virtual void OnProcessUpdate(double delta) { }
 
         private void ConnectPathEndScreenExited()
         {
@@ -683,25 +784,6 @@ namespace Enemies
             }
 
             await Task.WhenAll(audioTasks);
-            // var children = GetChildren();
-            // foreach (Node node in children)
-            // {
-            //     if (node is not AudioStreamPlayer2D audioStream)
-            //     {
-            //         continue;
-            //     }
-
-            //     if (!audioStream.Playing)
-            //     {
-            //         continue;
-            //     }
-            //     else
-            //     {
-            //         await ToSignal(audioStream, AudioStreamPlayer2D.SignalName.Finished);
-            //         continue;
-            //     }
-            // }
-            // return true;
         }
 
         public override void _ExitTree()

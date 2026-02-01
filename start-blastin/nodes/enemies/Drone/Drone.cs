@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Components;
 using Entities;
 using Godot;
@@ -9,57 +10,27 @@ namespace Enemies
     {
         private RayCast2D _visionRay;
         private Node2D _spriteContainer;
-        private AnimatedSprite2D _base;
+        private AnimatedSprite2D _body;
         private AnimatedSprite2D _engine;
         private AnimatedSprite2D _destruction;
 
-        // ~~ Sound Strings ~~ //
-
-        public override void _Ready()
+        protected override void OnBaseReadyComplete()
         {
-            base._Ready();
             // Stop the fire timer since we'll control it using the raycast instead.
             _weapon.FireTimer.Stop();
 
             _visionRay = GetNode<RayCast2D>("%VisionRay");
             _spriteContainer = GetNode<Node2D>("%SpriteContainer");
-            _base = _spriteContainer.GetNode<AnimatedSprite2D>("%Base");
+            _body = _spriteContainer.GetNode<AnimatedSprite2D>("%Base");
             _engine = _spriteContainer.GetNode<AnimatedSprite2D>("%Engine");
             _destruction = _spriteContainer.GetNode<AnimatedSprite2D>("%Destruction");
-
-            _currentGlobalPosition = GlobalPosition;
-            _lastGlobalPosition = _currentGlobalPosition;
-
-            SetHealthBarSize();
-
-            FollowPath(_followSpeed);
         }
 
-        protected override void SetHealthBarSize()
-        {
-            // Get size of the base sprite
-            SpriteFrames sprite = _base.SpriteFrames ?? null;
-            if (sprite != null)
-            {
-                Rect2I usedRect = sprite.GetFrameTexture("default", 0).GetImage().GetUsedRect();
-                _healthBar.SetSizeAndOffset(usedRect.Size);
-            }
-        }
+        protected override AnimatedSprite2D GetPrimarySprite() => _body;
 
-        public override void _Process(double delta)
+        protected override void OnProcessUpdate(double delta)
         {
-            // _lastGlobalPosition = _currentGlobalPosition;
-            // _currentGlobalPosition = GlobalPosition;
-
-            base._Process(delta);
             SetMoveAnimation();
-
-            KinematicCollision2D collision = MoveAndCollide(_motion, true);
-
-            if (collision != null)
-            {
-                OnCrash(collision);
-            }
         }
 
         public override void _PhysicsProcess(double delta)
@@ -109,43 +80,24 @@ namespace Enemies
             _followTween.TweenProperty(_followPath, "FollowRatio", 1.0, stepDuration);
         }
 
-        protected override void FireWeapon()
+        protected override void PlayFireAnimation()
         {
-            if (_alive)
-            {
-                base.FireWeapon();
-                _base.Play("fire");
-            }
+            _body.Play("fire");
         }
 
-        public override void Die(int? playerId = null)
+        protected override async Task PlayDeathSequence()
         {
-            _alive = false;
-            _weapon.FireTimer.Stop();
-            _shape.Disabled = true;
-
             // Make the base and engine sprites invisible.
-            _base.Visible = false;
+            _body.Visible = false;
             _engine.Visible = false;
 
-            // Play the destruction sound
+            // Play the destruction sound and show the destruction sprite
             _audioComponent.PlayDestructionSound();
             _destruction.Visible = true;
             _destruction.Play();
 
-            if (
-                !_destruction.IsConnected(
-                    AnimatedSprite2D.SignalName.AnimationFinished,
-                    Callable.From(() => base.Die(playerId))
-                )
-            )
-            // Call the base "die" method when the animation is finished.
-            {
-                _destruction.Connect(
-                    AnimatedSprite2D.SignalName.AnimationFinished,
-                    Callable.From(() => base.Die(playerId))
-                );
-            }
+            // Return after the destruction animation is complete.
+            await ToSignal(_destruction, AnimatedSprite2D.SignalName.AnimationFinished);
         }
     }
 }

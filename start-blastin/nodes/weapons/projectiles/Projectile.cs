@@ -118,10 +118,6 @@ namespace Projectiles
 
         protected void RaiseCollision(object source, CollisionEventArgs args)
         {
-            if (args?.Collider is Node node)
-            {
-                DebugLogger.LogMessage($"{Name} is colliding with {node.Name}!");
-            }
             Collision?.Invoke(source, args);
         }
 

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Components;
 using Enemies;
 using Godot;
@@ -40,10 +41,8 @@ public partial class Bumper : EnemyNode
     /// </summary>
     private const int ROTATE_STEP = 90;
 
-    public override void _Ready()
+    protected override void OnBaseReadyComplete()
     {
-        base._Ready();
-
         // Set all the child nodes
         _spriteContainer = GetNode<Node2D>("%SpriteContainer");
         _bodySprite = _spriteContainer.GetNode<AnimatedSprite2D>("%BodySprite");
@@ -54,12 +53,11 @@ public partial class Bumper : EnemyNode
         _deflectorS = _shieldGenSprite.GetNode<StaticDeflector>("%DeflectorS");
 
         InitializeTimers();
-
-        SetHealthBarSize();
-
-        FollowPath(_followSpeed);
     }
 
+    /// <summary>
+    /// Sets up and starts the rotation timer.
+    /// </summary>
     private void InitializeTimers()
     {
         _rotateTimer = new()
@@ -75,16 +73,7 @@ public partial class Bumper : EnemyNode
         StartRotateTimer();
     }
 
-    protected override void SetHealthBarSize()
-    {
-        // Get size of the base sprite
-        SpriteFrames sprite = _bodySprite.SpriteFrames ?? null;
-        if (sprite != null)
-        {
-            Rect2I usedRect = sprite.GetFrameTexture("default", 0).GetImage().GetUsedRect();
-            _healthBar.SetSizeAndOffset(usedRect.Size);
-        }
-    }
+    protected override AnimatedSprite2D GetPrimarySprite() => _bodySprite;
 
     private void StartRotateTimer()
     {
@@ -119,53 +108,44 @@ public partial class Bumper : EnemyNode
         _rotateTween.TweenCallback(Callable.From(StartRotateTimer));
     }
 
-    protected override void FireWeapon()
+    protected override void PlayFireAnimation()
     {
         _turretSprite.Play("fire");
-        base.FireWeapon();
     }
 
-    public override void _Process(double delta)
+    protected override void OnProcessUpdate(double delta)
     {
         // Set the velocities of the deflectors
         _deflectorN.ConstantLinearVelocity = _currentVelocity;
         _deflectorS.ConstantLinearVelocity = _currentVelocity;
 
-        base._Process(delta);
         SetMoveAnimation();
-
-        KinematicCollision2D collision = MoveAndCollide(_motion, true);
-
-        if (collision != null)
-        {
-            OnCrash(collision);
-        }
     }
 
     private void SetMoveAnimation()
     {
         if (_currentGlobalPosition != _lastGlobalPosition)
         {
-            _bodySprite.Play("move");
+            if (_bodySprite.Animation != "move" || !_bodySprite.IsPlaying())
+            {
+                _bodySprite.Play("move");
+            }
         }
         else
         {
-            _bodySprite.Play("default");
+            if (_bodySprite.Animation != "default" || !_bodySprite.IsPlaying())
+            {
+                _bodySprite.Play("default");
+            }
         }
     }
 
-    public override void Die(int? playerId = null)
+    protected override async Task PlayDeathSequence()
     {
-        _alive = false;
-        _weapon.FireTimer.Stop();
-        _shape.Disabled = true;
-
         // Make the base and engine sprites invisible.
         _spriteContainer.Visible = false;
 
         // Play the destruction sound
         _audioComponent.PlayDestructionSound();
-
-        base.Die();
     }
 }

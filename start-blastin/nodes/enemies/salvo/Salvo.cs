@@ -28,17 +28,13 @@ public partial class Salvo : EnemyNode
     private event Action FireComplete;
     private event Action FinalFireComplete;
 
-    public override void _Ready()
+    protected override void OnBaseReadyComplete()
     {
-        base._Ready();
         _spriteContainer = GetNode<Node2D>("%SpriteContainer");
         _body = GetNode<AnimatedSprite2D>("%Body");
         _engine = GetNode<AnimatedSprite2D>("%Engine");
         _rack = GetNode<AnimatedSprite2D>("%Rack");
         _destruction = GetNode<AnimatedSprite2D>("%Destruction");
-
-        _currentGlobalPosition = GlobalPosition;
-        _lastGlobalPosition = _currentGlobalPosition;
 
         // Get the points that I need to know about.
         _firePositions.Add(_followPath.Curve.GetPointPosition(1), false);
@@ -46,12 +42,7 @@ public partial class Salvo : EnemyNode
         _firePositions.Add(_followPath.Curve.GetPointPosition(3), false);
 
         ReadyBarrels();
-
-        SetHealthBarSize();
-
         ConnectWaypointSignals();
-
-        FollowPath(_followSpeed);
     }
 
     private void ReadyBarrels()
@@ -59,16 +50,7 @@ public partial class Salvo : EnemyNode
         _weapon.Barrels.ToggleActivateAllBarrels(true);
     }
 
-    protected override void SetHealthBarSize()
-    {
-        // Get size of the base sprite
-        SpriteFrames sprite = _body.SpriteFrames ?? null;
-        if (sprite != null)
-        {
-            Rect2I usedRect = sprite.GetFrameTexture("default", 0).GetImage().GetUsedRect();
-            _healthBar.SetSizeAndOffset(usedRect.Size);
-        }
-    }
+    protected override AnimatedSprite2D GetPrimarySprite() => _body;
 
     public void ConnectWaypointSignals()
     {
@@ -76,7 +58,6 @@ public partial class Salvo : EnemyNode
         FireWaypointReached += OnFireWaypointReached;
         FireComplete += OnFireComplete;
         FinalFireComplete += OnFinalFireComplete;
-        // base.ConnectSignals();
     }
 
     public void DisconnectWaypointSignals()
@@ -85,27 +66,14 @@ public partial class Salvo : EnemyNode
         FireWaypointReached -= OnFireWaypointReached;
         FireComplete -= OnFireComplete;
         FinalFireComplete -= OnFinalFireComplete;
-        // base.DisconnectSignals();
     }
 
-    public override void _Process(double delta)
+    protected override void OnProcessUpdate(double delta)
     {
         if (_alive)
         {
-            // _lastGlobalPosition = _currentGlobalPosition;
-            // _currentGlobalPosition = GlobalPosition;
-
             CheckWaypoints();
-
-            base._Process(delta);
             SetMoveAnimation();
-
-            KinematicCollision2D collision = MoveAndCollide(_motion, true);
-
-            if (collision != null)
-            {
-                OnCrash(collision);
-            }
         }
     }
 
@@ -130,29 +98,24 @@ public partial class Salvo : EnemyNode
         }
     }
 
-    protected override void FireWeapon()
+    protected override void PlayFireAnimation()
     {
-        base.FireWeapon();
         _rack.Play("fire");
     }
 
-    public override void Die(int? playerId = null)
+    protected override async Task PlayDeathSequence()
     {
-        _alive = false;
-        _weapon.FireTimer.Stop();
-        _shape.Disabled = true;
-
         // Make the non-destruction sprites invisible and turn on the destruction sprite
         _body.Visible = false;
         _engine.Visible = false;
         _rack.Visible = false;
 
-        // AudioService.Instance.PlaySound(_sounds?.Destruction, this, 1, volume: -5);
+        // Play destruction sound and animation
         _audioComponent.PlayDestructionSound();
         _destruction.Visible = true;
         _destruction.Play();
 
-        _destruction.AnimationFinished += () => base.Die(playerId);
+        await ToSignal(_destruction, AnimatedSprite2D.SignalName.AnimationFinished);
     }
 
     protected override void FollowPath(float speed)

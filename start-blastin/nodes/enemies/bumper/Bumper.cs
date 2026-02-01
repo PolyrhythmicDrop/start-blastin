@@ -127,9 +127,6 @@ public partial class Bumper : EnemyNode
 
     public override void _Process(double delta)
     {
-        _lastGlobalPosition = _currentGlobalPosition;
-        _currentGlobalPosition = GlobalPosition;
-
         // Set the velocities of the deflectors
         _deflectorN.ConstantLinearVelocity = _currentVelocity;
         _deflectorS.ConstantLinearVelocity = _currentVelocity;

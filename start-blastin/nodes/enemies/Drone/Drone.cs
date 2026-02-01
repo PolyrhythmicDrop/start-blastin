@@ -48,8 +48,8 @@ namespace Enemies
 
         public override void _Process(double delta)
         {
-            _lastGlobalPosition = _currentGlobalPosition;
-            _currentGlobalPosition = GlobalPosition;
+            // _lastGlobalPosition = _currentGlobalPosition;
+            // _currentGlobalPosition = GlobalPosition;
 
             base._Process(delta);
             SetMoveAnimation();

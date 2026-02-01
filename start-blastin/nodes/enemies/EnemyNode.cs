@@ -58,7 +58,6 @@ namespace Enemies
         protected Vector2 _currentGlobalPosition;
         protected Vector2 _lastGlobalPosition;
         protected Vector2 _motion => _currentGlobalPosition - _lastGlobalPosition;
-        protected Vector2 _lastFramePosition;
         protected Vector2 _currentVelocity = Vector2.Zero;
         protected Tween _followTween;
         #endregion
@@ -73,6 +72,8 @@ namespace Enemies
 
         protected float _crashDamage => _stats.GetStat(StatType.CrashDamage).CurrentValue;
 
+        protected Vector2? _terminalTrajectory = null;
+
         // Base stats
         protected float _baseSpeed;
         protected float _baseCrashDamage;
@@ -86,6 +87,10 @@ namespace Enemies
 
         #region State
         protected bool _alive = true;
+
+        protected bool _atPathEnd = false;
+
+        private Callable _screenExitCallable;
 
         public bool DeflectActive { get; set; }
 
@@ -244,8 +249,8 @@ namespace Enemies
             double delay = RNG.GetRandomDouble(max: _weapon.Stats.FireRate);
             _weapon.FireTimer.Start(delay);
 
-            // Initialize position tracking
-            _lastFramePosition = GlobalPosition;
+            // // Initialize position tracking
+            // _lastGlobalPosition = GlobalPosition;
 
             // Initialize the health bar.
             _healthBar = GetNode<OverheadHealthBar>("%OverheadHealthBar");
@@ -271,6 +276,8 @@ namespace Enemies
 
         public virtual void ConnectSignals()
         {
+            _screenExitCallable = Callable.From(OnScreenExit);
+
             if (_stats != null)
             {
                 _stats.StatUpdated += OnStatUpdated;
@@ -318,6 +325,7 @@ namespace Enemies
 
         public virtual void OnPathComplete()
         {
+            _atPathEnd = true;
             if (!VisibleNotifier.IsOnScreen())
             {
                 FreeEnemy();
@@ -521,6 +529,12 @@ namespace Enemies
             FreeEnemy();
         }
 
+        private void OnScreenExit()
+        {
+            DebugLogger.LogMessage($"OnScreenExit called for {Name}!");
+            FreeEnemy();
+        }
+
         public async void FreeEnemy()
         {
             _healthBar.ToggleBarVisibility(false);
@@ -528,7 +542,7 @@ namespace Enemies
             await WaitForAudioEnd();
             bool projectilesDisabled = await _weapon.WaitForAllProjectilesDisabled();
 
-            if (projectilesDisabled)
+            if (projectilesDisabled && !IsQueuedForDeletion())
             {
                 QueueFree();
             }
@@ -573,10 +587,10 @@ namespace Enemies
             base._PhysicsProcess(delta);
             if (delta > 0)
             {
-                _currentVelocity = (GlobalPosition - _lastFramePosition) / (float)delta;
+                _currentVelocity = (GlobalPosition - _lastGlobalPosition) / (float)delta;
             }
 
-            _lastFramePosition = GlobalPosition;
+            _lastGlobalPosition = GlobalPosition;
         }
 
         public override void _Process(double delta)
@@ -584,6 +598,25 @@ namespace Enemies
             if (_motion != Vector2.Zero)
             {
                 SetHealthBarPosition();
+            }
+
+            // Keep going along current motion of at path end and not dead
+            if (_atPathEnd && _alive && OnScreen)
+            {
+                if (
+                    !VisibleNotifier.IsConnected(
+                        VisibleOnScreenNotifier2D.SignalName.ScreenExited,
+                        _screenExitCallable
+                    )
+                )
+                {
+                    ConnectPathEndScreenExited();
+                }
+                if (_terminalTrajectory == null || _terminalTrajectory == Vector2.Zero)
+                {
+                    SetTerminalTrajectory(delta);
+                }
+                MoveAndCollide(_terminalTrajectory ?? Vector2.Right.Rotated(GlobalRotation));
             }
 
             if (_split)
@@ -599,6 +632,20 @@ namespace Enemies
                     TweenSquadronPosition((Vector2)SquadronPosition);
                 }
             }
+        }
+
+        private void ConnectPathEndScreenExited()
+        {
+            VisibleNotifier.Connect(
+                VisibleOnScreenNotifier2D.SignalName.ScreenExited,
+                _screenExitCallable
+            );
+        }
+
+        private void SetTerminalTrajectory(double delta)
+        {
+            _terminalTrajectory =
+                Vector2.Right.Rotated(GlobalRotation) * (_followSpeed * (float)delta);
         }
 
         /// <summary>

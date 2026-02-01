@@ -37,9 +37,6 @@ namespace Enemies
 
         public override void _Process(double delta)
         {
-            _lastGlobalPosition = _currentGlobalPosition;
-            _currentGlobalPosition = GlobalPosition;
-
             base._Process(delta);
 
             KinematicCollision2D collision = MoveAndCollide(_motion, true);

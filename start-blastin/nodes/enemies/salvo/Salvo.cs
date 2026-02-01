@@ -92,8 +92,8 @@ public partial class Salvo : EnemyNode
     {
         if (_alive)
         {
-            _lastGlobalPosition = _currentGlobalPosition;
-            _currentGlobalPosition = GlobalPosition;
+            // _lastGlobalPosition = _currentGlobalPosition;
+            // _currentGlobalPosition = GlobalPosition;
 
             CheckWaypoints();
 

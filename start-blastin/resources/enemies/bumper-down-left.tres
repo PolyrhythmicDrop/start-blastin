@@ -1,28 +1,28 @@
 [gd_resource type="Resource" script_class="EnemyResource" format=3 uid="uid://dgbyy8tmc5fv0"]
 
-[ext_resource type="Curve2D" uid="uid://dru8kloi28a1k" path="res://resources/curves/bend-down-left.tres" id="1_67j8u"]
-[ext_resource type="Script" uid="uid://cf7pn6qd7aa15" path="res://nodes/enemies/EnemyResource.cs" id="1_y6k7r"]
-[ext_resource type="Script" uid="uid://dt02kxv7k56mm" path="res://architecture/data-structures/SoundSet.cs" id="2_q44rd"]
-[ext_resource type="Script" uid="uid://bytfm61mpkr5u" path="res://nodes/weapons/WeaponStats.cs" id="3_e4ogo"]
+[ext_resource type="Curve2D" uid="uid://dru8kloi28a1k" path="res://resources/curves/bend-down-left.tres" id="1_jejq1"]
+[ext_resource type="Script" uid="uid://dt02kxv7k56mm" path="res://architecture/data-structures/SoundSet.cs" id="2_5kqek"]
+[ext_resource type="Script" uid="uid://bytfm61mpkr5u" path="res://nodes/weapons/WeaponStats.cs" id="3_swxag"]
+[ext_resource type="Script" uid="uid://cf7pn6qd7aa15" path="res://nodes/enemies/EnemyResource.cs" id="4_o84ow"]
 
 [sub_resource type="Resource" id="Resource_a1a7p"]
-script = ExtResource("2_q44rd")
+script = ExtResource("2_5kqek")
 metadata/_custom_type_script = "uid://dt02kxv7k56mm"
 
 [sub_resource type="Resource" id="Resource_58ywe"]
-script = ExtResource("3_e4ogo")
+script = ExtResource("3_swxag")
 FireRate = 1.0
 ProjectileSpeed = 800.0
 metadata/_custom_type_script = "uid://bytfm61mpkr5u"
 
 [resource]
-script = ExtResource("1_y6k7r")
+script = ExtResource("4_o84ow")
 ScenePath = "res://nodes/enemies/bumper/bumper.tscn"
 Speed = 100.0
 CrashDamage = 3
 MaxHealth = 8.0
 WeaponStats = SubResource("Resource_58ywe")
-PathCurve = ExtResource("1_67j8u")
+PathCurve = ExtResource("1_jejq1")
 FluxReward = 250
 ByteReward = 400
 Sounds = SubResource("Resource_a1a7p")

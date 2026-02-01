@@ -95,11 +95,6 @@ namespace Enemies
         public bool DeflectActive { get; set; }
 
         /// <summary>
-        /// Whether or not the enemy is spawning. Set to false automatically after the enemy leaves the OOB area for the first time.
-        /// </summary>
-        public bool Spawning { get; set; } = true;
-
-        /// <summary>
         /// Whether or not the enemy is part of a squadron. Enables squadron behavior, like tweening out of the formation at a set time.
         /// </summary>
         public bool InSquadron { get; set; } = false;

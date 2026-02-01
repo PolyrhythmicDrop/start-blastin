@@ -55,24 +55,23 @@ namespace Enemies
 
 
         #region Position and Velocity
+
         protected Vector2 _currentGlobalPosition;
         protected Vector2 _lastGlobalPosition;
         protected Vector2 _motion => _currentGlobalPosition - _lastGlobalPosition;
         protected Vector2 _currentVelocity = Vector2.Zero;
+        protected Vector2 _terminalTrajectory = Vector2.Zero;
         protected Tween _followTween;
+        protected float _followSpeed => _stats.GetStat(StatType.Speed).CurrentValue;
+
         #endregion
 
         #region Stats
 
-
         /// <summary>
         /// The speed at which this enemy follows its assigned path.
         /// </summary>
-        protected float _followSpeed => _stats.GetStat(StatType.Speed).CurrentValue;
-
         protected float _crashDamage => _stats.GetStat(StatType.CrashDamage).CurrentValue;
-
-        protected Vector2 _terminalTrajectory = Vector2.Zero;
 
         // Base stats
         protected float _baseSpeed;

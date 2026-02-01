@@ -145,6 +145,10 @@ public partial class Bumper : EnemyNode
         // Make the base and engine sprites invisible.
         _spriteContainer.Visible = false;
 
+        // Remove collision on shields
+        _deflectorN.ProcessMode = ProcessModeEnum.Disabled;
+        _deflectorS.ProcessMode = ProcessModeEnum.Disabled;
+
         // Play the destruction sound
         _audioComponent.PlayDestructionSound();
     }

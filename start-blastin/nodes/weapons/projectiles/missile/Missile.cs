@@ -108,10 +108,6 @@ public partial class Missile : Projectile
                 collNormal = Vector2.Right.Rotated(GlobalRotation).Normalized() * -1;
             }
         }
-        // else
-        // {
-        //     collNormal *= -1;
-        // }
 
         return new CollisionEventArgs(collider, collPoint, collNormal);
     }

@@ -14,6 +14,7 @@ namespace Factories
         private static PackedScene _bulletScene = GD.Load<PackedScene>("uid://07rkya3u10jt");
         private static PackedScene _missileScene = GD.Load<PackedScene>("uid://cgh78hdll5s2h");
         private static PackedScene _shieldScene = GD.Load<PackedScene>("uid://k6jtmcb31ro7");
+        private static PackedScene _flameScene = GD.Load<PackedScene>("uid://b1b7y7knhlc7r");
 
         // Cached shaders
         private static ShaderMaterial _bulletPalette = ResourceLoader.Load<ShaderMaterial>(
@@ -47,6 +48,9 @@ namespace Factories
                 case ProjectileType.Shield:
                     ammo = _shieldScene.Instantiate<ShieldProjectile>();
                     break;
+                case ProjectileType.Flame:
+                    ammo = _flameScene.Instantiate<Flame>();
+                    break;
             }
             ammo.SourceWeapon = weapon;
 
@@ -68,6 +72,7 @@ namespace Factories
                     Bullet => _bulletPalette,
                     Missile => _missilePalette,
                     ShieldProjectile => null,
+                    // TODO: Add flame palette here when it's ready.
                     _ => _bulletPalette,
                 };
             }

@@ -33,6 +33,8 @@ namespace Weapons
         private int _activeProjectileCount;
         private IVelocityProvider _velocityProvider;
 
+        private readonly Dictionary<Barrel, ITetheredProjectile> _activeTethers = new();
+
         /// <summary>
         /// The weapon's base stats.
         /// </summary>
@@ -305,17 +307,51 @@ namespace Weapons
         {
             if (barrel.Active == true)
             {
+                // Check for any active tethers on this barrel
+                if (_activeTethers.TryGetValue(barrel, out ITetheredProjectile existingTether))
+                {
+                    // Return immediately if there's already an active tether on this barrel.
+                    if (existingTether is Projectile proj && proj.Active)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        // If there's a tether on this barrel but the tether isn't active, that's a mistake and/or stale.
+                        // Remove this entry from the dictionary.
+                        _activeTethers.Remove(barrel);
+                    }
+                }
+
                 Projectile projectile = _pool.RequestProjectile();
                 projectile.Position = barrel.GlobalPosition;
                 projectile.GlobalRotation = barrel.GlobalRotation;
 
+                // Apply velocity.
+                // TODO: Consider adding a condition that this not be a tethered projectile. Don't think I want to add velocity to those.
                 if (_velocityProvider != null)
                 {
                     projectile.AddSourceVelocity(_velocityProvider.GetCurrentVelocity());
                 }
+
+                // If we're working with a tethered projectile, register it.
+                if (projectile is ITetheredProjectile tethered)
+                {
+                    // Set the barrel and bool for the projectile
+                    tethered.TetheredBarrel = barrel;
+                    tethered.IsTethered = true;
+
+                    // Register the barrel & projectile in the dictionary.
+                    _activeTethers[barrel] = tethered;
+                }
             }
         }
 
+        /// <summary>
+        /// Updates the relevant weapon stats based on an update to the owner's stats.
+        /// </summary>
+        /// <param name="statType">The stat type that was updated.</param>
+        /// <param name="stat">The value of the stat to update.</param>
         public virtual void UpdateWeaponStats(StatType statType, Stat stat)
         {
             switch (statType)
@@ -331,6 +367,45 @@ namespace Weapons
                     break;
                 default:
                     break;
+            }
+        }
+
+        /// <summary>
+        /// Releases all currently active tethered projectiles.
+        /// </summary>
+        public void ReleaseAllTetheredProjectiles()
+        {
+            foreach (KeyValuePair<Barrel, ITetheredProjectile> kvp in _activeTethers)
+            {
+                if (kvp.Value is Projectile proj && proj.Active)
+                {
+                    // I release thee!
+                    kvp.Value.ReleaseTether();
+                }
+            }
+
+            _activeTethers.Clear();
+        }
+
+        /// <summary>
+        /// Releases a tethered projectile from a single barrel.
+        /// </summary>
+        /// <param name="barrel"></param>
+        public void ReleaseTetheredProjectile(Barrel barrel)
+        {
+            bool tethered = _activeTethers.TryGetValue(barrel, out ITetheredProjectile tether);
+
+            if (!tethered)
+            {
+                return;
+            }
+            else
+            {
+                if (tether is Projectile proj && proj.Active)
+                {
+                    tether.ReleaseTether();
+                }
+                _activeTethers.Remove(barrel);
             }
         }
     }

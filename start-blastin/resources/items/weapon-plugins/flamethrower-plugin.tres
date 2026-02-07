@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="1_5nycs"]
 [ext_resource type="Script" uid="uid://e8ufr3v1a1f" path="res://architecture/items/plugins/WeaponPlugin.cs" id="1_bbk7j"]
-[ext_resource type="Script" uid="uid://ccsyqmp61ikky" path="res://architecture/effects/DamageOverTimeEffect.cs" id="2_8iqq6"]
 [ext_resource type="Resource" uid="uid://c86hwny0l2bri" path="res://resources/audio-data/sfx/enemies/drone/drone-shots.tres" id="2_11e41"]
 [ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="2_c7cto"]
 
@@ -12,15 +11,6 @@ Type = 8
 Operation = 1
 metadata/_custom_type_script = "uid://bmeda5w63vsw7"
 
-[sub_resource type="Resource" id="Resource_703nk"]
-script = ExtResource("2_8iqq6")
-DamagePerTick = 0.2
-Frequency = 0.3
-Trigger = 3
-Target = 2
-EnemyTargeting = true
-metadata/_custom_type_script = "uid://ccsyqmp61ikky"
-
 [resource]
 script = ExtResource("1_bbk7j")
 ProjectileType = 3
@@ -28,5 +18,5 @@ FireSound = ExtResource("2_11e41")
 Name = &"Flamethrower"
 Description = &"It\'s got fire. In space."
 Icon = ExtResource("2_c7cto")
-Effects = Array[Object]([SubResource("Resource_11e41"), SubResource("Resource_703nk")])
+Effects = Array[Object]([SubResource("Resource_11e41")])
 metadata/_custom_type_script = "uid://e8ufr3v1a1f"

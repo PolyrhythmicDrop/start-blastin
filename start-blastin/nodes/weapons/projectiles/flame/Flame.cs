@@ -1,12 +1,16 @@
 using System;
+using Effects;
+using Enemies;
+using Entities;
 using Godot;
 using Interfaces;
+using Utility;
 using Weapons;
 
 namespace Projectiles
 {
     [GlobalClass]
-    public partial class Flame : Projectile, ITetheredProjectile
+    public partial class Flame : Projectile, ITetheredProjectile, IListener
     {
         private GpuParticles2D _particles;
         private CollisionShape2D _collShape;
@@ -14,6 +18,10 @@ namespace Projectiles
         // ~ ITetheredProjectile interface implementation ~
         private Barrel _tetheredBarrel;
         private bool _isTethered;
+
+        // DoT Effect
+        private DamageOverTimeEffect _damageEffect;
+        private const float DMG_FREQUENCY = 0.5f;
 
         public Barrel TetheredBarrel
         {
@@ -35,6 +43,53 @@ namespace Projectiles
 
             // Disable the raycast since we're not using it.
             _ray?.Enabled = false;
+
+            // Set up the DoT effect
+            _damageEffect = new()
+            {
+                DamagePerTick = _sourceWeapon.Stats.Damage,
+                Frequency = DMG_FREQUENCY,
+                Stacking = false,
+                Timed = false,
+            };
+
+            ConnectSignals();
+        }
+
+        public void ConnectSignals()
+        {
+            BodyEntered += OnBodyEntered;
+            BodyExited += OnBodyExited;
+        }
+
+        public void DisconnectSignals()
+        {
+            // BodyEntered -= OnBodyEntered;
+            // BodyExited -= OnBodyExited;
+        }
+
+        private void OnBodyEntered(Node2D body)
+        {
+            // DebugLogger.LogMessage($"{body.Name} entered {Name}!", true);
+            if (
+                (_faction == Faction.Players && body is EnemyNode)
+                || (_faction == Faction.Enemies && body is Player)
+            )
+            {
+                _damageEffect.ApplyEffect(body);
+            }
+        }
+
+        private void OnBodyExited(Node2D body)
+        {
+            // DebugLogger.LogMessage($"{body.Name} exited {Name}!", true);
+            if (
+                (_faction == Faction.Players && body is EnemyNode)
+                || (_faction == Faction.Enemies && body is Player)
+            )
+            {
+                _damageEffect.RemoveEffectFromTarget(body);
+            }
         }
 
         public override void SetProjectileCollisionLayers(Faction faction)
@@ -166,6 +221,12 @@ namespace Projectiles
         {
             _isTethered = false;
             ToggleActive(false);
+        }
+
+        public override void _ExitTree()
+        {
+            DisconnectSignals();
+            base._ExitTree();
         }
     }
 }

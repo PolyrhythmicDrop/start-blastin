@@ -38,16 +38,19 @@ color = Color(0.9820749, 0, 0.06120705, 1)
 color_ramp = SubResource("GradientTexture1D_2ultm")
 
 [node name="Flame" type="Area2D" unique_id=1245001736]
-collision_layer = 8
-collision_mask = 4
+collision_layer = 0
+collision_mask = 0
+input_pickable = false
+monitorable = false
 script = ExtResource("1_k0qfi")
 
 [node name="TrajRayCast" type="RayCast2D" parent="." unique_id=626733840]
 unique_name_in_owner = true
+enabled = false
 target_position = Vector2(0, 0)
 collision_mask = 2
 hit_from_inside = true
-collide_with_areas = true
+collide_with_bodies = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1356015044]
 unique_name_in_owner = true

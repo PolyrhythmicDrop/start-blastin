@@ -280,12 +280,13 @@ namespace Weapons
 
             // Projectiles deactivate.
             // TODO: Also add some kind of animation that plays.
-            if (args.Collider is Projectile projectile)
+            if (args.Collider is Projectile projectile && args.Collider is not ITetheredProjectile)
             {
                 projectile.ToggleActive(false);
             }
 
             // Deactivate the source projectile on collision.
+            // TODO: Determine if we want to do this here or elsewhere, because some projectiles (Flame, Laser, etc.) might not want to deactivate on collision.
             sourceProj.ToggleActive(false);
         }
 

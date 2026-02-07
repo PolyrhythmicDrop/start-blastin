@@ -27,10 +27,15 @@ namespace Projectiles
 
         private bool _sourceInitialized;
         private bool _factionInitialized;
+
+        /// <summary>
+        /// Whether or not this projectile should ignore collisions by other projectiles.
+        /// </summary>
+        protected bool _ignoreOtherProjectiles = false;
+
         private Callable _deactivateCallable;
         protected bool _active;
 
-        // protected bool _isBeingDeflected = false;
         protected Faction _faction;
         protected Timer _deactivationTimer;
         protected float _baseSpeed;
@@ -68,11 +73,6 @@ namespace Projectiles
             get => _active;
             set => _active = value;
         }
-
-        // public bool IsBeingDeflected
-        // {
-        //     get => _isBeingDeflected;
-        // }
 
         /// <summary>
         /// Time out for the projectile.
@@ -365,17 +365,29 @@ namespace Projectiles
 
             Ray.ForceRaycastUpdate();
 
-            if (Ray.IsColliding() && Ray.GetCollider() is not (OobArea or DeflectorWall))
+            if (Ray.IsColliding())
             {
-                Collision?.Invoke(this, CalculateRayCollisionData(delta));
+                GodotObject collider = Ray.GetCollider();
+                if (collider is Projectile colliderProj && colliderProj._ignoreOtherProjectiles)
+                {
+                    return;
+                }
+                else if (collider is not (OobArea or DeflectorWall))
+                {
+                    Collision?.Invoke(this, CalculateRayCollisionData(delta, collider));
+                }
             }
         }
 
-        protected virtual CollisionEventArgs CalculateRayCollisionData(double delta)
+        protected virtual CollisionEventArgs CalculateRayCollisionData(
+            double delta,
+            GodotObject collider = null
+        )
         {
             Vector2 collNormal = Ray.GetCollisionNormal();
             Vector2 collPoint = Ray.GetCollisionPoint();
-            GodotObject collider = Ray.GetCollider();
+
+            collider ??= Ray.GetCollider();
 
             // If we get a 0 normal (likely because the ray started inside the collider), calculate the normal manually.
             if (collNormal == Vector2.Zero)

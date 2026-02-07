@@ -38,6 +38,8 @@ namespace Projectiles
         {
             base._Ready();
 
+            _ignoreOtherProjectiles = true;
+
             _particles = GetNode<GpuParticles2D>("%FlameParticles");
             _collShape = GetNode<CollisionShape2D>("%CollisionShape2D");
 

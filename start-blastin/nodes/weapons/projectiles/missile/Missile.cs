@@ -10,7 +10,7 @@ using Projectiles;
 using Utility;
 
 [GlobalClass]
-public partial class Missile : Projectile
+public partial class Missile : DeflectableProjectile
 {
     private AnimatedSprite2D _sprite;
 

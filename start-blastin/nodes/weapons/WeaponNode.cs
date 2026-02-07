@@ -227,16 +227,20 @@ namespace Weapons
                 playerId = player.PlayerId;
             }
 
-            // If the collider has deflection active, deflect the projectile and return
-            if (args.Collider is IDeflector deflector && deflector.DeflectActive)
+            // If the source projectile is deflectable, see if we should be deflecting it
+            if (sourceProj is DeflectableProjectile defSrcProj)
             {
-                // Deflect and then return.
-                sourceProj.Deflect(deflector, args);
-                return;
+                // If the collider has deflection active, deflect the projectile and return
+                if (args.Collider is IDeflector deflector && deflector.DeflectActive)
+                {
+                    // Deflect and then return.
+                    defSrcProj.Deflect(deflector, args);
+                    return;
+                }
             }
             else if (sourceProj is IDeflector srcDeflector && srcDeflector.DeflectActive)
             {
-                if (args.Collider is Projectile proj)
+                if (args.Collider is DeflectableProjectile defColliderProj)
                 {
                     // Invert the arguments
                     CollisionEventArgs invertedArgs = new(
@@ -244,7 +248,7 @@ namespace Weapons
                         args.GlobalCollisionPoint,
                         args.CollisionNormal * -1
                     );
-                    proj.Deflect(srcDeflector, invertedArgs);
+                    defColliderProj.Deflect(srcDeflector, invertedArgs);
                     return;
                 }
             }

@@ -9,7 +9,7 @@ using Projectiles;
 using Utility;
 
 [GlobalClass]
-public partial class ShieldProjectile : Projectile, IDeflector, IVelocityProvider
+public partial class ShieldProjectile : DeflectableProjectile, IVelocityProvider
 {
     // Nodes //
     private Sprite2D _sprite;
@@ -214,7 +214,10 @@ public partial class ShieldProjectile : Projectile, IDeflector, IVelocityProvide
             {
                 GodotObject collider = _shapeCast.GetCollider(i);
                 // Don't raise the collision if we're colliding with a projectile that is in the process of being deflected.
-                if ((collider is Projectile proj && proj.IsBeingDeflected) || collider is OobArea)
+                if (
+                    (collider is DeflectableProjectile proj && proj.IsBeingDeflected)
+                    || collider is OobArea
+                )
                 {
                     return;
                 }

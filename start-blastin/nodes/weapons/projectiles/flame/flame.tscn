@@ -4,7 +4,7 @@
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_k0qfi"]
 radius = 8.535
-height = 72.03
+height = 170.0
 
 [sub_resource type="Gradient" id="Gradient_k0qfi"]
 offsets = PackedFloat32Array(0.1852459, 1)
@@ -31,12 +31,15 @@ angle_min = -5.9999895
 angle_max = 6.000011
 spread = 50.0
 gravity = Vector3(0, 98, 0)
-scale_max = 1.5
+scale_min = 2.0
+scale_max = 4.0
 scale_curve = SubResource("CurveTexture_iuv2x")
 color = Color(0.9820749, 0, 0.06120705, 1)
 color_ramp = SubResource("GradientTexture1D_2ultm")
 
 [node name="Flame" type="Area2D" unique_id=1245001736]
+collision_layer = 8
+collision_mask = 4
 script = ExtResource("1_k0qfi")
 
 [node name="TrajRayCast" type="RayCast2D" parent="." unique_id=626733840]
@@ -48,17 +51,16 @@ collide_with_areas = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1356015044]
 unique_name_in_owner = true
-position = Vector2(36, 0)
+position = Vector2(85, 0)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_k0qfi")
 
 [node name="FlameParticles" type="GPUParticles2D" parent="CollisionShape2D" unique_id=538856923]
 unique_name_in_owner = true
-position = Vector2(1.57361e-06, 36)
+position = Vector2(3.7154678e-06, 85)
 rotation = 3.1415927
-emitting = false
 amount = 10
-lifetime = 1.2
+lifetime = 2.0
 speed_scale = 2.0
 randomness = 0.05
 local_coords = true

@@ -562,7 +562,8 @@ namespace Enemies
             // Standardized death stuff
             _alive = false;
             _weapon.FireTimer.Stop();
-            _shape.Disabled = true;
+            _shape.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+            // _shape.Disabled = true;
 
             // Derived class death stuff
             await PlayDeathSequence();

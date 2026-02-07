@@ -2,6 +2,7 @@ using System;
 using Effects;
 using Enemies;
 using Entities;
+using Events;
 using Godot;
 using Interfaces;
 using Utility;
@@ -21,7 +22,7 @@ namespace Projectiles
 
         // DoT Effect
         private DamageOverTimeEffect _damageEffect;
-        private const float DMG_FREQUENCY = 0.5f;
+        private const float DMG_FREQUENCY = 0.2f;
 
         public Barrel TetheredBarrel
         {
@@ -79,6 +80,8 @@ namespace Projectiles
             )
             {
                 _damageEffect.ApplyEffect(body);
+                CollisionEventArgs args = new(body, body.GlobalPosition);
+                RaiseCollision(this, args);
             }
         }
 

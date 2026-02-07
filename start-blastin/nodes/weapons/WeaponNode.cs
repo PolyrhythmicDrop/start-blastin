@@ -287,7 +287,10 @@ namespace Weapons
 
             // Deactivate the source projectile on collision.
             // TODO: Determine if we want to do this here or elsewhere, because some projectiles (Flame, Laser, etc.) might not want to deactivate on collision.
-            sourceProj.ToggleActive(false);
+            if (sourceProj is not ITetheredProjectile)
+            {
+                sourceProj.ToggleActive(false);
+            }
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://07rkya3u10jt"]
+[gd_scene format=3 uid="uid://07rkya3u10jt"]
 
 [ext_resource type="Script" uid="uid://c581icoxx0s37" path="res://nodes/weapons/projectiles/Bullet/Bullet.cs" id="1_ajx7a"]
 [ext_resource type="Texture2D" uid="uid://d2bgkt4md412u" path="res://assets/projectiles/bullet/bullet-sprite.png" id="2_nppro"]
@@ -54,13 +54,13 @@ animations = [{
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nppro"]
 radius = 6.0
 
-[node name="Bullet" type="Area2D" groups=["projectiles"]]
+[node name="Bullet" type="Area2D" unique_id=703601569 groups=["projectiles"]]
 z_index = -2
 collision_layer = 0
 collision_mask = 7
 script = ExtResource("1_ajx7a")
 
-[node name="Sprite" type="AnimatedSprite2D" parent="."]
+[node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=820213285]
 unique_name_in_owner = true
 texture_filter = 1
 use_parent_material = true
@@ -92,14 +92,14 @@ metadata/_aseprite_wizard_config_ = {
 }
 metadata/_aseprite_wizard_source_file_hash_ = "0c6dfed3e2dfef714e6b29018b88c7b9"
 
-[node name="TrajRayCast" type="RayCast2D" parent="."]
+[node name="TrajRayCast" type="RayCast2D" parent="." unique_id=1803000671]
 unique_name_in_owner = true
 target_position = Vector2(0, 0)
 collision_mask = 2
 hit_from_inside = true
 collide_with_areas = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=128244106]
 position = Vector2(4, 0)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_nppro")

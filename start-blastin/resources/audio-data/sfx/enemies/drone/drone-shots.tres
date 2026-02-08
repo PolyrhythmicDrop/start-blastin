@@ -1,8 +1,9 @@
-[gd_resource type="Resource" script_class="AudioData" load_steps=2 format=3 uid="uid://c86hwny0l2bri"]
+[gd_resource type="Resource" script_class="AudioData" format=3 uid="uid://c86hwny0l2bri"]
 
 [ext_resource type="Script" uid="uid://cx2eehu1aj48f" path="res://architecture/data-structures/AudioData.cs" id="1_fksvm"]
 
 [resource]
+resource_local_to_scene = true
 script = ExtResource("1_fksvm")
 Sound = "uid://dc233os2xrmsn"
 Volume = -0.5

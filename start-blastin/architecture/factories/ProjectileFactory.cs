@@ -14,7 +14,7 @@ namespace Factories
         private static PackedScene _bulletScene = GD.Load<PackedScene>("uid://07rkya3u10jt");
         private static PackedScene _missileScene = GD.Load<PackedScene>("uid://cgh78hdll5s2h");
         private static PackedScene _shieldScene = GD.Load<PackedScene>("uid://k6jtmcb31ro7");
-        private static PackedScene _flameScene = GD.Load<PackedScene>("uid://b1b7y7knhlc7r");
+        private static PackedScene _flameScene = GD.Load<PackedScene>("uid://cyymtdtc5b7lk");
 
         // Cached shaders
         private static ShaderMaterial _bulletPalette = ResourceLoader.Load<ShaderMaterial>(

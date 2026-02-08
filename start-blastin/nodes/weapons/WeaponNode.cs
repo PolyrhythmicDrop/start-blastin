@@ -227,6 +227,8 @@ namespace Weapons
                 playerId = player.PlayerId;
             }
 
+            // ** Deflection block **
+
             // If the source projectile is deflectable, see if we should be deflecting it
             if (sourceProj is DeflectableProjectile defSrcProj)
             {
@@ -252,6 +254,8 @@ namespace Weapons
                     return;
                 }
             }
+
+            // ** Damage **
 
             // IHealthful objects take damage.
             if (args.Collider is IHealthful healthful)
@@ -285,7 +289,7 @@ namespace Weapons
                 projectile.ToggleActive(false);
             }
 
-            // Deactivate the source projectile on collision.
+            // Deactivate the source projectile on collision if it's not tethered
             // TODO: Determine if we want to do this here or elsewhere, because some projectiles (Flame, Laser, etc.) might not want to deactivate on collision.
             if (sourceProj is not ITetheredProjectile)
             {

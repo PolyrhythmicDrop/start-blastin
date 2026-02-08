@@ -1,70 +1,74 @@
-[gd_scene format=3 uid="uid://b1b7y7knhlc7r"]
+[gd_scene format=3 uid="uid://cyymtdtc5b7lk"]
 
-[ext_resource type="Script" uid="uid://dqlqekj1nx7gt" path="res://nodes/weapons/projectiles/flame/Flame.cs" id="1_k0qfi"]
+[ext_resource type="Script" uid="uid://co0n1k3nis3so" path="res://nodes/weapons/projectiles/flame/Flame.cs" id="1_k0qfi"]
+[ext_resource type="Texture2D" uid="uid://nbaq7ost4ga4" path="res://assets/projectiles/flame/flamethrower-particle-clipped.png" id="2_2ultm"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_k0qfi"]
-radius = 8.535
-height = 170.0
+[sub_resource type="AtlasTexture" id="AtlasTexture_k1lqq"]
+atlas = ExtResource("2_2ultm")
+region = Rect2(0, 0, 32, 32)
 
-[sub_resource type="Gradient" id="Gradient_k0qfi"]
-offsets = PackedFloat32Array(0.1852459, 1)
-colors = PackedColorArray(0.90413976, 0.7404736, 0.51558065, 1, 0.9820749, 0, 0.06120705, 1)
+[sub_resource type="AtlasTexture" id="AtlasTexture_iuv2x"]
+atlas = ExtResource("2_2ultm")
+region = Rect2(32, 0, 32, 32)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_2ultm"]
-gradient = SubResource("Gradient_k0qfi")
+[sub_resource type="AtlasTexture" id="AtlasTexture_hsc3d"]
+atlas = ExtResource("2_2ultm")
+region = Rect2(64, 0, 32, 32)
 
-[sub_resource type="Curve" id="Curve_k1lqq"]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.6257861, 1), 1.4, 0.0, 0, 0]
-point_count = 2
+[sub_resource type="AtlasTexture" id="AtlasTexture_lx22l"]
+atlas = ExtResource("2_2ultm")
+region = Rect2(96, 0, 32, 32)
 
-[sub_resource type="CurveTexture" id="CurveTexture_iuv2x"]
-curve = SubResource("Curve_k1lqq")
+[sub_resource type="AtlasTexture" id="AtlasTexture_i4bt4"]
+atlas = ExtResource("2_2ultm")
+region = Rect2(128, 0, 32, 32)
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_k0qfi"]
-lifetime_randomness = 0.1
-particle_flag_align_y = true
-particle_flag_rotate_y = true
-particle_flag_disable_z = true
-emission_shape = 2
-emission_sphere_radius = 2.0
-angle_min = -5.9999895
-angle_max = 6.000011
-spread = 50.0
-gravity = Vector3(0, 98, 0)
-scale_min = 2.0
-scale_max = 4.0
-scale_curve = SubResource("CurveTexture_iuv2x")
-color = Color(0.9820749, 0, 0.06120705, 1)
-color_ramp = SubResource("GradientTexture1D_2ultm")
+[sub_resource type="SpriteFrames" id="SpriteFrames_qgyhe"]
+resource_local_to_scene = true
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k1lqq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iuv2x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hsc3d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lx22l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i4bt4")
+}],
+"loop": false,
+"name": &"default",
+"speed": 15.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2ultm"]
+radius = 16.0
 
 [node name="Flame" type="Area2D" unique_id=1245001736]
 collision_layer = 0
 collision_mask = 0
 input_pickable = false
-monitorable = false
 script = ExtResource("1_k0qfi")
 
 [node name="TrajRayCast" type="RayCast2D" parent="." unique_id=626733840]
 unique_name_in_owner = true
-enabled = false
+position = Vector2(16, 0)
 target_position = Vector2(0, 0)
 collision_mask = 2
 hit_from_inside = true
-collide_with_bodies = false
+collide_with_areas = true
+
+[node name="FlameSprite" type="AnimatedSprite2D" parent="." unique_id=1732894262]
+unique_name_in_owner = true
+sprite_frames = SubResource("SpriteFrames_qgyhe")
+autoplay = "default"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1356015044]
 unique_name_in_owner = true
-position = Vector2(85, 0)
-rotation = 1.5707964
-shape = SubResource("CapsuleShape2D_k0qfi")
-
-[node name="FlameParticles" type="GPUParticles2D" parent="CollisionShape2D" unique_id=538856923]
-unique_name_in_owner = true
-position = Vector2(3.7154678e-06, 85)
-rotation = 3.1415927
-amount = 10
-lifetime = 2.0
-speed_scale = 2.0
-randomness = 0.05
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_k0qfi")
+shape = SubResource("CircleShape2D_2ultm")

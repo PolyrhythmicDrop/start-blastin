@@ -1,0 +1,82 @@
+[gd_scene format=3 uid="uid://b1b7y7knhlc7r"]
+
+[ext_resource type="Script" uid="uid://dqlqekj1nx7gt" path="res://nodes/weapons/projectiles/flame/FlameParticles.cs" id="1_o3qc7"]
+[ext_resource type="Texture2D" uid="uid://nbaq7ost4ga4" path="res://assets/projectiles/flame/flamethrower-particle-clipped.png" id="2_2pwsy"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_k1lqq"]
+particles_animation = true
+particles_anim_h_frames = 5
+particles_anim_v_frames = 1
+particles_anim_loop = true
+
+[sub_resource type="Curve" id="Curve_k1lqq"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.6257861, 1), 1.4, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_iuv2x"]
+curve = SubResource("Curve_k1lqq")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_k0qfi"]
+particle_flag_disable_z = true
+angle_min = -27.79999
+angle_max = 27.80001
+inherit_velocity_ratio = 0.1
+spread = 0.0
+initial_velocity_min = 90.0
+initial_velocity_max = 110.0
+angular_velocity_min = -128.19002
+angular_velocity_max = 128.18999
+radial_velocity_min = -7.420022
+radial_velocity_max = 4.4599776
+gravity = Vector3(0, 0, 0)
+linear_accel_min = 99.99999
+linear_accel_max = 99.99999
+radial_accel_min = -0.59000224
+radial_accel_max = 0.58999777
+tangential_accel_min = -2.6700022
+tangential_accel_max = 2.6699977
+attractor_interaction_enabled = false
+scale_max = 1.5
+scale_curve = SubResource("CurveTexture_iuv2x")
+anim_speed_min = 1.0
+anim_speed_max = 1.0
+turbulence_noise_strength = 0.0
+turbulence_noise_scale = 1.19
+turbulence_noise_speed_random = 2.4
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_k0qfi"]
+radius = 23.0
+height = 233.85
+
+[node name="Flame" type="Area2D" unique_id=1245001736]
+collision_layer = 0
+collision_mask = 0
+input_pickable = false
+monitorable = false
+script = ExtResource("1_o3qc7")
+
+[node name="TrajRayCast" type="RayCast2D" parent="." unique_id=626733840]
+unique_name_in_owner = true
+enabled = false
+target_position = Vector2(0, 0)
+collision_mask = 2
+hit_from_inside = true
+collide_with_bodies = false
+
+[node name="FlameParticles" type="GPUParticles2D" parent="." unique_id=538856923]
+unique_name_in_owner = true
+material = SubResource("CanvasItemMaterial_k1lqq")
+position = Vector2(0, -4.5474735e-13)
+emitting = false
+amount = 16
+texture = ExtResource("2_2pwsy")
+lifetime = 1.2
+speed_scale = 2.0
+randomness = 0.3
+process_material = SubResource("ParticleProcessMaterial_k0qfi")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1356015044]
+unique_name_in_owner = true
+position = Vector2(117, 0)
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_k0qfi")

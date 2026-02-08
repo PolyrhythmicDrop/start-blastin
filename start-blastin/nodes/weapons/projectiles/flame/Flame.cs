@@ -1,237 +1,45 @@
-using System;
-using Effects;
-using Enemies;
-using Entities;
-using Events;
 using Godot;
-using Interfaces;
-using Utility;
-using Weapons;
 
 namespace Projectiles
 {
     [GlobalClass]
-    public partial class Flame : Projectile, ITetheredProjectile, IListener
+    public partial class Flame : DeflectableProjectile
     {
-        private GpuParticles2D _particles;
         private CollisionShape2D _collShape;
-
-        // ~ ITetheredProjectile interface implementation ~
-        private Barrel _tetheredBarrel;
-        private bool _isTethered;
-
-        // DoT Effect
-        private DamageOverTimeEffect _damageEffect;
-        private const float DMG_FREQUENCY = 0.2f;
-
-        public Barrel TetheredBarrel
-        {
-            get => _tetheredBarrel;
-            set => _tetheredBarrel = value;
-        }
-        public bool IsTethered
-        {
-            get => _isTethered;
-            set => _isTethered = value;
-        }
+        private AnimatedSprite2D _sprite;
 
         public override void _Ready()
         {
             base._Ready();
-
             _ignoreOtherProjectiles = true;
 
-            _particles = GetNode<GpuParticles2D>("%FlameParticles");
             _collShape = GetNode<CollisionShape2D>("%CollisionShape2D");
-
-            // Disable the raycast since we're not using it.
-            _ray?.Enabled = false;
-
-            // Set up the DoT effect
-            _damageEffect = new()
-            {
-                DamagePerTick = _sourceWeapon.Stats.Damage,
-                Frequency = DMG_FREQUENCY,
-                Stacking = false,
-                Timed = false,
-            };
+            _sprite = GetNode<AnimatedSprite2D>("%FlameSprite");
 
             ConnectSignals();
         }
 
         public void ConnectSignals()
         {
-            BodyEntered += OnBodyEntered;
-            BodyExited += OnBodyExited;
-        }
-
-        public void DisconnectSignals()
-        {
-            // BodyEntered -= OnBodyEntered;
-            // BodyExited -= OnBodyExited;
-        }
-
-        private void OnBodyEntered(Node2D body)
-        {
-            // DebugLogger.LogMessage($"{body.Name} entered {Name}!", true);
             if (
-                (_faction == Faction.Players && body is EnemyNode)
-                || (_faction == Faction.Enemies && body is Player)
+                !_sprite.IsConnected(
+                    AnimatedSprite2D.SignalName.AnimationFinished,
+                    _deactivateCallable
+                )
             )
             {
-                _damageEffect.ApplyEffect(body);
-                CollisionEventArgs args = new(body, body.GlobalPosition);
-                RaiseCollision(this, args);
-            }
-        }
-
-        private void OnBodyExited(Node2D body)
-        {
-            // DebugLogger.LogMessage($"{body.Name} exited {Name}!", true);
-            if (
-                (_faction == Faction.Players && body is EnemyNode)
-                || (_faction == Faction.Enemies && body is Player)
-            )
-            {
-                _damageEffect.RemoveEffectFromTarget(body);
-            }
-        }
-
-        public override void SetProjectileCollisionLayers(Faction faction)
-        {
-            // Enable aura detection (Layer 6) for both types
-            SetCollisionMaskValue(6, true);
-            // // Enable shield collision detection
-            // SetCollisionMaskValue(8, true);
-            // // Enable OOB area detection
-            // SetCollisionMaskValue(2, true);
-
-            switch (faction)
-            {
-                case Faction.Enemies:
-                {
-                    // Set the mask so the projectile hits players.
-                    SetCollisionMaskValue(1, true);
-                    // Set the mask so that the projectile does not hit fellow enemies.
-                    SetCollisionMaskValue(3, false);
-                    // Set collision layer 4 (Projectiles-Player) to false.
-                    SetCollisionLayerValue(4, false);
-                    // // Set the mask so the projectile hits player projectiles.
-                    // SetCollisionMaskValue(4, true);
-                    // Set the collision layer 5 (Projectiles-Enemy) to true.
-                    SetCollisionLayerValue(5, true);
-                    // Set the mask so the projectile does not hit other enemy projectiles.
-                    SetCollisionMaskValue(5, false);
-                    break;
-                }
-                case Faction.Players:
-                {
-                    // Set the mask so the projectile does not hit players.
-                    SetCollisionMaskValue(1, false);
-                    // Set the mask so that the projectile hits enemies.
-                    SetCollisionMaskValue(3, true);
-                    // Set the collision layer so that the projectile is a Player projectile.
-                    SetCollisionLayerValue(4, true);
-                    // Set the mask so the projectile does not hit player projectiles.
-                    SetCollisionMaskValue(4, false);
-                    // Set the collision layer 5 (Projectiles-Enemy) to false.
-                    SetCollisionLayerValue(5, false);
-                    // // Set the mask so the projectile hits enemy projectiles.
-                    // SetCollisionMaskValue(5, true);
-                    break;
-                }
-                case Faction.All:
-                {
-                    // Set all relevant masks and layers to true, except for the projectiles, since we don't want the flame to interact with other projectiles.
-                    SetCollisionMaskValue(1, true);
-                    SetCollisionMaskValue(3, true);
-                    SetCollisionLayerValue(4, true);
-                    // SetCollisionMaskValue(4, true);
-                    SetCollisionLayerValue(5, true);
-                    // SetCollisionMaskValue(5, true);
-                    break;
-                }
-                case Faction.None:
-                {
-                    // Set all relevant masks and layers to false.
-                    SetCollisionMaskValue(1, false);
-                    SetCollisionMaskValue(3, false);
-                    SetCollisionLayerValue(4, false);
-                    SetCollisionMaskValue(4, false);
-                    SetCollisionLayerValue(5, false);
-                    SetCollisionMaskValue(5, false);
-                    break;
-                }
+                _sprite.Connect(AnimatedSprite2D.SignalName.AnimationFinished, _deactivateCallable);
             }
         }
 
         public override void ToggleActive(bool active)
         {
+            base.ToggleActive(active);
+
             if (active)
             {
-                // Normal projectile parenting
-                _sourceWeapon.ProjectileParent.AddChild(this);
-                _sourceWeapon.ActiveProjectileCount++;
-
-                // Particles and collision
-                _particles.Emitting = true;
-                _collShape.Disabled = false;
-
-                // Weapon will handle assigning a barrel and changing _isTethered, don't do it here.
+                _sprite.Play();
             }
-            else
-            {
-                // Normal projectile de-parenting
-                _sourceWeapon.ProjectileParent.RemoveChild(this);
-                _sourceWeapon.ActiveProjectileCount--;
-
-                // Particles and collision
-                _particles.Emitting = false;
-                _collShape.Disabled = true;
-
-                // Remove barrel assignment and tethering bool
-                _isTethered = false;
-                _tetheredBarrel = null;
-            }
-
-            _active = active;
-            ToggleCollisionSignalConnection(active);
-
-            // No need to toggle the deactivation timer for tethered projectiles.
-        }
-
-        /// <summary>
-        /// Calls <see cref="UpdateTether"/> every frame if this Flame is active.
-        /// </summary>
-        /// <param name="delta">The time between frames.</param>
-        public override void _PhysicsProcess(double delta)
-        {
-            if (_active)
-            {
-                UpdateTether();
-            }
-        }
-
-        public void UpdateTether()
-        {
-            // Keep the flame fixed to the barrel
-            if (_tetheredBarrel != null && _active)
-            {
-                GlobalPosition = _tetheredBarrel.GlobalPosition;
-                GlobalRotation = _tetheredBarrel.GlobalRotation;
-            }
-        }
-
-        public void ReleaseTether()
-        {
-            _isTethered = false;
-            ToggleActive(false);
-        }
-
-        public override void _ExitTree()
-        {
-            DisconnectSignals();
-            base._ExitTree();
         }
     }
 }

@@ -1,12 +1,8 @@
 using System;
-using System.Threading.Tasks;
-using Enemies;
-using Entities;
 using Environmental;
 using Events;
 using Factories;
 using Godot;
-using Interfaces;
 using Utility;
 using Weapons;
 
@@ -32,8 +28,9 @@ namespace Projectiles
         /// Whether or not this projectile should ignore collisions by other projectiles.
         /// </summary>
         protected bool _ignoreOtherProjectiles = false;
+        public bool DeactivateOnCollision = true;
 
-        private Callable _deactivateCallable;
+        protected Callable _deactivateCallable;
         protected bool _active;
 
         protected Faction _faction;

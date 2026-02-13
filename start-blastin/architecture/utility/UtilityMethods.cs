@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Godot;
@@ -127,6 +128,53 @@ namespace Utility
             }
 
             return children;
+        }
+
+        public static float? GetAnimationDuration(
+            AnimatedSprite2D animSprite,
+            string animation = "default"
+        )
+        {
+            try
+            {
+                if (animSprite.SpriteFrames == null)
+                {
+                    throw new ArgumentException(
+                        $"{animSprite.Name} has no SpriteFrames! Cannot get the length of an animation that does not exist.",
+                        paramName: nameof(animSprite)
+                    );
+                }
+
+                SpriteFrames sf = animSprite.SpriteFrames;
+
+                if (!sf.HasAnimation(animation))
+                {
+                    throw new ArgumentException(
+                        $"{animation} is not an valid animation name for {animSprite.Name}!",
+                        paramName: nameof(animation)
+                    );
+                }
+
+                int frameCount = animSprite.SpriteFrames.GetFrameCount(animation);
+                float totalDuration = 0;
+
+                for (int i = 0; i < frameCount; i++)
+                {
+                    totalDuration +=
+                        sf.GetFrameDuration(animation, i)
+                        / (
+                            (float)sf.GetAnimationSpeed(animation)
+                            * MathF.Abs(animSprite.GetPlayingSpeed())
+                        );
+                }
+
+                return totalDuration;
+            }
+            catch (Exception e)
+            {
+                DebugLogger.LogMessage(e.Message, true, true);
+                return null;
+            }
         }
     }
 }

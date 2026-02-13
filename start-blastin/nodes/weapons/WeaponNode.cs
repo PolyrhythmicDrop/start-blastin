@@ -284,14 +284,18 @@ namespace Weapons
 
             // Projectiles deactivate.
             // TODO: Also add some kind of animation that plays.
-            if (args.Collider is Projectile projectile && args.Collider is not ITetheredProjectile)
+            if (
+                args.Collider is Projectile projectile
+                && projectile is not ITetheredProjectile
+                && projectile.DeactivateOnCollision
+            )
             {
                 projectile.ToggleActive(false);
             }
 
-            // Deactivate the source projectile on collision if it's not tethered
+            // Deactivate the source projectile on collision if it's not tethered or has the flag set
             // TODO: Determine if we want to do this here or elsewhere, because some projectiles (Flame, Laser, etc.) might not want to deactivate on collision.
-            if (sourceProj is not ITetheredProjectile)
+            if (sourceProj is not ITetheredProjectile && sourceProj.DeactivateOnCollision)
             {
                 sourceProj.ToggleActive(false);
             }

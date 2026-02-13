@@ -44,7 +44,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"default",
-"speed": 15.0
+"speed": 12.0
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_2ultm"]
@@ -68,7 +68,10 @@ collide_with_areas = true
 unique_name_in_owner = true
 sprite_frames = SubResource("SpriteFrames_qgyhe")
 autoplay = "default"
+frame = 4
+frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1356015044]
 unique_name_in_owner = true
+process_mode = 4
 shape = SubResource("CircleShape2D_2ultm")

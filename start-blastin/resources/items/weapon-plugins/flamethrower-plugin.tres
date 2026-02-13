@@ -9,13 +9,13 @@
 [sub_resource type="Resource" id="Resource_c7cto"]
 script = ExtResource("1_5nycs")
 Type = 6
-Value = -0.3
+Value = -0.8
 metadata/_custom_type_script = "uid://bmeda5w63vsw7"
 
 [sub_resource type="Resource" id="Resource_703nk"]
 script = ExtResource("2_8iqq6")
 DamagePerTick = 0.3
-Frequency = 0.2
+Frequency = 0.4
 Trigger = 3
 Target = 2
 EnemyTargeting = true
@@ -26,13 +26,13 @@ metadata/_custom_type_script = "uid://ccsyqmp61ikky"
 [sub_resource type="Resource" id="Resource_11e41"]
 script = ExtResource("1_5nycs")
 Type = 7
-Value = -1.95
+Value = -1.9
 metadata/_custom_type_script = "uid://bmeda5w63vsw7"
 
 [sub_resource type="Resource" id="Resource_2ueyf"]
 script = ExtResource("1_5nycs")
 Type = 8
-Value = 800.0
+Value = 700.0
 metadata/_custom_type_script = "uid://bmeda5w63vsw7"
 
 [sub_resource type="Resource" id="Resource_8iqq6"]

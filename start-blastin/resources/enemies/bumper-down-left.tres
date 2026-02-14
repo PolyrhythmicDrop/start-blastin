@@ -11,8 +11,11 @@ metadata/_custom_type_script = "uid://dt02kxv7k56mm"
 
 [sub_resource type="Resource" id="Resource_58ywe"]
 script = ExtResource("3_swxag")
-FireRate = 1.0
+FireRate = 0.2
 ProjectileSpeed = 800.0
+BurstFire = true
+BurstTime = 0.6000000000000001
+BurstCooldown = 2.0
 metadata/_custom_type_script = "uid://bytfm61mpkr5u"
 
 [resource]

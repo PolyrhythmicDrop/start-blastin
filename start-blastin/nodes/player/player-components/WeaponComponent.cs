@@ -62,8 +62,7 @@ namespace PlayerComponents
         {
             if (_weaponNode != null)
             {
-                _weaponNode.FireTimer.Timeout += _weaponNode.Fire;
-                _weaponNode.FireTimer.Timeout += _player.Audio.PlayFireSound;
+                _weaponNode.FireTimer.Timeout += FireWeapon;
             }
         }
 

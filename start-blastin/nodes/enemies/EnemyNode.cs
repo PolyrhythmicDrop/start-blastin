@@ -253,8 +253,19 @@ namespace Enemies
             _weapon.FireTimer.Timeout += FireWeapon;
 
             // Set an initial firing delay
-            double delay = RNG.GetRandomDouble(max: _weapon.Stats.FireRate);
-            _weapon.FireTimer.Start(delay);
+            // double delay = RNG.GetRandomDouble(max: _weapon.Stats.FireRate);
+
+            if (_weapon.Stats.BurstFire)
+            {
+                _weapon.BurstFireTimer.Timeout += OnBurstFireEnd;
+                _weapon.BurstCooldownTimer.Timeout += BurstFire;
+                _weapon.BurstCooldownTimer.Start();
+            }
+            else
+            {
+                _weapon.FireTimer.OneShot = false;
+                _weapon.FireTimer.Start();
+            }
 
             // Initialize position tracking
             _currentGlobalPosition = GlobalPosition;
@@ -538,6 +549,28 @@ namespace Enemies
             _audioComponent.PlayFireSound();
             PlayFireAnimation();
             _weapon.Fire();
+            _weapon.FireTimer.Start(MathF.Round(_weapon.Stats.FireRate, 4));
+        }
+
+        /// <summary>
+        /// Called when the BurstCooldownTimer ends.
+        /// </summary>
+        protected virtual void BurstFire()
+        {
+            _weapon.BurstFireTimer.Start(_weapon.Stats.BurstTime);
+            FireWeapon();
+            DebugLogger.LogMessage(
+                $"BurstFireTimer wait time: {_weapon.BurstFireTimer.WaitTime} | FireTimer wait time: {_weapon.FireTimer.WaitTime}"
+            );
+        }
+
+        /// <summary>
+        /// Called when the BurstFireTimer ends.
+        /// </summary>
+        protected virtual void OnBurstFireEnd()
+        {
+            _weapon.FireTimer.Stop();
+            _weapon.BurstCooldownTimer.Start(_weapon.Stats.BurstCooldown);
         }
 
         /// <summary>

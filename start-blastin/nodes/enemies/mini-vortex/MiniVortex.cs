@@ -11,6 +11,8 @@ namespace Enemies
         private AnimatedSprite2D _sprite;
 
         private const float SPIN_DURATION = 2;
+        private const float SPIN_PROGRESS_RATIO = 0.2f;
+        private const float SPIN_AMT_DEG = 1080;
 
         protected override void OnBaseReadyComplete()
         {
@@ -19,7 +21,7 @@ namespace Enemies
 
         protected override AnimatedSprite2D GetPrimarySprite() => _sprite;
 
-        protected override void PlayFireAnimation()
+        public override void PlayFireAnimation()
         {
             _sprite.Play("fire");
         }
@@ -27,9 +29,10 @@ namespace Enemies
         protected override void FollowPath(float speed)
         {
             // Stop the fire timer until we get to our spinning fire position.
-            if (!_weapon.FireTimer.IsStopped())
+            if (_weaponComponent.IsFiring)
             {
-                _weapon.FireTimer.Stop();
+                // _weapon.FireTimer.Stop();
+                _weaponComponent.StopFiring();
             }
 
             float pathLength = _followPath.Curve.GetBakedLength();
@@ -43,7 +46,12 @@ namespace Enemies
 
             _followTween = CreateTween();
             _followTween
-                .TweenProperty(_followPath.PathFollow, "progress_ratio", 0.2f, stepDuration)
+                .TweenProperty(
+                    _followPath.PathFollow,
+                    "progress_ratio",
+                    SPIN_PROGRESS_RATIO,
+                    stepDuration
+                )
                 .SetTrans(Tween.TransitionType.Quad)
                 .SetEase(Tween.EaseType.Out);
             ;
@@ -52,12 +60,12 @@ namespace Enemies
                 {
                     if (_alive)
                     {
-                        _weapon.FireTimer.Start();
+                        _weaponComponent.StartFiring();
                     }
                 })
             );
             _followTween
-                .TweenProperty(this, "rotation_degrees", 1080f, SPIN_DURATION)
+                .TweenProperty(this, "rotation_degrees", SPIN_AMT_DEG, SPIN_DURATION)
                 .SetTrans(Tween.TransitionType.Sine)
                 .SetEase(Tween.EaseType.InOut);
             _followTween.TweenCallback(
@@ -65,7 +73,7 @@ namespace Enemies
                 {
                     if (_alive)
                     {
-                        _weapon.FireTimer.Stop();
+                        _weaponComponent.StopFiring();
                     }
                 })
             );

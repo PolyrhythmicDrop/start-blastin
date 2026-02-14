@@ -30,26 +30,32 @@ namespace Enemies
             IListener,
             IDeflector
     {
-        #region Nodes
+        #region Nodes and Components
         protected StatManager _stats;
-
-        protected WeaponNode _weapon;
-
+        protected EnemyWeaponComponent _weaponComponent;
+        protected AudioComponent _audioComponent;
         protected CollisionShape2D _shape;
 
-        public VisibleOnScreenNotifier2D VisibleNotifier;
+        protected EntityPath _followPath;
+
+        /// <summary>
+        /// The weapon managed by this enemy's <see cref="EnemyWeaponComponent"/>.
+        /// </summary>
+        public WeaponNode Weapon => _weaponComponent.Weapon;
+
+        /// <summary>
+        /// The enemy's audio component.
+        /// </summary>
+        public AudioComponent AudioComp => _audioComponent;
 
         /// <summary>
         /// The main path the enemy follows. When they reach the end of this path, the enemy despawns.
         /// </summary>
-        protected EntityPath _followPath;
+        public EntityPath Path => _followPath;
 
-        protected AudioComponent _audioComponent;
+        public VisibleOnScreenNotifier2D VisibleNotifier;
 
         protected OverheadHealthBar _healthBar;
-
-        public WeaponNode Weapon => _weapon;
-        public EntityPath Path => _followPath;
 
         #endregion
 
@@ -77,19 +83,27 @@ namespace Enemies
         protected float _baseSpeed;
         protected float _baseCrashDamage;
         protected float _baseMaxHealth;
-        protected float _baseFireRate;
-        protected float _baseWeaponDamage;
         protected int _fluxReward;
         protected int _byteReward;
 
         #endregion
 
         #region State
-        protected bool _alive = true;
 
+        /// <summary>
+        /// Callback method for when the enemy exits the screen.
+        /// </summary>
+        private Callable _screenExitCallable;
+
+        protected bool _alive = true;
         protected bool _atPathEnd = false;
 
-        private Callable _screenExitCallable;
+        /// <summary>
+        /// If part of a squadron, whether or not the enemy has split from the squadron.
+        /// </summary>
+        private bool _split = false;
+
+        public bool IsAlive => _alive;
 
         public bool DeflectActive { get; set; }
 
@@ -113,17 +127,18 @@ namespace Enemies
         /// </summary>
         public float SplitPoint;
 
-        /// <summary>
-        /// If part of a squadron, whether or not the enemy has split from the squadron.
-        /// </summary>
-        private bool _split = false;
+        #endregion
+
+        #region Constants
+
+        protected const float MIN_FOLLOW_TWEEN_DURATION = 0.1f;
+        protected const float SQUADRON_TWEEN_DURATION = 1.5f;
+        protected const float DAMAGE_ANIM_DURATION = 0.5f;
 
         #endregion
 
-
         #region Health
 
-        // current stats
         protected float _currentHealth;
         protected float _maxHealth => _stats.GetStat(StatType.MaxHealth).CurrentValue;
         public float CurrentHealth
@@ -145,14 +160,6 @@ namespace Enemies
                 _healthBar?.SetValues(_maxHealth, _currentHealth);
             }
         }
-
-        #region Constants
-
-        protected const float MIN_FOLLOW_TWEEN_DURATION = 0.1f;
-        protected const float SQUADRON_TWEEN_DURATION = 1.5f;
-        protected const float DAMAGE_ANIM_DURATION = 0.5f;
-
-        #endregion
 
         /// <summary>
         /// Sets the position of the health bar based on the enemy's current position.
@@ -194,7 +201,7 @@ namespace Enemies
 
         /// <summary>
         /// Initializes the enemy node from an enemy resource.
-        /// Called from the EnemyFactory before the enemy is added to the scene tree, before _Ready().
+        /// Called from the <see cref="EnemyFactory"/> before the enemy is added to the scene tree, before _Ready().
         /// </summary>
         /// <param name="enemyResource">The resource used to create the enemy.</param>
         public virtual void Initialize(EnemyResource enemyResource)
@@ -207,16 +214,13 @@ namespace Enemies
             _fluxReward = enemyResource.FluxReward;
             _byteReward = enemyResource.ByteReward;
 
-            // Weapon initialization
-            _weapon = WeaponFactory.CreateWeapon(
-                enemyResource.WeaponStats,
-                velocityProvider: this,
-                owner: this
-            );
-            _baseFireRate = enemyResource.WeaponStats.FireRate;
-            _baseWeaponDamage = enemyResource.WeaponStats.Damage;
+            // Speed and crash damage
             _baseSpeed = enemyResource.Speed;
             _baseCrashDamage = enemyResource.CrashDamage;
+
+            // Weapon component initialization
+            _weaponComponent = new();
+            _weaponComponent.Initialize(this, enemyResource.WeaponStats);
 
             // Sound initialization
             _audioComponent = new() { Sounds = enemyResource.Sounds };
@@ -234,9 +238,9 @@ namespace Enemies
             _stats = new();
             _stats.AddStat(StatType.CrashDamage, _baseCrashDamage);
             _stats.AddStat(StatType.Speed, _baseSpeed);
-            _stats.AddStat(StatType.FireRate, _baseFireRate);
             _stats.AddStat(StatType.MaxHealth, _baseMaxHealth);
-            _stats.AddStat(StatType.Damage, _baseWeaponDamage);
+            _stats.AddStat(StatType.FireRate, _weaponComponent.BaseFireRate);
+            _stats.AddStat(StatType.Damage, _weaponComponent.BaseWeaponDamage);
         }
 
         public override void _Ready()
@@ -247,39 +251,20 @@ namespace Enemies
             _shape = GetNode<CollisionShape2D>("%CollisionShape2D");
             InitVisibleNotifier();
 
-            AddChild(_weapon);
-
-            // Start the weapon fire timer to fire on a set interval.
-            _weapon.FireTimer.Timeout += FireWeapon;
-
-            // Set an initial firing delay
-            // double delay = RNG.GetRandomDouble(max: _weapon.Stats.FireRate);
-
-            if (_weapon.Stats.BurstFire)
-            {
-                _weapon.BurstFireTimer.Timeout += OnBurstFireEnd;
-                _weapon.BurstCooldownTimer.Timeout += BurstFire;
-                _weapon.BurstCooldownTimer.Start();
-            }
-            else
-            {
-                _weapon.FireTimer.OneShot = false;
-                _weapon.FireTimer.Start();
-            }
+            AddChild(_weaponComponent);
 
             // Initialize position tracking
             _currentGlobalPosition = GlobalPosition;
             _lastGlobalPosition = _currentGlobalPosition;
-
-            // Initialize the health bar.
-            _healthBar = GetNode<OverheadHealthBar>("%OverheadHealthBar");
-            _healthBar.Initialize(this);
 
             ConnectSignals();
 
             // Call the derived class's Ready steps.
             OnBaseReadyComplete();
 
+            // Initialize the health bar.
+            _healthBar = GetNode<OverheadHealthBar>("%OverheadHealthBar");
+            _healthBar.Initialize(this);
             SetHealthBarSize();
 
             FollowPath(_followSpeed);
@@ -383,15 +368,22 @@ namespace Enemies
             _stats.UpdateStat(type, value);
         }
 
+        /// <summary>
+        /// Callback for when a stat in the StatManager (<see cref="_stats"/>) is updated.
+        /// Updates either the weapon stats via the <see cref="EnemyWeaponComponent"/> or the follow speed for pathed enemies.
+        /// </summary>
+        /// <param name="source">The source of the <see cref="StatManager.StatUpdated"/> event.</param>
+        /// <param name="args">The event args containing the stat type and the stat object.</param>
         public virtual void OnStatUpdated(object source, StatUpdatedEventArgs args)
         {
+            // Attempt to update weapon stats first. If successful, return. Otherwise, update the non-weapon stats.
+            if (_weaponComponent.HandleStatUpdates(args.StatType, args.Stat))
+            {
+                return;
+            }
+
             switch (args.StatType)
             {
-                case StatType.FireRate:
-                case StatType.Damage:
-                case StatType.ProjectileSpeed:
-                    Weapon.UpdateWeaponStats(args.StatType, args.Stat);
-                    return;
                 case StatType.Speed:
                     if (_followTween != null && _followTween.IsValid())
                     {
@@ -474,13 +466,19 @@ namespace Enemies
             float newFollowSpeed = _baseSpeed * (1 + (scaler.SpeedModifier * waveSqrtMultiplier));
             SetStat(StatType.Speed, newFollowSpeed);
 
+            // float newDamage =
+            //     _baseWeaponDamage * (1 + (scaler.WeaponDamageModifier * waveSqrtMultiplier));
             float newDamage =
-                _baseWeaponDamage * (1 + (scaler.WeaponDamageModifier * waveSqrtMultiplier));
+                _weaponComponent.BaseWeaponDamage
+                * (1 + (scaler.WeaponDamageModifier * waveSqrtMultiplier));
             SetStat(StatType.Damage, newDamage);
 
             float waveExpoMultiplier = Mathf.Pow(0.95f, wave * scaler.FireRateModifier);
+
             // Fire rate should be decreased, since lower fire rates result in faster firing.
-            float newFireRate = Mathf.Max(0.1f, _baseFireRate * waveExpoMultiplier);
+            // float newFireRate = Mathf.Max(0.1f, _baseFireRate * waveExpoMultiplier);
+            float newFireRate = Mathf.Max(0.1f, _weaponComponent.BaseFireRate * waveExpoMultiplier);
+
             SetStat(StatType.FireRate, newFireRate);
         }
 
@@ -535,48 +533,48 @@ namespace Enemies
             CurrentHealth = Mathf.Min(_currentHealth + healAmount, MaxHealth);
         }
 
-        /// <summary>
-        /// Fires the enemy's weapon if the enemy is on the screen.
-        /// </summary>
-        protected virtual void FireWeapon()
-        {
-            // Don't fire if we're dead or not on screen.
-            if (!_alive || !VisibleNotifier.IsOnScreen())
-            {
-                return;
-            }
+        // /// <summary>
+        // /// Fires the enemy's weapon if the enemy is on the screen.
+        // /// </summary>
+        // protected virtual void FireWeapon()
+        // {
+        //     // // Don't fire if we're dead or not on screen.
+        //     // if (!_alive || !VisibleNotifier.IsOnScreen())
+        //     // {
+        //     //     return;
+        //     // }
 
-            _audioComponent.PlayFireSound();
-            PlayFireAnimation();
-            _weapon.Fire();
-            _weapon.FireTimer.Start(MathF.Round(_weapon.Stats.FireRate, 4));
-        }
+        //     // _audioComponent.PlayFireSound();
+        //     // PlayFireAnimation();
+        //     // _weapon.Fire();
+        //     // _weapon.FireTimer.Start(MathF.Round(_weapon.Stats.FireRate, 4));
+        // }
 
-        /// <summary>
-        /// Called when the BurstCooldownTimer ends.
-        /// </summary>
-        protected virtual void BurstFire()
-        {
-            _weapon.BurstFireTimer.Start(_weapon.Stats.BurstTime);
-            FireWeapon();
-            DebugLogger.LogMessage(
-                $"BurstFireTimer wait time: {_weapon.BurstFireTimer.WaitTime} | FireTimer wait time: {_weapon.FireTimer.WaitTime}"
-            );
-        }
+        // /// <summary>
+        // /// Called when the BurstCooldownTimer ends.
+        // /// </summary>
+        // protected virtual void BurstFire()
+        // {
+        //     _weapon.BurstFireTimer.Start(_weapon.Stats.BurstTime);
+        //     FireWeapon();
+        //     DebugLogger.LogMessage(
+        //         $"BurstFireTimer wait time: {_weapon.BurstFireTimer.WaitTime} | FireTimer wait time: {_weapon.FireTimer.WaitTime}"
+        //     );
+        // }
 
-        /// <summary>
-        /// Called when the BurstFireTimer ends.
-        /// </summary>
-        protected virtual void OnBurstFireEnd()
-        {
-            _weapon.FireTimer.Stop();
-            _weapon.BurstCooldownTimer.Start(_weapon.Stats.BurstCooldown);
-        }
+        // /// <summary>
+        // /// Called when the BurstFireTimer ends.
+        // /// </summary>
+        // protected virtual void OnBurstFireEnd()
+        // {
+        //     _weapon.FireTimer.Stop();
+        //     _weapon.BurstCooldownTimer.Start(_weapon.Stats.BurstCooldown);
+        // }
 
         /// <summary>
         /// Plays the enemy's fire animation. Must be implemented by the derived class.
         /// </summary>
-        protected abstract void PlayFireAnimation();
+        public abstract void PlayFireAnimation();
 
         /// <summary>
         /// Kills the enemy. Raises the <see cref="EventBus.EnemyKilled"/> event if a Player killed the enemy.
@@ -594,9 +592,9 @@ namespace Enemies
 
             // Standardized death stuff
             _alive = false;
-            _weapon.FireTimer.Stop();
+            // _weapon.FireTimer.Stop();
+            _weaponComponent.StopFiring();
             _shape.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
-            // _shape.Disabled = true;
 
             // Derived class death stuff
             await PlayDeathSequence();
@@ -640,11 +638,13 @@ namespace Enemies
             _healthBar.ToggleBarVisibility(false);
 
             // Release all tethered projectiles, if any.
-            _weapon.ReleaseAllTetheredProjectiles();
+            // _weapon.ReleaseAllTetheredProjectiles();
+            _weaponComponent.ReleaseAllTetheredProjectiles();
 
             // Queue free after all child projectiles die and all child audio nodes stop playing
             await WaitForAudioEnd();
-            bool projectilesDisabled = await _weapon.WaitForAllProjectilesDisabled();
+            bool projectilesDisabled = await _weaponComponent.WaitForAllProjectilesDisabled();
+            // bool projectilesDisabled = await _weapon.WaitForAllProjectilesDisabled();
 
             if (projectilesDisabled && !IsQueuedForDeletion())
             {

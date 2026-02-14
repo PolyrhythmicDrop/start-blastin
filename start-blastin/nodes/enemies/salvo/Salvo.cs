@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Components;
 using Enemies;
 using Godot;
 
@@ -25,8 +24,6 @@ public partial class Salvo : EnemyNode
 
     private event Action InitialFirePosReached;
     private event Action<Vector2> FireWaypointReached;
-    private event Action FireComplete;
-    private event Action FinalFireComplete;
 
     protected override void OnBaseReadyComplete()
     {
@@ -41,13 +38,9 @@ public partial class Salvo : EnemyNode
         _firePositions.Add(_followPath.Curve.GetPointPosition(2), false);
         _firePositions.Add(_followPath.Curve.GetPointPosition(3), false);
 
-        ReadyBarrels();
-        ConnectWaypointSignals();
-    }
+        _weaponComponent.ActivateAllBarrels();
 
-    private void ReadyBarrels()
-    {
-        _weapon.Barrels.ToggleActivateAllBarrels(true);
+        ConnectWaypointSignals();
     }
 
     protected override AnimatedSprite2D GetPrimarySprite() => _body;
@@ -56,16 +49,12 @@ public partial class Salvo : EnemyNode
     {
         InitialFirePosReached += OnInitialFirePositionReached;
         FireWaypointReached += OnFireWaypointReached;
-        FireComplete += OnFireComplete;
-        FinalFireComplete += OnFinalFireComplete;
     }
 
     public void DisconnectWaypointSignals()
     {
         InitialFirePosReached -= OnInitialFirePositionReached;
         FireWaypointReached -= OnFireWaypointReached;
-        FireComplete -= OnFireComplete;
-        FinalFireComplete -= OnFinalFireComplete;
     }
 
     protected override void OnProcessUpdate(double delta)
@@ -98,7 +87,7 @@ public partial class Salvo : EnemyNode
         }
     }
 
-    protected override void PlayFireAnimation()
+    public override void PlayFireAnimation()
     {
         _rack.Play("fire");
     }
@@ -121,7 +110,8 @@ public partial class Salvo : EnemyNode
     protected override void FollowPath(float speed)
     {
         // Pause firing initially
-        _weapon.FireTimer.Stop();
+        // _weapon.FireTimer.Stop();
+        _weaponComponent.StopFiring();
 
         float pathLength = _followPath.Curve.GetBakedLength();
         float duration = Mathf.Max(pathLength / speed, MIN_FOLLOW_TWEEN_DURATION);
@@ -171,35 +161,22 @@ public partial class Salvo : EnemyNode
     {
         // Pause movement for a spell
         _followTween.Pause();
-        // Fire weapon
-        FireWeapon();
-        _weapon.FireTimer.Start();
-        await StayAndSpin();
-        _weapon.FireTimer.Stop();
 
+        // Start firing while we stay in place and do our little spin move, then stop firing when we're done.
+        _weaponComponent.StartFiring();
+        await StayAndSpin();
+        _weaponComponent.StopFiring();
+
+        // If we're not at the final waypoint, play the follow tween.
         if (waypoint != _firePositions.ElementAt(2).Key)
         {
-            FireComplete?.Invoke();
+            _followTween.Play();
         }
+        // If we're at the final waypoint but have not yet begun to flounce, flounce.
         else if (!_flouncing)
         {
-            FinalFireComplete?.Invoke();
+            Flounce();
         }
-    }
-
-    private void OnFireComplete()
-    {
-        _followTween.Play();
-    }
-
-    private void OnFinalFireComplete()
-    {
-        if (_flouncing)
-        {
-            return;
-        }
-
-        Flounce();
     }
 
     private async Task<bool> StayAndSpin()
@@ -219,6 +196,7 @@ public partial class Salvo : EnemyNode
         _flouncing = true;
 
         _followTween.Pause();
+
         // Get the offset at the current progress ratio
         float pathRotation = _followPath
             .Curve.SampleBakedWithRotation(

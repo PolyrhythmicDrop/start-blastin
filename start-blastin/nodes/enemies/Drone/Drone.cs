@@ -16,9 +16,6 @@ namespace Enemies
 
         protected override void OnBaseReadyComplete()
         {
-            // Stop the fire timer since we'll control it using the raycast instead.
-            _weapon.FireTimer.Stop();
-
             _visionRay = GetNode<RayCast2D>("%VisionRay");
             _spriteContainer = GetNode<Node2D>("%SpriteContainer");
             _body = _spriteContainer.GetNode<AnimatedSprite2D>("%Base");
@@ -38,15 +35,17 @@ namespace Enemies
             base._PhysicsProcess(delta);
             if (_visionRay.IsColliding() && _visionRay.GetCollider() is Player)
             {
-                if (_weapon.FireTimer.IsStopped())
+                if (!_weaponComponent.IsFiring)
                 {
-                    FireWeapon();
-                    _weapon.FireTimer.Start(_weapon.Stats.FireRate);
+                    _weaponComponent.StartFiring();
+                    // FireWeapon();
+                    // _weapon.FireTimer.Start(_weapon.Stats.FireRate);
                 }
             }
-            else if (!_visionRay.IsColliding() && !_weapon.FireTimer.IsStopped())
+            else if (!_visionRay.IsColliding() && _weaponComponent.IsFiring)
             {
-                _weapon.FireTimer.Stop();
+                // _weapon.FireTimer.Stop();
+                _weaponComponent.StopFiring();
             }
         }
 
@@ -80,7 +79,7 @@ namespace Enemies
             _followTween.TweenProperty(_followPath, "FollowRatio", 1.0, stepDuration);
         }
 
-        protected override void PlayFireAnimation()
+        public override void PlayFireAnimation()
         {
             _body.Play("fire");
         }

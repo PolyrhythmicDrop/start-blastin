@@ -53,6 +53,9 @@ public partial class Bumper : EnemyNode
         _deflectorS = _shieldGenSprite.GetNode<StaticDeflector>("%DeflectorS");
 
         InitializeTimers();
+
+        // Start firing immediately
+        _weaponComponent.StartFiring();
     }
 
     /// <summary>
@@ -108,7 +111,7 @@ public partial class Bumper : EnemyNode
         _rotateTween.TweenCallback(Callable.From(StartRotateTimer));
     }
 
-    protected override void PlayFireAnimation()
+    public override void PlayFireAnimation()
     {
         _turretSprite.Play("fire");
     }

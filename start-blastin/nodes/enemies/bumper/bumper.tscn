@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://cyyfprpfg4wxs" path="res://assets/enemies/bumper/bumper-body.png" id="2_qq06v"]
 [ext_resource type="Texture2D" uid="uid://6a048ykfc0fj" path="res://assets/enemies/bumper/bumper-shield-nodes.png" id="3_0thyw"]
 [ext_resource type="PackedScene" uid="uid://cpr6gjyj2y750" path="res://nodes/components/static-deflector.tscn" id="5_4fy3a"]
+[ext_resource type="Texture2D" uid="uid://6tdf7abhl64y" path="res://assets/particles/explosions/explosion-1.png" id="8_lw7tk"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_w4umt"]
 radius = 24.0
@@ -168,6 +169,73 @@ animations = [{
 "speed": 14.0
 }]
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_lw7tk"]
+particles_animation = true
+particles_anim_h_frames = 6
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Curve" id="Curve_lw7tk"]
+_limits = [-1.0, 1.0, 0.0, 1.0]
+bake_resolution = 16
+_data = [Vector2(0, -1), 0.0, 2.8, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_0img3"]
+width = 128
+curve = SubResource("Curve_lw7tk")
+
+[sub_resource type="Curve" id="Curve_0img3"]
+_limits = [-1.0, 1.0, 0.0, 1.0]
+bake_resolution = 16
+_data = [Vector2(0, -1), 0.0, 2.8, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_ahsab"]
+width = 64
+curve = SubResource("Curve_0img3")
+
+[sub_resource type="Curve" id="Curve_2a0tu"]
+_limits = [-1.0, 1.0, 0.0, 1.0]
+_data = [Vector2(0, -1), 0.0, 2.8, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_wpvbn"]
+width = 128
+curve = SubResource("Curve_2a0tu")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_0img3"]
+lifetime_randomness = 0.2
+particle_flag_rotate_y = true
+particle_flag_disable_z = true
+emission_shape = 6
+emission_ring_axis = Vector3(0, 0, 1)
+emission_ring_height = 1.0
+emission_ring_radius = 1.0
+emission_ring_inner_radius = 0.0
+emission_ring_cone_angle = 90.0
+angle_min = -220.09999
+angle_max = 220.10002
+inherit_velocity_ratio = 0.2
+direction = Vector3(0, 0, 0)
+spread = 180.0
+initial_velocity_min = 74.189995
+initial_velocity_max = 137.98
+gravity = Vector3(0, 0, 0)
+linear_accel_min = -28.78
+linear_accel_max = 28.779997
+linear_accel_curve = SubResource("CurveTexture_0img3")
+radial_accel_min = -53.710003
+radial_accel_max = 53.709995
+radial_accel_curve = SubResource("CurveTexture_ahsab")
+tangential_accel_min = -74.78
+tangential_accel_max = 74.78
+tangential_accel_curve = SubResource("CurveTexture_wpvbn")
+attractor_interaction_enabled = false
+scale_max = 1.1999999
+anim_speed_min = 1.0
+anim_speed_max = 1.0
+
 [node name="Bumper" type="AnimatableBody2D" unique_id=196568354]
 material = ExtResource("1_lw7tk")
 collision_layer = 4
@@ -233,3 +301,17 @@ rotation = 3.1415927
 unique_name_in_owner = true
 use_parent_material = true
 sprite_frames = SubResource("SpriteFrames_ahsab")
+
+[node name="DestructParticles" type="GPUParticles2D" parent="." unique_id=110796294]
+unique_name_in_owner = true
+material = SubResource("CanvasItemMaterial_lw7tk")
+scale = Vector2(1.0000001, 1.0000001)
+emitting = false
+amount = 10
+texture = ExtResource("8_lw7tk")
+lifetime = 0.7
+one_shot = true
+explosiveness = 1.0
+randomness = 0.2
+visibility_rect = Rect2(-100.98, -100, 200, 200)
+process_material = SubResource("ParticleProcessMaterial_0img3")

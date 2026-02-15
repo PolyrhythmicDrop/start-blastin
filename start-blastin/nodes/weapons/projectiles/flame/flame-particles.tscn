@@ -1,13 +1,15 @@
 [gd_scene format=3 uid="uid://b1b7y7knhlc7r"]
 
 [ext_resource type="Script" uid="uid://dqlqekj1nx7gt" path="res://nodes/weapons/projectiles/flame/FlameParticles.cs" id="1_o3qc7"]
-[ext_resource type="Texture2D" uid="uid://nbaq7ost4ga4" path="res://assets/projectiles/flame/flamethrower-particle-clipped.png" id="2_2pwsy"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_k1lqq"]
 particles_animation = true
 particles_anim_h_frames = 5
 particles_anim_v_frames = 1
 particles_anim_loop = true
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_33ca7"]
+load_path = "res://.godot/imported/flamethrower-particle-clipped.png-cf0bc301eb6b971e84e8e5b24c60c141.ctex"
 
 [sub_resource type="Curve" id="Curve_k1lqq"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.6257861, 1), 1.4, 0.0, 0, 0]
@@ -67,9 +69,8 @@ collide_with_bodies = false
 unique_name_in_owner = true
 material = SubResource("CanvasItemMaterial_k1lqq")
 position = Vector2(0, -4.5474735e-13)
-emitting = false
 amount = 16
-texture = ExtResource("2_2pwsy")
+texture = SubResource("CompressedTexture2D_33ca7")
 lifetime = 1.2
 speed_scale = 2.0
 randomness = 0.3

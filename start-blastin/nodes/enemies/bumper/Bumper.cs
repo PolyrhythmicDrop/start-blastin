@@ -17,6 +17,8 @@ public partial class Bumper : EnemyNode
     private StaticDeflector _deflectorN;
     private StaticDeflector _deflectorS;
 
+    private GpuParticles2D _particles;
+
     // ~ Rotation Variables ~ //
 
     /// <summary>
@@ -41,6 +43,11 @@ public partial class Bumper : EnemyNode
     /// </summary>
     private const int ROTATE_STEP = 90;
 
+    /// <summary>
+    /// The duration of the death animation. Sync your particle lifetime to this value.
+    /// </summary>
+    private const float DEATH_DURATION = 0.8f;
+
     protected override void OnBaseReadyComplete()
     {
         // Set all the child nodes
@@ -51,6 +58,7 @@ public partial class Bumper : EnemyNode
         _shieldGenSprite = _rotator.GetNode<AnimatedSprite2D>("%ShieldGenSprite");
         _deflectorN = _shieldGenSprite.GetNode<StaticDeflector>("%DeflectorN");
         _deflectorS = _shieldGenSprite.GetNode<StaticDeflector>("%DeflectorS");
+        _particles = GetNode<GpuParticles2D>("%DestructParticles");
 
         InitializeTimers();
 
@@ -145,8 +153,8 @@ public partial class Bumper : EnemyNode
 
     protected override async Task PlayDeathSequence()
     {
-        // Make the base and engine sprites invisible.
-        _spriteContainer.Visible = false;
+        // // Make the base and engine sprites invisible.
+        // _spriteContainer.Visible = false;
 
         // Remove collision on shields
         _deflectorN.ProcessMode = ProcessModeEnum.Disabled;
@@ -154,5 +162,27 @@ public partial class Bumper : EnemyNode
 
         // Play the destruction sound
         _audioComponent.PlayDestructionSound();
+
+        // Emit the particles
+        _particles.Lifetime = DEATH_DURATION;
+        _particles.Emitting = true;
+
+        // Modulate the sprite to white, then transparent.
+        float stepDur = DEATH_DURATION / 4;
+        Color white = new(18.892f, 18.892f, 18.892f);
+        Color transparent = white;
+        transparent.A = 0;
+
+        // Remove the deflectors' shader materials so we can modulate them.
+        _deflectorN.RemoveSpriteShaderMaterial();
+        _deflectorS.RemoveSpriteShaderMaterial();
+
+        Tween tween = CreateTween();
+        tween.TweenProperty(_spriteContainer, "modulate", white, stepDur);
+        tween.TweenProperty(_spriteContainer, "modulate", transparent, stepDur);
+
+        await ToSignal(_particles, GpuParticles2D.SignalName.Finished);
+
+        _spriteContainer.Visible = false;
     }
 }

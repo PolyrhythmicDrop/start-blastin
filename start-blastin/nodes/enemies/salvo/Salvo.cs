@@ -43,7 +43,7 @@ public partial class Salvo : EnemyNode
         ConnectWaypointSignals();
     }
 
-    protected override AnimatedSprite2D GetPrimarySprite() => _body;
+    public override AnimatedSprite2D GetPrimarySprite() => _body;
 
     public void ConnectWaypointSignals()
     {

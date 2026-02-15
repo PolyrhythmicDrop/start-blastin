@@ -6,7 +6,6 @@
 [ext_resource type="Material" uid="uid://c2utwn3c0waxt" path="res://resources/materials/enemy-hit-effect.tres" id="2_owq5x"]
 [ext_resource type="Texture2D" uid="uid://baym56lbmyrdk" path="res://assets/enemies/drone/drone-destruction.png" id="4_k5dt5"]
 [ext_resource type="Script" uid="uid://bekbgunrmk3ad" path="res://nodes/weapons/Barrel.cs" id="6_eyaxp"]
-[ext_resource type="PackedScene" uid="uid://dyem7stdeqti4" path="res://nodes/ui/elements/overhead-health-bar.tscn" id="7_aakgy"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ijs4g"]
 radius = 20.0
@@ -304,6 +303,3 @@ script = ExtResource("6_eyaxp")
 Base = true
 DefaultActive = true
 metadata/_custom_type_script = "uid://bekbgunrmk3ad"
-
-[node name="OverheadHealthBar" parent="." unique_id=1537391236 instance=ExtResource("7_aakgy")]
-unique_name_in_owner = true

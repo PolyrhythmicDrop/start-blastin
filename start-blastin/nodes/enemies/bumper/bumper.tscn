@@ -5,7 +5,6 @@
 [ext_resource type="Script" uid="uid://bvm0kxtbbb75a" path="res://nodes/enemies/bumper/Bumper.cs" id="1_w4umt"]
 [ext_resource type="Texture2D" uid="uid://cj364u0fo1386" path="res://assets/enemies/bumper/bumper-turrets.png" id="2_0thyw"]
 [ext_resource type="Texture2D" uid="uid://cyyfprpfg4wxs" path="res://assets/enemies/bumper/bumper-body.png" id="2_qq06v"]
-[ext_resource type="PackedScene" uid="uid://dyem7stdeqti4" path="res://nodes/ui/elements/overhead-health-bar.tscn" id="2_uelcb"]
 [ext_resource type="Texture2D" uid="uid://6a048ykfc0fj" path="res://assets/enemies/bumper/bumper-shield-nodes.png" id="3_0thyw"]
 [ext_resource type="PackedScene" uid="uid://cpr6gjyj2y750" path="res://nodes/components/static-deflector.tscn" id="5_4fy3a"]
 
@@ -234,6 +233,3 @@ rotation = 3.1415927
 unique_name_in_owner = true
 use_parent_material = true
 sprite_frames = SubResource("SpriteFrames_ahsab")
-
-[node name="OverheadHealthBar" parent="." unique_id=609393363 instance=ExtResource("2_uelcb")]
-unique_name_in_owner = true

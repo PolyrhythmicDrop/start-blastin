@@ -19,7 +19,7 @@ namespace Enemies
             _sprite = GetNode<AnimatedSprite2D>("%Sprite");
         }
 
-        protected override AnimatedSprite2D GetPrimarySprite() => _sprite;
+        public override AnimatedSprite2D GetPrimarySprite() => _sprite;
 
         public override void PlayFireAnimation()
         {

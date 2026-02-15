@@ -76,7 +76,7 @@ public partial class Bumper : EnemyNode
         StartRotateTimer();
     }
 
-    protected override AnimatedSprite2D GetPrimarySprite() => _bodySprite;
+    public override AnimatedSprite2D GetPrimarySprite() => _bodySprite;
 
     private void StartRotateTimer()
     {

@@ -32,7 +32,11 @@ namespace Enemies
     {
         #region Nodes and Components
         protected StatManager _stats;
+
+        public StatManager Stats => _stats;
+
         protected EnemyWeaponComponent _weaponComponent;
+        protected EnemyHealthComponent _healthComponent;
         protected AudioComponent _audioComponent;
         protected CollisionShape2D _shape;
 
@@ -54,8 +58,6 @@ namespace Enemies
         public EntityPath Path => _followPath;
 
         public VisibleOnScreenNotifier2D VisibleNotifier;
-
-        protected OverheadHealthBar _healthBar;
 
         #endregion
 
@@ -82,7 +84,7 @@ namespace Enemies
         // Base stats
         protected float _baseSpeed;
         protected float _baseCrashDamage;
-        protected float _baseMaxHealth;
+
         protected int _fluxReward;
         protected int _byteReward;
 
@@ -137,65 +139,12 @@ namespace Enemies
 
         #endregion
 
-        #region Health
 
-        protected float _currentHealth;
-        protected float _maxHealth => _stats.GetStat(StatType.MaxHealth).CurrentValue;
-        public float CurrentHealth
-        {
-            get => _currentHealth;
-            private set
-            {
-                _currentHealth = value;
-                _healthBar?.SetValues(_maxHealth, _currentHealth);
-            }
-        }
+        public float CurrentHealth => _healthComponent.CurrentHealth;
 
-        public float MaxHealth
-        {
-            get => _maxHealth;
-            set
-            {
-                _stats.UpdateStat(StatType.MaxHealth, Mathf.Max(1, value));
-                _healthBar?.SetValues(_maxHealth, _currentHealth);
-            }
-        }
+        public float MaxHealth => _healthComponent.MaxHealth;
 
-        /// <summary>
-        /// Sets the position of the health bar based on the enemy's current position.
-        /// </summary>
-        protected virtual void SetHealthBarPosition()
-        {
-            _healthBar.SetPosition(_currentGlobalPosition);
-        }
-
-        /// <summary>
-        /// Sets the size of the enemy's health bar based on the size of the enemy's sprite. Override in derived classes.
-        /// </summary>
-        protected virtual void SetHealthBarSize()
-        {
-            AnimatedSprite2D sprite = GetPrimarySprite();
-
-            // Get size of the base sprite
-            SpriteFrames frames = sprite.SpriteFrames ?? null;
-            if (sprite != null)
-            {
-                Rect2I usedRect = frames.GetFrameTexture("default", 0).GetImage().GetUsedRect();
-                _healthBar.SetSizeAndOffset(usedRect.Size);
-            }
-        }
-
-        protected virtual AnimatedSprite2D GetPrimarySprite() => null;
-
-        /// <summary>
-        /// Turn the health bar on and off.
-        /// </summary>
-        public virtual void ToggleHealthBarActive()
-        {
-            _healthBar.ToggleActive();
-        }
-
-        #endregion
+        public virtual AnimatedSprite2D GetPrimarySprite() => null;
 
         #region Init
 
@@ -207,8 +156,8 @@ namespace Enemies
         public virtual void Initialize(EnemyResource enemyResource)
         {
             // Health
-            _baseMaxHealth = enemyResource.MaxHealth;
-            _currentHealth = _baseMaxHealth;
+            _healthComponent = new();
+            _healthComponent.Initialize(this, enemyResource);
 
             // Currency
             _fluxReward = enemyResource.FluxReward;
@@ -238,7 +187,7 @@ namespace Enemies
             _stats = new();
             _stats.AddStat(StatType.CrashDamage, _baseCrashDamage);
             _stats.AddStat(StatType.Speed, _baseSpeed);
-            _stats.AddStat(StatType.MaxHealth, _baseMaxHealth);
+            _stats.AddStat(StatType.MaxHealth, _healthComponent.BaseMaxHealth);
             _stats.AddStat(StatType.FireRate, _weaponComponent.BaseFireRate);
             _stats.AddStat(StatType.Damage, _weaponComponent.BaseWeaponDamage);
         }
@@ -248,9 +197,11 @@ namespace Enemies
             base._Ready();
             AddToGroup("enemies");
 
+            // Initialize the collision shape and the visible notifier node
             _shape = GetNode<CollisionShape2D>("%CollisionShape2D");
             InitVisibleNotifier();
 
+            // Add the weapon component
             AddChild(_weaponComponent);
 
             // Initialize position tracking
@@ -262,11 +213,10 @@ namespace Enemies
             // Call the derived class's Ready steps.
             OnBaseReadyComplete();
 
-            // Initialize the health bar.
-            _healthBar = GetNode<OverheadHealthBar>("%OverheadHealthBar");
-            _healthBar.Initialize(this);
-            SetHealthBarSize();
+            // Add the health component after derived Ready steps so the health bar can access the enemy's sprite
+            AddChild(_healthComponent);
 
+            // Start following the proscribed path
             FollowPath(_followSpeed);
         }
 
@@ -275,6 +225,9 @@ namespace Enemies
         /// </summary>
         protected virtual void OnBaseReadyComplete() { }
 
+        /// <summary>
+        /// Initializes the <see cref="VisibleOnScreenNotifier2D"/> node for this enemy.
+        /// </summary>
         protected void InitVisibleNotifier()
         {
             VisibleNotifier = new() { Rect = _shape.Shape.GetRect() };
@@ -452,12 +405,16 @@ namespace Enemies
             float waveLogMultiplier = Mathf.Log(1 + wave);
             float waveSqrtMultiplier = Mathf.Sqrt(wave) * 0.1f;
 
+            // float newMaxHealth =
+            //     _baseMaxHealth * (1 + (scaler.MaxHealthModifier * waveLogMultiplier));
             float newMaxHealth =
-                _baseMaxHealth * (1 + (scaler.MaxHealthModifier * waveLogMultiplier));
+                _healthComponent.BaseMaxHealth
+                * (1 + (scaler.MaxHealthModifier * waveLogMultiplier));
             SetStat(StatType.MaxHealth, newMaxHealth);
 
             // Fill the enemy's health.
-            CurrentHealth = MaxHealth;
+            _healthComponent.CurrentHealth = MaxHealth;
+            // CurrentHealth = MaxHealth;
 
             float newCrashDamage =
                 _baseCrashDamage * (1 + (scaler.CrashDamageModifier * waveLogMultiplier));
@@ -466,8 +423,6 @@ namespace Enemies
             float newFollowSpeed = _baseSpeed * (1 + (scaler.SpeedModifier * waveSqrtMultiplier));
             SetStat(StatType.Speed, newFollowSpeed);
 
-            // float newDamage =
-            //     _baseWeaponDamage * (1 + (scaler.WeaponDamageModifier * waveSqrtMultiplier));
             float newDamage =
                 _weaponComponent.BaseWeaponDamage
                 * (1 + (scaler.WeaponDamageModifier * waveSqrtMultiplier));
@@ -496,79 +451,46 @@ namespace Enemies
         /// </summary>
         /// <param name="damage">The amount of damage to take.</param>
         /// <param name="playerId">If a player caused the damage, the <see cref="Player.PlayerId"/> of the damaging player.</param>
-        public void TakeDamage(float damage, int? playerId = null)
-        {
-            if (_alive)
-            {
-                // Play the hit sound
-                // AudioService.Instance.PlaySound(_sounds?.Hit, this, volume: -6);
-                _audioComponent.PlayHitSound();
+        public void TakeDamage(float damage, int? playerId = null) =>
+            _healthComponent.TakeDamage(damage, playerId);
 
-                if (damage != 0)
-                {
-                    PlayDamageAnimation();
-                    IndicatorFactory.CreateTextIndicator(
-                        (MathF.Round(damage, 1) * -1).ToString(),
-                        GlobalPosition,
-                        parent: this
-                    );
-                    CurrentHealth -= damage;
-                }
+        public void ToggleHealthBarActive() => _healthComponent.ToggleHealthBarActive();
 
-                if (_currentHealth <= 0)
-                {
-                    CurrentHealth = 0;
-                    Die(playerId);
-                }
-            }
-        }
-
-        public void Heal(float healAmount)
-        {
-            // Don't do anything if current health is greater than max health
-            if (_currentHealth >= _maxHealth)
-            {
-                return;
-            }
-            CurrentHealth = Mathf.Min(_currentHealth + healAmount, MaxHealth);
-        }
-
-        // /// <summary>
-        // /// Fires the enemy's weapon if the enemy is on the screen.
-        // /// </summary>
-        // protected virtual void FireWeapon()
         // {
-        //     // // Don't fire if we're dead or not on screen.
-        //     // if (!_alive || !VisibleNotifier.IsOnScreen())
-        //     // {
-        //     //     return;
-        //     // }
+        //     if (_alive)
+        //     {
+        //         // Play the hit sound
+        //         // AudioService.Instance.PlaySound(_sounds?.Hit, this, volume: -6);
+        //         _audioComponent.PlayHitSound();
 
-        //     // _audioComponent.PlayFireSound();
-        //     // PlayFireAnimation();
-        //     // _weapon.Fire();
-        //     // _weapon.FireTimer.Start(MathF.Round(_weapon.Stats.FireRate, 4));
+        //         if (damage != 0)
+        //         {
+        //             PlayDamageAnimation();
+        //             IndicatorFactory.CreateTextIndicator(
+        //                 (MathF.Round(damage, 1) * -1).ToString(),
+        //                 GlobalPosition,
+        //                 parent: this
+        //             );
+        //             CurrentHealth -= damage;
+        //         }
+
+        //         if (_currentHealth <= 0)
+        //         {
+        //             CurrentHealth = 0;
+        //             Die(playerId);
+        //         }
+        //     }
         // }
 
-        // /// <summary>
-        // /// Called when the BurstCooldownTimer ends.
-        // /// </summary>
-        // protected virtual void BurstFire()
-        // {
-        //     _weapon.BurstFireTimer.Start(_weapon.Stats.BurstTime);
-        //     FireWeapon();
-        //     DebugLogger.LogMessage(
-        //         $"BurstFireTimer wait time: {_weapon.BurstFireTimer.WaitTime} | FireTimer wait time: {_weapon.FireTimer.WaitTime}"
-        //     );
-        // }
+        public void Heal(float healAmount) => _healthComponent.Heal(healAmount);
 
-        // /// <summary>
-        // /// Called when the BurstFireTimer ends.
-        // /// </summary>
-        // protected virtual void OnBurstFireEnd()
         // {
-        //     _weapon.FireTimer.Stop();
-        //     _weapon.BurstCooldownTimer.Start(_weapon.Stats.BurstCooldown);
+        //     // Don't do anything if current health is greater than max health
+        //     if (_currentHealth >= _maxHealth)
+        //     {
+        //         return;
+        //     }
+        //     CurrentHealth = Mathf.Min(_currentHealth + healAmount, MaxHealth);
         // }
 
         /// <summary>
@@ -635,7 +557,7 @@ namespace Enemies
         /// </summary>
         public async void FreeEnemy()
         {
-            _healthBar.ToggleBarVisibility(false);
+            _healthComponent.HealthBar.ToggleBarVisibility(false);
 
             // Release all tethered projectiles, if any.
             // _weapon.ReleaseAllTetheredProjectiles();
@@ -707,7 +629,7 @@ namespace Enemies
         {
             if (_motion != Vector2.Zero)
             {
-                SetHealthBarPosition();
+                _healthComponent.SetHealthBarPosition();
             }
 
             // Pre-processing for derived classes

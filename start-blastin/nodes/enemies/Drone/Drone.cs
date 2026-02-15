@@ -23,7 +23,7 @@ namespace Enemies
             _destruction = _spriteContainer.GetNode<AnimatedSprite2D>("%Destruction");
         }
 
-        protected override AnimatedSprite2D GetPrimarySprite() => _body;
+        public override AnimatedSprite2D GetPrimarySprite() => _body;
 
         protected override void OnProcessUpdate(double delta)
         {
@@ -38,13 +38,10 @@ namespace Enemies
                 if (!_weaponComponent.IsFiring)
                 {
                     _weaponComponent.StartFiring();
-                    // FireWeapon();
-                    // _weapon.FireTimer.Start(_weapon.Stats.FireRate);
                 }
             }
             else if (!_visionRay.IsColliding() && _weaponComponent.IsFiring)
             {
-                // _weapon.FireTimer.Stop();
                 _weaponComponent.StopFiring();
             }
         }

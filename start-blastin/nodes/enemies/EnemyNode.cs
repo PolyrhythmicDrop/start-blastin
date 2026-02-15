@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,7 +11,6 @@ using Factories;
 using Godot;
 using Interfaces;
 using Stats;
-using UI;
 using Utility;
 using WaveManagement;
 using Weapons;
@@ -85,6 +83,7 @@ namespace Enemies
         protected float _baseSpeed;
         protected float _baseCrashDamage;
 
+        // Currency
         protected int _fluxReward;
         protected int _byteReward;
 
@@ -98,16 +97,14 @@ namespace Enemies
         private Callable _screenExitCallable;
 
         protected bool _alive = true;
+        public bool IsAlive => _alive;
+
         protected bool _atPathEnd = false;
 
         /// <summary>
         /// If part of a squadron, whether or not the enemy has split from the squadron.
         /// </summary>
         private bool _split = false;
-
-        public bool IsAlive => _alive;
-
-        public bool DeflectActive { get; set; }
 
         /// <summary>
         /// Whether or not the enemy is part of a squadron. Enables squadron behavior, like tweening out of the formation at a set time.
@@ -120,14 +117,15 @@ namespace Enemies
         public Vector2? SquadronPosition { get; set; }
 
         /// <summary>
-        /// Whether or not the enemy is currently visible on the screen.
-        /// </summary>
-        public bool OnScreen { get; set; }
-
-        /// <summary>
         /// The point in the enemy's path at which they split off from the main squadron point into their <see cref="SquadronPosition"/>.
         /// </summary>
         public float SplitPoint;
+
+        /// <summary>
+        /// Whether or not the enemy is currently visible on the screen.
+        /// </summary>
+        public bool OnScreen { get; set; }
+        public bool DeflectActive { get; set; }
 
         #endregion
 

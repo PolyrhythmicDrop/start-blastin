@@ -308,12 +308,13 @@ namespace Projectiles
         {
             if (active)
             {
+                // _sourceWeapon.ProjectileParent.CallDeferred(Node.MethodName.AddChild, this);
                 _sourceWeapon.ProjectileParent.AddChild(this);
                 _sourceWeapon.ActiveProjectileCount++;
             }
             else
             {
-                // Add items from projectile pool
+                // _sourceWeapon.ProjectileParent.CallDeferred(Node.MethodName.RemoveChild, this);
                 _sourceWeapon.ProjectileParent.RemoveChild(this);
                 _sourceWeapon.ActiveProjectileCount--;
             }

@@ -242,13 +242,14 @@ metadata/_custom_type_script = "uid://bekbgunrmk3ad"
 
 [node name="SwoopDetectArea" type="Area2D" parent="." unique_id=1823773550]
 unique_name_in_owner = true
-process_mode = 4
 collision_layer = 0
 input_pickable = false
 monitorable = false
 
 [node name="SwoopDetectPolygon" type="CollisionPolygon2D" parent="SwoopDetectArea" unique_id=1994043379]
+unique_name_in_owner = true
 polygon = PackedVector2Array(700, -400, 65, -85, 65, 85, 700, 400)
+disabled = true
 
 [node name="FireArea" type="Area2D" parent="." unique_id=840870467]
 unique_name_in_owner = true

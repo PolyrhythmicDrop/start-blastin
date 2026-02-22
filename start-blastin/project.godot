@@ -42,6 +42,7 @@ EventBus="*res://architecture/autoloads/EventBus.cs"
 ServiceManager="*res://architecture/services/ServiceManager.cs"
 AudioService="*res://architecture/services/AudioService.cs"
 LimboConsole="*uid://dyxornv8vwibg"
+RuntimeDebugTools="*uid://c6bkea7amdoay"
 
 [debug]
 
@@ -66,7 +67,7 @@ run/main_run_args="--debug-stringnames"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg", "res://addons/limbo_console/plugin.cfg", "res://addons/resources_spreadsheet_view/plugin.cfg", "res://addons/safe_resource_picker/plugin.cfg", "res://addons/subresource_inspector/plugin.cfg")
+enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg", "res://addons/limbo_console/plugin.cfg", "res://addons/resources_spreadsheet_view/plugin.cfg", "res://addons/runtime_debug_tools/plugin.cfg", "res://addons/safe_resource_picker/plugin.cfg", "res://addons/subresource_inspector/plugin.cfg")
 
 [file_customization]
 

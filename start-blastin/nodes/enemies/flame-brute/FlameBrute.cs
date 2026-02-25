@@ -153,8 +153,8 @@ namespace Enemies
 
             _swooping = true;
 
-            _swoopEndPoint = Position;
-            _swoopTargetPoint = ToLocal(body.GlobalPosition);
+            _swoopEndPoint = GlobalPosition;
+            _swoopTargetPoint = body.GlobalPosition;
 
             await StartSwoop();
         }
@@ -194,11 +194,13 @@ namespace Enemies
         /// <param name="swoopFollowNode"></param>
         private void SetSwoopNodes(out Path2D swoopPathNode, out PathFollow2D swoopFollowNode)
         {
+            Node2D parent = GetParent<Node2D>();
+
             // Create the curve
             Curve2D swoopCurve = new();
-            swoopCurve.AddPoint(Position);
-            swoopCurve.AddPoint(_swoopTargetPoint);
-            swoopCurve.AddPoint(_swoopEndPoint);
+            swoopCurve.AddPoint(parent.ToLocal(GlobalPosition));
+            swoopCurve.AddPoint(parent.ToLocal(_swoopTargetPoint));
+            swoopCurve.AddPoint(parent.ToLocal(_swoopEndPoint));
 
             // Create the pathing nodes.
             swoopPathNode = new() { Curve = swoopCurve };
@@ -397,6 +399,11 @@ namespace Enemies
             return c;
         }
 
+        /// <summary>
+        /// Tweens the follow ratio of the patrol path created using <see cref="SetPatrolCurve"/>,
+        /// Loops after reaching a certain point.
+        /// </summary>
+        /// <param name="speed"></param>
         protected void FollowPatrolPath(float speed)
         {
             if (_patrolStarted)

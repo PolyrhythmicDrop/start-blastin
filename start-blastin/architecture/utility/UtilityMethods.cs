@@ -130,6 +130,12 @@ namespace Utility
             return children;
         }
 
+        /// <summary>
+        /// Gets the duration of a specific animation of an AnimatedSprite2D.
+        /// </summary>
+        /// <param name="animSprite"></param>
+        /// <param name="animation">The name of the animation.</param>
+        /// <returns></returns>
         public static float? GetAnimationDuration(
             AnimatedSprite2D animSprite,
             string animation = "default"
@@ -175,6 +181,19 @@ namespace Utility
                 DebugLogger.LogMessage(e.Message, true, true);
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Gets the progress ratio of a point near or on a Curve2D.
+        /// </summary>
+        /// <param name="curve">The Curve2D.</param>
+        /// <param name="position">The point (in local coordinates) to calculate the progress ratio from.</param>
+        /// <returns></returns>
+        public static float GetCurveProgressRatio(Curve2D curve, Vector2 position)
+        {
+            float offset = curve.GetClosestOffset(position);
+            float length = curve.GetBakedLength();
+            return offset / length;
         }
     }
 }

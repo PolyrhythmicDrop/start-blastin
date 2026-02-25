@@ -9,4 +9,3 @@ script = ExtResource("1_g26qx")
 
 [node name="PathFollow2D" type="PathFollow2D" parent="." unique_id=1259970568]
 unique_name_in_owner = true
-rotation = 1.5707964

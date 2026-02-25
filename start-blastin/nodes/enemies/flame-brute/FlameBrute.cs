@@ -39,6 +39,8 @@ namespace Enemies
         private Timer _swoopEnableDelay;
         private Tween _swoopTween;
 
+        private const float NINETY_DEG_RAD = 1.5708f;
+
         private const float SWOOP_DELAY_TIME = 2;
         private const float RETURN_ROTATE_WEIGHT = 0.08f;
         private const float RETURN_EASE_CURVE = 2.5f;
@@ -47,47 +49,78 @@ namespace Enemies
 
         public override AnimatedSprite2D GetPrimarySprite() => _bodySprite;
 
+        #region EnemyNode Overrides
         protected override void OnBaseReadyComplete()
         {
+            // Set the sprite nodes
             _spriteContainer = GetNode<Node2D>("%SpriteContainer");
-
             _bodySprite = _spriteContainer.GetNode<AnimatedSprite2D>("%BodySprite");
             _lArmSprite = _spriteContainer.GetNode<AnimatedSprite2D>("%LArmSprite");
             _rArmSprite = _spriteContainer.GetNode<AnimatedSprite2D>("%RArmSprite");
 
+            // Set the area and collision shape nodes
             _swoopArea = GetNode<Area2D>("%SwoopDetectArea");
             _swoopPoly = GetNode<CollisionPolygon2D>("%SwoopDetectPolygon");
             _fireArea = GetNode<Area2D>("%FireArea");
 
+            // Set the initial curve and path settings
             _startRotation = GlobalRotation;
             _followPath.Curve = SetEnterCurve();
             _followPath.PathFollow.Rotates = false;
 
+            // Connect area signals
             _swoopArea.BodyEntered += OnBodyEnteredSwoopArea;
             _fireArea.BodyEntered += OnBodyEnteredFireArea;
             _fireArea.BodyExited += OnBodyExitedFireArea;
 
+            // Set the swoop delay timer
             SetSwoopDelay();
         }
 
-        private Curve2D SetEnterCurve()
+        /// <summary>
+        /// Called after Ready to start tweening the enter curve created with <see cref="SetEnterCurve"/>.
+        /// </summary>
+        /// <param name="speed"></param>
+        protected override void FollowPath(float speed)
         {
-            Curve2D c = new() { BakeInterval = 100 };
-            float startLength = MathF.Round(GD.RandRange(200, 500), 0);
-            Vector2 endPoint = Mathf.RadToDeg(_startRotation) switch
-            {
-                0 => new(startLength, 0),
-                90 => new(0, startLength),
-                180 => new(-startLength, 0),
-                270 => new(0, -startLength),
-                _ => new(startLength, 0),
-            };
-            c.AddPoint(Vector2.Zero);
-            c.AddPoint(endPoint);
+            float pathLength = _followPath.Curve.GetBakedLength();
+            float duration = Mathf.Max(pathLength / speed, MIN_FOLLOW_TWEEN_DURATION);
 
-            return c;
+            if (_followTween != null)
+            {
+                _followTween.Kill();
+            }
+
+            _followTween = CreateTween();
+            _followTween.TweenProperty(_followPath, "FollowRatio", 0.98f, duration);
+            // _followTween.TweenCallback(Callable.From(StartPatrol));
+
+            _followTween.Finished += async () =>
+            {
+                await StartPatrol();
+            };
         }
 
+        public override void PlayFireAnimation()
+        {
+            if (_bodySprite.Animation != "fire")
+            {
+                _bodySprite.Play("fire");
+            }
+        }
+
+        protected override Task PlayDeathSequence()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+
+        #region Swoop
+        /// <summary>
+        /// Sets up the swoop delay timer, including adding it to the scene tree, connecting the timeout signal, adding the timer to the tree, and starting the timer.
+        /// </summary>
         private void SetSwoopDelay()
         {
             _swoopEnableDelay = new()
@@ -101,13 +134,16 @@ namespace Enemies
 
             _swoopEnableDelay.Timeout += () =>
             {
-                DebugLogger.LogMessage($"Swoop enable delay timer timed out!");
                 _swoopPoly.SetDeferred(CollisionPolygon2D.PropertyName.Disabled, false);
             };
 
             _swoopEnableDelay.Start();
         }
 
+        /// <summary>
+        /// Callback for when the player enters the swoop area.
+        /// </summary>
+        /// <param name="body"></param>
         private async void OnBodyEnteredSwoopArea(Node2D body)
         {
             if (_swooping)
@@ -123,11 +159,14 @@ namespace Enemies
             await StartSwoop();
         }
 
+        /// <summary>
+        /// Creates the swooping nodes and the swoop path. Calls <see cref="TweenSwoop"/> .
+        /// </summary>
         private async Task StartSwoop()
         {
-            if (_followTween.IsValid() && _followTween.IsRunning())
+            if (_patrolTween != null && _patrolTween.IsValid() && _patrolTween.IsRunning())
             {
-                _followTween.Pause();
+                _patrolTween.Pause();
             }
 
             if (_bodySprite.Animation != "fire")
@@ -137,7 +176,6 @@ namespace Enemies
 
             // Disable the swoop detection area
             _swoopPoly.SetDeferred(CollisionPolygon2D.PropertyName.Disabled, true);
-            DebugLogger.LogMessage($"Collision polygon disabled? {_swoopPoly.Disabled}");
 
             SetSwoopNodes(out Path2D swoopPathNode, out PathFollow2D swoopFollowNode);
 
@@ -147,6 +185,13 @@ namespace Enemies
             TweenSwoop(swoopPathNode, swoopFollowNode);
         }
 
+        /// <summary>
+        /// Creates the <see cref="Curve2D"/> for the swoop using the enemy's current position and the swoop target position.
+        /// Also creates new <see cref="Path2D"/>, <see cref="PathFollow2D"/>, and <see cref="RemoteTransform2D"/> nodes and adds them all to the scene tree.
+        /// Adds this enemy as the path for the RemoteTransform2D note.
+        /// </summary>
+        /// <param name="swoopPathNode"></param>
+        /// <param name="swoopFollowNode"></param>
         private void SetSwoopNodes(out Path2D swoopPathNode, out PathFollow2D swoopFollowNode)
         {
             // Create the curve
@@ -170,6 +215,11 @@ namespace Enemies
             remote.RemotePath = remote.GetPathTo(this, true);
         }
 
+        /// <summary>
+        /// Runs the swoop tween based on the passed Path2D and PathFollow2D nodes.
+        /// </summary>
+        /// <param name="swoopPath"></param>
+        /// <param name="swoopFollow"></param>
         private void TweenSwoop(Path2D swoopPath, PathFollow2D swoopFollow)
         {
             if (_swoopTween != null && _swoopTween.IsValid())
@@ -187,6 +237,10 @@ namespace Enemies
             _swoopTween.TweenCallback(Callable.From(() => EndSwoop(swoopPath)));
         }
 
+        /// <summary>
+        /// Ends the swoop animation and restarts the swoop delay timer.
+        /// </summary>
+        /// <param name="swoopPath"></param>
         private void EndSwoop(Path2D swoopPath)
         {
             swoopPath.QueueFree();
@@ -196,17 +250,19 @@ namespace Enemies
                 _weaponComponent.CallDeferred(EnemyWeaponComponent.MethodName.StopFiring);
                 _bodySprite.Play("default");
             }
-
-            if (!_followTween.IsRunning())
-            {
-                _followTween.Play();
-            }
-
             _swooping = false;
+
+            if (!_patrolTween.IsRunning())
+            {
+                _patrolTween.Play();
+            }
 
             _swoopEnableDelay.Start();
         }
 
+        #endregion
+
+        #region Area Callbacks
         private void OnBodyEnteredFireArea(Node2D body)
         {
             // If we already have a target or our current target is the same body that just entered, don't do anything.
@@ -256,91 +312,135 @@ namespace Enemies
             }
         }
 
-        private void StartPatrol()
+        #endregion
+
+        #region Patrol
+
+        /// <summary>
+        /// Creates the initial Curve2D.
+        /// </summary>
+        /// <returns>A Curve2D from the spawner to the patrol point.</returns>
+        private Curve2D SetEnterCurve()
+        {
+            Curve2D c = new() { BakeInterval = 100 };
+            float startLength = MathF.Round(GD.RandRange(200, 500), 0);
+            Vector2 endPoint = new(0, startLength);
+            c.AddPoint(Vector2.Zero);
+            c.AddPoint(endPoint);
+
+            return c;
+        }
+
+        /// <summary>
+        /// Starts the patrol behavior, including setting the <see cref="_patrolStarted"/> boolean and calling <see cref="SetPatrolCurve"/> to create the patrol curve.
+        /// </summary>
+        /// <returns></returns>
+        private async Task StartPatrol()
         {
             if (!_patrolStarted)
             {
-                if (_followTween != null || _followTween.IsRunning())
+                if (_followTween != null && _followTween.IsValid())
                 {
                     _followTween.Kill();
                 }
 
                 _patrolStarted = true;
                 _followPath.GlobalPosition = GlobalPosition;
-                _followPath.Curve = SetPatrolCurve();
 
-                // Set follow ratio to where we are in the curve
-                var offset = _followPath.Curve.GetClosestOffset(Position);
-                var length = _followPath.Curve.GetBakedLength();
-                var ratio = offset / length;
+                _followPath.Curve = await SetPatrolCurve();
+                _followPath.FollowRatio = UtilityMethods.GetCurveProgressRatio(
+                    _followPath.Curve,
+                    Position
+                );
 
-                DebugLogger.LogMessage($"Offset: {offset} | Length: {length} | Ratio: {ratio}");
-
-                _followPath.FollowRatio = ratio;
-
-                // _followPath.FollowRatio = 0;
                 FollowPatrolPath(_followSpeed);
             }
         }
 
-        private Curve2D SetPatrolCurve()
+        /// <summary>
+        /// Creates and returns the patrol curve based on the enemy's starting rotation and spawner position.
+        /// </summary>
+        /// <returns>A <see cref="Curve2D"/> for patrolling.</returns>
+        private async Task<Curve2D> SetPatrolCurve()
         {
             Vector2 viewSize = GetViewportRect().Size;
-            float startDeg = Mathf.RadToDeg(_startRotation);
-            Curve2D c = new() { BakeInterval = 100 };
-            // c.AddPoint(Vector2.Zero);
 
+            // Get posmod for the starting rotation in degrees (like modulo, but "wraps around" for negative numbers)
+            float normDeg = Mathf.PosMod(Mathf.RadToDeg(_startRotation), 360f);
+            // Round to nearest 90 degree interval
+            float startDeg = MathF.Round(normDeg / 90f) * 90f % 360f;
+            // Convert back to radians to use in Godot methods
+            float startRad = Mathf.DegToRad(startDeg);
+
+            Curve2D c = new() { BakeInterval = 50 };
+
+            // Create edge points based on starting rotation (basically, which side of the screen the enemy spawns from and the enemy's orientation), then convert those to local space for use in the curve.
             Vector2 edgePoint1 = startDeg switch
             {
-                90 or 180 => new(viewSize.X - 200, GlobalPosition.Y),
-                0 or 270 => new(GlobalPosition.X, viewSize.Y - 200),
-                _ => new(600, 600),
+                90 or 270 => ToLocal(new(viewSize.X - 200, GlobalPosition.Y)).Rotated(startRad),
+                0 or 180 => ToLocal(new(GlobalPosition.X, viewSize.Y - 200))
+                    .Rotated(NINETY_DEG_RAD),
+                _ => ToLocal(new(600, 600)).Rotated(startRad),
             };
 
             Vector2 edgePoint2 = startDeg switch
             {
-                90 or 180 => new(200, GlobalPosition.Y),
-                0 or 270 => new(GlobalPosition.X, 200),
-                _ => new(600, 600),
+                90 or 270 => ToLocal(new(200, GlobalPosition.Y)).Rotated(startRad),
+                0 or 180 => ToLocal(new(GlobalPosition.X, 200)).Rotated(NINETY_DEG_RAD),
+                _ => ToLocal(new(600, 600)).Rotated(startRad),
             };
 
-            c.AddPoint(ToLocal(edgePoint1).Rotated(-_startRotation));
-            c.AddPoint(ToLocal(edgePoint2).Rotated(-_startRotation));
+            // Add the points to the curve.
+            c.AddPoint(edgePoint1);
+            c.AddPoint(edgePoint2);
+
             return c;
         }
 
         protected void FollowPatrolPath(float speed)
         {
-            float pathLength = _followPath.Curve.GetBakedLength();
-            float duration = Mathf.Max(pathLength / speed, MIN_FOLLOW_TWEEN_DURATION);
-
-            if (_followTween != null && _followTween.IsRunning())
+            if (_patrolStarted)
             {
-                _followTween.Kill();
-            }
+                if (_patrolTween != null && _patrolTween.IsRunning())
+                {
+                    _patrolTween.Kill();
+                }
 
-            _followTween = CreateTween()
-                .SetLoops()
-                .SetEase(Tween.EaseType.InOut)
-                .SetTrans(Tween.TransitionType.Sine);
-            _followTween.TweenProperty(_followPath, "FollowRatio", 0.95f, duration);
-            _followTween.TweenProperty(_followPath, "FollowRatio", 0, duration);
+                // Get the total path length
+                float pathLength = _followPath.Curve.GetBakedLength();
+
+                // Get the base duration using the total path length
+                float baseDuration = MathF.Max(pathLength / speed, MIN_FOLLOW_TWEEN_DURATION);
+
+                float initRatio = _followPath.PathFollow.ProgressRatio;
+                // Get the remaining length using the current follow ratio so we can calucate the initial duration
+                float remainingLength = pathLength - (initRatio * pathLength);
+
+                // Calculate the duration for the remaining length.
+                float initDuration = MathF.Max(remainingLength / speed, MIN_FOLLOW_TWEEN_DURATION);
+
+                // Create the looping subtween
+                var loopSubTween = CreateTween()
+                    .SetEase(Tween.EaseType.InOut)
+                    .SetTrans(Tween.TransitionType.Sine)
+                    .SetLoops();
+                loopSubTween.TweenProperty(_followPath, "FollowRatio", 0, baseDuration);
+                loopSubTween.TweenProperty(_followPath, "FollowRatio", 0.95f, baseDuration);
+
+                // Create the tween
+                _patrolTween = CreateTween()
+                    .SetEase(Tween.EaseType.InOut)
+                    .SetTrans(Tween.TransitionType.Sine);
+                // Set the initial movement before we start the loop.
+                _patrolTween
+                    .TweenProperty(_followPath, "FollowRatio", 0.95f, initDuration)
+                    .FromCurrent();
+                _patrolTween.TweenSubtween(loopSubTween);
+            }
         }
 
-        protected override void FollowPath(float speed)
-        {
-            float pathLength = _followPath.Curve.GetBakedLength();
-            float duration = Mathf.Max(pathLength / speed, MIN_FOLLOW_TWEEN_DURATION);
+        #endregion
 
-            if (_followTween != null)
-            {
-                _followTween.Kill();
-            }
-
-            _followTween = CreateTween();
-            _followTween.TweenProperty(_followPath, "FollowRatio", 0.98f, duration);
-            _followTween.TweenCallback(Callable.From(StartPatrol));
-        }
 
         private void RotateToTarget(double delta, Vector2 targetPoint)
         {
@@ -360,19 +460,6 @@ namespace Enemies
                 _startRotation,
                 Mathf.Ease(RETURN_ROTATE_WEIGHT, RETURN_EASE_CURVE)
             );
-        }
-
-        public override void PlayFireAnimation()
-        {
-            if (_bodySprite.Animation != "fire")
-            {
-                _bodySprite.Play("fire");
-            }
-        }
-
-        protected override Task PlayDeathSequence()
-        {
-            throw new NotImplementedException();
         }
     }
 }

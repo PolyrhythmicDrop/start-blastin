@@ -21,6 +21,8 @@ namespace Enemies
         private CollisionPolygon2D _swoopPoly;
         private Area2D _fireArea;
 
+        private GpuParticles2D _destructParticles;
+
         private bool _patrolStarted = false;
         private Tween _patrolTween;
 
@@ -46,6 +48,7 @@ namespace Enemies
         private const float RETURN_EASE_CURVE = 2.5f;
         private const float TARGET_ROTATE_WEIGHT = 0.15f;
         private const float TARGET_EASE_CURVE = 3.5f;
+        private const float DEATH_DURATION = 2.0f;
 
         public override AnimatedSprite2D GetPrimarySprite() => _bodySprite;
 
@@ -62,6 +65,9 @@ namespace Enemies
             _swoopArea = GetNode<Area2D>("%SwoopDetectArea");
             _swoopPoly = GetNode<CollisionPolygon2D>("%SwoopDetectPolygon");
             _fireArea = GetNode<Area2D>("%FireArea");
+
+            // Set the destruction particles
+            _destructParticles = GetNode<GpuParticles2D>("%DestructParticles");
 
             // Set the initial curve and path settings
             _startRotation = GlobalRotation;
@@ -93,7 +99,6 @@ namespace Enemies
 
             _followTween = CreateTween();
             _followTween.TweenProperty(_followPath, "FollowRatio", 0.98f, duration);
-            // _followTween.TweenCallback(Callable.From(StartPatrol));
 
             _followTween.Finished += async () =>
             {
@@ -109,9 +114,41 @@ namespace Enemies
             }
         }
 
-        protected override Task PlayDeathSequence()
+        protected override async Task PlayDeathSequence()
         {
-            throw new NotImplementedException();
+            // Stop all tweens to stop moving
+            if (_swoopTween != null && _swoopTween.IsValid())
+            {
+                _swoopTween.Kill();
+            }
+            if (_patrolTween != null && _patrolTween.IsValid())
+            {
+                _patrolTween.Kill();
+            }
+            if (_followTween != null && _followTween.IsValid())
+            {
+                _followTween.Kill();
+            }
+
+            // Disable all the detection areas.
+            _swoopArea.Monitoring = false;
+            _fireArea.Monitoring = false;
+
+            // Tween the sprite modulation to white.
+            float stepDur = DEATH_DURATION / 2;
+            Color white = new(18.892f, 18.892f, 18.892f);
+            Color transparent = white;
+            transparent.A = 0;
+
+            Tween tween = CreateTween();
+            tween.TweenProperty(_destructParticles, "emitting", true, 0);
+            tween.TweenProperty(_spriteContainer, "modulate", white, stepDur);
+            tween.TweenProperty(_spriteContainer, "modulate", transparent, stepDur);
+            tween.TweenInterval(DEATH_DURATION / 4);
+            tween.TweenProperty(_destructParticles, "emitting", false, 0);
+            tween.TweenInterval(DEATH_DURATION);
+
+            await ToSignal(tween, Tween.SignalName.Finished);
         }
 
         #endregion

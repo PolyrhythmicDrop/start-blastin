@@ -153,9 +153,6 @@ public partial class Bumper : EnemyNode
 
     protected override async Task PlayDeathSequence()
     {
-        // // Make the base and engine sprites invisible.
-        // _spriteContainer.Visible = false;
-
         // Remove collision on shields
         _deflectorN.ProcessMode = ProcessModeEnum.Disabled;
         _deflectorS.ProcessMode = ProcessModeEnum.Disabled;

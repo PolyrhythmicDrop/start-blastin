@@ -19,7 +19,6 @@ metadata/_custom_type_script = "uid://ci68p6xph38co"
 [sub_resource type="Resource" id="Resource_b07x4"]
 script = ExtResource("3_3dipg")
 SpawnSteps = Array[ExtResource("1_mswl7")]([SubResource("Resource_x3lrh")])
-Location = 2
 metadata/_custom_type_script = "uid://bneh110nwl6dl"
 
 [resource]

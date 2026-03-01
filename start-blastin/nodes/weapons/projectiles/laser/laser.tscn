@@ -98,6 +98,14 @@ shader_parameter/repeat_y = 1.0
 shader_parameter/row_offset = 0.0
 shader_parameter/texture_to_scroll = ExtResource("4_dfxnm")
 
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_swn5a"]
+particle_flag_disable_z = true
+flatness = 0.878
+initial_velocity_min = 96.439995
+initial_velocity_max = 203.26999
+gravity = Vector3(0, 0, 0)
+scale_max = 4.0
+
 [node name="Laser" type="Area2D" unique_id=391111106]
 monitorable = false
 script = ExtResource("1_p5523")
@@ -114,7 +122,8 @@ shape = SubResource("CapsuleShape2D_70c7y")
 
 [node name="BarrelParticles" type="GPUParticles2D" parent="." unique_id=1172194992]
 unique_name_in_owner = true
-amount = 20
+visible = false
+amount = 10
 texture = ExtResource("2_swn5a")
 lifetime = 0.5
 randomness = 0.2
@@ -150,3 +159,10 @@ joint_mode = 2
 begin_cap_mode = 2
 end_cap_mode = 2
 antialiased = true
+
+[node name="ImpactParticles" type="GPUParticles2D" parent="." unique_id=1284923742]
+unique_name_in_owner = true
+z_index = 5
+amount = 20
+lifetime = 0.2
+process_material = SubResource("ParticleProcessMaterial_swn5a")

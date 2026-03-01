@@ -23,8 +23,12 @@ namespace Projectiles
         private Color _baseLineMod;
 
         private GpuParticles2D _barrelParticles;
+        private GpuParticles2D _impactParticles;
+
+        private bool _impactActive;
 
         private Tween _laserTween;
+        private Tween _impactTween;
 
         private Barrel _tBarrel;
 
@@ -80,6 +84,10 @@ namespace Projectiles
             _barrelParticles.Position = new(START_DISTANCE / 2, 0);
             _barrelParticles.Emitting = false;
 
+            _impactParticles = GetNode<GpuParticles2D>("%ImpactParticles");
+            _impactParticles.Visible = false;
+            _impactParticles.Emitting = false;
+
             _bodyLine.Visible = false;
             _boltLine.Visible = false;
             InitLinePoints();
@@ -116,6 +124,7 @@ namespace Projectiles
             }
             else
             {
+                DeactivateImpactParticles();
                 TweenDeactivation();
 
                 if (_laserTween != null)
@@ -222,7 +231,9 @@ namespace Projectiles
 
             Ray.ForceRaycastUpdate();
 
-            if (Ray.IsColliding())
+            bool colliding = Ray.IsColliding();
+
+            if (colliding)
             {
                 GodotObject collider = Ray.GetCollider();
                 if (collider is Projectile colliderProj && colliderProj.IgnoreOtherProjectiles)
@@ -234,10 +245,59 @@ namespace Projectiles
                     RaiseCollision(this, CalculateRayCollisionData(delta, collider));
                     laserEnd = ToLocal(Ray.GetCollisionPoint());
                     Ray.TargetPosition = ToLocal(Ray.GetCollisionPoint());
+
+                    UpdateImpactParticles(laserEnd, Ray.GetCollisionNormal().Angle());
+
+                    if (!_impactActive)
+                    {
+                        ActivateImpactParticles();
+                    }
                 }
+            }
+            else if (_impactActive)
+            {
+                DeactivateImpactParticles();
             }
 
             UpdateLaserEndPoint(laserEnd);
+        }
+
+        private void UpdateImpactParticles(Vector2 pos, float gRot)
+        {
+            _impactParticles.Position = pos;
+            _impactParticles.GlobalRotation = gRot;
+        }
+
+        private void ActivateImpactParticles()
+        {
+            _impactActive = true;
+
+            _impactParticles.Modulate = _baseLineMod;
+            _impactParticles.Visible = true;
+            _impactParticles.Restart();
+        }
+
+        private void DeactivateImpactParticles()
+        {
+            _impactActive = false;
+
+            if (_impactTween != null && _impactTween.IsValid())
+            {
+                _impactTween.Kill();
+            }
+
+            // Create the transparent modulation color.
+            Color trans = _baseLineMod;
+            trans.A = 0;
+
+            _impactTween = _impactParticles.CreateTween();
+
+            _impactTween.TweenProperty(_impactParticles, "modulate", trans, 0.2f);
+            _impactTween.TweenProperty(_impactParticles, "emitting", false, 0);
+
+            // _impactParticles.Emitting = false;
+            // _impactParticles.Position = Vector2.Zero;
+            // _impactParticles.Visible = false;
         }
 
         /// <summary>

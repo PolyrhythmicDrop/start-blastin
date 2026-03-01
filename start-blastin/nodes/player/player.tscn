@@ -93,6 +93,7 @@ PluginSlots = 3
 [node name="InventoryComponent" type="Node" parent="." unique_id=381298834]
 unique_name_in_owner = true
 script = ExtResource("3_2xyxk")
+InitialWeaponPlugin = "uid://d4i5hj4h5qbvo"
 metadata/_custom_type_script = "uid://bw0jf3wqbeqhj"
 
 [node name="AudioComponent" type="Node" parent="." unique_id=2120752469]

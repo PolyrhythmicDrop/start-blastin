@@ -8,5 +8,6 @@ namespace Projectiles
         Missile,
         Shield,
         Flame,
+        Laser,
     }
 }

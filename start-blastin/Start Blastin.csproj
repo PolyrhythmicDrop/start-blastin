@@ -10,6 +10,7 @@
     <Folder Include="nodes\components\enemy-components\" />
     <Folder Include="nodes\utility\" />
     <Folder Include="nodes\weapons\projectiles\flame\" />
+    <Folder Include="nodes\weapons\projectiles\laser\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="LimboConsole.Sharp" Version="0.0.1-beta-010" />

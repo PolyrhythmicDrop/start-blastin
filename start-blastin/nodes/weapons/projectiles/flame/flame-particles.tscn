@@ -69,6 +69,7 @@ collide_with_bodies = false
 unique_name_in_owner = true
 material = SubResource("CanvasItemMaterial_k1lqq")
 position = Vector2(0, -4.5474735e-13)
+emitting = false
 amount = 16
 texture = SubResource("CompressedTexture2D_33ca7")
 lifetime = 1.2

@@ -28,6 +28,8 @@ namespace Projectiles
         /// Whether or not this projectile should ignore collisions by other projectiles.
         /// </summary>
         protected bool _ignoreOtherProjectiles = false;
+        public bool IgnoreOtherProjectiles => _ignoreOtherProjectiles;
+
         public bool DeactivateOnCollision = true;
 
         protected Callable _deactivateCallable;

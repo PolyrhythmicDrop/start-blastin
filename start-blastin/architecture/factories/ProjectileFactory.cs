@@ -15,17 +15,14 @@ namespace Factories
         private static PackedScene _missileScene = GD.Load<PackedScene>("uid://cgh78hdll5s2h");
         private static PackedScene _shieldScene = GD.Load<PackedScene>("uid://k6jtmcb31ro7");
         private static PackedScene _flameScene = GD.Load<PackedScene>("uid://cyymtdtc5b7lk");
+        private static PackedScene _laserScene = GD.Load<PackedScene>("uid://c86aqukn113s5");
 
-        // Cached shaders
+        // Cached shaders for palette swapping
         private static ShaderMaterial _bulletPalette = ResourceLoader.Load<ShaderMaterial>(
             "res://resources/materials/enemy-bullet-palette-swap.tres"
         );
         private static ShaderMaterial _missilePalette = ResourceLoader.Load<ShaderMaterial>(
             "uid://cfd51ihwk3ior"
-        );
-
-        private static ShaderMaterial _shieldPalette = ResourceLoader.Load<ShaderMaterial>(
-            "uid://bqux6tvmprg1l"
         );
 
         /// <summary>
@@ -51,6 +48,9 @@ namespace Factories
                 case ProjectileType.Flame:
                     ammo = _flameScene.Instantiate<Flame>();
                     break;
+                case ProjectileType.Laser:
+                    ammo = _laserScene.Instantiate<Laser>();
+                    break;
             }
             ammo.SourceWeapon = weapon;
 
@@ -71,8 +71,9 @@ namespace Factories
                 {
                     Bullet => _bulletPalette,
                     Missile => _missilePalette,
+                    // Shield has a different structure for managing its palette swap, so don't set it here.
                     ShieldProjectile => null,
-                    // TODO: Add flame palette here when it's ready.
+                    // TODO: Add flame and laser palette here when it's ready.
                     _ => _bulletPalette,
                 };
             }

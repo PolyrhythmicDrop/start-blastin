@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="WeaponPlugin" format=3 uid="uid://d4i5hj4h5qbvo"]
+
+[ext_resource type="Script" uid="uid://e8ufr3v1a1f" path="res://architecture/items/plugins/WeaponPlugin.cs" id="1_6fjto"]
+[ext_resource type="Resource" uid="uid://d2vlkp1h8v08y" path="res://resources/audio-data/sfx/player-sounds/phase-ready-data.tres" id="1_j7sr7"]
+[ext_resource type="Script" uid="uid://bmeda5w63vsw7" path="res://architecture/effects/StatEffect.cs" id="1_p1ek6"]
+[ext_resource type="Texture2D" uid="uid://b7iuctehqixub" path="res://icon.svg" id="2_p1ek6"]
+
+[sub_resource type="Resource" id="Resource_aula2"]
+script = ExtResource("1_p1ek6")
+Type = 8
+Value = 2000.0
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[sub_resource type="Resource" id="Resource_p1ek6"]
+script = ExtResource("1_p1ek6")
+Type = 6
+Value = -0.9
+metadata/_custom_type_script = "uid://bmeda5w63vsw7"
+
+[resource]
+script = ExtResource("1_6fjto")
+ProjectileType = 4
+FireSound = ExtResource("1_j7sr7")
+Name = &"Laser"
+Description = &"bzzort"
+Icon = ExtResource("2_p1ek6")
+Effects = Array[Object]([SubResource("Resource_aula2"), SubResource("Resource_p1ek6")])
+metadata/_custom_type_script = "uid://e8ufr3v1a1f"

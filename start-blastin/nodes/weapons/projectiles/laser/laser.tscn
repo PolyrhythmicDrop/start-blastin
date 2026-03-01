@@ -1,0 +1,152 @@
+[gd_scene format=3 uid="uid://c86aqukn113s5"]
+
+[ext_resource type="Script" uid="uid://b8flm3hrg6m3o" path="res://nodes/weapons/projectiles/laser/Laser.cs" id="1_p5523"]
+[ext_resource type="Shader" uid="uid://bmrkxskm12d6r" path="res://nodes/weapons/projectiles/laser/laser.gdshader" id="2_cmm5u"]
+[ext_resource type="Texture2D" uid="uid://bit03j7yrqcp8" path="res://assets/projectiles/laser/laser-segment.png" id="2_fgtsm"]
+[ext_resource type="Texture2D" uid="uid://c4gd4sxlaa4vb" path="res://assets/projectiles/laser/laser-base-particle.png" id="2_swn5a"]
+[ext_resource type="Shader" uid="uid://b2u28rv8kyjvk" path="res://nodes/weapons/projectiles/laser/laser-bolt-scroll.gdshader" id="4_1ly8m"]
+[ext_resource type="Texture2D" uid="uid://b14y0d0v3ibf4" path="res://assets/projectiles/laser/laser-bolt.png" id="4_dfxnm"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_70c7y"]
+radius = 7.5
+height = 15.0
+
+[sub_resource type="Curve" id="Curve_13tjs"]
+_limits = [-1.0, 1.0, 0.0, 1.0]
+_data = [Vector2(0, -1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_eyjt8"]
+curve = SubResource("Curve_13tjs")
+
+[sub_resource type="Curve" id="Curve_swn5a"]
+_limits = [-1.0, 1.0, 0.0, 1.0]
+_data = [Vector2(0, -1), 0.0, 2.8, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_06dy1"]
+width = 32
+curve = SubResource("Curve_swn5a")
+
+[sub_resource type="Curve" id="Curve_eyjt8"]
+_limits = [-1.0, 1.0, 0.0, 1.0]
+_data = [Vector2(0, -1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_coykk"]
+width = 64
+curve = SubResource("Curve_eyjt8")
+
+[sub_resource type="Curve" id="Curve_06dy1"]
+_data = [Vector2(0, 0), 0.0, 1.4, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_13tjs"]
+width = 64
+curve = SubResource("Curve_06dy1")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_1ly8m"]
+lifetime_randomness = 0.3
+particle_flag_disable_z = true
+emission_shape_scale = Vector3(1, 2, 1)
+emission_shape = 3
+emission_box_extents = Vector3(10, 30, 1)
+angle_min = -170.99998
+angle_max = 200.80002
+angle_curve = SubResource("CurveTexture_eyjt8")
+spread = 80.0
+flatness = 0.2
+angular_velocity_min = 12.8199835
+angular_velocity_max = 119.639984
+angular_velocity_curve = SubResource("CurveTexture_06dy1")
+orbit_velocity_min = 9.49949e-08
+orbit_velocity_max = 9.49949e-08
+radial_velocity_min = -62.31002
+radial_velocity_max = -2.2351742e-05
+gravity = Vector3(0, 0, 0)
+radial_accel_min = -100.0
+radial_accel_max = -80.0
+scale_min = 0.19999999
+scale_max = 0.79999995
+scale_over_velocity_max = 0.5
+scale_over_velocity_curve = SubResource("CurveTexture_13tjs")
+hue_variation_min = -0.030000022
+hue_variation_max = 0.029999977
+hue_variation_curve = SubResource("CurveTexture_coykk")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dfxnm"]
+shader = ExtResource("2_cmm5u")
+shader_parameter/intensity = 0.3
+shader_parameter/alpha_mod = 1.0
+shader_parameter/speed = 15.0
+shader_parameter/frequency_y = 2.0
+shader_parameter/frequency_x = 0.0
+shader_parameter/amplitude_y = 2.0
+shader_parameter/amplitude_x = 0.0
+shader_parameter/rotation_angle = 0.0
+
+[sub_resource type="Gradient" id="Gradient_fgtsm"]
+colors = PackedColorArray(1.1511151, 1.4807141, 1.4807141, 1, 1.1638972, 0.91149175, 1.1638972, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_swn5a"]
+shader = ExtResource("4_1ly8m")
+shader_parameter/alpha_mod = 1.0
+shader_parameter/scroll_speed = 17.0000008075
+shader_parameter/angle_degrees = 0.0
+shader_parameter/repeat_x = 1.0
+shader_parameter/repeat_y = 1.0
+shader_parameter/row_offset = 0.0
+shader_parameter/texture_to_scroll = ExtResource("4_dfxnm")
+
+[node name="Laser" type="Area2D" unique_id=391111106]
+monitorable = false
+script = ExtResource("1_p5523")
+
+[node name="TrajRayCast" type="RayCast2D" parent="." unique_id=76783258]
+unique_name_in_owner = true
+enabled = false
+target_position = Vector2(0, 0)
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=992641029]
+unique_name_in_owner = true
+shape = SubResource("CapsuleShape2D_70c7y")
+
+[node name="BarrelParticles" type="GPUParticles2D" parent="." unique_id=1172194992]
+unique_name_in_owner = true
+amount = 20
+texture = ExtResource("2_swn5a")
+lifetime = 0.5
+randomness = 0.2
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_1ly8m")
+
+[node name="BodyLine" type="Line2D" parent="." unique_id=627928974]
+unique_name_in_owner = true
+visible = false
+texture_repeat = 3
+material = SubResource("ShaderMaterial_dfxnm")
+points = PackedVector2Array(0, 0, 30, 0, 80, 0, 120, 0, 160, 0, 200, 0)
+width = 26.0
+gradient = SubResource("Gradient_fgtsm")
+texture = ExtResource("2_fgtsm")
+texture_mode = 1
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+antialiased = true
+
+[node name="BoltLine" type="Line2D" parent="." unique_id=1658024776]
+unique_name_in_owner = true
+visible = false
+texture_filter = 1
+texture_repeat = 3
+material = SubResource("ShaderMaterial_swn5a")
+points = PackedVector2Array(0, 0, 30, 0, 80, 0, 120, 0, 160, 0, 200, 0)
+width = 34.0
+texture = ExtResource("4_dfxnm")
+texture_mode = 1
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+antialiased = true

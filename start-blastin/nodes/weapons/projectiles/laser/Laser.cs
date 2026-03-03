@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using Environmental;
 using Godot;
 using Interfaces;
@@ -21,6 +19,7 @@ namespace Projectiles
         private Callable _boltLineAlphaModCall;
 
         private Color _baseLineMod;
+        private Color _transMod;
 
         private GpuParticles2D _barrelParticles;
         private GpuParticles2D _impactParticles;
@@ -29,43 +28,50 @@ namespace Projectiles
         private bool _impactParticlesActive;
 
         private Tween _laserTween;
-        private Tween _impactTween;
 
-        private Barrel _tBarrel;
+        public Barrel TetheredBarrel { get; set; }
 
-        public Barrel TetheredBarrel
-        {
-            get => _tBarrel;
-            set => _tBarrel = value;
-        }
-
-        private bool _tethered;
-        public bool IsTethered
-        {
-            get => _tethered;
-            set => _tethered = value;
-        }
+        public bool IsTethered { get; set; }
 
         /// <summary>
-        /// Maximum length of the laser. Set to be outside the screen bounds no matter where you fire it from or in what direction.
+        /// Maximum length of the laser.
         /// </summary>
-        private float _maxLength = 1080;
+        private const float MAX_LENGTH = 1080;
 
+        /// <summary>
+        /// The distance the <see cref="_bodyLine"/> should start from the Laser's base Position.
+        /// </summary>
         private const float START_DISTANCE = 30;
 
+        /// <summary>
+        /// The offset of the <see cref="_boltLine"/> from the start and end of the <see cref="_bodyLine"/>.
+        /// </summary>
         private const float BOLT_OFFSET = 20;
 
+        /// <summary>
+        /// Fade duration for the laser's tweens.
+        /// </summary>
         private const float FADE_DURATION = 0.2f;
+
+        #region Init
 
         public override void _Ready()
         {
             base._Ready();
             _ignoreOtherProjectiles = true;
 
+            // Set up the Line2Ds.
             _bodyLine = GetNode<Line2D>("%BodyLine");
             _boltLine = GetNode<Line2D>("%BoltLine");
-            _baseLineMod = _bodyLine.Modulate;
+            _bodyLine.Visible = false;
+            _boltLine.Visible = false;
+            InitLinePoints();
 
+            // Set up the modulation variables.
+            _baseLineMod = _bodyLine.Modulate;
+            _transMod = new(_baseLineMod.R, _baseLineMod.G, _baseLineMod.B, 0);
+
+            // Set the shader materials and the callbacks for later tweening.
             _bodyLineShaderMat = (ShaderMaterial)_bodyLine.Material;
             _boltLineShaderMat = (ShaderMaterial)_boltLine.Material;
             _bodyLineAlphaModCall = Callable.From(
@@ -81,25 +87,22 @@ namespace Projectiles
                 }
             );
 
+            // Set up the barrel particles
             _barrelParticles = GetNode<GpuParticles2D>("%BarrelParticles");
             _barrelParticles.Position = new(START_DISTANCE / 2, 0);
             _barrelParticles.Emitting = false;
 
+            // Set up the body particles
             _bodyParticles = GetNode<GpuParticles2D>("%BodyParticles");
 
+            // Set up the impact particles
             _impactParticles = GetNode<GpuParticles2D>("%ImpactParticles");
-            // _impactParticles.Visible = false;
             _impactParticles.Emitting = false;
-            // ParticleProcessMaterial impProcessMat = (ParticleProcessMaterial)
-            //     _impactParticles.ProcessMaterial;
-            // impProcessMat.EmissionBoxExtents = new Vector3(1, _bodyLine.Width / 2, 1);
-            // impProcessMat.EmissionSphereRadius = _bodyLine.Width / 2;
-
-            _bodyLine.Visible = false;
-            _boltLine.Visible = false;
-            InitLinePoints();
         }
 
+        /// <summary>
+        /// Resets the start and end points of both <see cref="_bodyLine"/> and <see cref="_boltLine"/> to their default values.
+        /// </summary>
         public void InitLinePoints()
         {
             _bodyLine.ClearPoints();
@@ -110,6 +113,10 @@ namespace Projectiles
             _boltLine.AddPoint(new(START_DISTANCE + BOLT_OFFSET, 0));
             _boltLine.AddPoint(Vector2.Zero);
         }
+
+        #endregion
+
+        #region Activation
 
         public override async void ToggleActive(bool active)
         {
@@ -134,7 +141,6 @@ namespace Projectiles
             }
             else
             {
-                DeactivateImpactParticles();
                 TweenDeactivation();
 
                 if (_laserTween != null)
@@ -143,7 +149,7 @@ namespace Projectiles
                 }
 
                 // Reset body emission box to zero
-                UpdateLaserEndPoint(Vector2.Zero);
+                UpdateLaser(Vector2.Zero);
 
                 _bodyLine.Visible = false;
                 _boltLine.Visible = false;
@@ -153,14 +159,13 @@ namespace Projectiles
                 _sourceWeapon.ActiveProjectileCount--;
 
                 // Remove barrel assignment and tethering bool
-                _tethered = false;
-                _tBarrel = null;
+                IsTethered = false;
+                TetheredBarrel = null;
 
                 // Reset the points in the line.
                 InitLinePoints();
 
                 // Reset the ray target position
-                Ray.TargetPosition = Vector2.Zero;
             }
 
             _active = active;
@@ -169,6 +174,9 @@ namespace Projectiles
             // No need to toggle the deactivation timer for tethered projectiles.
         }
 
+        /// <summary>
+        /// Fades in the body and bolt Line2D's using the <see cref="_laserTween"/>.
+        /// </summary>
         private void TweenActivation()
         {
             if (_laserTween != null && _laserTween.IsValid())
@@ -183,6 +191,10 @@ namespace Projectiles
             _laserTween.TweenMethod(_boltLineAlphaModCall, 0, 1.0, FADE_DURATION);
         }
 
+        /// <summary>
+        /// Fades out the body and bolt Line2D's using the <see cref="_laserTween"/>.
+        /// Fades out the barrel and body particles before setting both particle nodes' Emitting value to false.
+        /// </summary>
         private void TweenDeactivation()
         {
             if (_laserTween != null && _laserTween.IsValid())
@@ -190,23 +202,22 @@ namespace Projectiles
                 _laserTween.Kill();
             }
 
-            // Create the transparent modulation color.
-            Color trans = _baseLineMod;
-            trans.A = 0;
-
             _laserTween = CreateTween().SetParallel();
             _laserTween.TweenMethod(_bodyLineAlphaModCall, 1.0, 0, FADE_DURATION);
             _laserTween.TweenMethod(_boltLineAlphaModCall, 1.0, 0, FADE_DURATION);
-            _laserTween.TweenProperty(_barrelParticles, "modulate", trans, FADE_DURATION);
-            _laserTween.TweenProperty(_bodyParticles, "modulate", trans, FADE_DURATION);
+            _laserTween.TweenProperty(_barrelParticles, "modulate", _transMod, FADE_DURATION);
+            _laserTween.TweenProperty(_bodyParticles, "modulate", _transMod, FADE_DURATION);
             _laserTween.SetParallel(false);
             _laserTween.TweenProperty(_barrelParticles, "emitting", false, 0);
             _laserTween.TweenProperty(_bodyParticles, "emitting", false, 0);
         }
 
+        #endregion
+
+        #region Process
+
         /// <summary>
-        /// Expands the laser based on the projectile speed and delta by calling CastRay() and using the new target position to set the line end point.
-        /// Calls <see cref="UpdateTether"/> every frame if this Laser is active.
+        /// Expands the laser based on the projectile speed and delta by calling <see cref="CastRay"/> and using the new target position to set the line end point.
         /// </summary>
         /// <param name="delta">The time between frames.</param>
         public override void _PhysicsProcess(double delta)
@@ -217,6 +228,10 @@ namespace Projectiles
             }
         }
 
+        /// <summary>
+        /// Calls <see cref="UpdateTether"/> every frame if this Laser is active.
+        /// </summary>
+        /// <param name="delta"></param>
         public override void _Process(double delta)
         {
             if (_active)
@@ -226,6 +241,13 @@ namespace Projectiles
             }
         }
 
+        /// <summary>
+        /// Sets the ray's target position based on the speed of the projectile and the current speed.
+        /// Clamps the target position to the viewport so the laser does not extend beyond the bounds of the viewport.
+        /// Sets the position of the end of the laser using the ray's target position.
+        /// At the end, updates the laser graphics and particles based on the laser end point and whether or not the laser is colliding with something.
+        /// </summary>
+        /// <param name="delta"></param>
         protected override void CastRay(double delta)
         {
             if (Ray.Enabled == false)
@@ -236,7 +258,7 @@ namespace Projectiles
             Rect2 viewRect = GetViewport().GetVisibleRect();
 
             Ray.TargetPosition = new(
-                (float)Mathf.MoveToward(Ray.TargetPosition.X, _maxLength, _currentSpeed * delta),
+                (float)Mathf.MoveToward(Ray.TargetPosition.X, MAX_LENGTH, _currentSpeed * delta),
                 0
             );
 
@@ -248,19 +270,16 @@ namespace Projectiles
             // Set the initial end point for the laser
             Vector2 laserEnd = Ray.TargetPosition;
 
-            // DebugLogger.LogMessage($"Ray target position: {Ray.TargetPosition}");
-
             Ray.ForceRaycastUpdate();
 
             bool colliding = Ray.IsColliding();
             if (colliding)
             {
                 GodotObject collider = Ray.GetCollider();
-                if (collider is Projectile colliderProj && colliderProj.IgnoreOtherProjectiles)
-                {
-                    // return;
-                }
-                else if (collider is not (OobArea or DeflectorWall))
+                if (
+                    collider
+                    is not (Projectile { IgnoreOtherProjectiles: true } or OobArea or DeflectorWall)
+                )
                 {
                     RaiseCollision(this, CalculateRayCollisionData(delta, collider));
                     laserEnd = ToLocal(Ray.GetCollisionPoint());
@@ -268,48 +287,47 @@ namespace Projectiles
                 }
             }
 
-            UpdateLaserEndPoint(laserEnd, colliding);
+            UpdateLaser(laserEnd);
+            UpdateImpactParticles(laserEnd, colliding);
         }
 
-        private void UpdateImpactParticles(Vector2 pos, float gRot)
+        /// <summary>
+        /// Makes the <see cref="_impactParticles"/> visible or invisible, based on whether or not the laser is colliding with something.
+        /// If the laser is colliding, updates the impact particles' position.
+        /// </summary>
+        /// <param name="pos">The position of the impact particles node. Only used if <paramref name="colliding"/> is true.</param>
+        /// <param name="colliding">Whether or not the laser is colliding with an object.</param>
+        private void UpdateImpactParticles(Vector2 pos, bool colliding)
         {
-            _impactParticles.Position = pos;
-            _impactParticles.GlobalRotation = gRot;
-        }
-
-        private void ActivateImpactParticles()
-        {
-            _impactParticlesActive = true;
-
-            _impactParticles.Modulate = _baseLineMod;
-            _impactParticles.Visible = true;
-            _impactParticles.Restart();
-        }
-
-        private void DeactivateImpactParticles()
-        {
-            _impactParticlesActive = false;
-
-            if (_impactTween != null && _impactTween.IsValid())
+            if (colliding)
             {
-                _impactTween.Kill();
+                if (!_impactParticlesActive)
+                {
+                    _impactParticlesActive = true;
+
+                    _impactParticles.Modulate = _baseLineMod;
+                    _impactParticles.Visible = true;
+                    _impactParticles.Restart();
+                }
+
+                _impactParticles.Position = pos;
             }
-
-            // Create the transparent modulation color.
-            Color trans = _baseLineMod;
-            trans.A = 0;
-
-            _impactTween = _impactParticles.CreateTween();
-
-            _impactTween.TweenProperty(_impactParticles, "modulate", trans, 0.2f);
-            _impactTween.TweenProperty(_impactParticles, "emitting", false, 0);
+            else
+            {
+                if (_impactParticlesActive)
+                {
+                    _impactParticlesActive = false;
+                    _impactParticles.Visible = false;
+                    _impactParticles.Emitting = false;
+                }
+            }
         }
 
         /// <summary>
         /// Updates the end point of the Line2D that is the visual representation of the laser.
         /// </summary>
         /// <param name="endPoint">The end point of the laser. This argument should be in local coordinates.</param>
-        private void UpdateLaserEndPoint(Vector2 endPoint, bool colliding = false)
+        private void UpdateLaser(Vector2 endPoint)
         {
             int pCount = _bodyLine.GetPointCount();
             _bodyLine.SetPointPosition(pCount - 1, endPoint);
@@ -328,39 +346,28 @@ namespace Projectiles
                 pm.EmissionBoxExtents.Y,
                 pm.EmissionBoxExtents.Z
             );
-
-            // Impact stuff
-            if (colliding)
-            {
-                if (!_impactParticlesActive)
-                {
-                    ActivateImpactParticles();
-                }
-                UpdateImpactParticles(endPoint, Ray.GetCollisionNormal().Angle());
-            }
-            else
-            {
-                if (_impactParticlesActive)
-                {
-                    DeactivateImpactParticles();
-                }
-            }
         }
+
+        #endregion
+
+        #region Tethering
 
         public void ReleaseTether()
         {
-            _tethered = false;
+            IsTethered = false;
             ToggleActive(false);
         }
 
         public void UpdateTether()
         {
             // Keep the laser fixed to the barrel
-            if (_tBarrel != null && _active)
+            if (TetheredBarrel != null && _active)
             {
-                GlobalPosition = _tBarrel.GlobalPosition;
-                GlobalRotation = _tBarrel.GlobalRotation;
+                GlobalPosition = TetheredBarrel.GlobalPosition;
+                GlobalRotation = TetheredBarrel.GlobalRotation;
             }
         }
+
+        #endregion
     }
 }

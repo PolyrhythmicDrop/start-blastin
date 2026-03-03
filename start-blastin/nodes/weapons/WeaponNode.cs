@@ -390,7 +390,7 @@ namespace Weapons
 
                 // Apply velocity.
                 // TODO: Consider adding a condition that this not be a tethered projectile. Don't think I want to add velocity to those.
-                if (_velocityProvider != null)
+                if (_velocityProvider != null && projectile is not ITetheredProjectile)
                 {
                     projectile.AddSourceVelocity(_velocityProvider.GetCurrentVelocity());
                 }

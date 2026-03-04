@@ -130,18 +130,21 @@ DefaultActive = true
 position = Vector2(3.45703e-07, -12)
 rotation = 4.712389
 Base = true
+DefaultActive = true
 Direction = 6
 
 [node name="BarrelE" parent="WeaponComponent" unique_id=1231465166 instance=ExtResource("9_xl06i")]
 position = Vector2(0, 12)
 rotation = 1.5707964
 Base = true
+DefaultActive = true
 Direction = 2
 
 [node name="BarrelS" parent="WeaponComponent" unique_id=1995264072 instance=ExtResource("9_xl06i")]
 position = Vector2(-18, -9.536743e-07)
 rotation = 3.1415927
 Base = true
+DefaultActive = true
 Direction = 4
 
 [node name="HitBox" type="CollisionShape2D" parent="." unique_id=1396445754]

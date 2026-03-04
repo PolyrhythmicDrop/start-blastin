@@ -36,7 +36,7 @@ namespace Projectiles
         /// <summary>
         /// Maximum length of the laser.
         /// </summary>
-        private const float MAX_LENGTH = 1080;
+        private const float MAX_LENGTH = 2000;
 
         /// <summary>
         /// The distance the <see cref="_bodyLine"/> should start from the Laser's base Position.
@@ -148,6 +148,11 @@ namespace Projectiles
                     await ToSignal(_laserTween, Tween.SignalName.Finished);
                 }
 
+                // Reset the points in the line.
+                InitLinePoints();
+                // Reset the ray's target position.
+                Ray.TargetPosition = Vector2.Zero;
+
                 // Reset body emission box to zero
                 UpdateLaser(Vector2.Zero);
 
@@ -161,9 +166,6 @@ namespace Projectiles
                 // Remove barrel assignment and tethering bool
                 IsTethered = false;
                 TetheredBarrel = null;
-
-                // Reset the points in the line.
-                InitLinePoints();
 
                 // Reset the ray target position
             }
@@ -305,9 +307,9 @@ namespace Projectiles
                 {
                     _impactParticlesActive = true;
 
+                    _impactParticles.Restart();
                     _impactParticles.Modulate = _baseLineMod;
                     _impactParticles.Visible = true;
-                    _impactParticles.Restart();
                 }
 
                 _impactParticles.Position = pos;

@@ -7,7 +7,7 @@
 
 [sub_resource type="Resource" id="Resource_7wn5a"]
 script = ExtResource("2_3dipg")
-EnemyType = "uid://bi8j7u82gwk0w"
+EnemyType = "uid://dy000j7xt4c3k"
 metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
 
 [sub_resource type="Resource" id="Resource_x3lrh"]

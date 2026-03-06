@@ -178,6 +178,8 @@ namespace Components
         {
             _weapon.FireTimer.Stop();
 
+            ReleaseAllTetheredProjectiles();
+
             if (_weapon.Stats.BurstFire)
             {
                 _weapon.BurstFireTimer?.Stop();

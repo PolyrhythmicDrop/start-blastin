@@ -267,7 +267,12 @@ namespace Projectiles
             // Convert target position to global space so we can see if it's in the viewport.
             Vector2 tpGlobal = ToGlobal(Ray.TargetPosition);
             // Clamp the target position to the viewport.
-            Ray.TargetPosition = ToLocal(tpGlobal.Clamp(viewRect.Position, viewRect.End));
+            Ray.TargetPosition = ToLocal(
+                tpGlobal.Clamp(
+                    viewRect.Position + new Vector2(-50, -50),
+                    viewRect.End + new Vector2(50, 50)
+                )
+            );
 
             // Set the initial end point for the laser
             Vector2 laserEnd = Ray.TargetPosition;

@@ -403,8 +403,6 @@ namespace Enemies
             float waveLogMultiplier = Mathf.Log(1 + wave);
             float waveSqrtMultiplier = Mathf.Sqrt(wave) * 0.1f;
 
-            // float newMaxHealth =
-            //     _baseMaxHealth * (1 + (scaler.MaxHealthModifier * waveLogMultiplier));
             float newMaxHealth =
                 _healthComponent.BaseMaxHealth
                 * (1 + (scaler.MaxHealthModifier * waveLogMultiplier));
@@ -412,7 +410,6 @@ namespace Enemies
 
             // Fill the enemy's health.
             _healthComponent.CurrentHealth = MaxHealth;
-            // CurrentHealth = MaxHealth;
 
             float newCrashDamage =
                 _baseCrashDamage * (1 + (scaler.CrashDamageModifier * waveLogMultiplier));
@@ -429,7 +426,6 @@ namespace Enemies
             float waveExpoMultiplier = Mathf.Pow(0.95f, wave * scaler.FireRateModifier);
 
             // Fire rate should be decreased, since lower fire rates result in faster firing.
-            // float newFireRate = Mathf.Max(0.1f, _baseFireRate * waveExpoMultiplier);
             float newFireRate = Mathf.Max(0.1f, _weaponComponent.BaseFireRate * waveExpoMultiplier);
 
             SetStat(StatType.FireRate, newFireRate);
@@ -454,42 +450,7 @@ namespace Enemies
 
         public void ToggleHealthBarActive() => _healthComponent.ToggleHealthBarActive();
 
-        // {
-        //     if (_alive)
-        //     {
-        //         // Play the hit sound
-        //         // AudioService.Instance.PlaySound(_sounds?.Hit, this, volume: -6);
-        //         _audioComponent.PlayHitSound();
-
-        //         if (damage != 0)
-        //         {
-        //             PlayDamageAnimation();
-        //             IndicatorFactory.CreateTextIndicator(
-        //                 (MathF.Round(damage, 1) * -1).ToString(),
-        //                 GlobalPosition,
-        //                 parent: this
-        //             );
-        //             CurrentHealth -= damage;
-        //         }
-
-        //         if (_currentHealth <= 0)
-        //         {
-        //             CurrentHealth = 0;
-        //             Die(playerId);
-        //         }
-        //     }
-        // }
-
         public void Heal(float healAmount) => _healthComponent.Heal(healAmount);
-
-        // {
-        //     // Don't do anything if current health is greater than max health
-        //     if (_currentHealth >= _maxHealth)
-        //     {
-        //         return;
-        //     }
-        //     CurrentHealth = Mathf.Min(_currentHealth + healAmount, MaxHealth);
-        // }
 
         /// <summary>
         /// Plays the enemy's fire animation. Must be implemented by the derived class.

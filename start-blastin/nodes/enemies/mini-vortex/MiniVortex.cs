@@ -31,7 +31,6 @@ namespace Enemies
             // Stop the fire timer until we get to our spinning fire position.
             if (_weaponComponent.IsFiring)
             {
-                // _weapon.FireTimer.Stop();
                 _weaponComponent.StopFiring();
             }
 

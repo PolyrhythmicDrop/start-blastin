@@ -127,6 +127,7 @@ namespace Enemies
                 )
                 .SetTrans(Tween.TransitionType.Circ)
                 .SetEase(Tween.EaseType.Out);
+
             // Start spinning while doing fire stuff.
             _followTween.TweenSubtween(spinTween);
             _followTween.SetParallel(true);

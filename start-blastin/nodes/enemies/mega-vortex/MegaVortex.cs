@@ -19,7 +19,7 @@ namespace Enemies
         /// <summary>
         /// The duration of the spin cycle.
         /// </summary>
-        private const float SPIN_DURATION = 15f;
+        private const float SPIN_DURATION = 18f;
 
         /// <summary>
         ///  The number of total revolutions that occur during the spin cycle.

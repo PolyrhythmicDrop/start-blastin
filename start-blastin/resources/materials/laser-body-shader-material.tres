@@ -1,0 +1,15 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://bqkui8rixsed7"]
+
+[ext_resource type="Shader" uid="uid://bmrkxskm12d6r" path="res://nodes/weapons/projectiles/laser/laser.gdshader" id="1_u5fp7"]
+
+[resource]
+resource_local_to_scene = true
+shader = ExtResource("1_u5fp7")
+shader_parameter/intensity = 0.3
+shader_parameter/alpha_mod = 1.0
+shader_parameter/speed = 15.0
+shader_parameter/frequency_y = 2.0
+shader_parameter/frequency_x = 0.0
+shader_parameter/amplitude_y = 2.0
+shader_parameter/amplitude_x = 0.0
+shader_parameter/rotation_angle = 0.0

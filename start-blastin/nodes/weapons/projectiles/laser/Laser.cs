@@ -12,6 +12,12 @@ namespace Projectiles
         private Line2D _bodyLine;
         private Line2D _boltLine;
 
+        // Texture for enemy and player
+        private Texture2D _enemyBodyTexture = ResourceLoader.Load<Texture2D>("uid://cguj16yxmvtkk");
+        private Texture2D _playerBodyTexture = ResourceLoader.Load<Texture2D>(
+            "uid://bit03j7yrqcp8"
+        );
+
         // Shader materials and tweening callback functions
         private ShaderMaterial _bodyLineShaderMat;
         private ShaderMaterial _boltLineShaderMat;
@@ -63,6 +69,16 @@ namespace Projectiles
             // Set up the Line2Ds.
             _bodyLine = GetNode<Line2D>("%BodyLine");
             _boltLine = GetNode<Line2D>("%BoltLine");
+
+            if (_sourceWeapon != null && _sourceWeapon.EnemyOwned)
+            {
+                _bodyLine.Texture = _enemyBodyTexture;
+            }
+            else if (_sourceWeapon != null)
+            {
+                _bodyLine.Texture = _playerBodyTexture;
+            }
+
             _bodyLine.Visible = false;
             _boltLine.Visible = false;
             InitLinePoints();
@@ -283,14 +299,15 @@ namespace Projectiles
             if (colliding)
             {
                 GodotObject collider = Ray.GetCollider();
-                if (
-                    collider
-                    is not (Projectile { IgnoreOtherProjectiles: true } or OobArea or DeflectorWall)
-                )
+                if (collider is not (Projectile or OobArea or DeflectorWall))
                 {
                     RaiseCollision(this, CalculateRayCollisionData(delta, collider));
                     laserEnd = ToLocal(Ray.GetCollisionPoint());
                     Ray.TargetPosition = ToLocal(Ray.GetCollisionPoint());
+                }
+                else if (collider is Projectile { IgnoreOtherProjectiles: false })
+                {
+                    RaiseCollision(this, CalculateRayCollisionData(delta, collider));
                 }
             }
 

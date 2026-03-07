@@ -11,10 +11,10 @@ namespace Enemies
         private AnimatedSprite2D _bodySprite;
         private AnimatedSprite2D _gunSprite;
 
-        private Callable _startFireCallable;
         private Callable _preFireAnimCallable;
         private Callable _postFireAnimCallable;
-        private Callable _stopFireCallable;
+
+        private GpuParticles2D _destructParticles;
 
         /// <summary>
         /// The duration of the spin cycle.
@@ -31,33 +31,23 @@ namespace Enemies
         /// </summary>
         private const float SPIN_PROGRESS_RATIO = 0.2f;
 
+        private const float DEATH_DURATION = 3;
+
         protected override void OnBaseReadyComplete()
         {
             _spriteContainer = GetNode<Node2D>("%SpriteContainer");
             _bodySprite = GetNode<AnimatedSprite2D>("%Body");
             _gunSprite = GetNode<AnimatedSprite2D>("%Guns");
 
-            _startFireCallable = Callable.From(() =>
-            {
-                if (_alive)
-                {
-                    _weaponComponent.StartFiring();
-                }
-            });
-
             _preFireAnimCallable = Callable.From(PreFire);
-
             _postFireAnimCallable = Callable.From(PostFire);
 
-            _stopFireCallable = Callable.From(() =>
-            {
-                if (_alive)
-                {
-                    _weaponComponent.StopFiring();
-                }
-            });
+            _destructParticles = GetNode<GpuParticles2D>("%DestructParticles");
         }
 
+        /// <summary>
+        /// Callback that runs before the MegaVortex fires its weapon. Plays the prefire animation and starts firing after the animation is finished.
+        /// </summary>
         private async void PreFire()
         {
             if (_alive)
@@ -69,6 +59,9 @@ namespace Enemies
             }
         }
 
+        /// <summary>
+        /// Callback that runs after the MegaVortex fires its weapon. Stops firing, reverses the prefire animation, then plays the default animation.
+        /// </summary>
         private async void PostFire()
         {
             if (_alive)
@@ -138,7 +131,6 @@ namespace Enemies
             _followTween.TweenSubtween(spinTween);
             _followTween.SetParallel(true);
             _followTween.TweenSubtween(fireTween);
-            // _followTween.Chain().TweenCallback(_stopFireCallable);
             _followTween.Chain().TweenCallback(_postFireAnimCallable);
             _followTween.SetParallel(false);
             _followTween
@@ -147,9 +139,23 @@ namespace Enemies
                 .SetEase(Tween.EaseType.In);
         }
 
-        protected override Task PlayDeathSequence()
+        protected override async Task PlayDeathSequence()
         {
-            throw new System.NotImplementedException();
+            // Tween the sprite modulation to white.
+            float stepDur = DEATH_DURATION / 2;
+            Color white = new(18.892f, 18.892f, 18.892f);
+            Color transparent = white;
+            transparent.A = 0;
+
+            Tween tween = CreateTween();
+            tween.TweenProperty(_destructParticles, "emitting", true, 0);
+            tween.TweenProperty(_spriteContainer, "modulate", white, stepDur);
+            tween.TweenProperty(_spriteContainer, "modulate", transparent, stepDur);
+            tween.TweenInterval(DEATH_DURATION / 4);
+            tween.TweenProperty(_destructParticles, "emitting", false, 0);
+            tween.TweenInterval(DEATH_DURATION);
+
+            await ToSignal(tween, Tween.SignalName.Finished);
         }
     }
 }

@@ -11,10 +11,13 @@ namespace Factories
     public static class ProjectileFactory
     {
         // Cached scenes
-        private static PackedScene _bulletScene = GD.Load<PackedScene>(Bullet.ScenePath);
-        private static PackedScene _missileScene = GD.Load<PackedScene>(Missile.ScenePath);
+        private static PackedScene _bulletScene = GD.Load<PackedScene>("uid://07rkya3u10jt");
+        private static PackedScene _missileScene = GD.Load<PackedScene>("uid://cgh78hdll5s2h");
+        private static PackedScene _shieldScene = GD.Load<PackedScene>("uid://k6jtmcb31ro7");
+        private static PackedScene _flameScene = GD.Load<PackedScene>("uid://cyymtdtc5b7lk");
+        private static PackedScene _laserScene = GD.Load<PackedScene>("uid://c86aqukn113s5");
 
-        // Cached shaders
+        // Cached shaders for palette swapping
         private static ShaderMaterial _bulletPalette = ResourceLoader.Load<ShaderMaterial>(
             "res://resources/materials/enemy-bullet-palette-swap.tres"
         );
@@ -39,11 +42,19 @@ namespace Factories
                 case ProjectileType.Missile:
                     ammo = _missileScene.Instantiate<Missile>();
                     break;
+                case ProjectileType.Shield:
+                    ammo = _shieldScene.Instantiate<ShieldProjectile>();
+                    break;
+                case ProjectileType.Flame:
+                    ammo = _flameScene.Instantiate<Flame>();
+                    break;
+                case ProjectileType.Laser:
+                    ammo = _laserScene.Instantiate<Laser>();
+                    break;
             }
             ammo.SourceWeapon = weapon;
 
             SetProjectileShaderMaterial(ammo, ammo.SourceWeapon.EnemyOwned);
-            // ammo.SetProjectileCollisionLayers(ammo.SourceWeapon.EnemyOwned);
             ammo.CurrentFaction = ammo.SourceWeapon.EnemyOwned
                 ? Projectile.Faction.Enemies
                 : Projectile.Faction.Players;
@@ -60,6 +71,9 @@ namespace Factories
                 {
                     Bullet => _bulletPalette,
                     Missile => _missilePalette,
+                    // Shield has a different structure for managing its palette swap, so don't set it here.
+                    ShieldProjectile => null,
+                    // TODO: Add flame and laser palette here when it's ready.
                     _ => _bulletPalette,
                 };
             }

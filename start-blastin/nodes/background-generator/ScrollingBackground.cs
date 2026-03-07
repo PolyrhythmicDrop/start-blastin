@@ -97,6 +97,9 @@ namespace BackgroundGenerator
             _planetSpawnTimer.Start();
             _bigStarSpawnTimer.Start();
             _starSwapTimer.Start();
+
+            TrySpawnBody(CelestialBodyType.ShaderPlanet);
+            TrySpawnBody(CelestialBodyType.BigStar);
         }
 
         public void ConnectSignals()
@@ -105,15 +108,9 @@ namespace BackgroundGenerator
             _planetSpawnTimer.Timeout += () => TrySpawnBody(CelestialBodyType.ShaderPlanet);
             _bigStarSpawnTimer.Timeout += () => TrySpawnBody(CelestialBodyType.BigStar);
             _starSwapTimer.Timeout += SwapStarParticles;
-
-            // Connect wave timer for wave-based variations.
-            EventBus.Instance.WaveStarted += OnWaveStarted;
         }
 
-        public void DisconnectSignals()
-        {
-            EventBus.Instance.WaveStarted -= OnWaveStarted;
-        }
+        public void DisconnectSignals() { }
 
         public override void _ExitTree()
         {
@@ -125,17 +122,6 @@ namespace BackgroundGenerator
         {
             float factor = (float)GD.RandRange(0.05, 2);
             timer.WaitTime = Math.Clamp(factor * timer.WaitTime, 20, 600);
-        }
-
-        private void OnWaveStarted(object source, WaveStartedEventArgs args)
-        {
-            // Change the starfield every 3 waves.
-            // bool changeStarfield = args.Wave % 3 == 0;
-
-            // if (changeStarfield)
-            // {
-            //     SwapStarParticles();
-            // }
         }
 
         public override void _Process(double delta) { }

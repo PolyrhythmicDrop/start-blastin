@@ -17,7 +17,7 @@ size = Vector2(1920, 50)
 
 [node name="PlayAreaBorder" type="StaticBody2D"]
 disable_mode = 1
-collision_layer = 2
+collision_layer = 64
 
 [node name="LeftBorder" type="CollisionShape2D" parent="."]
 unique_name_in_owner = true

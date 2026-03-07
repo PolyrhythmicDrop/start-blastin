@@ -1,11 +1,10 @@
-using System.Reflection;
 using Godot;
+using Interfaces;
 
 namespace Projectiles
 {
-    public partial class Bullet : Projectile
+    public partial class Bullet : DeflectableProjectile
     {
-        public static string ScenePath => "res://nodes/weapons/projectiles/Bullet/Bullet.tscn";
         private AnimatedSprite2D _sprite;
 
         public override void _Ready()

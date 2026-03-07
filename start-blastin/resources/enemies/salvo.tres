@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="EnemyResource" load_steps=6 format=3 uid="uid://lv3xojj0ktlw"]
+[gd_resource type="Resource" script_class="EnemyResource" format=3 uid="uid://lv3xojj0ktlw"]
 
 [ext_resource type="Script" uid="uid://cf7pn6qd7aa15" path="res://nodes/enemies/EnemyResource.cs" id="1_2n6d0"]
 [ext_resource type="Resource" uid="uid://df6h5kagv14tp" path="res://resources/sound-sets/enemies/salvo-sound-set.tres" id="2_bl1by"]

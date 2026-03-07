@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Components;
 using Godot;
 
@@ -10,61 +11,27 @@ namespace Enemies
         private AnimatedSprite2D _sprite;
 
         private const float SPIN_DURATION = 2;
+        private const float SPIN_PROGRESS_RATIO = 0.2f;
+        private const float SPIN_AMT_DEG = 1080;
 
-        public override void _Ready()
+        protected override void OnBaseReadyComplete()
         {
-            base._Ready();
             _sprite = GetNode<AnimatedSprite2D>("%Sprite");
-
-            _currentGlobalPosition = GlobalPosition;
-            _lastGlobalPosition = _currentGlobalPosition;
-
-            SetHealthBarSize();
-
-            FollowPath(_followSpeed);
         }
 
-        protected override void SetHealthBarSize()
+        public override AnimatedSprite2D GetPrimarySprite() => _sprite;
+
+        public override void PlayFireAnimation()
         {
-            // Get size of the base sprite
-            SpriteFrames sprite = _sprite.SpriteFrames ?? null;
-            if (sprite != null)
-            {
-                Rect2I usedRect = sprite.GetFrameTexture("default", 0).GetImage().GetUsedRect();
-                _healthBar.SetSize(usedRect.Size);
-            }
-        }
-
-        public override void _Process(double delta)
-        {
-            _lastGlobalPosition = _currentGlobalPosition;
-            _currentGlobalPosition = GlobalPosition;
-
-            base._Process(delta);
-
-            KinematicCollision2D collision = MoveAndCollide(_motion, true);
-
-            if (collision != null)
-            {
-                OnCrash(collision);
-            }
-        }
-
-        protected override void FireWeapon()
-        {
-            if (_alive)
-            {
-                base.FireWeapon();
-                _sprite.Play("fire");
-            }
+            _sprite.Play("fire");
         }
 
         protected override void FollowPath(float speed)
         {
             // Stop the fire timer until we get to our spinning fire position.
-            if (!_weapon.FireTimer.IsStopped())
+            if (_weaponComponent.IsFiring)
             {
-                _weapon.FireTimer.Stop();
+                _weaponComponent.StopFiring();
             }
 
             float pathLength = _followPath.Curve.GetBakedLength();
@@ -78,7 +45,12 @@ namespace Enemies
 
             _followTween = CreateTween();
             _followTween
-                .TweenProperty(_followPath.PathFollow, "progress_ratio", 0.2f, stepDuration)
+                .TweenProperty(
+                    _followPath.PathFollow,
+                    "progress_ratio",
+                    SPIN_PROGRESS_RATIO,
+                    stepDuration
+                )
                 .SetTrans(Tween.TransitionType.Quad)
                 .SetEase(Tween.EaseType.Out);
             ;
@@ -87,12 +59,12 @@ namespace Enemies
                 {
                     if (_alive)
                     {
-                        _weapon.FireTimer.Start();
+                        _weaponComponent.StartFiring();
                     }
                 })
             );
             _followTween
-                .TweenProperty(this, "rotation_degrees", 1080f, SPIN_DURATION)
+                .TweenProperty(this, "rotation_degrees", SPIN_AMT_DEG, SPIN_DURATION)
                 .SetTrans(Tween.TransitionType.Sine)
                 .SetEase(Tween.EaseType.InOut);
             _followTween.TweenCallback(
@@ -100,7 +72,7 @@ namespace Enemies
                 {
                     if (_alive)
                     {
-                        _weapon.FireTimer.Stop();
+                        _weaponComponent.StopFiring();
                     }
                 })
             );
@@ -119,20 +91,13 @@ namespace Enemies
                 .SetEase(Tween.EaseType.In);
         }
 
-        public override void Die(int? playerId = null)
+        protected override async Task PlayDeathSequence()
         {
-            _alive = false;
-            _weapon.FireTimer.Stop();
-            _shape.Disabled = true;
-
             _audioComponent.PlayDestructionSound();
             _sprite.Play("destruction");
 
-            _sprite.AnimationFinished += () =>
-            {
-                _sprite.Visible = false;
-                base.Die(playerId);
-            };
+            await ToSignal(_sprite, AnimatedSprite2D.SignalName.AnimationFinished);
+            _sprite.Visible = false;
         }
     }
 }

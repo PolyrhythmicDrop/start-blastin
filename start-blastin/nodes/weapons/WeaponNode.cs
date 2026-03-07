@@ -33,6 +33,8 @@ namespace Weapons
         private int _activeProjectileCount;
         private IVelocityProvider _velocityProvider;
 
+        private readonly Dictionary<Barrel, ITetheredProjectile> _activeTethers = new();
+
         /// <summary>
         /// The weapon's base stats.
         /// </summary>
@@ -85,6 +87,8 @@ namespace Weapons
 
         public BarrelRack Barrels = new();
 
+        // ~~ Timers ~~
+
         /// <summary>
         /// Timer used to re-trigger firing of the weapon when the "fire" button is held down.
         /// </summary>
@@ -92,6 +96,16 @@ namespace Weapons
         /// The WaitTime of the FireTimer is set using the <see cref="WeaponStats.FireRate"/> of the weapon.
         /// </remarks>
         public Timer FireTimer;
+
+        /// <summary>
+        /// Timer used to set the time that firing is happening if this weapon has burst fire enabled.
+        /// </summary>
+        public Timer BurstFireTimer;
+
+        /// <summary>
+        /// Timer used to govern the time between burst fires, if burst firing is enabled.
+        /// </summary>
+        public Timer BurstCooldownTimer;
 
         /// <summary>
         /// The weapon's velocity provider. Used to add a parent object's velocity to projectile speed.
@@ -134,14 +148,17 @@ namespace Weapons
 
         public void SetBarrels()
         {
-            List<Node> children = [.. GetParent().GetChildren()];
+            // Get all the children of the parent node.
+            List<Node> children = UtilityMethods.GetAllChildren(GetParent());
+
             foreach (Barrel barrel in children.FindAll(child => child is Barrel))
             {
                 Barrels.Add(barrel);
+                if (barrel.DefaultActive == true)
+                {
+                    barrel.ToggleActive(true);
+                }
             }
-
-            // Activate the first barrel by default
-            Barrels.FirstOrDefault().ToggleActive(true);
         }
 
         /// <summary>
@@ -150,8 +167,7 @@ namespace Weapons
         public void InitializeProjectilePool()
         {
             _pool = new ProjectilePool(this, 5);
-            ProjectileParent = new();
-            ProjectileParent.Name = "ProjectileParent";
+            ProjectileParent = new() { Name = "ProjectileParent" };
             AddChild(ProjectileParent);
         }
 
@@ -173,21 +189,58 @@ namespace Weapons
         /// </summary>
         public void InitializeFireTimer()
         {
-            FireTimer = new();
-            if (Stats == null)
+            try
             {
-                DebugLogger.LogMessage(
-                    $"Stats is null in {Name} before setting FireTimer.WaitTime!",
-                    true,
-                    true
-                );
+                if (_stats == null)
+                {
+                    throw new NullReferenceException(
+                        $"Stats is null in {Name} before setting fire timer!"
+                    );
+                }
+
+                FireTimer = new()
+                {
+                    WaitTime = _stats.FireRate,
+                    Name = $"{Name}-FireTimer",
+                    OneShot = true,
+                    Autostart = false,
+                };
+                AddChild(FireTimer);
+
+                // Burst fire
+                if (_stats.BurstFire)
+                {
+                    if (_stats.BurstTime <= 0 || _stats.BurstCooldown <= 0)
+                    {
+                        throw new ArgumentException(
+                            $"Burst time and burst cooldown must be greater than 0! Burst time: {_stats.BurstTime} | Burst cooldown: {_stats.BurstCooldown}!"
+                        );
+                    }
+
+                    BurstFireTimer = new()
+                    {
+                        WaitTime = _stats.BurstTime,
+                        OneShot = true,
+                        Autostart = false,
+                        Name = $"{Name}-BurstFireTimer",
+                    };
+                    AddChild(BurstFireTimer);
+
+                    BurstCooldownTimer = new()
+                    {
+                        WaitTime = _stats.BurstCooldown,
+                        OneShot = true,
+                        Autostart = false,
+                        Name = $"{Name}-BurstCooldownTimer",
+                    };
+                    AddChild(BurstCooldownTimer);
+                }
             }
-            else
+            catch (Exception e)
             {
-                FireTimer.WaitTime = _stats.FireRate;
+                DebugLogger.LogMessage(e.Message, true, true);
+                return;
             }
-            AddChild(FireTimer);
-            FireTimer.Name = $"{Name}-FireTimer";
         }
 
         /// <summary>
@@ -219,13 +272,35 @@ namespace Weapons
                 playerId = player.PlayerId;
             }
 
-            // If the collidor has deflection active, deflect the projectile and return
-            if (args.Collider is IDeflector deflector && deflector.DeflectActive)
+            // ** Deflection block **
+
+            // If the source projectile is deflectable, see if we should be deflecting it
+            if (sourceProj is DeflectableProjectile defSrcProj)
             {
-                // Deflect and then return.
-                sourceProj.Deflect(deflector, args);
-                return;
+                // If the collider has deflection active, deflect the projectile and return
+                if (args.Collider is IDeflector deflector && deflector.DeflectActive)
+                {
+                    // Deflect and then return.
+                    defSrcProj.Deflect(deflector, args);
+                    return;
+                }
             }
+            else if (sourceProj is IDeflector srcDeflector && srcDeflector.DeflectActive)
+            {
+                if (args.Collider is DeflectableProjectile defColliderProj)
+                {
+                    // Invert the arguments
+                    CollisionEventArgs invertedArgs = new(
+                        sourceProj,
+                        args.GlobalCollisionPoint,
+                        args.CollisionNormal * -1
+                    );
+                    defColliderProj.Deflect(srcDeflector, invertedArgs);
+                    return;
+                }
+            }
+
+            // ** Damage **
 
             // IHealthful objects take damage.
             if (args.Collider is IHealthful healthful)
@@ -254,13 +329,21 @@ namespace Weapons
 
             // Projectiles deactivate.
             // TODO: Also add some kind of animation that plays.
-            if (args.Collider is Projectile projectile)
+            if (
+                args.Collider is Projectile projectile
+                && projectile is not ITetheredProjectile
+                && projectile.DeactivateOnCollision
+            )
             {
                 projectile.ToggleActive(false);
             }
 
-            // Deactivate the source projectile on collision.
-            sourceProj.ToggleActive(false);
+            // Deactivate the source projectile on collision if it's not tethered or has the flag set
+            // TODO: Determine if we want to do this here or elsewhere, because some projectiles (Flame, Laser, etc.) might not want to deactivate on collision.
+            if (sourceProj is not ITetheredProjectile && sourceProj.DeactivateOnCollision)
+            {
+                sourceProj.ToggleActive(false);
+            }
         }
 
         /// <summary>
@@ -285,17 +368,51 @@ namespace Weapons
         {
             if (barrel.Active == true)
             {
+                // Check for any active tethers on this barrel
+                if (_activeTethers.TryGetValue(barrel, out ITetheredProjectile existingTether))
+                {
+                    // Return immediately if there's already an active tether on this barrel.
+                    if (existingTether is Projectile proj && proj.Active)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        // If there's a tether on this barrel but the tether isn't active, that's a mistake and/or stale.
+                        // Remove this entry from the dictionary.
+                        _activeTethers.Remove(barrel);
+                    }
+                }
+
                 Projectile projectile = _pool.RequestProjectile();
                 projectile.Position = barrel.GlobalPosition;
                 projectile.GlobalRotation = barrel.GlobalRotation;
 
-                if (_velocityProvider != null)
+                // Apply velocity.
+                // TODO: Consider adding a condition that this not be a tethered projectile. Don't think I want to add velocity to those.
+                if (_velocityProvider != null && projectile is not ITetheredProjectile)
                 {
                     projectile.AddSourceVelocity(_velocityProvider.GetCurrentVelocity());
+                }
+
+                // If we're working with a tethered projectile, register it.
+                if (projectile is ITetheredProjectile tethered)
+                {
+                    // Set the barrel and bool for the projectile
+                    tethered.TetheredBarrel = barrel;
+                    tethered.IsTethered = true;
+
+                    // Register the barrel & projectile in the dictionary.
+                    _activeTethers[barrel] = tethered;
                 }
             }
         }
 
+        /// <summary>
+        /// Updates the relevant weapon stats based on an update to the owner's stats.
+        /// </summary>
+        /// <param name="statType">The stat type that was updated.</param>
+        /// <param name="stat">The value of the stat to update.</param>
         public virtual void UpdateWeaponStats(StatType statType, Stat stat)
         {
             switch (statType)
@@ -311,6 +428,45 @@ namespace Weapons
                     break;
                 default:
                     break;
+            }
+        }
+
+        /// <summary>
+        /// Releases all currently active tethered projectiles.
+        /// </summary>
+        public void ReleaseAllTetheredProjectiles()
+        {
+            foreach (KeyValuePair<Barrel, ITetheredProjectile> kvp in _activeTethers)
+            {
+                if (kvp.Value is Projectile proj && proj.Active)
+                {
+                    // I release thee!
+                    kvp.Value.ReleaseTether();
+                }
+            }
+
+            _activeTethers.Clear();
+        }
+
+        /// <summary>
+        /// Releases a tethered projectile from a single barrel.
+        /// </summary>
+        /// <param name="barrel"></param>
+        public void ReleaseTetheredProjectile(Barrel barrel)
+        {
+            bool tethered = _activeTethers.TryGetValue(barrel, out ITetheredProjectile tether);
+
+            if (!tethered)
+            {
+                return;
+            }
+            else
+            {
+                if (tether is Projectile proj && proj.Active)
+                {
+                    tether.ReleaseTether();
+                }
+                _activeTethers.Remove(barrel);
             }
         }
     }

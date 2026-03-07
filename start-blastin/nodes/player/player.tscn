@@ -1,20 +1,17 @@
-[gd_scene load_steps=23 format=3 uid="uid://nenl15kjphyb"]
+[gd_scene format=3 uid="uid://nenl15kjphyb"]
 
 [ext_resource type="Script" uid="uid://ceknkp5q1onls" path="res://nodes/player/Player.cs" id="1_4j62c"]
 [ext_resource type="PackedScene" uid="uid://cr3k7kv44d7a6" path="res://nodes/player/player-components/animation-component.tscn" id="2_hs1md"]
 [ext_resource type="Script" uid="uid://bw0jf3wqbeqhj" path="res://nodes/player/player-components/InventoryComponent.cs" id="3_2xyxk"]
-[ext_resource type="Script" uid="uid://b3qmdj461ykoi" path="res://architecture/items/plugins/Plugin.cs" id="3_lh1gn"]
 [ext_resource type="Script" uid="uid://dcupxkt621nuk" path="res://nodes/player/player-components/PlayerController.cs" id="4_1fmtd"]
-[ext_resource type="Shader" uid="uid://bmacriris3r2k" path="res://resources/shaders/color-cycling-hit-effect.gdshader" id="4_5h4ma"]
-[ext_resource type="Resource" uid="uid://cky7i7nr0uoxo" path="res://resources/items/plugins/space-berserker.tres" id="4_lh1gn"]
 [ext_resource type="PackedScene" uid="uid://bh7mbhu54my3n" path="res://nodes/player/player-components/movement-component.tscn" id="4_xl06i"]
 [ext_resource type="Script" uid="uid://wvxahp2d8k6f" path="res://nodes/player/player-components/WeaponComponent.cs" id="5_5h4ma"]
 [ext_resource type="Script" uid="uid://btnqmc5i2faj2" path="res://architecture/data-structures/PlayerSoundSet.cs" id="5_eiqky"]
 [ext_resource type="Script" uid="uid://bli5hxd5w3xhq" path="res://nodes/player/player-components/PlayerAudioComponent.cs" id="6_lh1gn"]
+[ext_resource type="Shader" uid="uid://bmacriris3r2k" path="res://resources/shaders/color-cycling-hit-effect.gdshader" id="7_eiqky"]
 [ext_resource type="Script" uid="uid://cx2eehu1aj48f" path="res://architecture/data-structures/AudioData.cs" id="7_lh1gn"]
 [ext_resource type="Script" uid="uid://75hy3sdqpcbx" path="res://nodes/player/player-components/PlayerStateComponent.cs" id="9_j4qgx"]
 [ext_resource type="PackedScene" uid="uid://bajml0u2freln" path="res://nodes/weapons/barrel.tscn" id="9_xl06i"]
-[ext_resource type="PackedScene" uid="uid://k6jtmcb31ro7" path="res://nodes/player/player-components/shield.tscn" id="10_qwfek"]
 
 [sub_resource type="Resource" id="Resource_1dubl"]
 script = ExtResource("7_lh1gn")
@@ -65,20 +62,20 @@ Fire = SubResource("Resource_1dubl")
 Hit = SubResource("Resource_3bit2")
 metadata/_custom_type_script = "uid://btnqmc5i2faj2"
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_xl06i"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_eiqky"]
 resource_local_to_scene = true
-shader = ExtResource("4_5h4ma")
+shader = ExtResource("7_eiqky")
 shader_parameter/start_frame = 0
 shader_parameter/current_frame = 0
 shader_parameter/mix_ratio = 0.0
 shader_parameter/color_array = PackedColorArray(1, 0.60784316, 0.7137255, 1, 1, 0.32941177, 0.4392157, 1, 0.74509805, 0.60784316, 1, 1, 0.34509805, 0.29803923, 0.5176471, 1, 0.14509805, 0.49019608, 0.60784316, 1, 0.14509805, 0.7372549, 0.7764706, 1)
 
 [sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_xl06i"]
-points = PackedVector2Array(26, -5.999999, -10, -30, -24.999998, -30.000002, -25, 0, -25.000002, 29.999998, -10, 30, 26, 6.000001)
+points = PackedVector2Array(26, -5.999999, -10, -30, -24.999998, -30.000002, -25, 0, -25.000002, 29.999998, -10, 30, 26, 6.000001, 26, 0)
 
-[node name="Player" type="CharacterBody2D" groups=["players"]]
+[node name="Player" type="CharacterBody2D" unique_id=110000331 groups=["players"]]
 rotation = -1.5707964
-collision_mask = 6
+collision_mask = 582
 motion_mode = 1
 platform_on_leave = 2
 script = ExtResource("1_4j62c")
@@ -93,64 +90,62 @@ FireRate = 2.0
 ProjectileSpeed = 100.0
 PluginSlots = 3
 
-[node name="InventoryComponent" type="Node" parent="."]
+[node name="InventoryComponent" type="Node" parent="." unique_id=381298834]
 unique_name_in_owner = true
 script = ExtResource("3_2xyxk")
-InitialPlugins = Array[ExtResource("3_lh1gn")]([ExtResource("4_lh1gn")])
 metadata/_custom_type_script = "uid://bw0jf3wqbeqhj"
 
-[node name="Shield" parent="InventoryComponent" instance=ExtResource("10_qwfek")]
-unique_name_in_owner = true
-position = Vector2(0, -29)
-rotation = -1.5707964
-
-[node name="AudioComponent" type="Node" parent="."]
+[node name="AudioComponent" type="Node" parent="." unique_id=2120752469]
 unique_name_in_owner = true
 script = ExtResource("6_lh1gn")
 Sounds = SubResource("Resource_j4qgx")
 
-[node name="AnimationComponent" parent="." instance=ExtResource("2_hs1md")]
+[node name="AnimationComponent" parent="." unique_id=1520006004 instance=ExtResource("2_hs1md")]
 unique_name_in_owner = true
-material = SubResource("ShaderMaterial_xl06i")
+material = SubResource("ShaderMaterial_eiqky")
 
-[node name="MovementComponent" parent="." instance=ExtResource("4_xl06i")]
+[node name="MovementComponent" parent="." unique_id=1131350049 instance=ExtResource("4_xl06i")]
 unique_name_in_owner = true
 
-[node name="PlayerStateComponent" type="Node" parent="."]
+[node name="PlayerStateComponent" type="Node" parent="." unique_id=1977487014]
 unique_name_in_owner = true
 script = ExtResource("9_j4qgx")
 metadata/_custom_type_script = "uid://75hy3sdqpcbx"
 
-[node name="PlayerController" type="Node" parent="."]
+[node name="PlayerController" type="Node" parent="." unique_id=383293799]
 unique_name_in_owner = true
 script = ExtResource("4_1fmtd")
 
-[node name="WeaponComponent" type="Node2D" parent="."]
+[node name="WeaponComponent" type="Node2D" parent="." unique_id=1169991206]
 unique_name_in_owner = true
 script = ExtResource("5_5h4ma")
 
-[node name="BarrelN" parent="WeaponComponent" instance=ExtResource("9_xl06i")]
+[node name="BarrelN" parent="WeaponComponent" unique_id=924356284 instance=ExtResource("9_xl06i")]
 position = Vector2(14, 6.119594e-07)
 Base = true
+DefaultActive = true
 
-[node name="BarrelW" parent="WeaponComponent" instance=ExtResource("9_xl06i")]
+[node name="BarrelW" parent="WeaponComponent" unique_id=878676542 instance=ExtResource("9_xl06i")]
 position = Vector2(3.45703e-07, -12)
 rotation = 4.712389
 Base = true
+DefaultActive = true
 Direction = 6
 
-[node name="BarrelE" parent="WeaponComponent" instance=ExtResource("9_xl06i")]
+[node name="BarrelE" parent="WeaponComponent" unique_id=1231465166 instance=ExtResource("9_xl06i")]
 position = Vector2(0, 12)
 rotation = 1.5707964
 Base = true
+DefaultActive = true
 Direction = 2
 
-[node name="BarrelS" parent="WeaponComponent" instance=ExtResource("9_xl06i")]
+[node name="BarrelS" parent="WeaponComponent" unique_id=1995264072 instance=ExtResource("9_xl06i")]
 position = Vector2(-18, -9.536743e-07)
 rotation = 3.1415927
 Base = true
+DefaultActive = true
 Direction = 4
 
-[node name="HitBox" type="CollisionShape2D" parent="."]
+[node name="HitBox" type="CollisionShape2D" parent="." unique_id=1396445754]
 unique_name_in_owner = true
 shape = SubResource("ConvexPolygonShape2D_xl06i")

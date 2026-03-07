@@ -1,0 +1,15 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://dl5k32pivt001"]
+
+[ext_resource type="Shader" uid="uid://b2u28rv8kyjvk" path="res://nodes/weapons/projectiles/laser/laser-bolt-scroll.gdshader" id="1_oqlg8"]
+[ext_resource type="Texture2D" uid="uid://b14y0d0v3ibf4" path="res://assets/projectiles/laser/laser-bolt.png" id="2_h8px6"]
+
+[resource]
+resource_local_to_scene = true
+shader = ExtResource("1_oqlg8")
+shader_parameter/alpha_mod = 1.0
+shader_parameter/scroll_speed = 17.0000008075
+shader_parameter/angle_degrees = 0.0
+shader_parameter/repeat_x = 1.0
+shader_parameter/repeat_y = 1.0
+shader_parameter/row_offset = 0.0
+shader_parameter/texture_to_scroll = ExtResource("2_h8px6")

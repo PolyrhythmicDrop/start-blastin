@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://k6jtmcb31ro7"]
+
+[ext_resource type="Material" uid="uid://diss6xjfqle4y" path="res://resources/shaders/deflect-hit-effect-shader.tres" id="1_yk324"]
+[ext_resource type="Script" uid="uid://xtu1hpna512e" path="res://nodes/weapons/projectiles/shield/ShieldProjectile.cs" id="2_6mcne"]
+[ext_resource type="Material" uid="uid://bqux6tvmprg1l" path="res://nodes/weapons/projectiles/shield/enemy-shield-projectile-palette.tres" id="3_k2die"]
+[ext_resource type="Texture2D" uid="uid://cdro5m8x72u18" path="res://assets/shields/shield.png" id="4_0wnjs"]
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_avtfy"]
+points = PackedVector2Array(-7, -24, -4, -30, 0, -30, 7, -5, 7, 5, 0, 30, -4, 30, -7, 24, -1, 5, -1, -5)
+
+[node name="ShieldProjectile" type="Area2D" unique_id=934244324]
+material = ExtResource("1_yk324")
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("2_6mcne")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1517501842]
+unique_name_in_owner = true
+material = ExtResource("3_k2die")
+use_parent_material = true
+texture = ExtResource("4_0wnjs")
+region_enabled = true
+region_rect = Rect2(26, 2, 14, 60)
+region_filter_clip_enabled = true
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=1209982295]
+unique_name_in_owner = true
+polygon = PackedVector2Array(-7, -24, -4, -30, 0, -30, 7, -5, 7, 5, 0, 30, -4, 30, -7, 24, -1, 5, -1, -5)
+
+[node name="TrajRayCast" type="RayCast2D" parent="." unique_id=1366944328]
+unique_name_in_owner = true
+target_position = Vector2(0, 0)
+collision_mask = 2
+hit_from_inside = true
+collide_with_areas = true
+
+[node name="ShapeCast2D" type="ShapeCast2D" parent="." unique_id=1386143998]
+unique_name_in_owner = true
+shape = SubResource("ConvexPolygonShape2D_avtfy")
+target_position = Vector2(0, 0)
+max_results = 1
+collision_mask = 0
+collide_with_areas = true

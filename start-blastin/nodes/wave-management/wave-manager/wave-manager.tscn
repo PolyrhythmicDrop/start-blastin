@@ -1,22 +1,21 @@
-[gd_scene load_steps=3 format=3 uid="uid://dxdlpe5yuamuy"]
+[gd_scene format=3 uid="uid://dxdlpe5yuamuy"]
 
 [ext_resource type="Script" uid="uid://fgb4t1vv8rw6" path="res://nodes/wave-management/wave-manager/WaveManager.cs" id="1_qioyi"]
 [ext_resource type="Script" uid="uid://d0dqgm5onjrth" path="res://nodes/wave-management/wave-manager/ScaleManager.cs" id="2_2lj5f"]
 
-[node name="WaveManager" type="Node" groups=["wave-manager"]]
+[node name="WaveManager" type="Node" unique_id=1483753488 groups=["wave-manager"]]
 process_mode = 1
 script = ExtResource("1_qioyi")
 Difficulty = 1
 WaveTime = 30.0
 
-[node name="WaveTimer" type="Timer" parent="."]
+[node name="WaveTimer" type="Timer" parent="." unique_id=1573309593]
 unique_name_in_owner = true
 process_mode = 1
 wait_time = 60.0
 one_shot = true
 
-[node name="ScaleManager" type="Node" parent="."]
+[node name="ScaleManager" type="Node" parent="." unique_id=903435514]
 unique_name_in_owner = true
 script = ExtResource("2_2lj5f")
-LevelOneFormation = "uid://cnm7xass0emcm"
 metadata/_custom_type_script = "uid://d0dqgm5onjrth"

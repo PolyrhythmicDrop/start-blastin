@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://dyem7stdeqti4"]
+[gd_scene format=3 uid="uid://dyem7stdeqti4"]
 
 [ext_resource type="Script" uid="uid://5lon7korvw26" path="res://nodes/ui/elements/OverheadHealthBar.cs" id="1_8f6ht"]
 
@@ -15,11 +15,12 @@ anti_aliasing = false
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g8qql"]
 resource_local_to_scene = true
 
-[node name="OverheadHealthBar" type="Node"]
+[node name="OverheadHealthBar" type="Node" unique_id=609393363]
 script = ExtResource("1_8f6ht")
 
-[node name="Bar" type="ProgressBar" parent="."]
+[node name="Bar" type="ProgressBar" parent="." unique_id=540123831]
 unique_name_in_owner = true
+visible = false
 layout_direction = 2
 anchors_preset = -1
 anchor_right = 0.026041666

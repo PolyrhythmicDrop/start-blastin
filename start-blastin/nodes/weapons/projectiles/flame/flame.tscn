@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://cyymtdtc5b7lk"]
+
+[ext_resource type="Script" uid="uid://co0n1k3nis3so" path="res://nodes/weapons/projectiles/flame/Flame.cs" id="1_k0qfi"]
+[ext_resource type="Texture2D" uid="uid://nbaq7ost4ga4" path="res://assets/projectiles/flame/flamethrower-particle-clipped.png" id="2_2ultm"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k1lqq"]
+atlas = ExtResource("2_2ultm")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iuv2x"]
+atlas = ExtResource("2_2ultm")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hsc3d"]
+atlas = ExtResource("2_2ultm")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lx22l"]
+atlas = ExtResource("2_2ultm")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i4bt4"]
+atlas = ExtResource("2_2ultm")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_qgyhe"]
+resource_local_to_scene = true
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k1lqq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iuv2x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hsc3d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lx22l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i4bt4")
+}],
+"loop": false,
+"name": &"default",
+"speed": 12.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2ultm"]
+radius = 16.0
+
+[node name="Flame" type="Area2D" unique_id=1245001736]
+collision_layer = 0
+collision_mask = 0
+input_pickable = false
+script = ExtResource("1_k0qfi")
+
+[node name="TrajRayCast" type="RayCast2D" parent="." unique_id=626733840]
+unique_name_in_owner = true
+position = Vector2(16, 0)
+target_position = Vector2(0, 0)
+collision_mask = 2
+hit_from_inside = true
+collide_with_areas = true
+
+[node name="FlameSprite" type="AnimatedSprite2D" parent="." unique_id=1732894262]
+unique_name_in_owner = true
+sprite_frames = SubResource("SpriteFrames_qgyhe")
+autoplay = "default"
+frame = 4
+frame_progress = 1.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1356015044]
+unique_name_in_owner = true
+process_mode = 4
+shape = SubResource("CircleShape2D_2ultm")

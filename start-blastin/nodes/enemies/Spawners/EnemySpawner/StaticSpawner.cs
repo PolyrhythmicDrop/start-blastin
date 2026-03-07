@@ -11,6 +11,8 @@ namespace Enemies.Spawners
     [GlobalClass]
     public partial class StaticSpawner : EnemySpawner
     {
+        public bool DebugMode { get; set; } = false;
+
         /// <summary>
         /// Sorted list of SpawnSteps that get triggered when their Timer key goes off.
         /// </summary>
@@ -131,7 +133,7 @@ namespace Enemies.Spawners
         public void SpawnEnemy(params SpawnStep[] steps)
         {
             // If the wave timer's not running for whatever reason, don't do anything.
-            if (!_waveTimerActive)
+            if (!_waveTimerActive && !DebugMode)
             {
                 return;
             }

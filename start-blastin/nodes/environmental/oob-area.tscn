@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://bsyev7gatn1jy"]
+[gd_scene format=3 uid="uid://bsyev7gatn1jy"]
 
 [ext_resource type="Script" uid="uid://3ub4ju4h50py" path="res://nodes/environmental/OobArea.cs" id="1_p6fuk"]
 
@@ -22,29 +22,29 @@ resource_local_to_scene = true
 resource_name = "right-oob"
 size = Vector2(217, 1712)
 
-[node name="OOB-Area" type="Area2D"]
+[node name="OOB-Area" type="Area2D" unique_id=844203182]
 collision_layer = 2
-collision_mask = 12
+collision_mask = 28
 input_pickable = false
 priority = 1
 script = ExtResource("1_p6fuk")
 
-[node name="OOB-Top" type="CollisionShape2D" parent="."]
+[node name="OOB-Top" type="CollisionShape2D" parent="." unique_id=782471773]
 position = Vector2(960, -242.5)
 shape = SubResource("RectangleShape2D_pxe5x")
 debug_color = Color(0.40196422, 0.6087442, 0, 0.41960785)
 
-[node name="OOB-Bottom" type="CollisionShape2D" parent="."]
+[node name="OOB-Bottom" type="CollisionShape2D" parent="." unique_id=580663201]
 position = Vector2(939, 1349.5)
 shape = SubResource("RectangleShape2D_rl1rb")
 debug_color = Color(0.40392157, 0.60784316, 0, 0.41960785)
 
-[node name="OOB-Right" type="CollisionShape2D" parent="."]
+[node name="OOB-Right" type="CollisionShape2D" parent="." unique_id=1159224249]
 position = Vector2(2175, 544.5)
 shape = SubResource("RectangleShape2D_ntwxm")
 debug_color = Color(0.40392157, 0.60784316, 0, 0.41960785)
 
-[node name="OOB-Left" type="CollisionShape2D" parent="."]
+[node name="OOB-Left" type="CollisionShape2D" parent="." unique_id=1035694819]
 position = Vector2(-258.5, 556)
 shape = SubResource("RectangleShape2D_l8aks")
 debug_color = Color(0.40392157, 0.60784316, 0, 0.41960785)

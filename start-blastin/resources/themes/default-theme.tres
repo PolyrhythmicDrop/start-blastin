@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=10 format=3 uid="uid://byu0wrnknwnnb"]
+[gd_resource type="Theme" format=3 uid="uid://byu0wrnknwnnb"]
 
 [ext_resource type="FontFile" uid="uid://b8tj5tsi08onc" path="res://resources/fonts/dogica/dogicapixelbold.ttf" id="1_k2mcc"]
 [ext_resource type="FontFile" uid="uid://bdn20wteigtfk" path="res://resources/fonts/silkscreen/Silkscreen-Regular.ttf" id="2_k2mcc"]

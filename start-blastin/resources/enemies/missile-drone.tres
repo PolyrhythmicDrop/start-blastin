@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="EnemyResource" load_steps=6 format=3 uid="uid://dwt1kb13007cq"]
+[gd_resource type="Resource" script_class="EnemyResource" format=3 uid="uid://dwt1kb13007cq"]
 
 [ext_resource type="Curve2D" uid="uid://ugylfjdaw4vv" path="res://resources/curves/sine-wave.tres" id="1_lbdoq"]
 [ext_resource type="Resource" uid="uid://c2r5pw0qbvtfr" path="res://resources/sound-sets/enemies/drone-sound-set.tres" id="2_o4e7f"]

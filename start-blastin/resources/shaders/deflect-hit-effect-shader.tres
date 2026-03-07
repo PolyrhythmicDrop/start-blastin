@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://diss6xjfqle4y"]
+
+[ext_resource type="Shader" uid="uid://bmacriris3r2k" path="res://resources/shaders/color-cycling-hit-effect.gdshader" id="1_pr5jr"]
+
+[resource]
+resource_local_to_scene = true
+shader = ExtResource("1_pr5jr")
+shader_parameter/start_frame = 0
+shader_parameter/current_frame = 0
+shader_parameter/mix_ratio = 0.0
+shader_parameter/color_array = PackedColorArray(1, 1, 1, 1, 0.7876081, 1, 0.99976116, 1, 0.9881422, 0.9999997, 0.825415, 1, 1, 1, 1, 1, 0.7882353, 1, 1, 1, 0.9882353, 1, 0.8235294, 1)

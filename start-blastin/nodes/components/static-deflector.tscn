@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://cpr6gjyj2y750"]
+
+[ext_resource type="Shader" uid="uid://dqd5mgfwuy3y7" path="res://resources/shaders/eye-dropper.gdshader" id="1_3nshe"]
+[ext_resource type="Script" uid="uid://b8hodie2upxtd" path="res://nodes/components/StaticDeflector.cs" id="1_ipavd"]
+[ext_resource type="Texture2D" uid="uid://cdro5m8x72u18" path="res://assets/shields/shield.png" id="2_ipavd"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ahsab"]
+resource_local_to_scene = true
+shader = ExtResource("1_3nshe")
+shader_parameter/palette_array_size = 4
+shader_parameter/input_palette_array = PackedColorArray(0.33333334, 0.64705884, 0.6392157, 1, 0.91764706, 0.7058824, 0.5254902, 1, 0.11764706, 0.3019608, 0.34509805, 1, 0.54509807, 0.9882353, 0.93333334, 1)
+shader_parameter/output_palette_array = PackedColorArray(0.61960787, 0.39607844, 0.78431374, 1, 0.6901961, 0.80784315, 0, 1, 0.397642, 0.21531087, 0.5250462, 1, 1, 0.6901961, 1, 1)
+
+[node name="StaticDeflector" type="StaticBody2D" unique_id=2099599118]
+collision_layer = 4
+collision_mask = 9
+script = ExtResource("1_ipavd")
+
+[node name="DeflectorSprite" type="Sprite2D" parent="." unique_id=1156815859]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_ahsab")
+texture = ExtResource("2_ipavd")
+
+[node name="DeflectorPoly" type="CollisionPolygon2D" parent="." unique_id=1361356855]
+unique_name_in_owner = true
+position = Vector2(1.0000037, -1.1924925e-08)
+polygon = PackedVector2Array(-7, -24, -4, -30, 0, -30, 7, -5, 7, 5, 0, 30, -4, 30, -7, 24, -1, 5, -1, -5)

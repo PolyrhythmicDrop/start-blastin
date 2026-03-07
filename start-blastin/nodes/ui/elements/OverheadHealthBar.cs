@@ -48,7 +48,7 @@ namespace UI
             ToggleBarVisibility(Active);
         }
 
-        public void SetSize(Vector2 spriteSize)
+        public void SetSizeAndOffset(Vector2 spriteSize)
         {
             // Get the width of the sprite
             float w = spriteSize.X;
@@ -57,7 +57,8 @@ namespace UI
             _yOffset = (spriteSize.Y / 2) + (BAR_HEIGHT * 3);
             _xOffset = spriteSize.X / 2;
 
-            _bar.Size = new(w, BAR_HEIGHT);
+            // Defer call to avoid debug warning about automatic re-sizing after Ready.
+            _bar.CallDeferred(Control.MethodName._SetSize, new Vector2(w, BAR_HEIGHT));
         }
 
         public void SetPosition(Vector2 spritePosition)

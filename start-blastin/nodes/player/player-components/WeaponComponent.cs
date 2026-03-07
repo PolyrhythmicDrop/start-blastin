@@ -62,26 +62,25 @@ namespace PlayerComponents
         {
             if (_weaponNode != null)
             {
-                _weaponNode.FireTimer.Timeout += _weaponNode.Fire;
-                _weaponNode.FireTimer.Timeout += _player.Audio.PlayFireSound;
+                _weaponNode.FireTimer.Timeout += FireWeapon;
             }
         }
 
         public void FireWeapon()
         {
-            Timer fireTimer = _weaponNode.FireTimer;
-
-            if (fireTimer.IsStopped())
+            if (_weaponNode.FireTimer.IsStopped())
             {
                 _weaponNode.Fire();
                 _player.Audio.PlayFireSound();
-                fireTimer.Start(_weaponNode.Stats.FireRate);
+                _weaponNode.FireTimer.Start(_weaponNode.Stats.FireRate);
             }
         }
 
         public void StopWeapon()
         {
             _weaponNode.FireTimer.Stop();
+            // Release tethered projectiles, if any.
+            _weaponNode.ReleaseAllTetheredProjectiles();
         }
 
         public void SetWeaponProjectile(ProjectileType type)

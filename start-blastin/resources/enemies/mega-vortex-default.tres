@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="EnemyResource" format=3 uid="uid://dy000j7xt4c3k"]
+
+[ext_resource type="Script" uid="uid://bytfm61mpkr5u" path="res://nodes/weapons/WeaponStats.cs" id="1_1bfo7"]
+[ext_resource type="Script" uid="uid://cf7pn6qd7aa15" path="res://nodes/enemies/EnemyResource.cs" id="1_bahvy"]
+[ext_resource type="Curve2D" uid="uid://bnvfjkrio8lfp" path="res://resources/curves/straight-down.tres" id="1_p1c0r"]
+[ext_resource type="Resource" uid="uid://c86hwny0l2bri" path="res://resources/audio-data/sfx/enemies/drone/drone-shots.tres" id="2_uom8x"]
+[ext_resource type="Script" uid="uid://dt02kxv7k56mm" path="res://architecture/data-structures/SoundSet.cs" id="3_a8eq1"]
+
+[sub_resource type="Resource" id="Resource_r4wna"]
+script = ExtResource("3_a8eq1")
+Fire = ExtResource("2_uom8x")
+metadata/_custom_type_script = "uid://dt02kxv7k56mm"
+
+[sub_resource type="Resource" id="Resource_p1c0r"]
+resource_local_to_scene = true
+script = ExtResource("1_1bfo7")
+ProjectileType = 4
+FireRate = 1.0
+ProjectileSpeed = 2000.0
+BurstTime = 5.0
+BurstCooldown = 2.0
+metadata/_custom_type_script = "uid://bytfm61mpkr5u"
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("1_bahvy")
+ScenePath = "res://nodes/enemies/mega-vortex/mega-vortex.tscn"
+Speed = 100.0
+CrashDamage = 5
+MaxHealth = 15.0
+WeaponStats = SubResource("Resource_p1c0r")
+PathCurve = ExtResource("1_p1c0r")
+Sounds = SubResource("Resource_r4wna")
+metadata/_custom_type_script = "uid://cf7pn6qd7aa15"

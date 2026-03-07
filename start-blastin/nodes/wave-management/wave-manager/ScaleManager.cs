@@ -290,11 +290,12 @@ namespace WaveManagement
         /// Adds the new spawners to the _activeSpawners list.
         /// </summary>
         /// <param name="configs">Configurations used to create and configure the new EnemySpawners.</param>
-        private async Task AddSpawners(params SpawnerConfig[] configs)
+        public async Task<HashSet<EnemySpawner>> AddSpawners(params SpawnerConfig[] configs)
         {
             // Get the scene tree and the root level node
             SceneTree tree = GetTree();
             Node levelNode = tree.GetFirstNodeInGroup("level");
+            HashSet<EnemySpawner> returnedSpawners = new();
 
             foreach (SpawnerConfig config in configs)
             {
@@ -310,9 +311,11 @@ namespace WaveManagement
                 ScaleSpawner(spawner, config);
 
                 _activeSpawners[config.Location].Add(spawner);
+                returnedSpawners.Add(spawner);
                 levelNode.CallDeferred(MethodName.AddChild, spawner);
                 await ToSignal(spawner, Node.SignalName.Ready);
             }
+            return returnedSpawners;
         }
 
         /// <summary>

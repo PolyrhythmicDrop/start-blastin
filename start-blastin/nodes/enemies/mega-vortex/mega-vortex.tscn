@@ -1,0 +1,385 @@
+[gd_scene format=3 uid="uid://w1yen5u453ac"]
+
+[ext_resource type="Shader" uid="uid://bmacriris3r2k" path="res://resources/shaders/color-cycling-hit-effect.gdshader" id="1_wgi55"]
+[ext_resource type="Texture2D" uid="uid://c4hgudf1g3kbu" path="res://assets/enemies/mega-vortex/mega-vortex-body-default.png" id="2_jn72d"]
+[ext_resource type="Script" uid="uid://ddrh88v27egxr" path="res://nodes/enemies/mega-vortex/MegaVortex.cs" id="2_ypfkn"]
+[ext_resource type="Script" uid="uid://bekbgunrmk3ad" path="res://nodes/weapons/Barrel.cs" id="3_jn72d"]
+[ext_resource type="Texture2D" uid="uid://d18gkf7i7ghv" path="res://assets/enemies/mega-vortex/mega-vortex-body-prefire.png" id="3_l8yul"]
+[ext_resource type="Texture2D" uid="uid://csi0lhke0esmw" path="res://assets/enemies/mega-vortex/mega-vortex-body-fire.png" id="3_my71f"]
+[ext_resource type="Texture2D" uid="uid://2pp2waivxwb7" path="res://assets/enemies/mega-vortex/mega-vortex-mouths-default.png" id="5_my71f"]
+[ext_resource type="Texture2D" uid="uid://d4idf0c5p0y5b" path="res://assets/enemies/mega-vortex/mega-vortex-mouths-prefire.png" id="6_ag1yp"]
+[ext_resource type="Texture2D" uid="uid://b0g38qacj0s5n" path="res://assets/enemies/mega-vortex/mega-vortex-mouths-fire.png" id="6_ypfkn"]
+[ext_resource type="Texture2D" uid="uid://6tdf7abhl64y" path="res://assets/particles/explosions/explosion-1.png" id="10_e4y3i"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_l8yul"]
+resource_local_to_scene = true
+shader = ExtResource("1_wgi55")
+shader_parameter/start_frame = 0
+shader_parameter/current_frame = 0
+shader_parameter/mix_ratio = 0.0
+shader_parameter/color_array = PackedColorArray(0.90325063, 0.71606773, 0.13664433, 1, 0.9286023, 0.44844162, 0.029969092, 1, 0.9297021, 0.55911386, 0.73078054, 1, 0.49905097, 0.24068788, 0.34344208, 1, 0.14509805, 0.49019608, 0.60784316, 1, 0.14509805, 0.7372549, 0.7764706, 1)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ijs4g"]
+radius = 20.0
+height = 50.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l8yul"]
+atlas = ExtResource("2_jn72d")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_my71f"]
+atlas = ExtResource("2_jn72d")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ag1yp"]
+atlas = ExtResource("2_jn72d")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ypfkn"]
+atlas = ExtResource("2_jn72d")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e4y3i"]
+atlas = ExtResource("2_jn72d")
+region = Rect2(512, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l7kdr"]
+atlas = ExtResource("2_jn72d")
+region = Rect2(640, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qpikx"]
+atlas = ExtResource("3_my71f")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w4ge6"]
+atlas = ExtResource("3_my71f")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i14yd"]
+atlas = ExtResource("3_my71f")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xlg3j"]
+atlas = ExtResource("3_my71f")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kmxhs"]
+atlas = ExtResource("3_l8yul")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a57ed"]
+atlas = ExtResource("3_l8yul")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v6kex"]
+atlas = ExtResource("3_l8yul")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_heccv"]
+atlas = ExtResource("3_l8yul")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_my71f"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l8yul")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_my71f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ag1yp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ypfkn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e4y3i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l7kdr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e4y3i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ypfkn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ag1yp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_my71f")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qpikx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w4ge6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i14yd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xlg3j")
+}],
+"loop": true,
+"name": &"fire",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kmxhs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a57ed")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v6kex")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_heccv")
+}],
+"loop": false,
+"name": &"prefire",
+"speed": 12.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pnlck"]
+atlas = ExtResource("6_ypfkn")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1g48i"]
+atlas = ExtResource("6_ypfkn")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oxwq2"]
+atlas = ExtResource("6_ypfkn")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6ckcp"]
+atlas = ExtResource("6_ypfkn")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wiorw"]
+atlas = ExtResource("6_ag1yp")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_epbrc"]
+atlas = ExtResource("6_ag1yp")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ap73k"]
+atlas = ExtResource("6_ag1yp")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b5n83"]
+atlas = ExtResource("6_ag1yp")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_pnlck"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_my71f")
+}],
+"loop": false,
+"name": &"default",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pnlck")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1g48i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oxwq2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6ckcp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oxwq2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1g48i")
+}],
+"loop": true,
+"name": &"fire",
+"speed": 15.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wiorw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_epbrc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ap73k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b5n83")
+}],
+"loop": false,
+"name": &"prefire",
+"speed": 8.0
+}]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_l7kdr"]
+particles_animation = true
+particles_anim_h_frames = 6
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Curve" id="Curve_kmxhs"]
+_limits = [-1.0, 1.0, 0.0, 1.0]
+_data = [Vector2(0, -1), 0.0, 2.8, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_22x4q"]
+width = 64
+curve = SubResource("Curve_kmxhs")
+
+[sub_resource type="Curve" id="Curve_a57ed"]
+_limits = [-1.0, 1.0, 0.0, 1.0]
+_data = [Vector2(0, -1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_0sbpf"]
+width = 64
+curve = SubResource("Curve_a57ed")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_v6kex"]
+lifetime_randomness = 0.2
+particle_flag_rotate_y = true
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(64, 64, 0)
+angle_min = -27.79999
+angle_max = 27.80001
+angle_curve = SubResource("CurveTexture_22x4q")
+spread = 40.623
+orbit_velocity_min = -0.07199991
+orbit_velocity_max = 0.0720001
+orbit_velocity_curve = SubResource("CurveTexture_0sbpf")
+gravity = Vector3(0, 0, 0)
+radial_accel_min = 0.28999776
+radial_accel_max = 73.89
+attractor_interaction_enabled = false
+scale_max = 1.5
+anim_speed_min = 1.0
+anim_speed_max = 1.09
+
+[node name="MegaVortex" type="AnimatableBody2D" unique_id=1369920116]
+material = SubResource("ShaderMaterial_l8yul")
+scale = Vector2(0.99999994, 0.99999994)
+collision_layer = 4
+collision_mask = 11
+sync_to_physics = false
+script = ExtResource("2_ypfkn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=669988398]
+unique_name_in_owner = true
+shape = SubResource("CapsuleShape2D_ijs4g")
+
+[node name="SpriteContainer" type="Node2D" parent="." unique_id=498378390]
+unique_name_in_owner = true
+use_parent_material = true
+scale = Vector2(1.0000001, 1.0000001)
+
+[node name="Body" type="AnimatedSprite2D" parent="SpriteContainer" unique_id=48352380]
+unique_name_in_owner = true
+texture_filter = 1
+use_parent_material = true
+sprite_frames = SubResource("SpriteFrames_my71f")
+animation = &"prefire"
+autoplay = "default"
+frame = 3
+frame_progress = 1.0
+metadata/_aseprite_wizard_interface_config_ = {
+"animation_section": true,
+"layer_section": true,
+"output_section": true,
+"pending_changes": {
+"source": "res://assets/enemies/drone/drone-base.aseprite"
+}
+}
+metadata/_aseprite_wizard_config_ = {
+"embed_tex": false,
+"layers": [],
+"o_ex_p": "",
+"o_folder": "res://nodes/enemies/Drone/sprites",
+"o_name": "drone-base",
+"only_visible": true,
+"scale": "2.0",
+"should_round_fps": true,
+"slice": "",
+"source": "res://nodes/enemies/Drone/sprites/drone-base.aseprite",
+"source_uid": 3091884809254475686
+}
+metadata/_aseprite_wizard_source_file_hash_ = "552ca6811f507bf31ca8961fec08bd78"
+
+[node name="Guns" type="AnimatedSprite2D" parent="SpriteContainer" unique_id=1914001758]
+unique_name_in_owner = true
+sprite_frames = SubResource("SpriteFrames_pnlck")
+animation = &"prefire"
+autoplay = "default"
+frame = 3
+frame_progress = 1.0
+
+[node name="BarrelN" type="Node2D" parent="." unique_id=786442203]
+position = Vector2(42.000004, -1.9073486e-06)
+script = ExtResource("3_jn72d")
+Base = true
+DefaultActive = true
+metadata/_custom_type_script = "uid://bekbgunrmk3ad"
+
+[node name="BarrelS" type="Node2D" parent="." unique_id=441159729]
+position = Vector2(-41.999996, -1.9073486e-06)
+rotation = 3.1415927
+script = ExtResource("3_jn72d")
+Base = true
+DefaultActive = true
+Direction = 4
+metadata/_custom_type_script = "uid://bekbgunrmk3ad"
+
+[node name="BarrelE" type="Node2D" parent="." unique_id=475139657]
+position = Vector2(0, 42)
+rotation = 1.5707964
+script = ExtResource("3_jn72d")
+Base = true
+DefaultActive = true
+Direction = 2
+metadata/_custom_type_script = "uid://bekbgunrmk3ad"
+
+[node name="BarrelW" type="Node2D" parent="." unique_id=1077712754]
+position = Vector2(0, -42)
+rotation = 4.712389
+script = ExtResource("3_jn72d")
+Base = true
+DefaultActive = true
+Direction = 6
+metadata/_custom_type_script = "uid://bekbgunrmk3ad"
+
+[node name="DestructParticles" type="GPUParticles2D" parent="." unique_id=854510115]
+unique_name_in_owner = true
+material = SubResource("CanvasItemMaterial_l7kdr")
+scale = Vector2(1.0000001, 1.0000001)
+emitting = false
+amount = 20
+texture = ExtResource("10_e4y3i")
+lifetime = 1.2
+explosiveness = 0.2
+randomness = 0.2
+visibility_rect = Rect2(-100.98, -100, 200, 200)
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_v6kex")

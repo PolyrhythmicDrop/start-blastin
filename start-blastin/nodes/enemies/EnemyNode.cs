@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,7 +11,6 @@ using Factories;
 using Godot;
 using Interfaces;
 using Stats;
-using UI;
 using Utility;
 using WaveManagement;
 using Weapons;
@@ -30,69 +28,83 @@ namespace Enemies
             IListener,
             IDeflector
     {
-        #region Nodes
+        #region Nodes and Components
         protected StatManager _stats;
 
-        protected WeaponNode _weapon;
+        public StatManager Stats => _stats;
 
+        protected EnemyWeaponComponent _weaponComponent;
+        protected EnemyHealthComponent _healthComponent;
+        protected AudioComponent _audioComponent;
         protected CollisionShape2D _shape;
 
-        public VisibleOnScreenNotifier2D VisibleNotifier;
+        protected EntityPath _followPath;
+
+        /// <summary>
+        /// The weapon managed by this enemy's <see cref="EnemyWeaponComponent"/>.
+        /// </summary>
+        public WeaponNode Weapon => _weaponComponent.Weapon;
+
+        /// <summary>
+        /// The enemy's audio component.
+        /// </summary>
+        public AudioComponent AudioComp => _audioComponent;
 
         /// <summary>
         /// The main path the enemy follows. When they reach the end of this path, the enemy despawns.
         /// </summary>
-        protected EntityPath _followPath;
-
-        protected AudioComponent _audioComponent;
-
-        protected OverheadHealthBar _healthBar;
-
-        public WeaponNode Weapon => _weapon;
         public EntityPath Path => _followPath;
+
+        public VisibleOnScreenNotifier2D VisibleNotifier;
 
         #endregion
 
 
         #region Position and Velocity
+
         protected Vector2 _currentGlobalPosition;
         protected Vector2 _lastGlobalPosition;
         protected Vector2 _motion => _currentGlobalPosition - _lastGlobalPosition;
-        protected Vector2 _lastFramePosition;
         protected Vector2 _currentVelocity = Vector2.Zero;
+        protected Vector2 _terminalTrajectory = Vector2.Zero;
         protected Tween _followTween;
+        protected float _followSpeed => _stats.GetStat(StatType.Speed).CurrentValue;
+
         #endregion
 
         #region Stats
 
-
         /// <summary>
         /// The speed at which this enemy follows its assigned path.
         /// </summary>
-        protected float _followSpeed => _stats.GetStat(StatType.Speed).CurrentValue;
-
         protected float _crashDamage => _stats.GetStat(StatType.CrashDamage).CurrentValue;
 
         // Base stats
         protected float _baseSpeed;
         protected float _baseCrashDamage;
-        protected float _baseMaxHealth;
-        protected float _baseFireRate;
-        protected float _baseWeaponDamage;
+
+        // Currency
         protected int _fluxReward;
         protected int _byteReward;
 
         #endregion
 
         #region State
-        protected bool _alive = true;
-
-        public bool DeflectActive { get; set; }
 
         /// <summary>
-        /// Whether or not the enemy is spawning. Set to false automatically after the enemy leaves the OOB area for the first time.
+        /// Callback method for when the enemy exits the screen.
         /// </summary>
-        public bool Spawning { get; set; } = true;
+        private Callable _screenExitCallable;
+
+        protected bool _alive = true;
+        public bool IsAlive => _alive;
+
+        protected bool _atPathEnd = false;
+
+        /// <summary>
+        /// If part of a squadron, whether or not the enemy has split from the squadron.
+        /// </summary>
+        private bool _split = false;
 
         /// <summary>
         /// Whether or not the enemy is part of a squadron. Enables squadron behavior, like tweening out of the formation at a set time.
@@ -105,47 +117,17 @@ namespace Enemies
         public Vector2? SquadronPosition { get; set; }
 
         /// <summary>
-        /// Whether or not the enemy is currently visible on the screen.
-        /// </summary>
-        public bool OnScreen { get; set; }
-
-        /// <summary>
         /// The point in the enemy's path at which they split off from the main squadron point into their <see cref="SquadronPosition"/>.
         /// </summary>
         public float SplitPoint;
 
         /// <summary>
-        /// If part of a squadron, whether or not the enemy has split from the squadron.
+        /// Whether or not the enemy is currently visible on the screen.
         /// </summary>
-        private bool _split = false;
+        public bool OnScreen { get; set; }
+        public bool DeflectActive { get; set; }
 
         #endregion
-
-
-        #region Health
-
-        // current stats
-        protected float _currentHealth;
-        protected float _maxHealth => _stats.GetStat(StatType.MaxHealth).CurrentValue;
-        public float CurrentHealth
-        {
-            get => _currentHealth;
-            private set
-            {
-                _currentHealth = value;
-                _healthBar?.SetValues(_maxHealth, _currentHealth);
-            }
-        }
-
-        public float MaxHealth
-        {
-            get => _maxHealth;
-            set
-            {
-                _stats.UpdateStat(StatType.MaxHealth, Mathf.Max(1, value));
-                _healthBar?.SetValues(_maxHealth, _currentHealth);
-            }
-        }
 
         #region Constants
 
@@ -155,56 +137,37 @@ namespace Enemies
 
         #endregion
 
-        /// <summary>
-        /// Sets the position of the health bar based on the enemy's current position.
-        /// </summary>
-        protected virtual void SetHealthBarPosition()
-        {
-            _healthBar.SetPosition(_currentGlobalPosition);
-        }
 
-        /// <summary>
-        /// Sets the size of the enemy's health bar based on the size of the enemy's sprite. Override in derived classes.
-        /// </summary>
-        protected virtual void SetHealthBarSize() { }
+        public float CurrentHealth => _healthComponent.CurrentHealth;
 
-        /// <summary>
-        /// Turn the health bar on and off.
-        /// </summary>
-        public virtual void ToggleHealthBarActive()
-        {
-            _healthBar.ToggleActive();
-        }
+        public float MaxHealth => _healthComponent.MaxHealth;
 
-        #endregion
+        public virtual AnimatedSprite2D GetPrimarySprite() => null;
 
         #region Init
 
         /// <summary>
         /// Initializes the enemy node from an enemy resource.
-        /// Called from the EnemyFactory before the enemy is added to the scene tree, before _Ready().
+        /// Called from the <see cref="EnemyFactory"/> before the enemy is added to the scene tree, before _Ready().
         /// </summary>
         /// <param name="enemyResource">The resource used to create the enemy.</param>
         public virtual void Initialize(EnemyResource enemyResource)
         {
             // Health
-            _baseMaxHealth = enemyResource.MaxHealth;
-            _currentHealth = _baseMaxHealth;
+            _healthComponent = new();
+            _healthComponent.Initialize(this, enemyResource);
 
             // Currency
             _fluxReward = enemyResource.FluxReward;
             _byteReward = enemyResource.ByteReward;
 
-            // Weapon initialization
-            _weapon = WeaponFactory.CreateWeapon(
-                enemyResource.WeaponStats,
-                velocityProvider: this,
-                owner: this
-            );
-            _baseFireRate = enemyResource.WeaponStats.FireRate;
-            _baseWeaponDamage = enemyResource.WeaponStats.Damage;
+            // Speed and crash damage
             _baseSpeed = enemyResource.Speed;
             _baseCrashDamage = enemyResource.CrashDamage;
+
+            // Weapon component initialization
+            _weaponComponent = new();
+            _weaponComponent.Initialize(this, enemyResource.WeaponStats);
 
             // Sound initialization
             _audioComponent = new() { Sounds = enemyResource.Sounds };
@@ -222,9 +185,9 @@ namespace Enemies
             _stats = new();
             _stats.AddStat(StatType.CrashDamage, _baseCrashDamage);
             _stats.AddStat(StatType.Speed, _baseSpeed);
-            _stats.AddStat(StatType.FireRate, _baseFireRate);
-            _stats.AddStat(StatType.MaxHealth, _baseMaxHealth);
-            _stats.AddStat(StatType.Damage, _baseWeaponDamage);
+            _stats.AddStat(StatType.MaxHealth, _healthComponent.BaseMaxHealth);
+            _stats.AddStat(StatType.FireRate, _weaponComponent.BaseFireRate);
+            _stats.AddStat(StatType.Damage, _weaponComponent.BaseWeaponDamage);
         }
 
         public override void _Ready()
@@ -232,28 +195,37 @@ namespace Enemies
             base._Ready();
             AddToGroup("enemies");
 
+            // Initialize the collision shape and the visible notifier node
             _shape = GetNode<CollisionShape2D>("%CollisionShape2D");
             InitVisibleNotifier();
 
-            AddChild(_weapon);
-
-            // Start the weapon fire timer to fire on a set interval.
-            _weapon.FireTimer.Timeout += FireWeapon;
-
-            // Set an initial firing delay
-            double delay = RNG.GetRandomDouble(max: _weapon.Stats.FireRate);
-            _weapon.FireTimer.Start(delay);
+            // Add the weapon component
+            AddChild(_weaponComponent);
 
             // Initialize position tracking
-            _lastFramePosition = GlobalPosition;
-
-            // Initialize the health bar.
-            _healthBar = GetNode<OverheadHealthBar>("%OverheadHealthBar");
-            _healthBar.Initialize(this);
+            _currentGlobalPosition = GlobalPosition;
+            _lastGlobalPosition = _currentGlobalPosition;
 
             ConnectSignals();
+
+            // Call the derived class's Ready steps.
+            OnBaseReadyComplete();
+
+            // Add the health component after derived Ready steps so the health bar can access the enemy's sprite
+            AddChild(_healthComponent);
+
+            // Start following the proscribed path
+            FollowPath(_followSpeed);
         }
 
+        /// <summary>
+        /// Setup logic for derived classes. Called during <see cref="_Ready"/>, after base initialization, but before <see cref="SetHealthBarSize"/> and <see cref="FollowPath"/>.
+        /// </summary>
+        protected virtual void OnBaseReadyComplete() { }
+
+        /// <summary>
+        /// Initializes the <see cref="VisibleOnScreenNotifier2D"/> node for this enemy.
+        /// </summary>
         protected void InitVisibleNotifier()
         {
             VisibleNotifier = new() { Rect = _shape.Shape.GetRect() };
@@ -271,6 +243,8 @@ namespace Enemies
 
         public virtual void ConnectSignals()
         {
+            _screenExitCallable = Callable.From(OnScreenExit);
+
             if (_stats != null)
             {
                 _stats.StatUpdated += OnStatUpdated;
@@ -318,7 +292,11 @@ namespace Enemies
 
         public virtual void OnPathComplete()
         {
-            Die();
+            _atPathEnd = true;
+            if (!VisibleNotifier.IsOnScreen())
+            {
+                FreeEnemy();
+            }
         }
 
         #endregion
@@ -341,15 +319,22 @@ namespace Enemies
             _stats.UpdateStat(type, value);
         }
 
+        /// <summary>
+        /// Callback for when a stat in the StatManager (<see cref="_stats"/>) is updated.
+        /// Updates either the weapon stats via the <see cref="EnemyWeaponComponent"/> or the follow speed for pathed enemies.
+        /// </summary>
+        /// <param name="source">The source of the <see cref="StatManager.StatUpdated"/> event.</param>
+        /// <param name="args">The event args containing the stat type and the stat object.</param>
         public virtual void OnStatUpdated(object source, StatUpdatedEventArgs args)
         {
+            // Attempt to update weapon stats first. If successful, return. Otherwise, update the non-weapon stats.
+            if (_weaponComponent.HandleStatUpdates(args.StatType, args.Stat))
+            {
+                return;
+            }
+
             switch (args.StatType)
             {
-                case StatType.FireRate:
-                case StatType.Damage:
-                case StatType.ProjectileSpeed:
-                    Weapon.UpdateWeaponStats(args.StatType, args.Stat);
-                    return;
                 case StatType.Speed:
                     if (_followTween != null && _followTween.IsValid())
                     {
@@ -419,11 +404,12 @@ namespace Enemies
             float waveSqrtMultiplier = Mathf.Sqrt(wave) * 0.1f;
 
             float newMaxHealth =
-                _baseMaxHealth * (1 + (scaler.MaxHealthModifier * waveLogMultiplier));
+                _healthComponent.BaseMaxHealth
+                * (1 + (scaler.MaxHealthModifier * waveLogMultiplier));
             SetStat(StatType.MaxHealth, newMaxHealth);
 
             // Fill the enemy's health.
-            CurrentHealth = MaxHealth;
+            _healthComponent.CurrentHealth = MaxHealth;
 
             float newCrashDamage =
                 _baseCrashDamage * (1 + (scaler.CrashDamageModifier * waveLogMultiplier));
@@ -433,12 +419,15 @@ namespace Enemies
             SetStat(StatType.Speed, newFollowSpeed);
 
             float newDamage =
-                _baseWeaponDamage * (1 + (scaler.WeaponDamageModifier * waveSqrtMultiplier));
+                _weaponComponent.BaseWeaponDamage
+                * (1 + (scaler.WeaponDamageModifier * waveSqrtMultiplier));
             SetStat(StatType.Damage, newDamage);
 
             float waveExpoMultiplier = Mathf.Pow(0.95f, wave * scaler.FireRateModifier);
+
             // Fire rate should be decreased, since lower fire rates result in faster firing.
-            float newFireRate = Mathf.Max(0.1f, _baseFireRate * waveExpoMultiplier);
+            float newFireRate = Mathf.Max(0.1f, _weaponComponent.BaseFireRate * waveExpoMultiplier);
+
             SetStat(StatType.FireRate, newFireRate);
         }
 
@@ -456,51 +445,42 @@ namespace Enemies
         /// </summary>
         /// <param name="damage">The amount of damage to take.</param>
         /// <param name="playerId">If a player caused the damage, the <see cref="Player.PlayerId"/> of the damaging player.</param>
-        public void TakeDamage(float damage, int? playerId = null)
+        public void TakeDamage(float damage, int? playerId = null) =>
+            _healthComponent.TakeDamage(damage, playerId);
+
+        public void ToggleHealthBarActive() => _healthComponent.ToggleHealthBarActive();
+
+        public void Heal(float healAmount) => _healthComponent.Heal(healAmount);
+
+        /// <summary>
+        /// Plays the enemy's fire animation. Must be implemented by the derived class.
+        /// </summary>
+        public abstract void PlayFireAnimation();
+
+        /// <summary>
+        /// Kills the enemy. Raises the <see cref="EventBus.EnemyKilled"/> event if a Player killed the enemy.
+        /// </summary>
+        /// <param name="playerId">The ID of the player that killed the enemy, if any. This player gets the rewards for killing the enemy.</param>
+        /// <remarks>
+        /// If <paramref name="playerId"/> is null, the <see cref="EventBus.EnemyKilled"/> event is not raised.
+        public virtual async void Die(int? playerId = null)
         {
-            if (_alive)
-            {
-                // Play the hit sound
-                // AudioService.Instance.PlaySound(_sounds?.Hit, this, volume: -6);
-                _audioComponent.PlayHitSound();
-
-                PlayDamageAnimation();
-                IndicatorFactory.CreateTextIndicator(
-                    (MathF.Round(damage, 1) * -1).ToString(),
-                    GlobalPosition,
-                    parent: this
-                );
-                CurrentHealth -= damage;
-
-                // _healthBar.SetValues(MaxHealth, CurrentHealth);
-
-                if (_currentHealth <= 0)
-                {
-                    CurrentHealth = 0;
-                    Die(playerId);
-                }
-            }
-        }
-
-        public void Heal(float healAmount)
-        {
-            // Don't do anything if current health is greater than max health
-            if (_currentHealth >= _maxHealth)
+            // Don't die again if you're already dead.
+            if (!_alive)
             {
                 return;
             }
-            CurrentHealth = Mathf.Min(_currentHealth + healAmount, MaxHealth);
-        }
 
-        protected virtual void FireWeapon()
-        {
-            _audioComponent.PlayFireSound();
-            _weapon.Fire();
-        }
+            // Standardized death stuff
+            _alive = false;
+            // _weapon.FireTimer.Stop();
+            _weaponComponent.StopFiring();
+            _shape.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
 
-        public virtual async void Die(int? playerId = null)
-        {
-            _healthBar.ToggleBarVisibility(false);
+            // Derived class death stuff
+            await PlayDeathSequence();
+
+            // Raise the enemy killed event
             if (playerId != null)
             {
                 EnemyKilledEventArgs args = new(
@@ -511,16 +491,51 @@ namespace Enemies
                 );
                 EventBus.Instance.RaiseEnemyKilled(args);
             }
+
+            // Free the enemy from memory
+            FreeEnemy();
+        }
+
+        /// <summary>
+        /// Handles all class-specific death logic, including playing death animations and sounds, freeing related objects, and waiting for animations to complete.
+        /// Must be implemented by derived class.
+        /// </summary>
+        /// <returns></returns>
+        protected abstract Task PlayDeathSequence();
+
+        /// <summary>
+        /// Callback for when the enemy exits the screen after it has reached the end of its path.
+        /// </summary>
+        private void OnScreenExit()
+        {
+            FreeEnemy();
+        }
+
+        /// <summary>
+        /// Frees the enemy from memory after all its associated audio is finished playing and all its projectiles are disabled.
+        /// </summary>
+        public async void FreeEnemy()
+        {
+            _healthComponent.HealthBar.ToggleBarVisibility(false);
+
+            // Release all tethered projectiles, if any.
+            // _weapon.ReleaseAllTetheredProjectiles();
+            _weaponComponent.ReleaseAllTetheredProjectiles();
+
             // Queue free after all child projectiles die and all child audio nodes stop playing
             await WaitForAudioEnd();
-            bool projectilesDisabled = await _weapon.WaitForAllProjectilesDisabled();
+            bool projectilesDisabled = await _weaponComponent.WaitForAllProjectilesDisabled();
+            // bool projectilesDisabled = await _weapon.WaitForAllProjectilesDisabled();
 
-            if (projectilesDisabled)
+            if (projectilesDisabled && !IsQueuedForDeletion())
             {
                 QueueFree();
             }
         }
 
+        /// <summary>
+        /// Plays the enemy's damage animation using the damage shader.
+        /// </summary>
         public virtual void PlayDamageAnimation()
         {
             string mixRatioPath = "mix_ratio";
@@ -558,26 +573,65 @@ namespace Enemies
         public override void _PhysicsProcess(double delta)
         {
             base._PhysicsProcess(delta);
+
+            // Update position tracking
+            _lastGlobalPosition = _currentGlobalPosition;
+            _currentGlobalPosition = GlobalPosition;
+
             if (delta > 0)
             {
-                _currentVelocity = (GlobalPosition - _lastFramePosition) / (float)delta;
+                _currentVelocity = (_currentGlobalPosition - _lastGlobalPosition) / (float)delta;
             }
-
-            _lastFramePosition = GlobalPosition;
         }
 
         public override void _Process(double delta)
         {
             if (_motion != Vector2.Zero)
             {
-                SetHealthBarPosition();
+                _healthComponent.SetHealthBarPosition();
             }
 
+            // Pre-processing for derived classes
+            OnProcessUpdate(delta);
+
+            // Collision detection
+            KinematicCollision2D collision = MoveAndCollide(_motion, true);
+
+            if (collision != null)
+            {
+                OnCrash(collision);
+            }
+
+            // Keep going along current motion of at path end and not dead
+            if (_atPathEnd && _alive && OnScreen)
+            {
+                // Connect to the screen exited signal for freeing if you're not already connected to it.
+                if (
+                    !VisibleNotifier.IsConnected(
+                        VisibleOnScreenNotifier2D.SignalName.ScreenExited,
+                        _screenExitCallable
+                    )
+                )
+                {
+                    ConnectPathEndScreenExited();
+                }
+                // Set your exiting trajectory if it's not already set.
+                if (_terminalTrajectory == Vector2.Zero)
+                {
+                    SetTerminalTrajectory(delta);
+                }
+
+                // Move along the terminal trajectory until you're off the screen.
+                MoveAndCollide(_terminalTrajectory);
+            }
+
+            // If you've already split from the squadron (or not in a squadron), return.
             if (_split)
             {
                 return;
             }
 
+            // Split off from the squadron if we're part of one.
             if (InSquadron && SquadronPosition != null)
             {
                 if (_followPath.PathFollow.ProgressRatio > SplitPoint)
@@ -586,6 +640,26 @@ namespace Enemies
                     TweenSquadronPosition((Vector2)SquadronPosition);
                 }
             }
+        }
+
+        /// <summary>
+        /// Called during the base <see cref="_Process(double)"/> function. Implemented by derived classes for class-specific behavior during _Process.
+        /// </summary>
+        /// <param name="delta">The time between frames, retrieved from <see cref="_Process(double)"/>.</param>
+        protected virtual void OnProcessUpdate(double delta) { }
+
+        private void ConnectPathEndScreenExited()
+        {
+            VisibleNotifier.Connect(
+                VisibleOnScreenNotifier2D.SignalName.ScreenExited,
+                _screenExitCallable
+            );
+        }
+
+        private void SetTerminalTrajectory(double delta)
+        {
+            _terminalTrajectory =
+                Vector2.Right.Rotated(GlobalRotation) * (_followSpeed * (float)delta);
         }
 
         /// <summary>
@@ -603,7 +677,6 @@ namespace Enemies
 
             _followTween = CreateTween();
             _followTween.TweenProperty(_followPath, "FollowRatio", 1.0, duration);
-            // _followTween.TweenProperty(_followPath, StringName., 1.0, duration);
         }
 
         /// <summary>
@@ -624,25 +697,6 @@ namespace Enemies
             }
 
             await Task.WhenAll(audioTasks);
-            // var children = GetChildren();
-            // foreach (Node node in children)
-            // {
-            //     if (node is not AudioStreamPlayer2D audioStream)
-            //     {
-            //         continue;
-            //     }
-
-            //     if (!audioStream.Playing)
-            //     {
-            //         continue;
-            //     }
-            //     else
-            //     {
-            //         await ToSignal(audioStream, AudioStreamPlayer2D.SignalName.Finished);
-            //         continue;
-            //     }
-            // }
-            // return true;
         }
 
         public override void _ExitTree()

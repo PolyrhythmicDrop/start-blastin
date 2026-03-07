@@ -772,10 +772,8 @@ namespace Effects
 
         #region Removal
 
-        protected void RemoveEffectFromTarget(GodotObject target)
+        public void RemoveEffectFromTarget(GodotObject target)
         {
-            // DebugLogger.LogMessage($"Removing {this.ResourceName} from {target}", true);
-
             // Get the current EffectState, if any.
             try
             {

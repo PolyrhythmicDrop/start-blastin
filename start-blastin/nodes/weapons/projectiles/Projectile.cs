@@ -1,11 +1,8 @@
 using System;
-using System.Threading.Tasks;
-using Enemies;
-using Entities;
+using Environmental;
 using Events;
 using Factories;
 using Godot;
-using Interfaces;
 using Utility;
 using Weapons;
 
@@ -26,8 +23,18 @@ namespace Projectiles
 
         private bool _sourceInitialized;
         private bool _factionInitialized;
-        private Callable _deactivateCallable;
+
+        /// <summary>
+        /// Whether or not this projectile should ignore collisions by other projectiles.
+        /// </summary>
+        protected bool _ignoreOtherProjectiles = false;
+        public bool IgnoreOtherProjectiles => _ignoreOtherProjectiles;
+
+        public bool DeactivateOnCollision = true;
+
+        protected Callable _deactivateCallable;
         protected bool _active;
+
         protected Faction _faction;
         protected Timer _deactivationTimer;
         protected float _baseSpeed;
@@ -109,13 +116,17 @@ namespace Projectiles
 
         public event EventHandler<CollisionEventArgs> Collision;
 
+        protected void RaiseCollision(object source, CollisionEventArgs args)
+        {
+            Collision?.Invoke(source, args);
+        }
+
         /// <summary>
         /// Constructor for the Projectile. Initializes the <see cref="DeactivationTimer"/> and the <see cref="_deactivateCallable"/>.
         /// </summary>
         public Projectile()
         {
-            _deactivationTimer = new Timer();
-            _deactivationTimer.WaitTime = 100;
+            _deactivationTimer = new() { WaitTime = 100 };
             _deactivateCallable = Callable.From(() => ToggleActive(false));
         }
 
@@ -161,7 +172,7 @@ namespace Projectiles
         /// Sets the collision masks for the targeting ray.
         /// </summary>
         /// <param name="faction">The Faction this projectile belongs to.</param>
-        public void SetRayMask(Faction faction)
+        public virtual void SetRayMask(Faction faction)
         {
             _ray?.SetCollisionMaskValue(8, true);
             switch (faction)
@@ -216,7 +227,7 @@ namespace Projectiles
             _currentSpeed = _baseSpeed;
         }
 
-        private void InitializeFaction(Faction faction)
+        protected virtual void InitializeFaction(Faction faction)
         {
             _faction = faction;
             SetProjectileCollisionLayers(faction);
@@ -226,6 +237,14 @@ namespace Projectiles
         #endregion
 
         #region Processing
+
+        /// <summary>
+        /// Basic per-frame physics processing. Casts a basic ray and sets the position based on the result of <see cref="GetTrajectory"/>.
+        /// </summary>
+        /// <param name="delta"></param>
+        /// <remarks>
+        /// Override this method in derived Projectile subclasses for custom physics behavior.
+        /// </remarks>
         public override void _PhysicsProcess(double delta)
         {
             if (_active)
@@ -270,7 +289,7 @@ namespace Projectiles
         /// </summary>
         /// <param name="connect">True to connect the signal, false to disconnect the signal.</param>
         /// <exception cref="InvalidOperationException"></exception>
-        private void ToggleCollisionSignalConnection(bool connect)
+        protected virtual void ToggleCollisionSignalConnection(bool connect)
         {
             if (connect)
             {
@@ -291,12 +310,13 @@ namespace Projectiles
         {
             if (active)
             {
+                // _sourceWeapon.ProjectileParent.CallDeferred(Node.MethodName.AddChild, this);
                 _sourceWeapon.ProjectileParent.AddChild(this);
                 _sourceWeapon.ActiveProjectileCount++;
             }
             else
             {
-                // Add items from projectile pool
+                // _sourceWeapon.ProjectileParent.CallDeferred(Node.MethodName.RemoveChild, this);
                 _sourceWeapon.ProjectileParent.RemoveChild(this);
                 _sourceWeapon.ActiveProjectileCount--;
             }
@@ -308,20 +328,6 @@ namespace Projectiles
         #endregion
 
         #region Physics
-
-        /// <summary>
-        /// Adds a fraction of the firing object's velocity to the projectile if the projectile is going in the same direction as the firing object.
-        /// </summary>
-        public virtual void AddSourceVelocity()
-        {
-            // Add speed in projectile's firing direction only
-            float projectionMagnitude = _sourceVelocity.Dot(Vector2.Right.Rotated(GlobalRotation));
-
-            // Only add a fraction of the movement speed to projectile speed.
-            float extraVelocity = Mathf.Max(0, projectionMagnitude) * 0.6f;
-
-            _currentSpeed = _baseSpeed + extraVelocity;
-        }
 
         public virtual void AddSourceVelocity(Vector2 velocity)
         {
@@ -338,7 +344,7 @@ namespace Projectiles
         {
             float magnitude = velocity.Dot(Vector2.Right.Rotated(GlobalRotation));
 
-            float extraVelocity = Mathf.Max(0, magnitude);
+            float extraVelocity = Mathf.Max(0, magnitude) * 0.3f;
 
             _currentSpeed += extraVelocity;
         }
@@ -361,15 +367,27 @@ namespace Projectiles
 
             if (Ray.IsColliding())
             {
-                Collision?.Invoke(this, CalculateRayCollisionData(delta));
+                GodotObject collider = Ray.GetCollider();
+                if (collider is Projectile colliderProj && colliderProj._ignoreOtherProjectiles)
+                {
+                    return;
+                }
+                else if (collider is not (OobArea or DeflectorWall))
+                {
+                    Collision?.Invoke(this, CalculateRayCollisionData(delta, collider));
+                }
             }
         }
 
-        protected virtual CollisionEventArgs CalculateRayCollisionData(double delta)
+        protected virtual CollisionEventArgs CalculateRayCollisionData(
+            double delta,
+            GodotObject collider = null
+        )
         {
             Vector2 collNormal = Ray.GetCollisionNormal();
             Vector2 collPoint = Ray.GetCollisionPoint();
-            GodotObject collider = Ray.GetCollider();
+
+            collider ??= Ray.GetCollider();
 
             // If we get a 0 normal (likely because the ray started inside the collider), calculate the normal manually.
             if (collNormal == Vector2.Zero)
@@ -386,10 +404,6 @@ namespace Projectiles
                     // Otherwise, just use the opposite direction of the projectile
                     collNormal = Vector2.Right.Rotated(GlobalRotation).Normalized() * -1;
                 }
-            }
-            else
-            {
-                collNormal *= -1;
             }
 
             return new CollisionEventArgs(collider, collPoint, collNormal);
@@ -409,12 +423,14 @@ namespace Projectiles
 
         #region Collision
 
-        public void SetProjectileCollisionLayers(Faction faction)
+        public virtual void SetProjectileCollisionLayers(Faction faction)
         {
             // Enable aura detection (Layer 6) for both types
             SetCollisionMaskValue(6, true);
             // Enable shield collision detection
             SetCollisionMaskValue(8, true);
+            // Enable OOB area detection
+            SetCollisionMaskValue(2, true);
 
             switch (faction)
             {
@@ -506,52 +522,19 @@ namespace Projectiles
             SetProjectileCollisionLayers(newFaction);
             SetRayMask(newFaction);
 
+            // Change the palette to match the new faction
+            bool isEnemy = _faction == Faction.Enemies;
+            if (this is not ShieldProjectile)
+            {
+                ProjectileFactory.SetProjectileShaderMaterial(this, isEnemy);
+            }
+
             // If this new faction is different from the initially-set faction...
             if (_factionInitialized)
             {
                 // Remove the projectile from the pool so it doesn't get re-used in its new role.
                 SourceWeapon.Pool.Remove(this);
             }
-        }
-
-        public virtual void Deflect(IDeflector deflector, CollisionEventArgs args = null)
-        {
-            // if (deflector is Node node)
-            // {
-            //     DebugLogger.LogMessage($"{Name} deflected by {node.Name}!");
-            // }
-            // Convert to the opposite faction of the current faction.
-            if (deflector is Shield && _faction != Faction.Players)
-            {
-                ConvertToNewFaction(Faction.Players);
-            }
-
-            // Default naive deflection, 180deg from current rotation.
-            if (args == null || args?.CollisionNormal == Vector2.Zero)
-            {
-                GlobalRotation += MathF.PI;
-            }
-            // If we get a normal and some more advanced args, perform a bounce
-            else
-            {
-                // Get the current direction vector based on rotation
-                Vector2 currentDir = Vector2.Right.Rotated(GlobalRotation).Normalized();
-
-                // Bounce the direction vector off the collision's normal
-                Vector2 bounceDir = currentDir.Bounce(args.CollisionNormal);
-
-                // Convert the bounced direction to rotation.
-                GlobalRotation = bounceDir.Angle();
-            }
-
-            if (deflector is IVelocityProvider velocitySource)
-            {
-                AddDeflectionVelocity(velocitySource.GetCurrentVelocity());
-            }
-
-            // Change the shader for easier detection
-            bool enemyFaction = _faction == Faction.Enemies ? true : false;
-            ProjectileFactory.SetProjectileShaderMaterial(this, enemyFaction);
         }
 
         public void SetProjectileAuraDetection(bool areaDetect)

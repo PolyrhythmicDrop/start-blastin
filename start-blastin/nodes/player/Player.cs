@@ -188,7 +188,7 @@ namespace Entities
         public float FireRate
         {
             get => _fireRate;
-            set => _stats.UpdateStat(StatType.FireRate, Mathf.Max(0.05f, value));
+            set => _stats.UpdateStat(StatType.FireRate, Mathf.Max(0.01f, value));
         }
 
         /// <summary>
@@ -332,10 +332,6 @@ namespace Entities
         public override void _Process(double delta)
         {
             Move(delta);
-            // if (_shield.Enabled)
-            // {
-            //     SetShieldVelocity();
-            // }
         }
 
         public void Move(double delta) =>
@@ -353,20 +349,22 @@ namespace Entities
         {
             // Play sound and animation
             _audioComponent.PlayHitSound();
-            _animationComponent.PlayDamageAnimation();
 
-            // Deal the damage
-            CurrentHealth -= damage;
+            if (damage != 0)
+            {
+                _animationComponent.PlayDamageAnimation();
+                // Deal the damage
+                CurrentHealth -= damage;
 
-            // Create and display an indicator
-            IndicatorFactory.CreateTextIndicator(
-                (MathF.Round(damage, 1) * -1).ToString(),
-                new Vector2(GlobalPosition.X + GD.RandRange(-20, 20), GlobalPosition.Y),
-                parent: this
-            );
+                // Create and display an indicator
+                IndicatorFactory.CreateTextIndicator(
+                    (MathF.Round(damage, 1) * -1).ToString(),
+                    new Vector2(GlobalPosition.X + GD.RandRange(-20, 20), GlobalPosition.Y),
+                    parent: this
+                );
 
-            EventBus.Instance.RaisePlayerTakeDamage(PlayerId, damage, this);
-
+                EventBus.Instance.RaisePlayerTakeDamage(PlayerId, damage, this);
+            }
             if (_currentHealth <= 0)
             {
                 CurrentHealth = 0;
@@ -590,7 +588,41 @@ namespace Entities
             // Apply the new values
             foreach (KeyValuePair<StatType, float> kvp in finalValues)
             {
-                _stats.UpdateStat(kvp.Key, kvp.Value);
+                // Instead of direct update stat calls, use the designated getters and setters instead.
+                switch (kvp.Key)
+                {
+                    case StatType.MaxHealth:
+                        MaxHealth = kvp.Value;
+                        break;
+                    case StatType.CrashDamage:
+                        CrashDamage = kvp.Value;
+                        break;
+                    case StatType.FireRate:
+                        FireRate = kvp.Value;
+                        break;
+                    case StatType.Speed:
+                        Speed = kvp.Value;
+                        break;
+                    case StatType.PhaseDuration:
+                        PhaseDuration = kvp.Value;
+                        break;
+                    case StatType.PhaseCooldown:
+                        PhaseCooldown = kvp.Value;
+                        break;
+                    case StatType.PhaseSpeed:
+                        PhaseSpeed = kvp.Value;
+                        break;
+                    case StatType.Damage:
+                        Damage = kvp.Value;
+                        break;
+                    case StatType.ProjectileSpeed:
+                        ProjectileSpeed = kvp.Value;
+                        break;
+                    case StatType.PluginSlots:
+                        PluginSlots = (int)kvp.Value;
+                        break;
+                }
+                // _stats.UpdateStat(kvp.Key, kvp.Value);
             }
         }
 
@@ -658,27 +690,5 @@ namespace Entities
         }
 
         #endregion
-
-        // #region Shield
-
-        // public void Block()
-        // {
-        //     if (!_shield.Enabled)
-        //     {
-        //         _shield.Enable();
-        //     }
-        // }
-
-        // public void EndBlock()
-        // {
-        //     _shield.Disable();
-        // }
-
-        // private void SetShieldVelocity()
-        // {
-        //     _shield.ConstantLinearVelocity = Velocity;
-        // }
-
-        // #endregion
     }
 }

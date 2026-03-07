@@ -1,3 +1,4 @@
+using System;
 using Godot;
 using Projectiles;
 
@@ -13,6 +14,12 @@ namespace Weapons
         private float _damage = 1;
         private float _fireRate = 0.5f;
         private float _projSpeed = 200;
+
+        // Burst fire
+
+        private bool _burstFire = false;
+        private float _burstTime;
+        private float _burstCooldown;
 
         /// <summary>
         /// The type of projectile fired by the eweapon.
@@ -42,7 +49,7 @@ namespace Weapons
         public float FireRate
         {
             get => _fireRate;
-            set => _fireRate = value;
+            set => _fireRate = MathF.Round(value, 4);
         }
 
         /// <summary>
@@ -56,6 +63,34 @@ namespace Weapons
         {
             get => _projSpeed;
             set => _projSpeed = value;
+        }
+
+        /// <summary>
+        /// Whether or not the weapon has burst fire enabled.
+        /// </summary>
+        [ExportGroup("Burst Fire")]
+        [Export(PropertyHint.GroupEnable)]
+        public bool BurstFire
+        {
+            get => _burstFire;
+            set => _burstFire = value;
+        }
+
+        /// <summary>
+        /// The time that firing is active. At the end of the burst time, firing stops.
+        /// </summary>
+        [Export(PropertyHint.Range, "0.05,2,or_greater")]
+        public float BurstTime
+        {
+            get => _burstTime;
+            set => _burstTime = MathF.Round(value, 4);
+        }
+
+        [Export(PropertyHint.Range, "0.05,2,or_greater")]
+        public float BurstCooldown
+        {
+            get => _burstCooldown;
+            set => _burstCooldown = MathF.Round(value, 4);
         }
     }
 }

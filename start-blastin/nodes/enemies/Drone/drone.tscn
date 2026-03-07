@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://dwhfr6b04sn3"]
+[gd_scene format=3 uid="uid://dwhfr6b04sn3"]
 
 [ext_resource type="Script" uid="uid://bf4nsy5w0ftaq" path="res://nodes/enemies/Drone/Drone.cs" id="1_2lfs3"]
 [ext_resource type="Texture2D" uid="uid://dniqs2y5gnx25" path="res://assets/enemies/drone/drone-engine.png" id="2_ijs4g"]
@@ -6,7 +6,6 @@
 [ext_resource type="Material" uid="uid://c2utwn3c0waxt" path="res://resources/materials/enemy-hit-effect.tres" id="2_owq5x"]
 [ext_resource type="Texture2D" uid="uid://baym56lbmyrdk" path="res://assets/enemies/drone/drone-destruction.png" id="4_k5dt5"]
 [ext_resource type="Script" uid="uid://bekbgunrmk3ad" path="res://nodes/weapons/Barrel.cs" id="6_eyaxp"]
-[ext_resource type="PackedScene" uid="uid://dyem7stdeqti4" path="res://nodes/ui/elements/overhead-health-bar.tscn" id="7_aakgy"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ijs4g"]
 radius = 20.0
@@ -188,7 +187,7 @@ animations = [{
 "speed": 10.0
 }]
 
-[node name="Drone" type="AnimatableBody2D"]
+[node name="Drone" type="AnimatableBody2D" unique_id=1369920116]
 material = ExtResource("2_owq5x")
 scale = Vector2(0.99999994, 0.99999994)
 collision_layer = 4
@@ -196,22 +195,22 @@ collision_mask = 11
 sync_to_physics = false
 script = ExtResource("1_2lfs3")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=669988398]
 unique_name_in_owner = true
 shape = SubResource("CapsuleShape2D_ijs4g")
 
-[node name="VisionRay" type="RayCast2D" parent="."]
+[node name="VisionRay" type="RayCast2D" parent="." unique_id=528041705]
 unique_name_in_owner = true
 scale = Vector2(0.99999994, 0.99999994)
 target_position = Vector2(2000, 0)
 hit_from_inside = true
 
-[node name="SpriteContainer" type="Node2D" parent="."]
+[node name="SpriteContainer" type="Node2D" parent="." unique_id=498378390]
 unique_name_in_owner = true
 use_parent_material = true
 scale = Vector2(1.0000001, 1.0000001)
 
-[node name="Engine" type="AnimatedSprite2D" parent="SpriteContainer"]
+[node name="Engine" type="AnimatedSprite2D" parent="SpriteContainer" unique_id=2097283574]
 unique_name_in_owner = true
 texture_filter = 1
 use_parent_material = true
@@ -241,7 +240,7 @@ metadata/_aseprite_wizard_config_ = {
 }
 metadata/_aseprite_wizard_source_file_hash_ = "99faf7464c1d53c1a8541867cba5c37c"
 
-[node name="Base" type="AnimatedSprite2D" parent="SpriteContainer"]
+[node name="Base" type="AnimatedSprite2D" parent="SpriteContainer" unique_id=48352380]
 unique_name_in_owner = true
 texture_filter = 1
 use_parent_material = true
@@ -270,7 +269,7 @@ metadata/_aseprite_wizard_config_ = {
 }
 metadata/_aseprite_wizard_source_file_hash_ = "552ca6811f507bf31ca8961fec08bd78"
 
-[node name="Destruction" type="AnimatedSprite2D" parent="SpriteContainer"]
+[node name="Destruction" type="AnimatedSprite2D" parent="SpriteContainer" unique_id=1286617601]
 unique_name_in_owner = true
 visible = false
 texture_filter = 1
@@ -298,11 +297,9 @@ metadata/_aseprite_wizard_config_ = {
 }
 metadata/_aseprite_wizard_source_file_hash_ = "619bbfa9dec3e9f2fd42a06f5dedf62e"
 
-[node name="Barrel" type="Node2D" parent="."]
+[node name="Barrel" type="Node2D" parent="." unique_id=786442203]
 position = Vector2(16, -1.9073486e-06)
 script = ExtResource("6_eyaxp")
 Base = true
+DefaultActive = true
 metadata/_custom_type_script = "uid://bekbgunrmk3ad"
-
-[node name="OverheadHealthBar" parent="." instance=ExtResource("7_aakgy")]
-unique_name_in_owner = true

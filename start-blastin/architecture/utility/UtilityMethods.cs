@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Godot;
@@ -101,6 +103,97 @@ namespace Utility
         {
             var task = Task.Run(async () => await signalAwaiter);
             return task;
+        }
+
+        /// <summary>
+        /// Recursively gets all children of a specified parent node, including nested nodes.
+        /// </summary>
+        /// <param name="parent">The node to get all children of.</param>
+        /// <returns>A List of child nodes.</returns>
+        public static List<Node> GetAllChildren(Node parent)
+        {
+            List<Node> children = [];
+
+            foreach (Node node in parent.GetChildren())
+            {
+                if (node.GetChildCount() > 0)
+                {
+                    children.Add(node);
+                    children.AddRange(GetAllChildren(node));
+                }
+                else
+                {
+                    children.Add(node);
+                }
+            }
+
+            return children;
+        }
+
+        /// <summary>
+        /// Gets the duration of a specific animation of an AnimatedSprite2D.
+        /// </summary>
+        /// <param name="animSprite"></param>
+        /// <param name="animation">The name of the animation.</param>
+        /// <returns></returns>
+        public static float? GetAnimationDuration(
+            AnimatedSprite2D animSprite,
+            string animation = "default"
+        )
+        {
+            try
+            {
+                if (animSprite.SpriteFrames == null)
+                {
+                    throw new ArgumentException(
+                        $"{animSprite.Name} has no SpriteFrames! Cannot get the length of an animation that does not exist.",
+                        paramName: nameof(animSprite)
+                    );
+                }
+
+                SpriteFrames sf = animSprite.SpriteFrames;
+
+                if (!sf.HasAnimation(animation))
+                {
+                    throw new ArgumentException(
+                        $"{animation} is not an valid animation name for {animSprite.Name}!",
+                        paramName: nameof(animation)
+                    );
+                }
+
+                int frameCount = animSprite.SpriteFrames.GetFrameCount(animation);
+                float totalDuration = 0;
+
+                for (int i = 0; i < frameCount; i++)
+                {
+                    totalDuration +=
+                        sf.GetFrameDuration(animation, i)
+                        / (
+                            (float)sf.GetAnimationSpeed(animation)
+                            * MathF.Abs(animSprite.GetPlayingSpeed())
+                        );
+                }
+
+                return totalDuration;
+            }
+            catch (Exception e)
+            {
+                DebugLogger.LogMessage(e.Message, true, true);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the progress ratio of a point near or on a Curve2D.
+        /// </summary>
+        /// <param name="curve">The Curve2D.</param>
+        /// <param name="position">The point (in local coordinates) to calculate the progress ratio from.</param>
+        /// <returns></returns>
+        public static float GetCurveProgressRatio(Curve2D curve, Vector2 position)
+        {
+            float offset = curve.GetClosestOffset(position);
+            float length = curve.GetBakedLength();
+            return offset / length;
         }
     }
 }

@@ -111,19 +111,10 @@ namespace Autoloads
 
         private void SetMinWindowSize()
         {
-            DebugLogger.LogMessage("Setting minimum window size...", true);
             Vector2I minSize = Vector2I.Zero;
             minSize.X = (int)ProjectSettings.GetSetting("display/window/size/viewport_width");
             minSize.Y = (int)ProjectSettings.GetSetting("display/window/size/viewport_height");
-            DebugLogger.LogMessage(
-                $"Current minimum size: {GetWindow().MinSize} | New minimum size: {minSize}",
-                true
-            );
             GetWindow().MinSize = minSize;
-            DebugLogger.LogMessage(
-                $"Window minimum size set! New minimum size: {GetWindow().MinSize}",
-                true
-            );
         }
 
         private bool LoadScene(string scenePath)

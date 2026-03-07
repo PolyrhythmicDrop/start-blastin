@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="EnemyResource" format=3 uid="uid://bi8j7u82gwk0w"]
+
+[ext_resource type="Curve2D" uid="uid://7oicwek3ftaf" path="res://resources/curves/rectangle-1.tres" id="1_6idvq"]
+[ext_resource type="Script" uid="uid://bytfm61mpkr5u" path="res://nodes/weapons/WeaponStats.cs" id="1_r8rh4"]
+[ext_resource type="Script" uid="uid://cf7pn6qd7aa15" path="res://nodes/enemies/EnemyResource.cs" id="1_vx6ff"]
+[ext_resource type="Resource" uid="uid://c86hwny0l2bri" path="res://resources/audio-data/sfx/enemies/drone/drone-shots.tres" id="2_hd01f"]
+[ext_resource type="Script" uid="uid://dt02kxv7k56mm" path="res://architecture/data-structures/SoundSet.cs" id="3_vfwug"]
+
+[sub_resource type="Resource" id="Resource_jm820"]
+script = ExtResource("3_vfwug")
+Fire = ExtResource("2_hd01f")
+metadata/_custom_type_script = "uid://dt02kxv7k56mm"
+
+[sub_resource type="Resource" id="Resource_4xh2c"]
+script = ExtResource("1_r8rh4")
+ProjectileType = 3
+FireRate = 0.1
+ProjectileSpeed = 500.0
+metadata/_custom_type_script = "uid://bytfm61mpkr5u"
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("1_vx6ff")
+ScenePath = "res://nodes/enemies/flame-brute/flame-brute.tscn"
+Speed = 200.0
+CrashDamage = 3
+MaxHealth = 15.0
+WeaponStats = SubResource("Resource_4xh2c")
+PathCurve = ExtResource("1_6idvq")
+Sounds = SubResource("Resource_jm820")
+metadata/_custom_type_script = "uid://cf7pn6qd7aa15"

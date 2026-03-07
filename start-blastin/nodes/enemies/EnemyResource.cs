@@ -38,7 +38,7 @@ namespace Enemies
             set => _crashDamage = value;
         }
 
-        [Export(PropertyHint.Range, "1,100,1,greater_than")]
+        [Export(PropertyHint.Range, "1,100,1,or_greater")]
         public float MaxHealth
         {
             get => _maxHealth;
@@ -86,29 +86,5 @@ namespace Enemies
 
         [Export]
         public SoundSet Sounds { get; set; }
-
-        // public EnemyResource()
-        //     : this(0, 1, null, "", 0, null, 0, 0) { }
-
-        // public EnemyResource(
-        //     int crashDamage,
-        //     float maxHealth,
-        //     Curve2D pathCurve,
-        //     string scenePath,
-        //     float speed,
-        //     WeaponStats weaponStats,
-        //     int flux,
-        //     int bytes
-        // )
-        // {
-        //     _crashDamage = crashDamage;
-        //     _maxHealth = maxHealth;
-        //     _pathCurve = pathCurve;
-        //     _scenePath = scenePath;
-        //     _speed = speed;
-        //     _weaponStats = weaponStats;
-        //     _fluxReward = flux;
-        //     _byteReward = bytes;
-        // }
     }
 }

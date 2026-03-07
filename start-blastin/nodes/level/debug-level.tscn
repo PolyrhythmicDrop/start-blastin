@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cca75d2re7isj"]
+[gd_scene format=3 uid="uid://cca75d2re7isj"]
 
 [ext_resource type="Script" uid="uid://bpw7egf87stew" path="res://architecture/utility/Debugger.cs" id="1_hxhdr"]
 [ext_resource type="PackedScene" uid="uid://bq7imdtl082ko" path="res://nodes/background-generator/scrolling-background-test.tscn" id="1_jmnrl"]
@@ -17,9 +17,9 @@ frequency = 0.1347
 fractal_type = 0
 fractal_octaves = 3
 
-[node name="DebugLevel" type="Node" groups=["level"]]
+[node name="DebugLevel" type="Node" unique_id=1692219403 groups=["level"]]
 
-[node name="LevelCamera" type="Camera2D" parent="."]
+[node name="LevelCamera" type="Camera2D" parent="." unique_id=867151118]
 anchor_mode = 0
 limit_enabled = false
 limit_left = 0
@@ -27,23 +27,23 @@ limit_top = 0
 script = ExtResource("8_jmnrl")
 Noise = SubResource("FastNoiseLite_jmnrl")
 
-[node name="VignetteLayer" parent="LevelCamera" instance=ExtResource("2_1iju8")]
+[node name="VignetteLayer" parent="LevelCamera" unique_id=180930752 instance=ExtResource("2_1iju8")]
 unique_name_in_owner = true
 
-[node name="ScrollingBackground" parent="." instance=ExtResource("1_jmnrl")]
+[node name="ScrollingBackground" parent="." unique_id=320442634 instance=ExtResource("1_jmnrl")]
 
-[node name="Player" parent="." instance=ExtResource("3_gl8ah")]
+[node name="Player" parent="." unique_id=725987276 instance=ExtResource("3_gl8ah")]
 position = Vector2(960, 882)
 
-[node name="PlayAreaBorder" parent="." instance=ExtResource("2_hxhdr")]
+[node name="PlayAreaBorder" parent="." unique_id=1427603931 instance=ExtResource("2_hxhdr")]
 collision_mask = 9
 script = ExtResource("7_ald07")
 
-[node name="OOB-Area" parent="." instance=ExtResource("8_mybqq")]
+[node name="OOB-Area" parent="." unique_id=1586112080 instance=ExtResource("8_mybqq")]
 
-[node name="WaveManager" parent="." instance=ExtResource("9_4usc6")]
+[node name="WaveManager" parent="." unique_id=1403433929 instance=ExtResource("9_4usc6")]
 
-[node name="Debugger" type="Node" parent="."]
+[node name="Debugger" type="Node" parent="." unique_id=1745615548]
 process_mode = 3
 script = ExtResource("1_hxhdr")
 metadata/_custom_type_script = "uid://bpw7egf87stew"

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Enemies;
 using Godot;
 using Projectiles;
+using Utility;
 
 namespace Environmental
 {
@@ -40,6 +41,9 @@ namespace Environmental
         {
             if (area is Projectile projectile)
             {
+                // DebugLogger.LogMessage(
+                //     $"{projectile.Name} detected in OOB Area! Attempting to disable..."
+                // );
                 projectile.ToggleActive(false);
             }
         }

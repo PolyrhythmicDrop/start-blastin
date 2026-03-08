@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bq7imdtl082ko"]
+[gd_scene format=3 uid="uid://bq7imdtl082ko"]
 
 [ext_resource type="Script" uid="uid://cyxnxbvsy0ky" path="res://nodes/background-generator/ScrollingBackground.cs" id="2_lly12"]
 [ext_resource type="Texture2D" uid="uid://cldtkatbsqrm7" path="res://nodes/background-generator/stars.png" id="3_8mioe"]
@@ -16,32 +16,32 @@ particles_anim_loop = false
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4gvry"]
 size = Vector2(2297, 1200)
 
-[node name="ScrollingBackground" type="Node"]
+[node name="ScrollingBackground" type="Node" unique_id=1304927215]
 script = ExtResource("2_lly12")
 MaxPlanets = 2
 MaxBigStars = 20
 ColorScheme = ExtResource("3_j73ms")
 
-[node name="StarSwapTimer" type="Timer" parent="."]
+[node name="StarSwapTimer" type="Timer" parent="." unique_id=1146274422]
 unique_name_in_owner = true
 wait_time = 100.0
 autostart = true
 
-[node name="ShaderPlanetSpawnTimer" type="Timer" parent="."]
+[node name="ShaderPlanetSpawnTimer" type="Timer" parent="." unique_id=679584686]
 unique_name_in_owner = true
 wait_time = 8.0
 one_shot = true
 
-[node name="BigStarSpawnTimer" type="Timer" parent="."]
+[node name="BigStarSpawnTimer" type="Timer" parent="." unique_id=2109748046]
 unique_name_in_owner = true
 wait_time = 3.0
 one_shot = true
 
-[node name="BG-CanvasLayer" type="CanvasLayer" parent="."]
-layer = -10
+[node name="BG-CanvasLayer" type="CanvasLayer" parent="." unique_id=1430292979]
+layer = -30
 follow_viewport_enabled = true
 
-[node name="Background" type="ColorRect" parent="BG-CanvasLayer"]
+[node name="Background" type="ColorRect" parent="BG-CanvasLayer" unique_id=1350260022]
 unique_name_in_owner = true
 anchors_preset = 15
 anchor_right = 1.0
@@ -55,14 +55,14 @@ grow_vertical = 2
 scale = Vector2(1.2, 1.2)
 color = Color(0, 0, 0, 1)
 
-[node name="Parallax2D" type="Parallax2D" parent="BG-CanvasLayer"]
+[node name="Parallax2D" type="Parallax2D" parent="BG-CanvasLayer" unique_id=1582268995]
 unique_name_in_owner = true
 scroll_scale = Vector2(0.05, 0.05)
 repeat_size = Vector2(2100, 1200)
 autoscroll = Vector2(0, 6)
 ignore_camera_scroll = true
 
-[node name="StarParticles" type="GPUParticles2D" parent="BG-CanvasLayer/Parallax2D"]
+[node name="StarParticles" type="GPUParticles2D" parent="BG-CanvasLayer/Parallax2D" unique_id=947885168]
 unique_name_in_owner = true
 material = SubResource("CanvasItemMaterial_2tko2")
 amount = 300
@@ -72,7 +72,7 @@ visibility_rect = Rect2(-193.96796, -194.38068, 387.87946, 387.63757)
 local_coords = true
 process_material = ExtResource("4_2tko2")
 
-[node name="StarParticles2" type="GPUParticles2D" parent="BG-CanvasLayer/Parallax2D"]
+[node name="StarParticles2" type="GPUParticles2D" parent="BG-CanvasLayer/Parallax2D" unique_id=481046462]
 unique_name_in_owner = true
 material = SubResource("CanvasItemMaterial_2tko2")
 amount = 300
@@ -82,28 +82,28 @@ visibility_rect = Rect2(-193.96796, -194.38068, 387.87946, 387.63757)
 local_coords = true
 process_material = ExtResource("4_stqqb")
 
-[node name="CelestialBody-CanvasLayer" type="CanvasLayer" parent="."]
+[node name="CelestialBody-CanvasLayer" type="CanvasLayer" parent="." unique_id=1298366855]
 unique_name_in_owner = true
-layer = -5
+layer = -20
 follow_viewport_enabled = true
 
-[node name="SpawnBlock" type="Area2D" parent="CelestialBody-CanvasLayer"]
+[node name="SpawnBlock" type="Area2D" parent="CelestialBody-CanvasLayer" unique_id=333416173]
 unique_name_in_owner = true
 position = Vector2(954, -768)
 collision_layer = 256
 collision_mask = 256
 
-[node name="SpawnShape2D" type="CollisionShape2D" parent="CelestialBody-CanvasLayer/SpawnBlock"]
+[node name="SpawnShape2D" type="CollisionShape2D" parent="CelestialBody-CanvasLayer/SpawnBlock" unique_id=555189359]
 unique_name_in_owner = true
 position = Vector2(18.5, 0)
 shape = SubResource("RectangleShape2D_4gvry")
 
-[node name="BigStar-CanvasLayer" type="CanvasLayer" parent="CelestialBody-CanvasLayer"]
+[node name="BigStar-CanvasLayer" type="CanvasLayer" parent="CelestialBody-CanvasLayer" unique_id=2047838804]
 unique_name_in_owner = true
-layer = -2
+layer = -15
 follow_viewport_enabled = true
 
-[node name="Planet-CanvasLayer" type="CanvasLayer" parent="CelestialBody-CanvasLayer"]
+[node name="Planet-CanvasLayer" type="CanvasLayer" parent="CelestialBody-CanvasLayer" unique_id=1254714945]
 unique_name_in_owner = true
-layer = -1
+layer = -10
 follow_viewport_enabled = true

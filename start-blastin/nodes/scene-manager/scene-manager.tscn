@@ -1,9 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://die13kk7ig6uu"]
+[gd_scene format=3 uid="uid://die13kk7ig6uu"]
 
 [ext_resource type="Script" uid="uid://b2cdnpa12pcfk" path="res://architecture/autoloads/SceneManager.cs" id="1_ue856"]
 
-[node name="SceneManager" type="Node"]
+[node name="SceneManager" type="Node" unique_id=1964609832]
 script = ExtResource("1_ue856")
-DefaultScenePath = "uid://dgcswjykgey5y"
-OverrideScene = true
+DefaultScenePath = "uid://cycox7vegt6tq"
 OverrideScenePath = "uid://cca75d2re7isj"

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Autoloads;
+using Entities;
 using Events;
 using Factories;
 using Godot;
@@ -90,7 +91,9 @@ namespace UI.Loadout
         #region Slot Management
         private void SetWeaponSlot()
         {
-            FillSlot(_weaponSlot, _service.GetPlayer(_playerId).Inventory.WeaponPlugin);
+            Player player = _service.GetPlayer(_playerId);
+            FillSlot(_weaponSlot, player.Inventory.WeaponPlugin);
+            // FillSlot(_weaponSlot, _service.GetPlayer(_playerId).Inventory.WeaponPlugin);
         }
 
         private void AddSlot()

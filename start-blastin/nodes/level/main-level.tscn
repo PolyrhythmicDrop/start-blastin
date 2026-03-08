@@ -1,37 +1,42 @@
-[gd_scene load_steps=6 format=3 uid="uid://dgcswjykgey5y"]
+[gd_scene format=3 uid="uid://dgcswjykgey5y"]
 
-[ext_resource type="PackedScene" uid="uid://dxdlpe5yuamuy" path="res://nodes/wave-management/wave-manager/wave-manager.tscn" id="1_esqth"]
-[ext_resource type="Texture2D" uid="uid://cilgl08og1qhy" path="res://nodes/backgrounds/background-purple-nebulae-stars.png" id="1_rvdan"]
-[ext_resource type="PackedScene" uid="uid://dl7j0usiolxux" path="res://nodes/environmental/play-area-border.tscn" id="2_cw5wp"]
-[ext_resource type="PackedScene" uid="uid://nenl15kjphyb" path="res://nodes/player/player.tscn" id="3_pxe5x"]
-[ext_resource type="PackedScene" uid="uid://bsyev7gatn1jy" path="res://nodes/environmental/oob-area.tscn" id="4_rl1rb"]
+[ext_resource type="Script" uid="uid://33wv8gl0qq4r" path="res://nodes/level/LevelCamera.cs" id="1_ltqac"]
+[ext_resource type="PackedScene" uid="uid://c66l16un13w80" path="res://nodes/ui/vignette-layer/vignette-layer.tscn" id="2_4foro"]
+[ext_resource type="PackedScene" uid="uid://dl7j0usiolxux" path="res://nodes/environmental/play-area-border.tscn" id="5_encfm"]
+[ext_resource type="Script" uid="uid://cv3ev8ojysetw" path="res://nodes/environmental/DeflectorWall.cs" id="6_ujvro"]
+[ext_resource type="PackedScene" uid="uid://bsyev7gatn1jy" path="res://nodes/environmental/oob-area.tscn" id="7_pwpww"]
+[ext_resource type="PackedScene" uid="uid://dxdlpe5yuamuy" path="res://nodes/wave-management/wave-manager/wave-manager.tscn" id="8_f3ran"]
+[ext_resource type="Script" uid="uid://bpw7egf87stew" path="res://architecture/utility/Debugger.cs" id="9_e6ghm"]
 
-[node name="MainLevel" type="Node" groups=["level"]]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_jmnrl"]
+noise_type = 3
+seed = 2
+frequency = 0.1347
+fractal_type = 0
+fractal_octaves = 3
 
-[node name="TextureRect" type="TextureRect" parent="."]
-z_index = -100
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-texture = ExtResource("1_rvdan")
-expand_mode = 2
-stretch_mode = 5
+[node name="MainLevel" type="Node" unique_id=1692219403 groups=["level"]]
 
-[node name="PlayAreaBorder" parent="." instance=ExtResource("2_cw5wp")]
-
-[node name="Player" parent="." instance=ExtResource("3_pxe5x")]
-position = Vector2(960, 770)
-Bytes = 0
-Flux = 0
-
-[node name="OOB-Area" parent="." instance=ExtResource("4_rl1rb")]
-
-[node name="WaveManager" parent="." instance=ExtResource("1_esqth")]
-Difficulty = 2
-
-[node name="LevelCamera" type="Camera2D" parent="."]
+[node name="LevelCamera" type="Camera2D" parent="." unique_id=867151118]
 anchor_mode = 0
+limit_enabled = false
+limit_left = 0
+limit_top = 0
+script = ExtResource("1_ltqac")
+Noise = SubResource("FastNoiseLite_jmnrl")
+
+[node name="VignetteLayer" parent="LevelCamera" unique_id=180930752 instance=ExtResource("2_4foro")]
+unique_name_in_owner = true
+
+[node name="PlayAreaBorder" parent="." unique_id=1427603931 instance=ExtResource("5_encfm")]
+collision_mask = 9
+script = ExtResource("6_ujvro")
+
+[node name="OOB-Area" parent="." unique_id=1586112080 instance=ExtResource("7_pwpww")]
+
+[node name="WaveManager" parent="." unique_id=1403433929 instance=ExtResource("8_f3ran")]
+
+[node name="Debugger" type="Node" parent="." unique_id=1745615548]
+process_mode = 3
+script = ExtResource("9_e6ghm")
+metadata/_custom_type_script = "uid://bpw7egf87stew"

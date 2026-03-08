@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cca75d2re7isj"]
 
 [ext_resource type="Script" uid="uid://bpw7egf87stew" path="res://architecture/utility/Debugger.cs" id="1_hxhdr"]
-[ext_resource type="PackedScene" uid="uid://bq7imdtl082ko" path="res://nodes/background-generator/scrolling-background-test.tscn" id="1_jmnrl"]
+[ext_resource type="PackedScene" uid="uid://bq7imdtl082ko" path="res://nodes/background-generator/scrolling-background.tscn" id="1_jmnrl"]
 [ext_resource type="PackedScene" uid="uid://c66l16un13w80" path="res://nodes/ui/vignette-layer/vignette-layer.tscn" id="2_1iju8"]
 [ext_resource type="PackedScene" uid="uid://dl7j0usiolxux" path="res://nodes/environmental/play-area-border.tscn" id="2_hxhdr"]
 [ext_resource type="PackedScene" uid="uid://nenl15kjphyb" path="res://nodes/player/player.tscn" id="3_gl8ah"]

@@ -1,5 +1,6 @@
 using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
+using BackgroundGenerator;
 using Entities;
 using Godot;
 using SafeResourcePicker;
@@ -11,11 +12,23 @@ namespace Autoloads
 {
     public partial class SceneManager : Node
     {
+        // Static instance singleton for global access.
+        public static SceneManager Instance { get; private set; }
         private string _defaultScenePath;
         private string _overrideScenePath;
-        private PackedScene _loadedScene;
-        private Node _loadedSceneNode;
-        private Node _overrideSceneNode;
+        private Node _currentSceneRoot;
+
+        // ~~ Cached scenes ~~
+
+        private PackedScene _startupScreenScene = GD.Load<PackedScene>("uid://cycox7vegt6tq");
+        private PackedScene _newGameScene = GD.Load<PackedScene>("uid://dgcswjykgey5y");
+        private PackedScene _backgroundScene = GD.Load<PackedScene>("uid://bq7imdtl082ko");
+        private PackedScene _playerScene = GD.Load<PackedScene>("uid://nenl15kjphyb");
+        private PackedScene _playerUiScene = GD.Load<PackedScene>(
+            "res://nodes/ui/ui-layer/ui-layer.tscn"
+        );
+
+        // ~~~~
 
         /// <summary>
         /// Whether or not the default scene logic should be overridden with a different scene.
@@ -23,12 +36,7 @@ namespace Autoloads
         /// </summary>
         private bool _shouldOverrideScene = false;
 
-        public PackedScene LoadedScene
-        {
-            get => _loadedScene;
-        }
-
-        private int _playerCount;
+        private int _playerCount = 1;
         public int PlayerCount
         {
             get => _playerCount;
@@ -59,6 +67,8 @@ namespace Autoloads
 
         public override void _Ready()
         {
+            Instance = this;
+
             // SetMinWindowSize();
             InitializeServices();
             InitializeRNG();
@@ -67,25 +77,31 @@ namespace Autoloads
             bool success;
             if (_shouldOverrideScene)
             {
-                success = LoadScene(_overrideScenePath);
+                success = ChangeScene(GD.Load<PackedScene>(_overrideScenePath));
                 if (!success)
                 {
                     DebugLogger.LogMessage("Failed to load override scene!", true, true);
                 }
                 else
                 {
-                    DebugLogger.LogMessage("Adding players...", true);
-                    AddPlayers();
+                    DebugLogger.LogMessage("Adding players from override scene", true);
+                    SetUpPlayersInOverrideScene();
                 }
             }
             else
             {
-                success = LoadScene(_defaultScenePath);
+                InitializeBackground();
+                success = ChangeScene(GD.Load<PackedScene>(_defaultScenePath));
                 if (!success)
                 {
                     DebugLogger.LogMessage("Failed to load default scene!", true, true);
                 }
             }
+        }
+
+        private void InitializeBackground()
+        {
+            AddChild(_backgroundScene.Instantiate<ScrollingBackground>());
         }
 
         /// <summary>
@@ -117,26 +133,32 @@ namespace Autoloads
             GetWindow().MinSize = minSize;
         }
 
-        private bool LoadScene(string scenePath)
+        /// <summary>
+        /// Changes the main scene to a new scene.
+        /// Removes the current scene root (if any) from the tree and frees it.
+        /// Loads the scene at <paramref name="scenePath"/> and adds it as a child of the SceneManager.
+        /// </summary>
+        /// <param name="scenePath">The path or UID of the scene to load.</param>
+        /// <returns></returns>
+        private bool ChangeScene(PackedScene scene)
         {
             try
             {
-                _loadedScene = GD.Load<PackedScene>(scenePath);
-                if (_loadedScene == null)
+                var pSceneNode =
+                    scene.Instantiate()
+                    ?? throw new NullReferenceException("Scene node could not be instantiated!");
+
+                if (_currentSceneRoot != null)
                 {
-                    throw new NullReferenceException($"Scene at {scenePath} could not be loaded!");
+                    RemoveChild(_currentSceneRoot);
+                    _currentSceneRoot.QueueFree();
                 }
-                _loadedSceneNode = _loadedScene.Instantiate();
-                if (_loadedSceneNode == null)
-                {
-                    throw new NullReferenceException("Scene node could not be instantiated!");
-                }
-                else
-                {
-                    AddChild(_loadedSceneNode);
-                    DebugLogger.LogMessage("Scene loaded!", true);
-                    return true;
-                }
+
+                AddChild(pSceneNode);
+                _currentSceneRoot = pSceneNode;
+
+                DebugLogger.LogMessage($"{_currentSceneRoot.Name} scene loaded!", true);
+                return true;
             }
             catch (NullReferenceException e)
             {
@@ -148,7 +170,7 @@ namespace Autoloads
         /// <summary>
         /// Gets the players currently present in the tree and adds them to the PlayerService's list of players.
         /// </summary>
-        private void AddPlayers()
+        private void SetUpPlayersInOverrideScene()
         {
             var players = GetTree().GetNodesInGroup("players");
             _playerCount = players.Count;
@@ -168,12 +190,44 @@ namespace Autoloads
                     playerService.AddPlayer(player);
 
                     // Instantiate the player's UI
-                    UiLayer ui = GD.Load<PackedScene>("res://nodes/ui/ui-layer/ui-layer.tscn")
-                        .Instantiate<UiLayer>();
+                    UiLayer ui = _playerUiScene.Instantiate<UiLayer>();
                     ui.Initialize(player.PlayerId);
-                    _loadedSceneNode.AddChild(ui);
+                    _currentSceneRoot.AddChild(ui);
                 }
             }
+        }
+
+        private async Task AddPlayers()
+        {
+            Vector2 startPos = GetViewport().GetVisibleRect().Size / 2;
+            for (int i = 1; i <= _playerCount; i++)
+            {
+                Player player = _playerScene.Instantiate<Player>();
+
+                // Set PlayerId
+                player.SetPlayerId(i);
+                player.Name = $"Player-{player.PlayerId}";
+                DebugLogger.LogMessage($"{player.Name} PlayerId: {player.PlayerId}", true);
+
+                // Add the player to the PlayerService list
+                PlayerService playerService = ServiceManager.Instance.GetService<PlayerService>();
+
+                _currentSceneRoot.AddChild(player);
+                player.GlobalPosition = startPos;
+                await ToSignal(player, CharacterBody2D.SignalName.Ready);
+                playerService.AddPlayer(player);
+
+                // Instantiate the player's UI
+                UiLayer ui = _playerUiScene.Instantiate<UiLayer>();
+                ui.Initialize(player.PlayerId);
+                _currentSceneRoot.AddChild(ui);
+            }
+        }
+
+        public async Task LoadNewGame()
+        {
+            ChangeScene(_newGameScene);
+            await AddPlayers();
         }
     }
 }

@@ -1,0 +1,130 @@
+[gd_scene format=3 uid="uid://cycox7vegt6tq"]
+
+[ext_resource type="FontFile" uid="uid://cl4qr5jjiwdn4" path="res://resources/fonts/sixtyfour-convergence/SixtyfourConvergence-Regular-VariableFont_BLED,SCAN,XELA,YELA.ttf" id="1_2af6r"]
+[ext_resource type="Script" uid="uid://yjrkluot64fd" path="res://nodes/ui/menus/splash-screen/StartupScreen.cs" id="1_pejoe"]
+[ext_resource type="Texture2D" uid="uid://6j70wa227713" path="res://assets/ui/menu-select-icon.png" id="2_sfa2f"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pejoe"]
+atlas = ExtResource("2_sfa2f")
+region = Rect2(0, 0, 31, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j44x6"]
+atlas = ExtResource("2_sfa2f")
+region = Rect2(31, 0, 31, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gssci"]
+atlas = ExtResource("2_sfa2f")
+region = Rect2(62, 0, 31, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3ntfm"]
+atlas = ExtResource("2_sfa2f")
+region = Rect2(93, 0, 31, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x57as"]
+atlas = ExtResource("2_sfa2f")
+region = Rect2(124, 0, 31, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_4sk86"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pejoe")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j44x6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gssci")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3ntfm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x57as")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3ntfm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gssci")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j44x6")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
+
+[node name="StartupScreen" type="Node" unique_id=1350850372]
+script = ExtResource("1_pejoe")
+
+[node name="TitleLabel" type="Label" parent="." unique_id=1785234605]
+unique_name_in_owner = true
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 187.0
+offset_bottom = 269.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 64
+text = "Start Blastin'"
+horizontal_alignment = 1
+
+[node name="MenuVbox" type="VBoxContainer" parent="." unique_id=38752516]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 200)
+anchors_preset = -1
+anchor_left = 0.421875
+anchor_top = 0.5046296
+anchor_right = 0.578125
+anchor_bottom = 0.6898148
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="NewGame" type="RichTextLabel" parent="MenuVbox" unique_id=672524974]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/normal_font = ExtResource("1_2af6r")
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+text = "New Game"
+scroll_active = false
+autowrap_mode = 0
+shortcut_keys_enabled = false
+horizontal_alignment = 1
+vertical_alignment = 1
+justification_flags = 131
+
+[node name="Options" type="RichTextLabel" parent="MenuVbox" unique_id=792788680]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/normal_font = ExtResource("1_2af6r")
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+text = "Options"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+autowrap_trim_flags = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+justification_flags = 3
+meta_underlined = false
+hint_underlined = false
+
+[node name="Selector" type="AnimatedSprite2D" parent="." unique_id=563788099]
+unique_name_in_owner = true
+scale = Vector2(1.5, 1.5)
+sprite_frames = SubResource("SpriteFrames_4sk86")
+autoplay = "default"
+frame = 6
+frame_progress = 0.9063613
+offset = Vector2(-15.333313, 0)

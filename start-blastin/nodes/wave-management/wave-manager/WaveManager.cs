@@ -1,6 +1,4 @@
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Autoloads;
 using Godot;
@@ -14,7 +12,7 @@ namespace WaveManagement
         private int _wave = 1;
         private float _difficultyModifier = 0.1f;
         private Timer _waveTimer;
-        private static double _waveTime;
+        private static double _waveTime = 30;
 
         private ScaleManager _scaleManager;
 
@@ -25,7 +23,6 @@ namespace WaveManagement
         /// <summary>
         /// Player-selected difficulty. Adjusts the difficulty modifier, which affects per-wave stat scaling.
         /// </summary>
-        [Export]
         public Difficulty Difficulty { get; set; } = Difficulty.Easy;
 
         public float DifficultyModifier => _difficultyModifier;
@@ -56,7 +53,7 @@ namespace WaveManagement
 
             ConnectSignals();
             SetBaseDifficultyModifier();
-            InitializeFirstWave();
+            // InitializeFirstWave();
         }
 
         /// <summary>
@@ -112,7 +109,7 @@ namespace WaveManagement
         /// Initializes both scale managers to their default scalers and assembles the default spawner formation.
         /// Scales all spawners according to the default scaler.
         /// </summary>
-        private async void InitializeFirstWave()
+        public async void InitializeFirstWave()
         {
             _scaleManager.Initialize(this);
             await _scaleManager.AssembleFormation();

@@ -7,6 +7,7 @@ using SafeResourcePicker;
 using Services;
 using UI;
 using Utility;
+using WaveManagement;
 
 namespace Autoloads
 {
@@ -27,6 +28,7 @@ namespace Autoloads
         private PackedScene _playerUiScene = GD.Load<PackedScene>(
             "res://nodes/ui/ui-layer/ui-layer.tscn"
         );
+        private PackedScene _waveManagerScene = GD.Load<PackedScene>("uid://dxdlpe5yuamuy");
 
         // ~~~~
 
@@ -197,7 +199,7 @@ namespace Autoloads
             }
         }
 
-        private async Task AddPlayers()
+        private async void AddPlayers()
         {
             Vector2 startPos = GetViewport().GetVisibleRect().Size / 2;
             for (int i = 1; i <= _playerCount; i++)
@@ -214,7 +216,6 @@ namespace Autoloads
 
                 _currentSceneRoot.AddChild(player);
                 player.GlobalPosition = startPos;
-                await ToSignal(player, CharacterBody2D.SignalName.Ready);
                 playerService.AddPlayer(player);
 
                 // Instantiate the player's UI
@@ -224,10 +225,18 @@ namespace Autoloads
             }
         }
 
-        public async Task LoadNewGame()
+        public void LoadNewGame(Difficulty difficulty)
         {
             ChangeScene(_newGameScene);
-            await AddPlayers();
+
+            // Load the wave manager with the appropriate difficulty
+            WaveManager wm = _waveManagerScene.Instantiate<WaveManager>();
+            wm.Difficulty = difficulty;
+            _currentSceneRoot.AddChild(wm);
+            DebugLogger.LogMessage($"{wm.Name} difficulty: {wm.Difficulty}");
+
+            AddPlayers();
+            wm.InitializeFirstWave();
         }
     }
 }

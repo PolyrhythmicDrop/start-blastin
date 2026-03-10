@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autoloads;
 using Godot;
+using UI;
 using Utility;
 
 namespace WaveManagement
@@ -121,10 +122,22 @@ namespace WaveManagement
         /// Starts a wave.
         /// Starts the wave timer and emits the <see cref="EventBus.SignalName.WaveStarted"/> signal.
         /// </summary>
-        private void StartWave()
+        private async void StartWave()
         {
+            await CountDownWave();
             _waveTimer.Start(_waveTime);
             EventBus.Instance.RaiseWaveStarted(_wave);
+        }
+
+        private async Task CountDownWave()
+        {
+            WaveCountdown wc = GD.Load<PackedScene>("uid://cj20n8pswpaby")
+                .Instantiate<WaveCountdown>();
+            AddChild(wc);
+
+            await wc.Start();
+
+            wc.QueueFree();
         }
 
         /// <summary>

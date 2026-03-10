@@ -177,11 +177,5 @@ namespace UI
                 CurrentEntryIndex = count - 1;
             }
         }
-
-        public override void _ExitTree()
-        {
-            // DisconnectSignals();
-            base._ExitTree();
-        }
     }
 }

@@ -202,6 +202,8 @@ namespace Autoloads
         private async void AddPlayers()
         {
             Vector2 startPos = GetViewport().GetVisibleRect().Size / 2;
+            startPos = new(startPos.X, startPos.Y + 100);
+
             for (int i = 1; i <= _playerCount; i++)
             {
                 Player player = _playerScene.Instantiate<Player>();
@@ -215,7 +217,8 @@ namespace Autoloads
                 PlayerService playerService = ServiceManager.Instance.GetService<PlayerService>();
 
                 _currentSceneRoot.AddChild(player);
-                player.GlobalPosition = startPos;
+                // Set the starting position to an offset if there are more than one player so they don't start on top of each other.
+                player.GlobalPosition = startPos + new Vector2((i - 1) * 200, 0);
                 playerService.AddPlayer(player);
 
                 // Instantiate the player's UI

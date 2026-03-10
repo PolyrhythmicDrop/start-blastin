@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://cj20n8pswpaby"]
+
+[ext_resource type="Script" uid="uid://cxvvgwavco8ts" path="res://nodes/ui/elements/WaveCountdown.cs" id="1_hywca"]
+[ext_resource type="FontFile" uid="uid://cl4qr5jjiwdn4" path="res://resources/fonts/sixtyfour-convergence/SixtyfourConvergence-Regular-VariableFont_BLED,SCAN,XELA,YELA.ttf" id="2_af4sc"]
+
+[node name="WaveCountdown" type="CenterContainer" unique_id=1126437089]
+z_index = 50
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_hywca")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="." unique_id=235475578]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(1000, 500)
+layout_direction = 2
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("2_af4sc")
+theme_override_font_sizes/normal_font_size = 120
+bbcode_enabled = true
+scroll_active = false
+shortcut_keys_enabled = false
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true

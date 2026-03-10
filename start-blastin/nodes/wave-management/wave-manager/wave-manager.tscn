@@ -6,8 +6,6 @@
 [node name="WaveManager" type="Node" unique_id=1483753488 groups=["wave-manager"]]
 process_mode = 1
 script = ExtResource("1_qioyi")
-Difficulty = 1
-WaveTime = 30.0
 
 [node name="WaveTimer" type="Timer" parent="." unique_id=1573309593]
 unique_name_in_owner = true

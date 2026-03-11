@@ -4,15 +4,27 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Autoloads;
 using Godot;
+using Utility;
+using WaveManagement;
 
 namespace UI
 {
     public partial class StartupScreen : Node
     {
+        // State flags
         private bool _initialized = false;
+        private bool _menuTransitioning = false;
+
         private Control _activeMenu;
         private Control _prevMenu;
         private AnimatedSprite2D _selector;
+
+        // Tween stuff
+        private Tween _selTween;
+        private Color _fullColor = new Color(1, 1, 1, 1);
+        private Color _transColor = new Color(1, 1, 1, 0);
+
+        private const float TRANSITION_DURATION = 0.25f;
 
         private VBoxContainer _initVBox;
         private RichTextLabel _newGameLabel;
@@ -31,11 +43,7 @@ namespace UI
         public int CurrentEntryIndex
         {
             get => _currentEntryIndex;
-            set
-            {
-                _currentEntryIndex = value;
-                MoveSelector(value);
-            }
+            set { _currentEntryIndex = value; }
         }
 
         public override void _Ready()
@@ -58,32 +66,113 @@ namespace UI
         {
             _initialized = true;
 
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+
             await SwitchMenu(_initVBox);
             _selector.Visible = true;
         }
 
-        private void MoveSelector(int index)
+        private void MoveSelectorToEntry(int index)
         {
             if (_entryList[index] == null)
             {
                 return;
             }
 
-            Rect2 cRect = _entryList[index].GetGlobalRect();
-            float yPos = cRect.Position.Y + (cRect.Size.Y / 2);
-            _selector.Position = new Vector2(cRect.Position.X, yPos);
+            if (_selTween != null && _selTween.IsValid())
+            {
+                _selTween.Kill();
+            }
+
+            _selector.GlobalPosition = GetEntrySelectorPoint(index);
+            TweenSelectorIdle();
+        }
+
+        private Vector2 GetEntrySelectorPoint(int index)
+        {
+            Control entry = _entryList[index];
+            Vector2 cSize = entry.Size;
+            float yPos = entry.GlobalPosition.Y + (cSize.Y / 2);
+            return new Vector2(entry.GlobalPosition.X, yPos);
+        }
+
+        private async Task TweenSelectorIn(Vector2 finalPos)
+        {
+            if (_selTween != null && _selTween.IsValid())
+            {
+                _selTween.Kill();
+            }
+
+            Vector2 startPos = new Vector2(finalPos.X - 300, finalPos.Y);
+
+            _selTween = _selector
+                .CreateTween()
+                .SetParallel(true)
+                .SetTrans(Tween.TransitionType.Sine)
+                .SetEase(Tween.EaseType.InOut);
+            _selTween
+                .TweenProperty(_selector, "modulate", _fullColor, TRANSITION_DURATION)
+                .From(_transColor);
+            _selTween
+                .TweenProperty(_selector, "global_position", finalPos, TRANSITION_DURATION)
+                .From(startPos);
+            _selTween.Chain().TweenCallback(Callable.From(() => _selector.Play("default")));
+
+            await ToSignal(_selTween, Tween.SignalName.Finished);
+        }
+
+        private void TweenSelectorOut()
+        {
+            if (_selTween != null && _selTween.IsValid())
+            {
+                _selTween.Kill();
+            }
+
+            Vector2 startPos = _selector.GlobalPosition;
+            Vector2 endPos = new Vector2(startPos.X - 300, startPos.Y);
+
+            _selector.Play("spin");
+            _selTween = _selector
+                .CreateTween()
+                .SetParallel(true)
+                .SetTrans(Tween.TransitionType.Sine)
+                .SetEase(Tween.EaseType.InOut);
+            _selTween
+                .TweenProperty(_selector, "modulate", _transColor, TRANSITION_DURATION)
+                .From(_fullColor);
+            _selTween.TweenProperty(_selector, "global_position", endPos, TRANSITION_DURATION);
+        }
+
+        private void TweenSelectorIdle()
+        {
+            if (_selTween != null && _selTween.IsValid())
+            {
+                _selTween.Kill();
+            }
+
+            DebugLogger.LogMessage($"Selector global pos: {_selector.GlobalPosition}");
+            Vector2 startPos = _selector.GlobalPosition;
+            Vector2 endPos = new(startPos.X - 10, startPos.Y);
+
+            _selTween = _selector
+                .CreateTween()
+                .SetLoops()
+                .SetTrans(Tween.TransitionType.Sine)
+                .SetEase(Tween.EaseType.InOut);
+            _selTween.TweenProperty(_selector, "global_position", endPos, 1f);
+            _selTween.TweenProperty(_selector, "global_position", startPos, 1f);
         }
 
         private async Task SwitchMenu(Control menu)
         {
+            _menuTransitioning = true;
+
             if (_activeMenu != null)
             {
-                _activeMenu.Hide();
                 _prevMenu = _activeMenu;
             }
 
             _activeMenu = menu;
-            _activeMenu.Show();
 
             _entryList?.Clear();
             var mc = menu.GetChildren();
@@ -91,8 +180,42 @@ namespace UI
             {
                 _entryList.Add(c);
             }
+
+            await TweenMenuTransition(_prevMenu, _activeMenu);
             await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
             CurrentEntryIndex = 0;
+            await TweenSelectorIn(GetEntrySelectorPoint(_currentEntryIndex));
+
+            TweenSelectorIdle();
+
+            _menuTransitioning = false;
+        }
+
+        private async Task TweenMenuTransition(Control prevMenu, Control nextMenu)
+        {
+            Tween t = CreateTween();
+            if (prevMenu != null)
+            {
+                t.SetParallel(true);
+                t.TweenProperty(prevMenu, "modulate", _transColor, TRANSITION_DURATION)
+                    .From(_fullColor);
+                t.TweenProperty(prevMenu, "scale", new Vector2(3f, 0.5f), TRANSITION_DURATION)
+                    .From(Vector2.One);
+                t.TweenCallback(Callable.From(TweenSelectorOut));
+                t.SetParallel(false);
+                t.Chain().TweenCallback(Callable.From(prevMenu.Hide));
+            }
+            if (nextMenu != null)
+            {
+                t.TweenCallback(Callable.From(nextMenu.Show));
+                t.SetParallel(true);
+                t.TweenProperty(nextMenu, "scale", Vector2.One, TRANSITION_DURATION)
+                    .From(new Vector2(3f, 0.5f));
+                t.TweenProperty(nextMenu, "modulate", _fullColor, TRANSITION_DURATION)
+                    .From(_transColor);
+            }
+
+            await ToSignal(t, Tween.SignalName.Finished);
         }
 
         public override void _Process(double delta)
@@ -102,27 +225,30 @@ namespace UI
                 Initialize();
             }
 
-            if (Input.IsActionJustPressed("ui_down") || Input.IsActionJustPressed("ui_right"))
+            if (!_menuTransitioning)
             {
-                IncrementCurrentIndex();
-            }
-            else if (Input.IsActionJustPressed("ui_up") || Input.IsActionJustPressed("ui_left"))
-            {
-                DecrementCurrentIndex();
-            }
-            else if (Input.IsActionJustPressed("ui_accept"))
-            {
-                MakeSelection();
-            }
-            else if (Input.IsActionJustPressed("ui_cancel"))
-            {
-                if (_activeMenu.Equals(_initVBox))
+                if (Input.IsActionJustPressed("ui_down") || Input.IsActionJustPressed("ui_right"))
                 {
-                    return;
+                    IncrementCurrentIndex();
                 }
-                else
+                else if (Input.IsActionJustPressed("ui_up") || Input.IsActionJustPressed("ui_left"))
                 {
-                    SwitchMenu(_prevMenu);
+                    DecrementCurrentIndex();
+                }
+                else if (Input.IsActionJustPressed("ui_accept"))
+                {
+                    MakeSelection();
+                }
+                else if (Input.IsActionJustPressed("ui_cancel"))
+                {
+                    if (_activeMenu.Equals(_initVBox))
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        SwitchMenu(_prevMenu);
+                    }
                 }
             }
         }
@@ -138,18 +264,24 @@ namespace UI
                     GetTree().Quit();
                     break;
                 case var entry when entry == _easy:
-                    SceneManager.Instance.LoadNewGame(WaveManagement.Difficulty.Easy);
+                    StartNewGame(Difficulty.Easy);
                     break;
                 case var entry when entry == _medium:
-                    SceneManager.Instance.LoadNewGame(WaveManagement.Difficulty.Medium);
+                    StartNewGame(Difficulty.Medium);
                     break;
                 case var entry when entry == _hard:
-                    SceneManager.Instance.LoadNewGame(WaveManagement.Difficulty.Hard);
+                    StartNewGame(Difficulty.Hard);
                     break;
                 case var entry when entry == _diffBack:
                     SwitchMenu(_initVBox);
                     break;
             }
+        }
+
+        private async Task StartNewGame(Difficulty difficulty)
+        {
+            await TweenMenuTransition(_activeMenu, null);
+            SceneManager.Instance.LoadNewGame(difficulty);
         }
 
         private void IncrementCurrentIndex()
@@ -163,6 +295,7 @@ namespace UI
             {
                 CurrentEntryIndex = 0;
             }
+            MoveSelectorToEntry(CurrentEntryIndex);
         }
 
         private void DecrementCurrentIndex()
@@ -176,6 +309,7 @@ namespace UI
             {
                 CurrentEntryIndex = count - 1;
             }
+            MoveSelectorToEntry(CurrentEntryIndex);
         }
     }
 }

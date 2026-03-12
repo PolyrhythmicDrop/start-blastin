@@ -24,7 +24,7 @@ namespace UI
         private Color _fullColor = new Color(1, 1, 1, 1);
         private Color _transColor = new Color(1, 1, 1, 0);
 
-        private const float TRANSITION_DURATION = 0.25f;
+        private const float MENU_TRANS_DUR = 0.2f;
 
         private VBoxContainer _initVBox;
         private RichTextLabel _newGameLabel;
@@ -111,10 +111,10 @@ namespace UI
                 .SetTrans(Tween.TransitionType.Sine)
                 .SetEase(Tween.EaseType.InOut);
             _selTween
-                .TweenProperty(_selector, "modulate", _fullColor, TRANSITION_DURATION)
+                .TweenProperty(_selector, "modulate", _fullColor, MENU_TRANS_DUR)
                 .From(_transColor);
             _selTween
-                .TweenProperty(_selector, "global_position", finalPos, TRANSITION_DURATION)
+                .TweenProperty(_selector, "global_position", finalPos, MENU_TRANS_DUR)
                 .From(startPos);
             _selTween.Chain().TweenCallback(Callable.From(() => _selector.Play("default")));
 
@@ -138,9 +138,9 @@ namespace UI
                 .SetTrans(Tween.TransitionType.Sine)
                 .SetEase(Tween.EaseType.InOut);
             _selTween
-                .TweenProperty(_selector, "modulate", _transColor, TRANSITION_DURATION)
+                .TweenProperty(_selector, "modulate", _transColor, MENU_TRANS_DUR)
                 .From(_fullColor);
-            _selTween.TweenProperty(_selector, "global_position", endPos, TRANSITION_DURATION);
+            _selTween.TweenProperty(_selector, "global_position", endPos, MENU_TRANS_DUR);
         }
 
         private void TweenSelectorIdle()
@@ -150,7 +150,6 @@ namespace UI
                 _selTween.Kill();
             }
 
-            DebugLogger.LogMessage($"Selector global pos: {_selector.GlobalPosition}");
             Vector2 startPos = _selector.GlobalPosition;
             Vector2 endPos = new(startPos.X - 10, startPos.Y);
 
@@ -197,9 +196,8 @@ namespace UI
             if (prevMenu != null)
             {
                 t.SetParallel(true);
-                t.TweenProperty(prevMenu, "modulate", _transColor, TRANSITION_DURATION)
-                    .From(_fullColor);
-                t.TweenProperty(prevMenu, "scale", new Vector2(3f, 0.5f), TRANSITION_DURATION)
+                t.TweenProperty(prevMenu, "modulate", _transColor, MENU_TRANS_DUR).From(_fullColor);
+                t.TweenProperty(prevMenu, "scale", new Vector2(3f, 0.5f), MENU_TRANS_DUR)
                     .From(Vector2.One);
                 t.TweenCallback(Callable.From(TweenSelectorOut));
                 t.SetParallel(false);
@@ -209,10 +207,9 @@ namespace UI
             {
                 t.TweenCallback(Callable.From(nextMenu.Show));
                 t.SetParallel(true);
-                t.TweenProperty(nextMenu, "scale", Vector2.One, TRANSITION_DURATION)
+                t.TweenProperty(nextMenu, "scale", Vector2.One, MENU_TRANS_DUR)
                     .From(new Vector2(3f, 0.5f));
-                t.TweenProperty(nextMenu, "modulate", _fullColor, TRANSITION_DURATION)
-                    .From(_transColor);
+                t.TweenProperty(nextMenu, "modulate", _fullColor, MENU_TRANS_DUR).From(_transColor);
             }
 
             await ToSignal(t, Tween.SignalName.Finished);
@@ -280,6 +277,7 @@ namespace UI
 
         private async Task StartNewGame(Difficulty difficulty)
         {
+            _menuTransitioning = true;
             await TweenMenuTransition(_activeMenu, null);
             SceneManager.Instance.LoadNewGame(difficulty);
         }

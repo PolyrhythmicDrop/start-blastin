@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Enemies;
+using Entities;
 using Events;
 using Godot;
 using Items;
@@ -11,6 +12,8 @@ namespace Autoloads
     public partial class EventBus : Node
     {
         public static EventBus Instance { get; private set; }
+
+        public event EventHandler<GameInitializedEventArgs> GameInitialized;
 
         #region Waves
 
@@ -96,6 +99,12 @@ namespace Autoloads
         public override void _Ready()
         {
             Instance = this;
+        }
+
+        public void RaiseGameInitialized(Player[] players, int startingWave, double waveTime)
+        {
+            GameInitializedEventArgs args = new(players, startingWave, waveTime);
+            GameInitialized?.Invoke(this, args);
         }
 
         public void RaiseWaveStarted(int wave)

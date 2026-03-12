@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackgroundGenerator;
 using Entities;
@@ -199,8 +200,9 @@ namespace Autoloads
             }
         }
 
-        private async void AddPlayers()
+        private async Task<List<Player>> AddPlayers()
         {
+            List<Player> players = new();
             Vector2 startPos = GetViewport().GetVisibleRect().Size / 2;
             startPos = new(startPos.X, startPos.Y + 100);
 
@@ -211,7 +213,6 @@ namespace Autoloads
                 // Set PlayerId
                 player.SetPlayerId(i);
                 player.Name = $"Player-{player.PlayerId}";
-                DebugLogger.LogMessage($"{player.Name} PlayerId: {player.PlayerId}", true);
 
                 // Add the player to the PlayerService list
                 PlayerService playerService = ServiceManager.Instance.GetService<PlayerService>();
@@ -225,10 +226,14 @@ namespace Autoloads
                 UiLayer ui = _playerUiScene.Instantiate<UiLayer>();
                 ui.Initialize(player.PlayerId);
                 _currentSceneRoot.AddChild(ui);
+
+                players.Add(player);
             }
+
+            return players;
         }
 
-        public void LoadNewGame(Difficulty difficulty)
+        public async Task LoadNewGame(Difficulty difficulty)
         {
             ChangeScene(_newGameScene);
 
@@ -236,9 +241,16 @@ namespace Autoloads
             WaveManager wm = _waveManagerScene.Instantiate<WaveManager>();
             wm.Difficulty = difficulty;
             _currentSceneRoot.AddChild(wm);
-            DebugLogger.LogMessage($"{wm.Name} difficulty: {wm.Difficulty}");
 
-            AddPlayers();
+            List<Player> players = await AddPlayers();
+
+            EventBus.Instance.RaiseGameInitialized([.. players], 1, wm.WaveTime);
+
+            foreach (Player p in players)
+            {
+                await p.EnterLevel();
+            }
+
             wm.InitializeFirstWave();
         }
     }

@@ -1,6 +1,8 @@
 using System;
+using System.Threading.Tasks;
 using Entities;
 using Godot;
+using Utility;
 
 namespace PlayerComponents
 {
@@ -15,6 +17,8 @@ namespace PlayerComponents
         private AnimatedSprite2D _destructionSprite;
         private AnimatedSprite2D _phaseReadySprite;
         private ShaderMaterial _hitEffectShaderMat;
+
+        private PackedScene _portalScene = GD.Load<PackedScene>("uid://c32k0p00itnlf");
 
         public override void _Ready()
         {
@@ -35,6 +39,68 @@ namespace PlayerComponents
         public void Initialize(Player player)
         {
             _player = player;
+        }
+
+        public async Task PlayPortalAnimation()
+        {
+            // Hide the player
+            _player.Hide();
+
+            // Set starting variables
+            Color defaultColor = _player.Modulate;
+            Color trans = new(1, 1, 1, 0);
+            Color white = new(1, 1, 1, 1);
+            white = white.Lightened(10.0f);
+            // white.OkHslL = 10;
+
+            // Set the player's starting modulation to transparent.
+            _player.Modulate = trans;
+            _player.Show();
+
+            // Wait for a process frame so GlobalPosition has time to computer after _Ready()
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+
+            // Set up the portal node
+            AnimatedSprite2D portal = _portalScene.Instantiate<AnimatedSprite2D>();
+            portal.ZIndex = _player.ZIndex - 1;
+            _player.GetParent().AddChild(portal);
+            portal.GlobalPosition = _player.GlobalPosition;
+
+            // Create the callables for tweening
+            Callable portalOpen = Callable.From(() => portal.Play("open"));
+            Callable portalLoop = Callable.From(() => portal.Play("loop"));
+            Callable portalClose = Callable.From(() => portal.PlayBackwards("open"));
+
+            _player.Scale = Vector2.Zero;
+
+            // Tween t = CreateTween();
+            // t.SetParallel(true);
+            // t.TweenCallback(portalOpen);
+            // t.SetParallel(false);
+
+            portal.Play("open");
+
+            await ToSignal(portal, AnimatedSprite2D.SignalName.AnimationFinished);
+
+            portal.Play("loop");
+
+            Tween t = CreateTween();
+
+            // t.TweenCallback(portalLoop);
+            t.SetParallel(true);
+            t.TweenProperty(_player, "modulate", defaultColor, 1f);
+            t.TweenProperty(_player, "scale", Vector2.One, 1f).From(Vector2.Zero);
+            t.SetParallel(false);
+            // t.TweenProperty(_player, "modulate", defaultColor, 2);
+            t.Chain().TweenProperty(_player.Controller, "Enabled", true, 0);
+            t.TweenCallback(portalClose);
+            t.TweenProperty(portal, "modulate", trans, 2);
+
+            await ToSignal(portal, AnimatedSprite2D.SignalName.AnimationFinished);
+            await ToSignal(t, Tween.SignalName.Finished);
+
+            portal.Hide();
+            portal.QueueFree();
         }
 
         public void ConnectSignals()

@@ -25,6 +25,7 @@ namespace UI.HUD
 
         public void ConnectSignals()
         {
+            EventBus.Instance.GameInitialized += OnGameInitialized;
             EventBus.Instance.WaveStarted += OnWaveStarted;
             EventBus.Instance.WaveTimeLeft += OnWaveTimeLeft;
             EventBus.Instance.WaveComplete += OnWaveComplete;
@@ -32,18 +33,25 @@ namespace UI.HUD
 
         public void DisconnectSignals()
         {
+            EventBus.Instance.GameInitialized -= OnGameInitialized;
             EventBus.Instance.WaveStarted -= OnWaveStarted;
             EventBus.Instance.WaveTimeLeft -= OnWaveTimeLeft;
             EventBus.Instance.WaveComplete -= OnWaveComplete;
         }
 
-        private void OnWaveStarted(object sender, WaveStartedEventArgs args) =>
-            SetWaveCount(args.Wave);
-
-        private void SetWaveCount(int waveCount)
+        public void SetWaveCount(int waveCount)
         {
             _waveCounter.Text = $"Wave {waveCount}";
         }
+
+        private void OnGameInitialized(object sender, GameInitializedEventArgs args)
+        {
+            SetWaveCount(args.StartingWave);
+            SetWaveProgress(args.WaveTime, args.WaveTime);
+        }
+
+        private void OnWaveStarted(object sender, WaveStartedEventArgs args) =>
+            SetWaveCount(args.Wave);
 
         private void OnWaveTimeLeft(object sender, WaveTimeLeftEventArgs args) =>
             SetWaveProgress(args.TimeLeft, args.TotalTime);
@@ -52,7 +60,7 @@ namespace UI.HUD
         {
             if (!_progressBarInitialized)
             {
-                InitializeWaveProgressBar(totalTime);
+                InitializeWaveProgressBar();
             }
             TimeSpan time = TimeSpan.FromSeconds(timeLeft);
             _waveProgressLabel.Text = time.ToString("mm':'ss");
@@ -68,7 +76,7 @@ namespace UI.HUD
             }
         }
 
-        private void InitializeWaveProgressBar(double totalTime)
+        private void InitializeWaveProgressBar()
         {
             _progressBarInitialized = true;
             _progressColor = new(Colors.MediumAquamarine);

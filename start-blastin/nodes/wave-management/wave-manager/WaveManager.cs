@@ -54,7 +54,6 @@ namespace WaveManagement
 
             ConnectSignals();
             SetBaseDifficultyModifier();
-            // InitializeFirstWave();
         }
 
         /// <summary>
@@ -129,6 +128,9 @@ namespace WaveManagement
             EventBus.Instance.RaiseWaveStarted(_wave);
         }
 
+        /// <summary>
+        /// Creates a <see cref="WaveCountdown"/> object and plays the pre-wave countdown.
+        /// </summary>
         private async Task CountDownWave()
         {
             WaveCountdown wc = GD.Load<PackedScene>("uid://cj20n8pswpaby")

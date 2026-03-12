@@ -52,7 +52,6 @@ namespace UI.HUD
 
         private void SetCollisionShape()
         {
-            DebugLogger.LogMessage("Setting collision shape...", true);
             RectangleShape2D newShape = new() { Size = Size };
             Vector2 size = newShape.Size;
             _hudCollision.Shape = newShape;

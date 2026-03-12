@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Autoloads;
 using Components;
 using Effects;
@@ -267,6 +268,7 @@ namespace Entities
 
         public override void _Ready()
         {
+            // Hide();
             CurrentHealth = _maxHealth;
 
             // Set component node variables
@@ -286,6 +288,18 @@ namespace Entities
 
             ConnectSignals();
             InitializeComponents();
+        }
+
+        public async Task EnterLevel()
+        {
+            // Suspend controller input during the intro animation
+            _controller.Enabled = false;
+
+            // Play the portal animation
+            await _animationComponent?.PlayPortalAnimation();
+
+            // Re-enable the controller.
+            // _controller.Enabled = true;
         }
 
         private void InitializeComponents()

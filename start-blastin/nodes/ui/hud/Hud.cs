@@ -36,6 +36,8 @@ namespace UI.HUD
 
             SetCollisionShape();
 
+            TweenHudEntrance();
+
             ConnectSignals();
         }
 
@@ -48,6 +50,19 @@ namespace UI.HUD
         public void DisconnectSignals()
         {
             Resized -= SetCollisionShape;
+        }
+
+        private void TweenHudEntrance()
+        {
+            Rect2 hudRect = GetGlobalRect();
+            Vector2 endPos = _hudBody.GlobalPosition;
+            Vector2 startPos = new(endPos.X, endPos.Y + hudRect.Size.Y);
+
+            Position = startPos;
+
+            Tween t = CreateTween().SetTrans(Tween.TransitionType.Sine).SetEase(Tween.EaseType.Out);
+
+            t.TweenProperty(this, "position", endPos, 1.75f);
         }
 
         private void SetCollisionShape()

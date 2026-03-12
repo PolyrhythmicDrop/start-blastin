@@ -298,8 +298,7 @@ namespace Entities
             // Play the portal animation
             await _animationComponent?.PlayPortalAnimation();
 
-            // Re-enable the controller.
-            // _controller.Enabled = true;
+            // Don't need to re-enable the controller here, as that's done from PlayPortalAnimation().
         }
 
         private void InitializeComponents()

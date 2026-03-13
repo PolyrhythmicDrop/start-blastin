@@ -26,4 +26,6 @@ scroll_active = false
 shortcut_keys_enabled = false
 horizontal_alignment = 1
 vertical_alignment = 1
+meta_underlined = false
+hint_underlined = false
 metadata/_edit_use_anchors_ = true

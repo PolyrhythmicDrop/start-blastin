@@ -2,51 +2,9 @@
 
 [ext_resource type="FontFile" uid="uid://cl4qr5jjiwdn4" path="res://resources/fonts/sixtyfour-convergence/SixtyfourConvergence-Regular-VariableFont_BLED,SCAN,XELA,YELA.ttf" id="1_2af6r"]
 [ext_resource type="Script" uid="uid://yjrkluot64fd" path="res://nodes/ui/menus/splash-screen/StartupScreen.cs" id="1_pejoe"]
-[ext_resource type="Texture2D" uid="uid://c5bb0v2pg41wv" path="res://assets/ui/menu-select-icon-48px.png" id="3_pejoe"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_j44x6"]
-atlas = ExtResource("3_pejoe")
-region = Rect2(0, 0, 41, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_gssci"]
-atlas = ExtResource("3_pejoe")
-region = Rect2(41, 0, 41, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_3ntfm"]
-atlas = ExtResource("3_pejoe")
-region = Rect2(82, 0, 41, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_x57as"]
-atlas = ExtResource("3_pejoe")
-region = Rect2(123, 0, 41, 48)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_4sk86"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_j44x6")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_j44x6")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_gssci")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_3ntfm")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_x57as")
-}],
-"loop": true,
-"name": &"spin",
-"speed": 40.0
-}]
+[ext_resource type="Script" uid="uid://ce5t3ttfymoxp" path="res://nodes/ui/menus/splash-screen/StartupSplashSelectionMenu.cs" id="2_gssci"]
+[ext_resource type="Script" uid="uid://37gacqokmebj" path="res://nodes/ui/menus/SelectionEntry.cs" id="4_gssci"]
+[ext_resource type="Script" uid="uid://b0fpcwimr8wmq" path="res://nodes/ui/menus/splash-screen/DifficultySelectionMenu.cs" id="5_gssci"]
 
 [node name="StartupScreen" type="Node" unique_id=1350850372]
 script = ExtResource("1_pejoe")
@@ -64,7 +22,7 @@ theme_override_font_sizes/font_size = 64
 text = "Start Blastin'"
 horizontal_alignment = 1
 
-[node name="InitVBox" type="VBoxContainer" parent="." unique_id=38752516]
+[node name="StartupMenu" type="VBoxContainer" parent="." unique_id=38752516]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 200)
 anchors_preset = -1
@@ -78,9 +36,11 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 size_flags_horizontal = 3
 theme_override_constants/separation = 10
 alignment = 1
+script = ExtResource("2_gssci")
+RememberEntry = null
 metadata/_edit_use_anchors_ = true
 
-[node name="NewGame" type="RichTextLabel" parent="InitVBox" unique_id=672524974]
+[node name="NewGame" type="RichTextLabel" parent="StartupMenu" unique_id=672524974]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -94,8 +54,9 @@ shortcut_keys_enabled = false
 horizontal_alignment = 1
 vertical_alignment = 1
 justification_flags = 131
+script = ExtResource("4_gssci")
 
-[node name="Options" type="RichTextLabel" parent="InitVBox" unique_id=792788680]
+[node name="Options" type="RichTextLabel" parent="StartupMenu" unique_id=792788680]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -112,8 +73,9 @@ vertical_alignment = 1
 justification_flags = 3
 meta_underlined = false
 hint_underlined = false
+script = ExtResource("4_gssci")
 
-[node name="Quit" type="RichTextLabel" parent="InitVBox" unique_id=1722548906]
+[node name="Quit" type="RichTextLabel" parent="StartupMenu" unique_id=1722548906]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -130,8 +92,9 @@ vertical_alignment = 1
 justification_flags = 3
 meta_underlined = false
 hint_underlined = false
+script = ExtResource("4_gssci")
 
-[node name="DifficultyVBox" type="VBoxContainer" parent="." unique_id=1323398227]
+[node name="DifficultyMenu" type="VBoxContainer" parent="." unique_id=1323398227]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(300, 200)
@@ -147,9 +110,11 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 size_flags_horizontal = 3
 alignment = 1
+script = ExtResource("5_gssci")
+RememberEntry = null
 metadata/_edit_use_anchors_ = true
 
-[node name="Easy" type="RichTextLabel" parent="DifficultyVBox" unique_id=1894703940]
+[node name="Easy" type="RichTextLabel" parent="DifficultyMenu" unique_id=1894703940]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -163,8 +128,9 @@ shortcut_keys_enabled = false
 horizontal_alignment = 1
 vertical_alignment = 1
 justification_flags = 131
+script = ExtResource("4_gssci")
 
-[node name="Medium" type="RichTextLabel" parent="DifficultyVBox" unique_id=588873800]
+[node name="Medium" type="RichTextLabel" parent="DifficultyMenu" unique_id=588873800]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -181,8 +147,9 @@ vertical_alignment = 1
 justification_flags = 3
 meta_underlined = false
 hint_underlined = false
+script = ExtResource("4_gssci")
 
-[node name="Hard" type="RichTextLabel" parent="DifficultyVBox" unique_id=1705534547]
+[node name="Hard" type="RichTextLabel" parent="DifficultyMenu" unique_id=1705534547]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -199,8 +166,9 @@ vertical_alignment = 1
 justification_flags = 3
 meta_underlined = false
 hint_underlined = false
+script = ExtResource("4_gssci")
 
-[node name="Back" type="RichTextLabel" parent="DifficultyVBox" unique_id=605948318]
+[node name="Back" type="RichTextLabel" parent="DifficultyMenu" unique_id=605948318]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -217,12 +185,4 @@ vertical_alignment = 1
 justification_flags = 3
 meta_underlined = false
 hint_underlined = false
-
-[node name="Selector" type="AnimatedSprite2D" parent="." unique_id=563788099]
-unique_name_in_owner = true
-scale = Vector2(1.5, 1.5)
-sprite_frames = SubResource("SpriteFrames_4sk86")
-animation = &"spin"
-autoplay = "default"
-frame_progress = 0.15788113
-offset = Vector2(-19.99998, 0)
+script = ExtResource("4_gssci")

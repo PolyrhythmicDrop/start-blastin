@@ -142,6 +142,13 @@ namespace Enemies
 
         protected override async Task PlayDeathSequence()
         {
+            if (_followTween != null && _followTween.IsRunning())
+            {
+                _followTween.Kill();
+            }
+
+            _healthComponent.HealthBar.ToggleBarVisibility(false);
+
             // Tween the sprite modulation to white.
             float stepDur = DEATH_DURATION / 2;
             Color white = new(18.892f, 18.892f, 18.892f);

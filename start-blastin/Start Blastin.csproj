@@ -8,6 +8,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="nodes\components\enemy-components\" />
+    <Folder Include="nodes\ui\menus\game-over-screen\" />
     <Folder Include="nodes\utility\" />
     <Folder Include="nodes\weapons\projectiles\flame\" />
     <Folder Include="nodes\weapons\projectiles\laser\" />

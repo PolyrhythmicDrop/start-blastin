@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://deabemykbs2vl"]
+
+[ext_resource type="Texture2D" uid="uid://c5bb0v2pg41wv" path="res://assets/ui/menu-select-icon-48px.png" id="1_3de47"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j44x6"]
+atlas = ExtResource("1_3de47")
+region = Rect2(0, 0, 41, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gssci"]
+atlas = ExtResource("1_3de47")
+region = Rect2(41, 0, 41, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3ntfm"]
+atlas = ExtResource("1_3de47")
+region = Rect2(82, 0, 41, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x57as"]
+atlas = ExtResource("1_3de47")
+region = Rect2(123, 0, 41, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_4sk86"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j44x6")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j44x6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gssci")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3ntfm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x57as")
+}],
+"loop": true,
+"name": &"spin",
+"speed": 30.0
+}]
+
+[node name="Selector" type="AnimatedSprite2D" unique_id=185654990]
+scale = Vector2(1.5, 1.5)
+sprite_frames = SubResource("SpriteFrames_4sk86")
+animation = &"spin"
+autoplay = "default"
+frame_progress = 0.8464987
+offset = Vector2(-19.99998, 0)

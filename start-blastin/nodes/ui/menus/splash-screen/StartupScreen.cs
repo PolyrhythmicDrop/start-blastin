@@ -13,11 +13,8 @@ namespace UI
 
         private SelectionMenu _activeMenu;
         private SelectionMenu _prevMenu;
-        private AnimatedSprite2D _selector = GD.Load<PackedScene>("uid://deabemykbs2vl")
-            .Instantiate<AnimatedSprite2D>();
-
-        // Tween stuff
-        private Tween _selTween;
+        private MenuSelector _selector = GD.Load<PackedScene>("uid://deabemykbs2vl")
+            .Instantiate<MenuSelector>();
 
         private ColorPalette _alphaPalette = ResourceLoader.Load<ColorPalette>(
             "uid://jo6hbayjhfba"
@@ -87,73 +84,6 @@ namespace UI
             _selector.Visible = true;
         }
 
-        private async Task TweenSelectorIn(Vector2 finalPos)
-        {
-            if (_selTween != null && _selTween.IsValid())
-            {
-                _selTween.Kill();
-            }
-
-            Vector2 startPos = new Vector2(finalPos.X - 300, finalPos.Y);
-            Color full = _alphaPalette.Colors[0];
-            Color trans = _alphaPalette.Colors[1];
-
-            _selTween = _selector
-                .CreateTween()
-                .SetParallel(true)
-                .SetTrans(Tween.TransitionType.Sine)
-                .SetEase(Tween.EaseType.InOut);
-            _selTween.TweenProperty(_selector, "modulate", full, MENU_TRANS_DUR).From(trans);
-            _selTween
-                .TweenProperty(_selector, "global_position", finalPos, MENU_TRANS_DUR)
-                .From(startPos);
-            _selTween.Chain().TweenCallback(Callable.From(() => _selector.Play("default")));
-
-            await ToSignal(_selTween, Tween.SignalName.Finished);
-        }
-
-        private void TweenSelectorOut()
-        {
-            if (_selTween != null && _selTween.IsValid())
-            {
-                _selTween.Kill();
-            }
-
-            Vector2 startPos = _selector.GlobalPosition;
-            Vector2 endPos = new Vector2(startPos.X - 300, startPos.Y);
-
-            Color full = _alphaPalette.Colors[0];
-            Color trans = _alphaPalette.Colors[1];
-
-            _selector.Play("spin");
-            _selTween = _selector
-                .CreateTween()
-                .SetParallel(true)
-                .SetTrans(Tween.TransitionType.Sine)
-                .SetEase(Tween.EaseType.InOut);
-            _selTween.TweenProperty(_selector, "modulate", trans, MENU_TRANS_DUR).From(full);
-            _selTween.TweenProperty(_selector, "global_position", endPos, MENU_TRANS_DUR);
-        }
-
-        private void TweenSelectorIdle()
-        {
-            if (_selTween != null && _selTween.IsValid())
-            {
-                _selTween.Kill();
-            }
-
-            Vector2 startPos = _selector.GlobalPosition;
-            Vector2 endPos = new(startPos.X - 10, startPos.Y);
-
-            _selTween = _selector
-                .CreateTween()
-                .SetLoops()
-                .SetTrans(Tween.TransitionType.Sine)
-                .SetEase(Tween.EaseType.InOut);
-            _selTween.TweenProperty(_selector, "global_position", endPos, 1f);
-            _selTween.TweenProperty(_selector, "global_position", startPos, 1f);
-        }
-
         private async Task SwitchMenu(SelectionMenu menu)
         {
             _menuTransitioning = true;
@@ -172,11 +102,9 @@ namespace UI
 
             await TweenMenuTransition(_prevMenu, _activeMenu);
             await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
-            // _activeMenu.CurrentEntryIndex = 0;
-            // await TweenSelectorIn(GetEntrySelectorPoint(_currentEntryIndex));
-            await TweenSelectorIn(_activeMenu.CurrentEntry.GetEntrySelectorPoint());
+            await _selector.TweenSelectorIn(_activeMenu.CurrentEntry.GetEntrySelectorPoint());
 
-            // TweenSelectorIdle();
+            _selector.TweenSelectorIdle();
 
             _menuTransitioning = false;
         }
@@ -193,7 +121,7 @@ namespace UI
                 t.TweenProperty(prevMenu, "modulate", trans, MENU_TRANS_DUR).From(full);
                 t.TweenProperty(prevMenu, "scale", new Vector2(3f, 0.5f), MENU_TRANS_DUR)
                     .From(Vector2.One);
-                t.TweenCallback(Callable.From(TweenSelectorOut));
+                t.TweenCallback(Callable.From(_selector.TweenSelectorOut));
                 t.SetParallel(false);
                 t.Chain().TweenCallback(Callable.From(prevMenu.Hide));
             }
@@ -209,6 +137,22 @@ namespace UI
             await ToSignal(t, Tween.SignalName.Finished);
         }
 
+        /// <summary>
+        /// Changes the current entry in the active menu.
+        /// Moves the selector and starts the selector idle animation.
+        /// </summary>
+        /// <param name="next">True to increment the active menu's entry index (go to the "next" index), false to decrement it.</param>
+        private void ChangeCurrentEntry(bool next)
+        {
+            if (next)
+                _activeMenu.IncrementCurrentIndex(_selector);
+            else
+                _activeMenu.DecrementCurrentIndex(_selector);
+
+            _selector.MoveSelectorToEntry(_activeMenu.CurrentEntry);
+            _selector.TweenSelectorIdle();
+        }
+
         public override void _Process(double delta)
         {
             if (!_initialized)
@@ -220,16 +164,14 @@ namespace UI
             {
                 if (Input.IsActionJustPressed("ui_down") || Input.IsActionJustPressed("ui_right"))
                 {
-                    _activeMenu.IncrementCurrentIndex(_selector);
+                    ChangeCurrentEntry(true);
                 }
                 else if (Input.IsActionJustPressed("ui_up") || Input.IsActionJustPressed("ui_left"))
                 {
-                    // DecrementCurrentIndex();
-                    _activeMenu.DecrementCurrentIndex(_selector);
+                    ChangeCurrentEntry(false);
                 }
                 else if (Input.IsActionJustPressed("ui_accept"))
                 {
-                    // MakeSelection();
                     _activeMenu.MakeSelection();
                 }
                 else if (Input.IsActionJustPressed("ui_cancel"))

@@ -61,7 +61,7 @@ namespace UI
             {
                 CurrentEntryIndex = 0;
             }
-            MoveSelectorToEntry(CurrentEntry, selector);
+            // MoveSelectorToEntry(CurrentEntry, selector);
         }
 
         public void DecrementCurrentIndex(Node2D selector)
@@ -75,24 +75,24 @@ namespace UI
             {
                 CurrentEntryIndex = count - 1;
             }
-            MoveSelectorToEntry(CurrentEntry, selector);
+            // MoveSelectorToEntry(CurrentEntry, selector);
         }
 
-        private void MoveSelectorToEntry(SelectionEntry entry, Node2D selector)
-        {
-            if (entry == null)
-            {
-                return;
-            }
+        // private void MoveSelectorToEntry(SelectionEntry entry, Node2D selector)
+        // {
+        //     if (entry == null)
+        //     {
+        //         return;
+        //     }
 
-            if (_selTween != null && _selTween.IsValid())
-            {
-                _selTween.Kill();
-            }
+        //     // if (_selTween != null && _selTween.IsValid())
+        //     // {
+        //     //     _selTween.Kill();
+        //     // }
 
-            selector.GlobalPosition = entry.GetEntrySelectorPoint();
-            // TweenSelectorIdle();
-        }
+        //     selector.GlobalPosition = entry.GetEntrySelectorPoint();
+        //     // TweenSelectorIdle();
+        // }
 
         // private Vector2 GetEntrySelectorPoint(int index)
         // {

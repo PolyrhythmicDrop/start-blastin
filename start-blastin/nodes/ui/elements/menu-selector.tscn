@@ -1,21 +1,22 @@
 [gd_scene format=3 uid="uid://deabemykbs2vl"]
 
-[ext_resource type="Texture2D" uid="uid://c5bb0v2pg41wv" path="res://assets/ui/menu-select-icon-48px.png" id="1_3de47"]
+[ext_resource type="Texture2D" uid="uid://c5bb0v2pg41wv" path="res://assets/ui/menu-select-icon-48px.png" id="1_wp01e"]
+[ext_resource type="Script" uid="uid://yc3rvins5c4x" path="res://nodes/ui/elements/MenuSelector.cs" id="2_y64yh"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j44x6"]
-atlas = ExtResource("1_3de47")
+atlas = ExtResource("1_wp01e")
 region = Rect2(0, 0, 41, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gssci"]
-atlas = ExtResource("1_3de47")
+atlas = ExtResource("1_wp01e")
 region = Rect2(41, 0, 41, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3ntfm"]
-atlas = ExtResource("1_3de47")
+atlas = ExtResource("1_wp01e")
 region = Rect2(82, 0, 41, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_x57as"]
-atlas = ExtResource("1_3de47")
+atlas = ExtResource("1_wp01e")
 region = Rect2(123, 0, 41, 48)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_4sk86"]
@@ -46,10 +47,11 @@ animations = [{
 "speed": 30.0
 }]
 
-[node name="Selector" type="AnimatedSprite2D" unique_id=185654990]
+[node name="MenuSelector" type="AnimatedSprite2D" unique_id=185654990]
 scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_4sk86")
 animation = &"spin"
 autoplay = "default"
 frame_progress = 0.8464987
 offset = Vector2(-19.99998, 0)
+script = ExtResource("2_y64yh")

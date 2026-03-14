@@ -1,5 +1,7 @@
 using System;
+using System.Threading.Tasks;
 using Godot;
+using WaveManagement;
 
 namespace UI
 {
@@ -24,6 +26,23 @@ namespace UI
             _medium = GetNode<SelectionEntry>("%Medium");
             _hard = GetNode<SelectionEntry>("%Hard");
             _back = GetNode<SelectionEntry>("%Back");
+        }
+
+        /// <summary>
+        /// Assigns callback functions to each <see cref="SelectionEntry"/> in the Difficulty menu.
+        /// </summary>
+        /// <param name="onDiffSelect">Callback function for the difficulty option.</param>
+        /// <param name="onBackSelect">Callback function for the Back option.</param>
+        public void SetDifficultyActions(
+            Func<Difficulty, Task> onDiffSelect,
+            Func<Task> onBackSelect
+        )
+        {
+            Easy.SetSelectAction(async () => await onDiffSelect(Difficulty.Easy));
+            Medium.SetSelectAction(async () => await onDiffSelect(Difficulty.Medium));
+            Hard.SetSelectAction(async () => await onDiffSelect(Difficulty.Hard));
+
+            Back.SetSelectAction(onBackSelect);
         }
     }
 }

@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://yjrkluot64fd" path="res://nodes/ui/menus/splash-screen/StartupScreen.cs" id="1_pejoe"]
 [ext_resource type="Script" uid="uid://ce5t3ttfymoxp" path="res://nodes/ui/menus/splash-screen/StartupSplashSelectionMenu.cs" id="2_gssci"]
 [ext_resource type="Script" uid="uid://37gacqokmebj" path="res://nodes/ui/menus/SelectionEntry.cs" id="4_gssci"]
-[ext_resource type="Script" uid="uid://b0fpcwimr8wmq" path="res://nodes/ui/menus/splash-screen/DifficultySelectionMenu.cs" id="5_gssci"]
+[ext_resource type="PackedScene" uid="uid://2ayv1bqwmhoe" path="res://nodes/ui/menus/selection-menus/difficulty-selection-menu.tscn" id="5_gssci"]
 
 [node name="StartupScreen" type="Node" unique_id=1350850372]
 script = ExtResource("1_pejoe")
@@ -26,10 +26,10 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 200)
 anchors_preset = -1
-anchor_left = 0.421875
+anchor_left = 0.36875
 anchor_top = 0.4712963
-anchor_right = 0.578125
-anchor_bottom = 0.787963
+anchor_right = 0.63125
+anchor_bottom = 0.8671296
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -44,9 +44,10 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_fonts/normal_font = ExtResource("1_2af6r")
-theme_override_font_sizes/normal_font_size = 32
+theme_override_font_sizes/normal_font_size = 42
 bbcode_enabled = true
 text = "New Game"
+fit_content = true
 scroll_active = false
 autowrap_mode = 0
 shortcut_keys_enabled = false
@@ -60,7 +61,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_fonts/normal_font = ExtResource("1_2af6r")
-theme_override_font_sizes/normal_font_size = 32
+theme_override_font_sizes/normal_font_size = 42
 bbcode_enabled = true
 text = "Options"
 fit_content = true
@@ -79,7 +80,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_fonts/normal_font = ExtResource("1_2af6r")
-theme_override_font_sizes/normal_font_size = 32
+theme_override_font_sizes/normal_font_size = 42
 bbcode_enabled = true
 text = "Quit"
 fit_content = true
@@ -93,94 +94,5 @@ meta_underlined = false
 hint_underlined = false
 script = ExtResource("4_gssci")
 
-[node name="DifficultyMenu" type="VBoxContainer" parent="." unique_id=1323398227]
+[node name="DifficultyMenu" parent="." unique_id=1593035402 instance=ExtResource("5_gssci")]
 unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(300, 200)
-anchors_preset = -1
-anchor_left = 0.421875
-anchor_top = 0.5046296
-anchor_right = 0.578125
-anchor_bottom = 0.81203705
-offset_top = -19.0
-offset_bottom = -19.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-size_flags_horizontal = 3
-alignment = 1
-script = ExtResource("5_gssci")
-metadata/_edit_use_anchors_ = true
-
-[node name="Easy" type="RichTextLabel" parent="DifficultyMenu" unique_id=1894703940]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_fonts/normal_font = ExtResource("1_2af6r")
-theme_override_font_sizes/normal_font_size = 32
-bbcode_enabled = true
-text = "Easy"
-scroll_active = false
-autowrap_mode = 0
-shortcut_keys_enabled = false
-horizontal_alignment = 1
-vertical_alignment = 1
-justification_flags = 131
-script = ExtResource("4_gssci")
-
-[node name="Medium" type="RichTextLabel" parent="DifficultyMenu" unique_id=588873800]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_fonts/normal_font = ExtResource("1_2af6r")
-theme_override_font_sizes/normal_font_size = 32
-bbcode_enabled = true
-text = "Medium"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-autowrap_trim_flags = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-justification_flags = 3
-meta_underlined = false
-hint_underlined = false
-script = ExtResource("4_gssci")
-
-[node name="Hard" type="RichTextLabel" parent="DifficultyMenu" unique_id=1705534547]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_fonts/normal_font = ExtResource("1_2af6r")
-theme_override_font_sizes/normal_font_size = 32
-bbcode_enabled = true
-text = "Hard"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-autowrap_trim_flags = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-justification_flags = 3
-meta_underlined = false
-hint_underlined = false
-script = ExtResource("4_gssci")
-
-[node name="Back" type="RichTextLabel" parent="DifficultyMenu" unique_id=605948318]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_fonts/normal_font = ExtResource("1_2af6r")
-theme_override_font_sizes/normal_font_size = 32
-bbcode_enabled = true
-text = "Back"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-autowrap_trim_flags = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-justification_flags = 3
-meta_underlined = false
-hint_underlined = false
-script = ExtResource("4_gssci")

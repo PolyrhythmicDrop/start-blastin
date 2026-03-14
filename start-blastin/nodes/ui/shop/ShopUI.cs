@@ -84,6 +84,14 @@ namespace UI.Shop
             ConnectSignals();
         }
 
+        private void OnPlayerMaxHealthChanged(object source, PlayerMaxHealthChangedEventArgs args)
+        {
+            if (args.PlayerId == _playerId)
+            {
+                SetHealPrice();
+            }
+        }
+
         private void SetHealPrice()
         {
             Player player = _service.GetPlayer(_playerId);
@@ -150,10 +158,7 @@ namespace UI.Shop
             _rerollButton.Pressed += RerollShop;
             _nextWaveButton.Pressed += EventBus.Instance.RaiseStartWaveButtonPressed;
             _healButton.Pressed += OnHealButtonPressed;
-            EventBus.Instance.PlayerMaxHealthChanged += (source, args) =>
-            {
-                SetHealPrice();
-            };
+            EventBus.Instance.PlayerMaxHealthChanged += OnPlayerMaxHealthChanged;
 
             _rerollButton.FocusEntered += RerollFocusEntered;
             _nextWaveButton.FocusEntered += NextWaveFocusEntered;
@@ -185,6 +190,9 @@ namespace UI.Shop
         {
             _rerollButton.Pressed -= RerollShop;
             _nextWaveButton.Pressed -= EventBus.Instance.RaiseStartWaveButtonPressed;
+            _healButton.Pressed -= OnHealButtonPressed;
+
+            EventBus.Instance.PlayerMaxHealthChanged -= OnPlayerMaxHealthChanged;
 
             _rerollButton.FocusEntered -= RerollFocusEntered;
             _nextWaveButton.FocusEntered -= NextWaveFocusEntered;

@@ -73,7 +73,6 @@ namespace UI
             {
                 CurrentEntryIndex = 0;
             }
-            // MoveSelectorToEntry(CurrentEntry, selector);
         }
 
         public void DecrementCurrentIndex(Node2D selector)
@@ -87,31 +86,6 @@ namespace UI
             {
                 CurrentEntryIndex = count - 1;
             }
-            // MoveSelectorToEntry(CurrentEntry, selector);
         }
-
-        // private void MoveSelectorToEntry(SelectionEntry entry, Node2D selector)
-        // {
-        //     if (entry == null)
-        //     {
-        //         return;
-        //     }
-
-        //     // if (_selTween != null && _selTween.IsValid())
-        //     // {
-        //     //     _selTween.Kill();
-        //     // }
-
-        //     selector.GlobalPosition = entry.GetEntrySelectorPoint();
-        //     // TweenSelectorIdle();
-        // }
-
-        // private Vector2 GetEntrySelectorPoint(int index)
-        // {
-        //     Control entry = _entryList[index];
-        //     Vector2 cSize = entry.Size;
-        //     float yPos = entry.GlobalPosition.Y + (cSize.Y / 2);
-        //     return new Vector2(entry.GlobalPosition.X, yPos);
-        // }
     }
 }

@@ -102,6 +102,7 @@ namespace UI
 
         public override void _ExitTree()
         {
+            // DisableLowHealthVignette();
             DisconnectSignals();
             base._ExitTree();
         }

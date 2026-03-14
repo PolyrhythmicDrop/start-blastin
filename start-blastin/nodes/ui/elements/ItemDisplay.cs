@@ -91,7 +91,7 @@ public partial class ItemDisplay : PanelContainer, IListener
     {
         if (_iconRect != null)
         {
-            _iconRect.Texture = _item?.Icon;
+            _iconRect?.Texture = _item?.Icon;
             SetBorder();
         }
     }

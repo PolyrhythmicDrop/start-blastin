@@ -38,7 +38,10 @@ namespace UI.HUD
             // }
         }
 
-        public void DisconnectSignals() { }
+        public void DisconnectSignals()
+        {
+            _loadoutDisplay.DisconnectSignals();
+        }
 
         public void Initialize(int playerId)
         {

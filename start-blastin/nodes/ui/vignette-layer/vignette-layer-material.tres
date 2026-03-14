@@ -1,8 +1,9 @@
-[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://cilbt3rwvdq5x"]
+[gd_resource type="ShaderMaterial" format=3 uid="uid://cilbt3rwvdq5x"]
 
 [ext_resource type="Shader" uid="uid://b1nxov4jmsll6" path="res://resources/shaders/camera-vignette-shader.gdshader" id="1_5n1hy"]
 
 [resource]
+resource_local_to_scene = true
 shader = ExtResource("1_5n1hy")
 shader_parameter/radius = 0.5010000237975
 shader_parameter/softness = 0.7210000342475

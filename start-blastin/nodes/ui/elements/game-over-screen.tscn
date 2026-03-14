@@ -1,51 +1,10 @@
 [gd_scene format=3 uid="uid://b6cuyy1lwkrw5"]
 
-[ext_resource type="Texture2D" uid="uid://c5bb0v2pg41wv" path="res://assets/ui/menu-select-icon-48px.png" id="2_4n1jt"]
+[ext_resource type="Script" uid="uid://o0gm4ctfwdbv" path="res://nodes/ui/menus/game-over-screen/GameOverScreen.cs" id="1_wekq6"]
 [ext_resource type="FontFile" uid="uid://cl4qr5jjiwdn4" path="res://resources/fonts/sixtyfour-convergence/SixtyfourConvergence-Regular-VariableFont_BLED,SCAN,XELA,YELA.ttf" id="2_wekq6"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_j44x6"]
-atlas = ExtResource("2_4n1jt")
-region = Rect2(0, 0, 41, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_gssci"]
-atlas = ExtResource("2_4n1jt")
-region = Rect2(41, 0, 41, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_3ntfm"]
-atlas = ExtResource("2_4n1jt")
-region = Rect2(82, 0, 41, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_x57as"]
-atlas = ExtResource("2_4n1jt")
-region = Rect2(123, 0, 41, 48)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_wekq6"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_j44x6")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_j44x6")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_gssci")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_3ntfm")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_x57as")
-}],
-"loop": true,
-"name": &"spin",
-"speed": 40.0
-}]
+[ext_resource type="Script" uid="uid://go7qqpipuvlc" path="res://nodes/ui/menus/game-over-screen/GameOverSelectionMenu.cs" id="3_cindi"]
+[ext_resource type="Script" uid="uid://37gacqokmebj" path="res://nodes/ui/menus/SelectionEntry.cs" id="4_jqw5c"]
+[ext_resource type="PackedScene" uid="uid://2ayv1bqwmhoe" path="res://nodes/ui/menus/selection-menus/difficulty-selection-menu.tscn" id="5_jqw5c"]
 
 [node name="GameOverScreen" type="Control" unique_id=442839649]
 layout_mode = 3
@@ -56,6 +15,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+script = ExtResource("1_wekq6")
 
 [node name="GameOverCenterContainer" type="CenterContainer" parent="." unique_id=1126437089]
 modulate = Color(1, 0.64705884, 0.50980395, 1)
@@ -98,12 +58,15 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MenuCenterContainer" unique_id=1047960224]
+[node name="GameOverSelectionMenu" type="VBoxContainer" parent="MenuCenterContainer" unique_id=1047960224]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 60
 alignment = 1
+script = ExtResource("3_cindi")
 
-[node name="NewGameLabel" type="RichTextLabel" parent="MenuCenterContainer/VBoxContainer" unique_id=1689649079]
+[node name="NewGame" type="RichTextLabel" parent="MenuCenterContainer/GameOverSelectionMenu" unique_id=1689649079]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_fonts/normal_font = ExtResource("2_wekq6")
@@ -114,8 +77,10 @@ fit_content = true
 scroll_active = false
 autowrap_mode = 0
 horizontal_alignment = 1
+script = ExtResource("4_jqw5c")
 
-[node name="MainMenuLabel" type="RichTextLabel" parent="MenuCenterContainer/VBoxContainer" unique_id=120473859]
+[node name="MainMenu" type="RichTextLabel" parent="MenuCenterContainer/GameOverSelectionMenu" unique_id=120473859]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_fonts/normal_font = ExtResource("2_wekq6")
 theme_override_font_sizes/normal_font_size = 42
@@ -125,24 +90,23 @@ fit_content = true
 scroll_active = false
 autowrap_mode = 0
 horizontal_alignment = 1
+script = ExtResource("4_jqw5c")
 
-[node name="Quit" type="RichTextLabel" parent="MenuCenterContainer/VBoxContainer" unique_id=132646240]
+[node name="Quit" type="RichTextLabel" parent="MenuCenterContainer/GameOverSelectionMenu" unique_id=132646240]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_fonts/normal_font = ExtResource("2_wekq6")
 theme_override_font_sizes/normal_font_size = 42
 bbcode_enabled = true
-text = "Quit
+text = "Quit to Desktop
 "
 fit_content = true
 scroll_active = false
 autowrap_mode = 0
 horizontal_alignment = 1
+script = ExtResource("4_jqw5c")
 
-[node name="Selector" type="AnimatedSprite2D" parent="." unique_id=1393196602]
+[node name="DifficultyMenu" parent="MenuCenterContainer" unique_id=1593035402 instance=ExtResource("5_jqw5c")]
 unique_name_in_owner = true
-visible = false
-scale = Vector2(1.5, 1.5)
-sprite_frames = SubResource("SpriteFrames_wekq6")
-animation = &"spin"
-autoplay = "default"
-offset = Vector2(-19.99998, 0)
+custom_minimum_size = Vector2(300, 350)
+layout_mode = 2

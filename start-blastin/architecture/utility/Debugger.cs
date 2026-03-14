@@ -1,17 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Enemies;
 using Enemies.Spawners;
 using Entities;
-using Factories;
 using FileIO;
 using Godot;
 using Interfaces;
 using Items;
-using Limbo;
 using Limbo.Console.Sharp;
 using Services;
 using Stats;
@@ -51,6 +48,12 @@ namespace Utility
             LoadResourcePools();
             _service = ServiceManager.Instance?.GetService<PlayerService>();
             RegisterConsoleCommands();
+        }
+
+        public override void _ExitTree()
+        {
+            UnregisterConsoleCommands();
+            base._ExitTree();
         }
 
         private void LoadResourcePools()

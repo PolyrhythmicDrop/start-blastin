@@ -1,14 +1,17 @@
-[gd_scene load_steps=6 format=3 uid="uid://b38bjsfdg17o2"]
+[gd_scene format=3 uid="uid://b38bjsfdg17o2"]
 
 [ext_resource type="Script" uid="uid://msvjncuj7wwp" path="res://nodes/ui/elements/ItemDisplay.cs" id="1_r1jc7"]
-[ext_resource type="Texture2D" uid="uid://csej8ulrejvni" path="res://assets/item-borders/weapon-slot-border-2x.png" id="2_mxf8y"]
 [ext_resource type="Texture2D" uid="uid://drp3a6v1mvedl" path="res://assets/item-borders/plugin-slot-mask.png" id="3_vf75t"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bmeww"]
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_3263a"]
+resource_local_to_scene = true
+load_path = "res://.godot/imported/weapon-slot-border-2x.png-8f763207602e71542b409cb5eeb200de.ctex"
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cwtpc"]
 
-[node name="ItemDisplay" type="PanelContainer"]
+[node name="ItemDisplay" type="PanelContainer" unique_id=230657866]
 custom_minimum_size = Vector2(32, 32)
 anchors_preset = -1
 anchor_left = 0.49166667
@@ -22,19 +25,19 @@ size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_bmeww")
 script = ExtResource("1_r1jc7")
 
-[node name="BorderRect" type="TextureRect" parent="."]
+[node name="BorderRect" type="TextureRect" parent="." unique_id=1112874081]
 unique_name_in_owner = true
 clip_contents = true
 layout_mode = 2
-texture = ExtResource("2_mxf8y")
+texture = SubResource("CompressedTexture2D_3263a")
 expand_mode = 5
 stretch_mode = 5
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=646093467]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_cwtpc")
 
-[node name="MaskRect" type="TextureRect" parent="PanelContainer"]
+[node name="MaskRect" type="TextureRect" parent="PanelContainer" unique_id=82369017]
 unique_name_in_owner = true
 clip_children = 1
 layout_mode = 2
@@ -42,7 +45,7 @@ texture = ExtResource("3_vf75t")
 expand_mode = 3
 stretch_mode = 5
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MaskRect"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MaskRect" unique_id=807509498]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -50,7 +53,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="IconRect" type="TextureRect" parent="PanelContainer/MaskRect/MarginContainer"]
+[node name="IconRect" type="TextureRect" parent="PanelContainer/MaskRect/MarginContainer" unique_id=2101538408]
 unique_name_in_owner = true
 layout_mode = 2
 expand_mode = 5

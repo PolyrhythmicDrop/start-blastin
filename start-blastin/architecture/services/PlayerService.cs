@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Autoloads;
 using Entities;
+using Events;
 using Godot;
 using Utility;
 
@@ -15,21 +17,101 @@ namespace Services
 
         public IReadOnlyDictionary<int, Player> Players => _players;
 
+        public event EventHandler<PlayerIdEventArgs> RemovingPlayer;
+
+        public PlayerService()
+        {
+            ConnectSignals();
+        }
+
+        public void ConnectSignals()
+        {
+            EventBus.Instance.PlayerDied += OnPlayerDied;
+        }
+
+        public void DisconnectSignals()
+        {
+            EventBus.Instance.PlayerDied -= OnPlayerDied;
+        }
+
+        public override void _ExitTree()
+        {
+            DisconnectSignals();
+            base._ExitTree();
+        }
+
+        private void OnPlayerDied(object sender, PlayerDiedEventArgs args)
+        {
+            RemovePlayer(args.PlayerId);
+            if (_players.Count == 0)
+            {
+                SceneManager.Instance.LoadGameOverScreen();
+            }
+        }
+
         public void AddPlayer(Player player)
         {
-            if (!_players.ContainsKey(player.PlayerId))
+            try
             {
-                _players.TryAdd(player.PlayerId, player);
-                DebugLogger.LogMessage($"Player added!", true);
+                if (!_players.ContainsKey(player.PlayerId))
+                {
+                    _players.TryAdd(player.PlayerId, player);
+                    DebugLogger.LogMessage($"Player added!", true);
+                }
+                else
+                {
+                    throw new ArgumentException(
+                        $"{nameof(_players)} already includes this player {player}!"
+                    );
+                }
+            }
+            catch (Exception e)
+            {
+                DebugLogger.LogMessage(e.Message, true, true);
             }
         }
 
         public void RemovePlayer(Player player)
         {
-            if (_players.Remove(player.PlayerId))
+            RemovePlayer(player.PlayerId);
+        }
+
+        public void RemovePlayer(int id)
+        {
+            try
             {
-                DebugLogger.LogMessage($"Player removed!", true);
+                if (_players.ContainsKey(id))
+                {
+                    RemovingPlayer?.Invoke(this, new PlayerIdEventArgs(id));
+                    if (_players.Remove(id))
+                    {
+                        DebugLogger.LogMessage($"Player removed!", true);
+                    }
+                    else
+                    {
+                        throw new ArgumentException(
+                            $"Could not find ID {id} in {nameof(_players)} Dictionary!",
+                            paramName: nameof(id)
+                        );
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException(
+                        $"Could not find ID {id} in {nameof(_players)} Dictionary!",
+                        paramName: nameof(id)
+                    );
+                }
             }
+            catch (Exception e)
+            {
+                DebugLogger.LogMessage(e.Message, true, true);
+            }
+        }
+
+        public void ClearPlayers()
+        {
+            _players.Clear();
         }
 
         public Player GetPlayer(int id)

@@ -1,0 +1,97 @@
+[gd_scene format=3 uid="uid://2ayv1bqwmhoe"]
+
+[ext_resource type="Script" uid="uid://b0fpcwimr8wmq" path="res://nodes/ui/menus/splash-screen/DifficultySelectionMenu.cs" id="1_pmnd2"]
+[ext_resource type="FontFile" uid="uid://cl4qr5jjiwdn4" path="res://resources/fonts/sixtyfour-convergence/SixtyfourConvergence-Regular-VariableFont_BLED,SCAN,XELA,YELA.ttf" id="2_8i4tq"]
+[ext_resource type="Script" uid="uid://37gacqokmebj" path="res://nodes/ui/menus/SelectionEntry.cs" id="3_3fq66"]
+
+[node name="DifficultyMenu" type="VBoxContainer" unique_id=1593035402]
+visible = false
+custom_minimum_size = Vector2(300, 200)
+anchors_preset = -1
+anchor_left = 0.421875
+anchor_top = 0.5046296
+anchor_right = 0.578125
+anchor_bottom = 0.81203705
+offset_top = -19.0
+offset_bottom = -19.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 3
+alignment = 1
+script = ExtResource("1_pmnd2")
+metadata/_edit_use_anchors_ = true
+
+[node name="Easy" type="RichTextLabel" parent="." unique_id=84756980]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/normal_font = ExtResource("2_8i4tq")
+theme_override_font_sizes/normal_font_size = 42
+bbcode_enabled = true
+text = "Easy"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+shortcut_keys_enabled = false
+horizontal_alignment = 1
+vertical_alignment = 1
+justification_flags = 131
+script = ExtResource("3_3fq66")
+
+[node name="Medium" type="RichTextLabel" parent="." unique_id=1717988845]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/normal_font = ExtResource("2_8i4tq")
+theme_override_font_sizes/normal_font_size = 42
+bbcode_enabled = true
+text = "Medium"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+autowrap_trim_flags = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+justification_flags = 3
+meta_underlined = false
+hint_underlined = false
+script = ExtResource("3_3fq66")
+
+[node name="Hard" type="RichTextLabel" parent="." unique_id=2091268859]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/normal_font = ExtResource("2_8i4tq")
+theme_override_font_sizes/normal_font_size = 42
+bbcode_enabled = true
+text = "Hard"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+autowrap_trim_flags = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+justification_flags = 3
+meta_underlined = false
+hint_underlined = false
+script = ExtResource("3_3fq66")
+
+[node name="Back" type="RichTextLabel" parent="." unique_id=875432822]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/normal_font = ExtResource("2_8i4tq")
+theme_override_font_sizes/normal_font_size = 42
+bbcode_enabled = true
+text = "Back"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+autowrap_trim_flags = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+justification_flags = 3
+meta_underlined = false
+hint_underlined = false
+script = ExtResource("3_3fq66")

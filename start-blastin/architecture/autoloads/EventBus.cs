@@ -74,6 +74,8 @@ namespace Autoloads
 
         public event EventHandler<PlayerItemRemovedEventArgs> PlayerItemRemoved;
 
+        public event EventHandler<PlayerDiedEventArgs> PlayerDied;
+
         #endregion
 
         #region Player Actions
@@ -270,6 +272,12 @@ namespace Autoloads
         {
             PlayerItemRemovedEventArgs args = new(playerId, item);
             PlayerItemRemoved?.Invoke(this, args);
+        }
+
+        public void RaisePlayerDied(int playerId)
+        {
+            PlayerDiedEventArgs args = new(playerId);
+            PlayerDied?.Invoke(this, args);
         }
 
         public void RaisePlayerHitByProjectile(int playerId, Projectile projectile)

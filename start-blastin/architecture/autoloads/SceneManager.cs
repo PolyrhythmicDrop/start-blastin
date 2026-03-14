@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackgroundGenerator;
 using Entities;
+using Events;
 using Godot;
 using SafeResourcePicker;
 using Services;
@@ -30,6 +31,7 @@ namespace Autoloads
             "res://nodes/ui/ui-layer/ui-layer.tscn"
         );
         private PackedScene _waveManagerScene = GD.Load<PackedScene>("uid://dxdlpe5yuamuy");
+        private PackedScene _gameOverScene = GD.Load<PackedScene>("uid://b6cuyy1lwkrw5");
 
         // ~~~~
 
@@ -100,7 +102,19 @@ namespace Autoloads
                     DebugLogger.LogMessage("Failed to load default scene!", true, true);
                 }
             }
+
+            // ConnectSignals();
         }
+
+        // public void ConnectSignals()
+        // {
+        //     EventBus.Instance.PlayerDied += LoadGameOverScreen;
+        // }
+
+        // public void DisconnectSignals()
+        // {
+        //     EventBus.Instance.PlayerDied -= LoadGameOverScreen;
+        // }
 
         private void InitializeBackground()
         {
@@ -216,11 +230,11 @@ namespace Autoloads
 
                 // Add the player to the PlayerService list
                 PlayerService playerService = ServiceManager.Instance.GetService<PlayerService>();
+                playerService.AddPlayer(player);
 
                 _currentSceneRoot.AddChild(player);
                 // Set the starting position to an offset if there are more than one player so they don't start on top of each other.
                 player.GlobalPosition = startPos + new Vector2((i - 1) * 200, 0);
-                playerService.AddPlayer(player);
 
                 // Instantiate the player's UI
                 UiLayer ui = _playerUiScene.Instantiate<UiLayer>();
@@ -232,6 +246,11 @@ namespace Autoloads
 
             return players;
         }
+
+        // private void OnPlayerDied(object sender, PlayerDiedEventArgs args)
+        // {
+
+        // }
 
         public async Task LoadNewGame(Difficulty difficulty)
         {
@@ -253,5 +272,22 @@ namespace Autoloads
 
             wm.InitializeFirstWave();
         }
+
+        public Task LoadMainMenu()
+        {
+            ChangeScene(_startupScreenScene);
+            return Task.CompletedTask;
+        }
+
+        public void LoadGameOverScreen()
+        {
+            ChangeScene(_gameOverScene);
+        }
+
+        // public override void _ExitTree()
+        // {
+        //     DisconnectSignals();
+        //     base._ExitTree();
+        // }
     }
 }

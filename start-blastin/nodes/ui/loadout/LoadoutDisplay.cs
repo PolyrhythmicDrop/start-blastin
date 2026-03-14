@@ -8,6 +8,7 @@ using Godot;
 using Interfaces;
 using Items;
 using Services;
+using Stats;
 using Utility;
 
 namespace UI.Loadout
@@ -18,6 +19,8 @@ namespace UI.Loadout
     public class LoadoutDisplay : IListener
     {
         private int _playerId;
+
+        private StatManager _playerStatManager;
         private PlayerService _service;
         private ItemDisplay _weaponSlot;
         private List<ItemDisplay> _pluginDisplays = new();
@@ -30,19 +33,12 @@ namespace UI.Loadout
 
         public event Action DisplayUpdated;
 
-        /// <summary>
-        /// Finalizer to disconnect event subscriptions when the LoadoutDisplay is being garbage collected
-        /// </summary>
-        ~LoadoutDisplay()
-        {
-            DisconnectSignals();
-        }
-
         #region Init
         public void Initialize(int playerId)
         {
             _playerId = playerId;
             _service = ServiceManager.Instance.GetService<PlayerService>();
+            _playerStatManager = _service.GetPlayer(_playerId).GetStatManager();
             _weaponSlot = ItemDisplayFactory.CreateEmptyItemDisplay();
             SetWeaponSlot();
 
@@ -55,18 +51,29 @@ namespace UI.Loadout
 
         public void ConnectSignals()
         {
+            _service.RemovingPlayer += OnRemovingPlayer;
             EventBus.Instance.PlayerPluginEquipped += OnPluginEquipped;
             EventBus.Instance.PlayerWeaponChanged += OnPlayerWeaponChanged;
             EventBus.Instance.PlayerItemRemoved += OnItemRemoved;
-            _service.GetPlayer(_playerId).GetStatManager().StatUpdated += OnPlayerStatUpdated;
+            _playerStatManager?.StatUpdated += OnPlayerStatUpdated;
         }
 
         public void DisconnectSignals()
         {
+            _service.RemovingPlayer -= OnRemovingPlayer;
+
             EventBus.Instance.PlayerPluginEquipped -= OnPluginEquipped;
             EventBus.Instance.PlayerWeaponChanged -= OnPlayerWeaponChanged;
             EventBus.Instance.PlayerItemRemoved -= OnItemRemoved;
-            _service.GetPlayer(_playerId).GetStatManager().StatUpdated -= OnPlayerStatUpdated;
+            _playerStatManager?.StatUpdated -= OnPlayerStatUpdated;
+        }
+
+        private void OnRemovingPlayer(object source, PlayerIdEventArgs args)
+        {
+            if (args.PlayerId == _playerId)
+            {
+                DisconnectSignals();
+            }
         }
 
         private void InitializePluginSlots()
@@ -93,7 +100,6 @@ namespace UI.Loadout
         {
             Player player = _service.GetPlayer(_playerId);
             FillSlot(_weaponSlot, player.Inventory.WeaponPlugin);
-            // FillSlot(_weaponSlot, _service.GetPlayer(_playerId).Inventory.WeaponPlugin);
         }
 
         private void AddSlot()

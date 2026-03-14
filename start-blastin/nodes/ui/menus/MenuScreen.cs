@@ -1,5 +1,7 @@
 using System.Threading.Tasks;
+using Autoloads;
 using Godot;
+using WaveManagement;
 
 namespace UI
 {
@@ -143,6 +145,22 @@ namespace UI
             }
 
             await ToSignal(t, Tween.SignalName.Finished);
+        }
+
+        // Common actions
+
+        protected async Task StartNewGame(Difficulty difficulty)
+        {
+            _menuTransitioning = true;
+            await TweenMenuTransition(_activeMenu, null);
+            SceneManager.Instance.LoadNewGame(difficulty);
+        }
+
+        protected async Task ReturnToMainMenu()
+        {
+            _menuTransitioning = true;
+            await TweenMenuTransition(_activeMenu, null);
+            SceneManager.Instance.LoadMainMenu();
         }
     }
 }

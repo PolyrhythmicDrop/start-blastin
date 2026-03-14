@@ -410,6 +410,7 @@ namespace Entities
 
         public void Despawn()
         {
+            EventBus.Instance.RaisePlayerDied(_playerId);
             QueueFree();
         }
 

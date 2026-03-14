@@ -109,6 +109,8 @@ namespace UI.Loadout
                 container.ItemContainerSelected -= OnItemContainerSelected;
             }
             _loadoutDisplay.DisplayUpdated -= OnDisplayUpdated;
+            // Disconnect the loadout display's signals as well.
+            _loadoutDisplay.DisconnectSignals();
         }
 
         public void ToggleActivate(bool activate)

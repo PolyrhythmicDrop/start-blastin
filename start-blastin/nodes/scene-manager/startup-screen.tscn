@@ -37,7 +37,6 @@ size_flags_horizontal = 3
 theme_override_constants/separation = 10
 alignment = 1
 script = ExtResource("2_gssci")
-RememberEntry = null
 metadata/_edit_use_anchors_ = true
 
 [node name="NewGame" type="RichTextLabel" parent="StartupMenu" unique_id=672524974]
@@ -111,7 +110,6 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 size_flags_horizontal = 3
 alignment = 1
 script = ExtResource("5_gssci")
-RememberEntry = null
 metadata/_edit_use_anchors_ = true
 
 [node name="Easy" type="RichTextLabel" parent="DifficultyMenu" unique_id=1894703940]

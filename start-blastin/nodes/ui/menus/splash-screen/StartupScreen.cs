@@ -5,23 +5,8 @@ using WaveManagement;
 
 namespace UI
 {
-    public partial class StartupScreen : Node
+    public partial class StartupScreen : MenuScreen
     {
-        // State flags
-        private bool _initialized = false;
-        private bool _menuTransitioning = false;
-
-        private SelectionMenu _activeMenu;
-        private SelectionMenu _prevMenu;
-        private MenuSelector _selector = GD.Load<PackedScene>("uid://deabemykbs2vl")
-            .Instantiate<MenuSelector>();
-
-        private ColorPalette _alphaPalette = ResourceLoader.Load<ColorPalette>(
-            "uid://jo6hbayjhfba"
-        );
-
-        private const float MENU_TRANS_DUR = 0.2f;
-
         private StartupSplashSelectionMenu _startupMenu;
 
         private DifficultySelectionMenu _diffMenu;
@@ -29,14 +14,14 @@ namespace UI
         public override void _Ready()
         {
             _startupMenu = GetNode<StartupSplashSelectionMenu>("%StartupMenu");
+            _initMenu = _startupMenu;
 
             _diffMenu = GetNode<DifficultySelectionMenu>("%DifficultyMenu");
 
-            AddChild(_selector);
-            AssignMenuActions();
+            base._Ready();
         }
 
-        private void AssignMenuActions()
+        protected override void AssignMenuActions()
         {
             // Startup
             _startupMenu.SetEntrySelectAction(
@@ -74,119 +59,109 @@ namespace UI
             );
         }
 
-        private async Task Initialize()
-        {
-            _initialized = true;
+        // private async Task SwitchMenu(SelectionMenu menu)
+        // {
+        //     _menuTransitioning = true;
 
-            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        //     if (_activeMenu != null)
+        //     {
+        //         _prevMenu = _activeMenu;
+        //     }
 
-            await SwitchMenu(_startupMenu);
-            _selector.Visible = true;
-        }
+        //     _activeMenu = menu;
 
-        private async Task SwitchMenu(SelectionMenu menu)
-        {
-            _menuTransitioning = true;
+        //     if (!_activeMenu.RememberEntry)
+        //     {
+        //         _activeMenu.CurrentEntryIndex = 0;
+        //     }
 
-            if (_activeMenu != null)
-            {
-                _prevMenu = _activeMenu;
-            }
+        //     await TweenMenuTransition(_prevMenu, _activeMenu);
+        //     await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        //     await _selector.TweenSelectorIn(_activeMenu.CurrentEntry.GetEntrySelectorPoint());
 
-            _activeMenu = menu;
+        //     _selector.TweenSelectorIdle();
 
-            if (!_activeMenu.RememberEntry)
-            {
-                _activeMenu.CurrentEntryIndex = 0;
-            }
+        //     _menuTransitioning = false;
+        // }
 
-            await TweenMenuTransition(_prevMenu, _activeMenu);
-            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
-            await _selector.TweenSelectorIn(_activeMenu.CurrentEntry.GetEntrySelectorPoint());
+        // private async Task TweenMenuTransition(Control prevMenu, Control nextMenu)
+        // {
+        //     Color full = _alphaPalette.Colors[0];
+        //     Color trans = _alphaPalette.Colors[1];
 
-            _selector.TweenSelectorIdle();
+        //     Tween t = CreateTween();
+        //     if (prevMenu != null)
+        //     {
+        //         t.SetParallel(true);
+        //         t.TweenProperty(prevMenu, "modulate", trans, MENU_TRANS_DUR).From(full);
+        //         t.TweenProperty(prevMenu, "scale", new Vector2(3f, 0.5f), MENU_TRANS_DUR)
+        //             .From(Vector2.One);
+        //         t.TweenCallback(Callable.From(_selector.TweenSelectorOut));
+        //         t.SetParallel(false);
+        //         t.Chain().TweenCallback(Callable.From(prevMenu.Hide));
+        //     }
+        //     if (nextMenu != null)
+        //     {
+        //         t.TweenCallback(Callable.From(nextMenu.Show));
+        //         t.SetParallel(true);
+        //         t.TweenProperty(nextMenu, "scale", Vector2.One, MENU_TRANS_DUR)
+        //             .From(new Vector2(3f, 0.5f));
+        //         t.TweenProperty(nextMenu, "modulate", full, MENU_TRANS_DUR).From(trans);
+        //     }
 
-            _menuTransitioning = false;
-        }
+        //     await ToSignal(t, Tween.SignalName.Finished);
+        // }
 
-        private async Task TweenMenuTransition(Control prevMenu, Control nextMenu)
-        {
-            Color full = _alphaPalette.Colors[0];
-            Color trans = _alphaPalette.Colors[1];
+        // /// <summary>
+        // /// Changes the current entry in the active menu.
+        // /// Moves the selector and starts the selector idle animation.
+        // /// </summary>
+        // /// <param name="next">True to increment the active menu's entry index (go to the "next" index), false to decrement it.</param>
+        // private void ChangeCurrentEntry(bool next)
+        // {
+        //     if (next)
+        //         _activeMenu.IncrementCurrentIndex(_selector);
+        //     else
+        //         _activeMenu.DecrementCurrentIndex(_selector);
 
-            Tween t = CreateTween();
-            if (prevMenu != null)
-            {
-                t.SetParallel(true);
-                t.TweenProperty(prevMenu, "modulate", trans, MENU_TRANS_DUR).From(full);
-                t.TweenProperty(prevMenu, "scale", new Vector2(3f, 0.5f), MENU_TRANS_DUR)
-                    .From(Vector2.One);
-                t.TweenCallback(Callable.From(_selector.TweenSelectorOut));
-                t.SetParallel(false);
-                t.Chain().TweenCallback(Callable.From(prevMenu.Hide));
-            }
-            if (nextMenu != null)
-            {
-                t.TweenCallback(Callable.From(nextMenu.Show));
-                t.SetParallel(true);
-                t.TweenProperty(nextMenu, "scale", Vector2.One, MENU_TRANS_DUR)
-                    .From(new Vector2(3f, 0.5f));
-                t.TweenProperty(nextMenu, "modulate", full, MENU_TRANS_DUR).From(trans);
-            }
+        //     _selector.MoveSelectorToEntry(_activeMenu.CurrentEntry);
+        //     _selector.TweenSelectorIdle();
+        // }
 
-            await ToSignal(t, Tween.SignalName.Finished);
-        }
+        // public override void _Process(double delta)
+        // {
+        //     if (!_initialized)
+        //     {
+        //         Initialize();
+        //     }
 
-        /// <summary>
-        /// Changes the current entry in the active menu.
-        /// Moves the selector and starts the selector idle animation.
-        /// </summary>
-        /// <param name="next">True to increment the active menu's entry index (go to the "next" index), false to decrement it.</param>
-        private void ChangeCurrentEntry(bool next)
-        {
-            if (next)
-                _activeMenu.IncrementCurrentIndex(_selector);
-            else
-                _activeMenu.DecrementCurrentIndex(_selector);
-
-            _selector.MoveSelectorToEntry(_activeMenu.CurrentEntry);
-            _selector.TweenSelectorIdle();
-        }
-
-        public override void _Process(double delta)
-        {
-            if (!_initialized)
-            {
-                Initialize();
-            }
-
-            if (!_menuTransitioning)
-            {
-                if (Input.IsActionJustPressed("ui_down") || Input.IsActionJustPressed("ui_right"))
-                {
-                    ChangeCurrentEntry(true);
-                }
-                else if (Input.IsActionJustPressed("ui_up") || Input.IsActionJustPressed("ui_left"))
-                {
-                    ChangeCurrentEntry(false);
-                }
-                else if (Input.IsActionJustPressed("ui_accept"))
-                {
-                    _activeMenu.MakeSelection();
-                }
-                else if (Input.IsActionJustPressed("ui_cancel"))
-                {
-                    if (_activeMenu.Equals(_startupMenu))
-                    {
-                        return;
-                    }
-                    else
-                    {
-                        SwitchMenu(_prevMenu);
-                    }
-                }
-            }
-        }
+        //     if (!_menuTransitioning)
+        //     {
+        //         if (Input.IsActionJustPressed("ui_down") || Input.IsActionJustPressed("ui_right"))
+        //         {
+        //             ChangeCurrentEntry(true);
+        //         }
+        //         else if (Input.IsActionJustPressed("ui_up") || Input.IsActionJustPressed("ui_left"))
+        //         {
+        //             ChangeCurrentEntry(false);
+        //         }
+        //         else if (Input.IsActionJustPressed("ui_accept"))
+        //         {
+        //             _activeMenu.MakeSelection();
+        //         }
+        //         else if (Input.IsActionJustPressed("ui_cancel"))
+        //         {
+        //             if (_activeMenu.Equals(_startupMenu))
+        //             {
+        //                 return;
+        //             }
+        //             else
+        //             {
+        //                 SwitchMenu(_prevMenu);
+        //             }
+        //         }
+        //     }
+        // }
 
         private async Task StartNewGame(Difficulty difficulty)
         {

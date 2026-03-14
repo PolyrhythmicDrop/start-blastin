@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Godot;
+using Utility;
 
 namespace UI
 {
@@ -47,7 +48,18 @@ namespace UI
 
         public void MakeSelection()
         {
-            CurrentEntry.SelectAction();
+            if (CurrentEntry?.SelectAction != null)
+            {
+                CurrentEntry.SelectAction();
+            }
+            else
+            {
+                DebugLogger.LogMessage(
+                    $"Either {nameof(CurrentEntry)} is null or {nameof(CurrentEntry.SelectAction)} is null. Did you remember to set a callback function to SelectAction?",
+                    true,
+                    true
+                );
+            }
         }
 
         public void IncrementCurrentIndex(Node2D selector)

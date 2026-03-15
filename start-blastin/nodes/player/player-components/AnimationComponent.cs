@@ -20,6 +20,10 @@ namespace PlayerComponents
 
         private PackedScene _portalScene = GD.Load<PackedScene>("uid://c32k0p00itnlf");
 
+        private const string MIX_RATIO_PATH = "mix_ratio";
+        private const string CURRENT_FRAME_PATH = "current_frame";
+        private const float DAMAGE_ANIM_DUR = 0.5f;
+
         public override void _Ready()
         {
             _spriteContainer = GetNode<Node2D>("%SpriteContainer");
@@ -72,11 +76,6 @@ namespace PlayerComponents
             Callable portalClose = Callable.From(() => portal.PlayBackwards("open"));
 
             _player.Scale = Vector2.Zero;
-
-            // Tween t = CreateTween();
-            // t.SetParallel(true);
-            // t.TweenCallback(portalOpen);
-            // t.SetParallel(false);
 
             portal.Play("open");
 
@@ -139,25 +138,22 @@ namespace PlayerComponents
 
         public void PlayDamageAnimation()
         {
-            string mixRatioPath = "mix_ratio";
-            string currentFramePath = "current_frame";
-
             if (Material is ShaderMaterial shaderMaterial)
             {
-                shaderMaterial.SetShaderParameter(mixRatioPath, 1.0);
+                shaderMaterial.SetShaderParameter(MIX_RATIO_PATH, 1.0);
 
                 Tween tween = CreateTween();
                 tween.TweenMethod(
                     Callable.From(
                         (int currentFrame) =>
-                            shaderMaterial.SetShaderParameter(currentFramePath, currentFrame)
+                            shaderMaterial.SetShaderParameter(CURRENT_FRAME_PATH, currentFrame)
                     ),
                     0,
                     30,
-                    0.5
+                    DAMAGE_ANIM_DUR
                 );
                 tween.TweenCallback(
-                    Callable.From(() => shaderMaterial.SetShaderParameter(mixRatioPath, 0))
+                    Callable.From(() => shaderMaterial.SetShaderParameter(MIX_RATIO_PATH, 0))
                 );
             }
         }

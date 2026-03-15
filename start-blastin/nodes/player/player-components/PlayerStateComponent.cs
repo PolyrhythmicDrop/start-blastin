@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Entities;
 using Godot;
 using Interfaces;
@@ -17,9 +18,31 @@ namespace PlayerComponents
         public bool Dying = false;
         public bool DeflectActive = false;
 
+        public bool Invincible = false;
+
+        private Timer IFrameTimer;
+
+        private const float IFRAME_TIME = 0.2f;
+
         public void Initialize(Player player)
         {
             _player = player;
+            IFrameTimer = new()
+            {
+                WaitTime = IFRAME_TIME,
+                Autostart = false,
+                OneShot = true,
+                Name = $"{player.Name}-IFrameTimer",
+            };
+            AddChild(IFrameTimer);
+        }
+
+        public async Task PlayIFrames()
+        {
+            Invincible = true;
+            IFrameTimer.Start(IFRAME_TIME);
+            await ToSignal(IFrameTimer, Timer.SignalName.Timeout);
+            Invincible = false;
         }
 
         /// <summary>

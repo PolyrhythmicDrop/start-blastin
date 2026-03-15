@@ -363,9 +363,14 @@ namespace Entities
             // Play sound and animation
             _audioComponent.PlayHitSound();
 
-            if (damage != 0)
+            if (damage != 0 && _stateComponent.Invincible == false)
             {
+                // Start iFrames
+                _stateComponent.PlayIFrames();
+
+                // Play the damage animation
                 _animationComponent.PlayDamageAnimation();
+
                 // Deal the damage
                 CurrentHealth -= damage;
 

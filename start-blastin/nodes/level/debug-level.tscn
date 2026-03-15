@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://cca75d2re7isj"]
 
+[ext_resource type="Script" uid="uid://8lsa7gvmolbt" path="res://nodes/level/DebugLevel.cs" id="1_gl8ah"]
 [ext_resource type="Script" uid="uid://bpw7egf87stew" path="res://architecture/utility/Debugger.cs" id="1_hxhdr"]
 [ext_resource type="PackedScene" uid="uid://bq7imdtl082ko" path="res://nodes/background-generator/scrolling-background.tscn" id="1_jmnrl"]
 [ext_resource type="PackedScene" uid="uid://c66l16un13w80" path="res://nodes/ui/vignette-layer/vignette-layer.tscn" id="2_1iju8"]
@@ -18,6 +19,8 @@ fractal_type = 0
 fractal_octaves = 3
 
 [node name="DebugLevel" type="Node" unique_id=1692219403 groups=["level"]]
+script = ExtResource("1_gl8ah")
+LevelOneOverride = "uid://8pspardp62ll"
 
 [node name="LevelCamera" type="Camera2D" parent="." unique_id=867151118]
 anchor_mode = 0

@@ -1,0 +1,51 @@
+[gd_resource type="Resource" script_class="SpawnerFormationScaler" format=3 uid="uid://8pspardp62ll"]
+
+[ext_resource type="Script" uid="uid://ci68p6xph38co" path="res://nodes/enemies/Spawners/SpawnStep.cs" id="1_0j842"]
+[ext_resource type="Script" uid="uid://b40t8najievo0" path="res://nodes/wave-management/wave-scalers/SpawnerFormationScaler.cs" id="1_jw2h2"]
+[ext_resource type="Script" uid="uid://dyer2c2n8y1v4" path="res://nodes/enemies/Spawners/SpawnData.cs" id="2_ulaon"]
+[ext_resource type="Script" uid="uid://bneh110nwl6dl" path="res://nodes/enemies/Spawners/StaticSpawnerConfig.cs" id="3_l18ls"]
+
+[sub_resource type="Resource" id="Resource_tp3we"]
+script = ExtResource("2_ulaon")
+EnemyType = "uid://oepg1yh64jk4"
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_7rufs"]
+script = ExtResource("1_0j842")
+SpawnPosition = 0.05
+Data = SubResource("Resource_tp3we")
+metadata/_custom_type_script = "uid://ci68p6xph38co"
+
+[sub_resource type="Resource" id="Resource_0j842"]
+script = ExtResource("2_ulaon")
+EnemyType = "uid://oepg1yh64jk4"
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_ulaon"]
+script = ExtResource("1_0j842")
+SpawnPosition = 0.95
+Data = SubResource("Resource_0j842")
+metadata/_custom_type_script = "uid://ci68p6xph38co"
+
+[sub_resource type="Resource" id="Resource_l18ls"]
+script = ExtResource("2_ulaon")
+EnemyType = "uid://b6vj8iih7r25c"
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_vuml7"]
+script = ExtResource("1_0j842")
+SpawnPosition = 0.5
+Data = SubResource("Resource_l18ls")
+metadata/_custom_type_script = "uid://ci68p6xph38co"
+
+[sub_resource type="Resource" id="Resource_n4wjg"]
+script = ExtResource("3_l18ls")
+SpawnSteps = Array[ExtResource("1_0j842")]([SubResource("Resource_7rufs"), SubResource("Resource_ulaon"), SubResource("Resource_vuml7")])
+metadata/_custom_type_script = "uid://bneh110nwl6dl"
+
+[resource]
+script = ExtResource("1_jw2h2")
+FormationGD = Array[Object]([SubResource("Resource_n4wjg")])
+MinWave = 2
+MaxWave = 5
+metadata/_custom_type_script = "uid://b40t8najievo0"

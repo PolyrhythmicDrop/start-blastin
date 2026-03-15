@@ -21,6 +21,12 @@ namespace WaveManagement
 
         public ScaleManager ScaleManager => _scaleManager;
 
+        public string LevelOneScaler
+        {
+            get => _scaleManager?.LevelOneFormation;
+            set => _scaleManager?.LevelOneFormation = value;
+        }
+
         /// <summary>
         /// Player-selected difficulty. Adjusts the difficulty modifier, which affects per-wave stat scaling.
         /// </summary>

@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Godot;
+using Utility;
 
 namespace UI
 {
@@ -31,10 +32,15 @@ namespace UI
 
         public override void _Process(double delta)
         {
-            // if (_running)
-            // {
-            //     _label.QueueRedraw();
-            // }
+            if (Input.IsActionJustPressed("ui_cancel"))
+            {
+                if (_tween != null && _tween.IsRunning())
+                {
+                    _tween.Stop();
+                    _tween.EmitSignal(Tween.SignalName.Finished);
+                    _tween.Kill();
+                }
+            }
         }
 
         public async Task Start()
@@ -79,16 +85,14 @@ namespace UI
 
             _tween.TweenProperty(_label, TEXT_PROP, START_BLASTIN, 0);
             _tween.TweenProperty(_label, "scale", Vector2.One, NUM_FADE_DUR);
-            // _tween.TweenSubtween(revertSize);
-            _tween
-                .Parallel()
-                .TweenProperty(_label, "modulate", new Color("#8bfcee"), NUM_FADE_DUR);
+            _tween.Parallel().TweenProperty(_label, "modulate", new Color("#8bfcee"), NUM_FADE_DUR);
 
             _tween.Chain().TweenInterval(1.5f);
             _tween.TweenProperty(_label, "modulate", trans, 0.5f);
             _tween.TweenInterval(0.5f);
 
             await ToSignal(_tween, Tween.SignalName.Finished);
+            DebugLogger.LogMessage($"Countdown tween finished!", true);
         }
     }
 }

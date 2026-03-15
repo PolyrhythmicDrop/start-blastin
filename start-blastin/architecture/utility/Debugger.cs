@@ -548,5 +548,12 @@ namespace Utility
         {
             return Enum.GetNames(typeof(SpawnerLocation));
         }
+
+        [ConsoleCommand]
+        public void SetNextWaveNumber(int waveNumber)
+        {
+            WaveManager waveManager = GetTree().GetNodesInGroup("wave-manager")[0] as WaveManager;
+            waveManager.DebugOverrideNextWaveNumber(waveNumber);
+        }
     }
 }

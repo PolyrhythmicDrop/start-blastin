@@ -10,6 +10,9 @@ namespace WaveManagement
     [GlobalClass]
     public partial class WaveManager : Node
     {
+        private bool _overrideNextWaveNumber = false;
+        private int _nextWaveNumber;
+
         private int _wave = 1;
         private float _difficultyModifier = 0.1f;
         private Timer _waveTimer;
@@ -165,9 +168,10 @@ namespace WaveManagement
 
             // Wait for all enemies to clear before processing the next wave.
             await WaitForEnemiesToClear();
-            EventBus.Instance.RaiseWaveComplete();
 
             IncrementWave();
+
+            EventBus.Instance.RaiseWaveComplete();
         }
 
         /// <summary>
@@ -181,6 +185,12 @@ namespace WaveManagement
             }
 
             EndWave();
+        }
+
+        public void DebugOverrideNextWaveNumber(int waveNumber)
+        {
+            _overrideNextWaveNumber = true;
+            _nextWaveNumber = waveNumber;
         }
 
         /// <summary>
@@ -211,7 +221,15 @@ namespace WaveManagement
         /// </summary>
         private void IncrementWave()
         {
-            _wave++;
+            if (_overrideNextWaveNumber)
+            {
+                _wave = _nextWaveNumber;
+                _overrideNextWaveNumber = false;
+            }
+            else
+            {
+                _wave++;
+            }
             ScaleWave();
         }
 

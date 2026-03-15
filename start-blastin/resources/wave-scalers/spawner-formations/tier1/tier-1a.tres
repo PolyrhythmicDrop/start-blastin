@@ -38,9 +38,33 @@ SpawnPosition = 0.5
 Data = SubResource("Resource_l18ls")
 metadata/_custom_type_script = "uid://ci68p6xph38co"
 
+[sub_resource type="Resource" id="Resource_k05aq"]
+script = ExtResource("2_ulaon")
+EnemyType = "uid://npd2vaquluup"
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_mj3mi"]
+script = ExtResource("1_0j842")
+WaveTimeRatio = 0.2
+SpawnPosition = 0.2
+Data = SubResource("Resource_k05aq")
+metadata/_custom_type_script = "uid://ci68p6xph38co"
+
+[sub_resource type="Resource" id="Resource_boful"]
+script = ExtResource("2_ulaon")
+EnemyType = "uid://dvifbtlwxf7nn"
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_4egnk"]
+script = ExtResource("1_0j842")
+WaveTimeRatio = 0.2
+SpawnPosition = 0.8
+Data = SubResource("Resource_boful")
+metadata/_custom_type_script = "uid://ci68p6xph38co"
+
 [sub_resource type="Resource" id="Resource_n4wjg"]
 script = ExtResource("3_l18ls")
-SpawnSteps = Array[ExtResource("1_0j842")]([SubResource("Resource_7rufs"), SubResource("Resource_ulaon"), SubResource("Resource_vuml7")])
+SpawnSteps = Array[ExtResource("1_0j842")]([SubResource("Resource_7rufs"), SubResource("Resource_ulaon"), SubResource("Resource_vuml7"), SubResource("Resource_mj3mi"), SubResource("Resource_4egnk")])
 metadata/_custom_type_script = "uid://bneh110nwl6dl"
 
 [resource]

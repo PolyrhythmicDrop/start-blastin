@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="EnemyResource" format=3 uid="uid://npd2vaquluup"]
+
+[ext_resource type="Curve2D" uid="uid://mpstlpqoevxh" path="res://resources/curves/bend-down-right.tres" id="1_6pa6n"]
+[ext_resource type="Resource" uid="uid://cy4btn0tjyjbl" path="res://resources/sound-sets/enemies/mini-vortex-sound-set.tres" id="2_rgv1a"]
+[ext_resource type="Script" uid="uid://bytfm61mpkr5u" path="res://nodes/weapons/WeaponStats.cs" id="3_shgaj"]
+[ext_resource type="Script" uid="uid://cf7pn6qd7aa15" path="res://nodes/enemies/EnemyResource.cs" id="4_txdwc"]
+
+[sub_resource type="Resource" id="Resource_fllia"]
+script = ExtResource("3_shgaj")
+FireRate = 0.2
+ProjectileSpeed = 400.0
+metadata/_custom_type_script = "uid://bytfm61mpkr5u"
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("4_txdwc")
+ScenePath = "res://nodes/enemies/mini-vortex/mini-vortex.tscn"
+Speed = 300.0
+CrashDamage = 1
+MaxHealth = 3.0
+WeaponStats = SubResource("Resource_fllia")
+PathCurve = ExtResource("1_6pa6n")
+FluxReward = 50
+ByteReward = 200
+Sounds = ExtResource("2_rgv1a")
+metadata/_custom_type_script = "uid://cf7pn6qd7aa15"

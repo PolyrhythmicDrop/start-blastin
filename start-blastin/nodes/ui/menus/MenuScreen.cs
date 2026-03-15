@@ -20,9 +20,9 @@ namespace UI
             "uid://jo6hbayjhfba"
         );
 
-        protected const float MENU_TRANS_DUR = 0.2f;
+        protected const float MENU_TRANS_DUR = 0.15f;
 
-        private async Task Initialize()
+        protected virtual async Task Initialize()
         {
             _initialized = true;
 

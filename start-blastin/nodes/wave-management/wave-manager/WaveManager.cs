@@ -74,11 +74,13 @@ namespace WaveManagement
         private void ConnectSignals()
         {
             EventBus.Instance.StartWaveButtonPressed += StartWave;
+            EventBus.Instance.GameOver += PauseWaveTimer;
         }
 
         private void DisconnectSignals()
         {
             EventBus.Instance.StartWaveButtonPressed -= StartWave;
+            EventBus.Instance.GameOver -= PauseWaveTimer;
         }
 
         #endregion
@@ -126,6 +128,11 @@ namespace WaveManagement
             await CountDownWave();
             _waveTimer.Start(_waveTime);
             EventBus.Instance.RaiseWaveStarted(_wave);
+        }
+
+        private void PauseWaveTimer()
+        {
+            _waveTimer.Paused = true;
         }
 
         /// <summary>
@@ -219,6 +226,15 @@ namespace WaveManagement
         {
             _wave = 1;
             InitializeFirstWave();
+        }
+
+        /// <summary>
+        /// Stops the wave timer, then restarts the current wave from the beginning. Does not apply new scaling or select a new formation.
+        /// </summary>
+        public void RestartCurrentWave()
+        {
+            _waveTimer.Stop();
+            StartWave();
         }
 
         #endregion

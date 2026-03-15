@@ -19,7 +19,9 @@ namespace Autoloads
         public static SceneManager Instance { get; private set; }
         private string _defaultScenePath;
         private string _overrideScenePath;
+
         private Node _currentSceneRoot;
+        private readonly Stack<Node> _overlayStack = new();
 
         // ~~ Cached scenes ~~
 
@@ -70,6 +72,7 @@ namespace Autoloads
             set => _overrideScenePath = value;
         }
 
+        #region Initialization
         public override void _Ready()
         {
             Instance = this;
@@ -103,18 +106,8 @@ namespace Autoloads
                 }
             }
 
-            // ConnectSignals();
+            ConnectSignals();
         }
-
-        // public void ConnectSignals()
-        // {
-        //     EventBus.Instance.PlayerDied += LoadGameOverScreen;
-        // }
-
-        // public void DisconnectSignals()
-        // {
-        //     EventBus.Instance.PlayerDied -= LoadGameOverScreen;
-        // }
 
         private void InitializeBackground()
         {
@@ -150,6 +143,26 @@ namespace Autoloads
             GetWindow().MinSize = minSize;
         }
 
+        public void ConnectSignals()
+        {
+            EventBus.Instance.GameOver += LoadGameOverScreen;
+        }
+
+        public void DisconnectSignals()
+        {
+            EventBus.Instance.GameOver -= LoadGameOverScreen;
+        }
+
+        public override void _ExitTree()
+        {
+            DisconnectSignals();
+            base._ExitTree();
+        }
+
+        #endregion
+
+        #region Scene Swapping
+
         /// <summary>
         /// Changes the main scene to a new scene.
         /// Removes the current scene root (if any) from the tree and frees it.
@@ -164,6 +177,12 @@ namespace Autoloads
                 var pSceneNode =
                     scene.Instantiate()
                     ?? throw new NullReferenceException("Scene node could not be instantiated!");
+
+                // Clear any overlay scenes
+                if (_overlayStack.Count > 0)
+                {
+                    ClearAllOverlayScenes();
+                }
 
                 if (_currentSceneRoot != null)
                 {
@@ -246,12 +265,42 @@ namespace Autoloads
 
             return players;
         }
+        #endregion
 
-        // private void OnPlayerDied(object sender, PlayerDiedEventArgs args)
-        // {
+        #region Overlays
 
-        // }
+        public void PushOverlayScene(PackedScene overlay)
+        {
+            var o = overlay.Instantiate();
+            _overlayStack.Push(o);
+            AddChild(o);
+        }
 
+        public void PopOverlayScene()
+        {
+            bool popped = _overlayStack.TryPop(out var o);
+            if (popped)
+            {
+                RemoveChild(o);
+                o.QueueFree();
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        public void ClearAllOverlayScenes()
+        {
+            for (int i = 0; i < _overlayStack.Count; i++)
+            {
+                PopOverlayScene();
+            }
+        }
+
+        #endregion
+
+        #region Specific Scenes
         public async Task LoadNewGame(Difficulty difficulty)
         {
             ChangeScene(_newGameScene);
@@ -281,13 +330,10 @@ namespace Autoloads
 
         public void LoadGameOverScreen()
         {
-            ChangeScene(_gameOverScene);
+            PushOverlayScene(_gameOverScene);
+            // ChangeScene(_gameOverScene);
         }
 
-        // public override void _ExitTree()
-        // {
-        //     DisconnectSignals();
-        //     base._ExitTree();
-        // }
+        #endregion
     }
 }

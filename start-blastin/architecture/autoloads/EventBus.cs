@@ -13,7 +13,13 @@ namespace Autoloads
     {
         public static EventBus Instance { get; private set; }
 
+        #region Game State
+
         public event EventHandler<GameInitializedEventArgs> GameInitialized;
+
+        public event Action GameOver;
+
+        #endregion
 
         #region Waves
 
@@ -107,6 +113,11 @@ namespace Autoloads
         {
             GameInitializedEventArgs args = new(players, startingWave, waveTime);
             GameInitialized?.Invoke(this, args);
+        }
+
+        public void RaiseGameOver()
+        {
+            GameOver?.Invoke();
         }
 
         public void RaiseWaveStarted(int wave)

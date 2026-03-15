@@ -45,7 +45,7 @@ namespace Services
             RemovePlayer(args.PlayerId);
             if (_players.Count == 0)
             {
-                SceneManager.Instance.LoadGameOverScreen();
+                EventBus.Instance.RaiseGameOver();
             }
         }
 

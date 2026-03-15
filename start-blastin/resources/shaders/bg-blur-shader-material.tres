@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://dxa57rdtsaq8k"]
+
+[ext_resource type="Shader" uid="uid://cqi6yk4xfri65" path="res://resources/shaders/darkened-blur.gdshader" id="1_j0fkr"]
+
+[resource]
+resource_local_to_scene = true
+shader = ExtResource("1_j0fkr")
+shader_parameter/lod = 2.000000095
+shader_parameter/mix_percentage = 0.0

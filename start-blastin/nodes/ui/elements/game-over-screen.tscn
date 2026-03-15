@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b6cuyy1lwkrw5"]
 
 [ext_resource type="Script" uid="uid://o0gm4ctfwdbv" path="res://nodes/ui/menus/game-over-screen/GameOverScreen.cs" id="1_wekq6"]
+[ext_resource type="PackedScene" uid="uid://by2ymfys887qn" path="res://nodes/ui/ui-layer/ui-blur-background.tscn" id="2_kne4m"]
 [ext_resource type="FontFile" uid="uid://cl4qr5jjiwdn4" path="res://resources/fonts/sixtyfour-convergence/SixtyfourConvergence-Regular-VariableFont_BLED,SCAN,XELA,YELA.ttf" id="2_wekq6"]
 [ext_resource type="Script" uid="uid://go7qqpipuvlc" path="res://nodes/ui/menus/game-over-screen/GameOverSelectionMenu.cs" id="3_cindi"]
 [ext_resource type="Script" uid="uid://37gacqokmebj" path="res://nodes/ui/menus/SelectionEntry.cs" id="4_jqw5c"]
@@ -16,6 +17,10 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_wekq6")
+
+[node name="UiBlurBG" parent="." unique_id=2046985196 instance=ExtResource("2_kne4m")]
+unique_name_in_owner = true
+layout_mode = 1
 
 [node name="GameOverCenterContainer" type="CenterContainer" parent="." unique_id=1126437089]
 modulate = Color(1, 0.64705884, 0.50980395, 1)
@@ -48,15 +53,14 @@ metadata/_edit_use_anchors_ = true
 
 [node name="MenuCenterContainer" type="CenterContainer" parent="." unique_id=1501109188]
 layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
+anchors_preset = -1
+anchor_top = 0.34537038
 anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -167.0
-offset_bottom = 540.0
+anchor_bottom = 0.875
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/_edit_use_anchors_ = true
 
 [node name="GameOverSelectionMenu" type="VBoxContainer" parent="MenuCenterContainer" unique_id=1047960224]
 unique_name_in_owner = true

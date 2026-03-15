@@ -15,7 +15,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "godot: build",
-            "program":"C:\\Program Files\\Godot\\Godot_v4.5-stable_mono_win64\\Godot_v4.5-stable_mono_win64.exe",
+            "program":"C:\\Program Files\\Godot\\Godot_v4.6-stable_mono_win64\\Godot_v4.6-stable_mono_win64.exe",
             "cwd":"${workspaceFolder}",
             "console": "internalConsole",
             "stopAtEntry": false,

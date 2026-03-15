@@ -1,15 +1,11 @@
-using System;
-using Enemies;
-using Entities;
 using Environmental;
 using Events;
 using Godot;
 using Interfaces;
 using Projectiles;
-using Utility;
 
 [GlobalClass]
-public partial class ShieldProjectile : DeflectableProjectile, IVelocityProvider
+public partial class ShieldProjectile : DeflectableProjectile, IVelocityProvider, IDeflector
 {
     // Nodes //
     private Sprite2D _sprite;
@@ -48,8 +44,6 @@ public partial class ShieldProjectile : DeflectableProjectile, IVelocityProvider
         _sprite = GetNode<Sprite2D>("%Sprite2D");
         if (_faction == Faction.Enemies)
         {
-            // Material = _deflectHitFXMaterial;
-            // _sprite.Material = _enemyPaletteMaterial;
             _sprite.UseParentMaterial = false;
         }
         else

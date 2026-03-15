@@ -525,7 +525,6 @@ namespace Enemies
             // Queue free after all child projectiles die and all child audio nodes stop playing
             await WaitForAudioEnd();
             bool projectilesDisabled = await _weaponComponent.WaitForAllProjectilesDisabled();
-            // bool projectilesDisabled = await _weapon.WaitForAllProjectilesDisabled();
 
             if (projectilesDisabled && !IsQueuedForDeletion())
             {

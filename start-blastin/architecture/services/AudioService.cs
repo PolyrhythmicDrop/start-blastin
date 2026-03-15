@@ -186,7 +186,7 @@ namespace Services
                 }
 
                 // Set up a callback so the audio player is removed when its parent exits the tree.
-                playerData.Parent.TreeExiting += async () =>
+                playerData.Parent?.TreeExiting += async () =>
                 {
                     await RemoveAudioStreamPlayer(audioPlayer);
                 };

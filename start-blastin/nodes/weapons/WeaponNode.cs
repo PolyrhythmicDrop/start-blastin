@@ -285,8 +285,11 @@ namespace Weapons
                     return;
                 }
             }
-            else if (sourceProj is IDeflector srcDeflector && srcDeflector.DeflectActive)
+
+            // If the source projectile is a deflector, see if the colliding projectile is deflectable
+            if (sourceProj is IDeflector srcDeflector && srcDeflector.DeflectActive)
             {
+                // Deflect the collider if it's deflectable.
                 if (args.Collider is DeflectableProjectile defColliderProj)
                 {
                     // Invert the arguments

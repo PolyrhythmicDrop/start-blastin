@@ -31,10 +31,10 @@ namespace UI
 
         public override void _Process(double delta)
         {
-            if (_running)
-            {
-                _label.QueueRedraw();
-            }
+            // if (_running)
+            // {
+            //     _label.QueueRedraw();
+            // }
         }
 
         public async Task Start()

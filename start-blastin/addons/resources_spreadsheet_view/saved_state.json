@@ -108,6 +108,17 @@
       "resource_name": {
         "visibility": 0.0
       }
+    },
+    "res://resources/wave-scalers/spawner-formations/tier1/": {
+      "metadata/_custom_type_script": {
+        "visibility": 0
+      },
+      "resource_local_to_scene": {
+        "visibility": 0
+      },
+      "resource_name": {
+        "visibility": 0
+      }
     }
   },
   "recent_paths": [
@@ -118,7 +129,8 @@
     "res://resources/items/plugins/",
     "res://resources/wave-scalers/spawner-formations/",
     "res://resources/enemies/squadron-layouts/",
-    "res://resources/enemies/"
+    "res://resources/enemies/",
+    "res://resources/wave-scalers/spawner-formations/tier1/"
   ],
   "table_functions": {
     "filter": [

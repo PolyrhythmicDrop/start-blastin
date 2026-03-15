@@ -88,9 +88,10 @@ SubResource("Resource_hijyx"): 3,
 SubResource("Resource_t5tfp"): 2
 })
 InitialProgressRatio = 0.5
+StopSpawnWaveRatio = 0.7
 EnableSpawnTimerDelay = true
-MinDelay = 0.3
-MaxDelay = 0.5
+MinDelayRatio = 0.4
+MaxDelayRatio = 0.6
 Location = 1
 metadata/_custom_type_script = "uid://85wl5t25bsmt"
 
@@ -113,8 +114,8 @@ SubResource("Resource_2rgln"): 2
 })
 InitialProgressRatio = 0.5
 EnableSpawnTimerDelay = true
-MinDelay = 0.5
-MaxDelay = 0.8
+MinDelayRatio = 0.5
+MaxDelayRatio = 0.7
 Location = 2
 metadata/_custom_type_script = "uid://85wl5t25bsmt"
 

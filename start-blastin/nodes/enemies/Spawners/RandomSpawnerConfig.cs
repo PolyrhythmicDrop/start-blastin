@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Autoloads;
 using Godot;
@@ -11,8 +12,10 @@ namespace Enemies.Spawners
     [GlobalClass]
     public partial class RandomSpawnerConfig : SpawnerConfig
     {
-        private float _minSpawnDelay;
-        private float _maxSpawnDelay;
+        private float _minSpawnDelayRatio = 0;
+        private float _maxSpawnDelayRatio = 0;
+
+        private float _stopSpawnWaveRatio = 0;
 
         /// <summary>
         /// Spawns an enemy as soon as the spawn timer starts.
@@ -37,6 +40,18 @@ namespace Enemies.Spawners
         [Export(PropertyHint.Range, "0,1.0")]
         public float InitialProgressRatio { get; set; } = 0;
 
+        /// <summary>
+        /// The ratio of wave time at which the spawner should stop spawning enemies.
+        /// For example, if you set StopSpawnWaveRatio to 0.5, the spawner will stop spawning halfway through the wave.
+        /// Set to 0 to make the spawner spawn continuously after it starts.
+        /// </summary>
+        [Export(PropertyHint.Range, "0,1.0")]
+        public float StopSpawnWaveRatio
+        {
+            get => _stopSpawnWaveRatio;
+            set => _stopSpawnWaveRatio = Math.Clamp(value, _minSpawnDelayRatio, 1.0f);
+        }
+
         [ExportGroup("Spawn Timer Delay")]
         [Export(PropertyHint.GroupEnable)]
         public bool EnableSpawnTimerDelay { get; set; }
@@ -45,20 +60,20 @@ namespace Enemies.Spawners
         /// Minimum factor to delay the spawn timer by, in a range from 0 (starts the spawn timer immediately on wave start) to 1.0 (starts the spawn timer at the very end of the wave, i.e. never spawns)
         /// </summary>
         [Export(PropertyHint.Range, "0,1.0")]
-        public float MinDelay
+        public float MinDelayRatio
         {
-            get => _minSpawnDelay;
-            set => _minSpawnDelay = value;
+            get => _minSpawnDelayRatio;
+            set => _minSpawnDelayRatio = value;
         }
 
         /// <summary>
         /// Maximum factor to delay the spawn timer by, in a range from 0 (starts the spawn timer immediately on wave start) to 1.0 (starts the spawn timer at the very end of the wave, i.e. never spawns)
         /// </summary>
         [Export(PropertyHint.Range, "0,1.0")]
-        public float MaxDelay
+        public float MaxDelayRatio
         {
-            get => _maxSpawnDelay;
-            set => _maxSpawnDelay = value;
+            get => _maxSpawnDelayRatio;
+            set => _maxSpawnDelayRatio = value;
         }
 
         public override void ConfigureSpawner(EnemySpawner spawner, double? waveTime = null)
@@ -85,7 +100,13 @@ namespace Enemies.Spawners
                 // Get the current wave time
                 // Get a random value between the min and the max.
                 spawner.SpawnTimerDelay =
-                    (double)waveTime * RNG.GetRandomDouble(MinDelay, MaxDelay);
+                    (double)waveTime * RNG.GetRandomDouble(MinDelayRatio, MaxDelayRatio);
+
+                // Set the stop time, if any.
+                if (_stopSpawnWaveRatio != 0)
+                {
+                    spawner.SpawnTimerStopTime = (double)waveTime * _stopSpawnWaveRatio;
+                }
             }
         }
     }

@@ -34,6 +34,9 @@ namespace Enemies.Spawners
         /// </summary>
         public double SpawnTimerDelay = 0;
 
+        public double SpawnTimerStopTime = 0;
+        public Timer StopTimer;
+
         /// <summary>
         /// The seconds that elapse before a new enemy is spawned from the spawner.
         /// </summary>
@@ -69,6 +72,24 @@ namespace Enemies.Spawners
             {
                 MoveSpawnPoint();
             }
+
+            if (SpawnTimerStopTime > 0)
+            {
+                SetStopTimer();
+            }
+        }
+
+        public void SetStopTimer()
+        {
+            StopTimer = new()
+            {
+                Autostart = false,
+                OneShot = true,
+                Name = $"{Name}-StopTimer",
+                WaitTime = SpawnTimerStopTime,
+            };
+            AddChild(StopTimer);
+            StopTimer.Timeout += () => ToggleSpawning(false);
         }
 
         protected override void OnWaveStarted(object sender, WaveStartedEventArgs args)
@@ -76,6 +97,11 @@ namespace Enemies.Spawners
             _waveTimerActive = true;
             _currentWave = args.Wave;
             ToggleSpawning(true);
+
+            if (StopTimer != null)
+            {
+                StopTimer.Start();
+            }
         }
 
         protected override void OnWaveTimerEnded()

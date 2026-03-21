@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Autoloads;
 using Godot;
 using Utility;
+using WaveManagement;
 
 namespace UI
 {
@@ -32,6 +33,7 @@ namespace UI
 
         private Tween _splashIntroTween;
         private Tween _shineTween;
+        private Tween _outroTween;
 
         public override void _Ready()
         {
@@ -42,36 +44,6 @@ namespace UI
 
             _starSprite = GetNode<AnimatedSprite2D>("%Star");
             _starFinalPos = _starSprite.GlobalPosition;
-            _twinkleTimer = new()
-            {
-                Autostart = false,
-                OneShot = true,
-                WaitTime = STAR_TWINKLE_TIME,
-                Name = "TwinkleTimer",
-            };
-
-            _twinkleTimer.Timeout += async () =>
-            {
-                await TwinkleStar();
-                _twinkleTimer.Start(STAR_TWINKLE_TIME * GD.RandRange(0.5f, 3));
-            };
-            AddChild(_twinkleTimer);
-
-            _shineTimer = new()
-            {
-                Autostart = false,
-                OneShot = true,
-                WaitTime = SHINE_DELAY_TIME,
-                Name = "ShineTimer",
-            };
-
-            _shineTimer.Timeout += async () =>
-            {
-                await TweenShine();
-                _shineTimer.Start(SHINE_DELAY_TIME * GD.RandRange(0.5f, 2));
-            };
-
-            AddChild(_shineTimer);
 
             _starSprite.Hide();
 
@@ -84,9 +56,37 @@ namespace UI
 
             _shineShader = _titleControl.Material as ShaderMaterial;
 
+            SetAnimationTimers();
+
             _titleControl.Hide();
 
             base._Ready();
+        }
+
+        private void SetAnimationTimers()
+        {
+            _twinkleTimer = new()
+            {
+                Autostart = false,
+                OneShot = true,
+                WaitTime = STAR_TWINKLE_TIME,
+                Name = "TwinkleTimer",
+            };
+
+            _twinkleTimer.Timeout += TwinkleStar;
+            AddChild(_twinkleTimer);
+
+            _shineTimer = new()
+            {
+                Autostart = false,
+                OneShot = true,
+                WaitTime = SHINE_DELAY_TIME,
+                Name = "ShineTimer",
+            };
+
+            _shineTimer.Timeout += TweenShine;
+
+            AddChild(_shineTimer);
         }
 
         protected override void AssignMenuActions()
@@ -117,15 +117,14 @@ namespace UI
             _initialized = true;
             _initMenu.Hide();
 
-            await TweenSplashScreenIntro();
+            await TweenIntro();
             await SwitchMenu(_initMenu);
 
             _selector.Visible = true;
         }
 
-        private async Task TweenSplashScreenIntro()
+        private async Task TweenIntro()
         {
-            // Play the animation and tween rotation and position.
             if (_splashIntroTween != null && _splashIntroTween.IsValid())
             {
                 _splashIntroTween.Kill();
@@ -214,13 +213,17 @@ namespace UI
             _shineTimer.Start();
         }
 
-        private async Task TwinkleStar()
+        private async void TwinkleStar()
         {
             _starSprite.Play("menu");
             await ToSignal(_starSprite, AnimatedSprite2D.SignalName.AnimationFinished);
+            if (_twinkleTimer != null)
+            {
+                _twinkleTimer?.Start(STAR_TWINKLE_TIME * GD.RandRange(0.5f, 3));
+            }
         }
 
-        private async Task TweenShine()
+        private async void TweenShine()
         {
             if (_shineTween != null && _shineTween.IsValid())
             {
@@ -239,6 +242,83 @@ namespace UI
                 .SetTrans(Tween.TransitionType.Sine);
 
             await ToSignal(_shineTween, Tween.SignalName.Finished);
+
+            if (_shineTimer != null)
+            {
+                _shineTimer?.Start(SHINE_DELAY_TIME * GD.RandRange(0.5f, 2));
+            }
+        }
+
+        private async Task TweenOutro()
+        {
+            // Stop and free the animation timers
+            if (_twinkleTimer != null && !_twinkleTimer.IsQueuedForDeletion())
+            {
+                _twinkleTimer.Stop();
+                _twinkleTimer.Timeout -= TwinkleStar;
+                _twinkleTimer.QueueFree();
+            }
+
+            if (_shineTimer != null && !_shineTimer.IsQueuedForDeletion())
+            {
+                _shineTimer.Stop();
+                _shineTimer.Timeout -= TweenShine;
+                _shineTimer.QueueFree();
+            }
+
+            // Kill and reset any other animation tweens
+            if (_shineTween != null && _shineTween.IsValid())
+            {
+                _shineTween.Kill();
+            }
+
+            if (_outroTween != null && _outroTween.IsValid())
+            {
+                _outroTween.Kill();
+            }
+
+            // Set the variables for the outro
+            Vector2 viewSize = GetViewport().GetVisibleRect().Size;
+
+            // Text variables
+            float startTextOutroPosX = -_startTexture.Texture.GetWidth();
+            Vector2 startTextOutroPos = new(startTextOutroPosX, _startTexture.GlobalPosition.Y);
+
+            float blastinTextOutroPosX = viewSize.X + _blastinTexture.Texture.GetWidth();
+            Vector2 blastinTextOutroPos = new(
+                blastinTextOutroPosX,
+                _blastinTexture.GlobalPosition.Y
+            );
+
+            _outroTween = CreateTween();
+
+            _outroTween.TweenProperty(_startTexture, "global_position", startTextOutroPos, 1);
+            _outroTween
+                .Parallel()
+                .TweenProperty(_blastinTexture, "global_position", blastinTextOutroPos, 1);
+            _outroTween
+                .Parallel()
+                .TweenProperty(_starSprite, "scale", Vector2.Zero, 1)
+                .SetTrans(Tween.TransitionType.Sine)
+                .SetEase(Tween.EaseType.In);
+            _outroTween
+                .Parallel()
+                .TweenProperty(_starSprite, "global_rotation_degrees", 1080, 1)
+                .SetTrans(Tween.TransitionType.Sine)
+                .SetEase(Tween.EaseType.In);
+
+            await ToSignal(_outroTween, Tween.SignalName.Finished);
+        }
+
+        protected override async Task StartNewGame(Difficulty difficulty)
+        {
+            _menuTransitioning = true;
+
+            // Wait for the menu transition and the splash screen outro to complete.
+            await Task.WhenAll(TweenMenuTransition(_activeMenu, null), TweenOutro());
+
+            // await TweenMenuTransition(_activeMenu, null);
+            SceneManager.Instance.LoadNewGame(difficulty);
         }
     }
 }

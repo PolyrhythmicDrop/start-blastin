@@ -149,7 +149,7 @@ namespace UI
 
         // Common actions
 
-        protected async Task StartNewGame(Difficulty difficulty)
+        protected virtual async Task StartNewGame(Difficulty difficulty)
         {
             _menuTransitioning = true;
             await TweenMenuTransition(_activeMenu, null);

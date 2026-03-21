@@ -340,3 +340,5 @@ script = ExtResource("4_gssci")
 
 [node name="DifficultyMenu" parent="." unique_id=1593035402 instance=ExtResource("5_gssci")]
 unique_name_in_owner = true
+offset_top = 54.0
+offset_bottom = 54.0

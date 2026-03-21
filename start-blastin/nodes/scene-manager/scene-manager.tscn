@@ -5,5 +5,4 @@
 [node name="SceneManager" type="Node" unique_id=1964609832]
 script = ExtResource("1_ue856")
 DefaultScenePath = "uid://cycox7vegt6tq"
-OverrideScene = true
 OverrideScenePath = "uid://cca75d2re7isj"

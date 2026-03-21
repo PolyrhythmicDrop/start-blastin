@@ -1,0 +1,13 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://b6gvmhveb285y"]
+
+[ext_resource type="Shader" uid="uid://dqjy4bsaj8b1c" path="res://resources/shaders/stylized-gradient-pixel-glint-shader.gdshader" id="1_agivo"]
+[ext_resource type="Texture2D" uid="uid://bcubvax32jhuy" path="res://assets/ui/title-screen/title-shine-gradient.png" id="2_r2i4h"]
+
+[resource]
+shader = ExtResource("1_agivo")
+shader_parameter/gradient_texture = ExtResource("2_r2i4h")
+shader_parameter/gradient_width = 64.0
+shader_parameter/shine_progress = 0.0
+shader_parameter/shine_size = 0.1999999955296
+shader_parameter/shine_angle = 89.9
+shader_parameter/threshold = 0.0

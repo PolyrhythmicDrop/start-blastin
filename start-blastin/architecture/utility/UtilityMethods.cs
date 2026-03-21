@@ -133,7 +133,7 @@ namespace Utility
         /// <summary>
         /// Gets the duration of a specific animation of an AnimatedSprite2D.
         /// </summary>
-        /// <param name="animSprite"></param>
+        /// <param name="animSprite">The AnimatedSprite2D object to get the animation from.</param>
         /// <param name="animation">The name of the animation.</param>
         /// <returns></returns>
         public static float? GetAnimationDuration(
@@ -163,15 +163,16 @@ namespace Utility
 
                 int frameCount = animSprite.SpriteFrames.GetFrameCount(animation);
                 float totalDuration = 0;
+                bool playing = animSprite.IsPlaying();
+                float playingSpeed = playing
+                    ? MathF.Abs(animSprite.GetPlayingSpeed())
+                    : animSprite.SpeedScale;
 
                 for (int i = 0; i < frameCount; i++)
                 {
                     totalDuration +=
                         sf.GetFrameDuration(animation, i)
-                        / (
-                            (float)sf.GetAnimationSpeed(animation)
-                            * MathF.Abs(animSprite.GetPlayingSpeed())
-                        );
+                        / ((float)sf.GetAnimationSpeed(animation) * playingSpeed);
                 }
 
                 return totalDuration;

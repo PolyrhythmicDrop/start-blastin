@@ -118,9 +118,25 @@ namespace UI
             _initMenu.Hide();
 
             await TweenIntro();
+            await OnIntroComplete();
             await SwitchMenu(_initMenu);
 
             _selector.Visible = true;
+        }
+
+        private void SkipIntro()
+        {
+            if (_splashIntroTween != null && _splashIntroTween.IsRunning())
+            {
+                _splashIntroTween.EmitSignal(Tween.SignalName.Finished);
+                _splashIntroTween.Kill();
+            }
+
+            _starSprite.GlobalPosition = _starFinalPos;
+            _starSprite.RotationDegrees = STAR_FINAL_ROTATE_DEG;
+            _starSprite.Scale = Vector2.One;
+            _startTexture.GlobalPosition = _startTextFinalPos;
+            _blastinTexture.GlobalPosition = _blastinTextFinalPos;
         }
 
         private async Task TweenIntro()
@@ -207,10 +223,26 @@ namespace UI
                 );
 
             await ToSignal(_splashIntroTween, Tween.SignalName.Finished);
+        }
 
+        public override void _Process(double delta)
+        {
+            if (_splashIntroTween != null && _splashIntroTween.IsRunning())
+            {
+                if (Input.IsAnythingPressed())
+                {
+                    SkipIntro();
+                }
+            }
+            base._Process(delta);
+        }
+
+        private Task OnIntroComplete()
+        {
             _starSprite.Play("menu");
             _twinkleTimer.Start();
             _shineTimer.Start();
+            return Task.CompletedTask;
         }
 
         private async void TwinkleStar()
@@ -236,10 +268,7 @@ namespace UI
 
             _shineTween = CreateTween();
 
-            _shineTween
-                .TweenMethod(shineCallable, 0.0f, 1.0f, 1.5f)
-                .SetEase(Tween.EaseType.Out)
-                .SetTrans(Tween.TransitionType.Sine);
+            _shineTween.TweenMethod(shineCallable, 0.0f, 1.0f, 0.5f);
 
             await ToSignal(_shineTween, Tween.SignalName.Finished);
 

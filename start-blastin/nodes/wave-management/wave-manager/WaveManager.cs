@@ -10,6 +10,8 @@ namespace WaveManagement
     [GlobalClass]
     public partial class WaveManager : Node
     {
+        private PackedScene _countdownScene = GD.Load<PackedScene>("uid://cj20n8pswpaby");
+        private PackedScene _completeScene = GD.Load<PackedScene>("uid://dupt8gxk8crm2");
         private bool _overrideNextWaveNumber = false;
         private int _nextWaveNumber;
 
@@ -149,8 +151,7 @@ namespace WaveManagement
         /// </summary>
         private async Task CountDownWave()
         {
-            WaveCountdown wc = GD.Load<PackedScene>("uid://cj20n8pswpaby")
-                .Instantiate<WaveCountdown>();
+            WaveCountdown wc = _countdownScene.Instantiate<WaveCountdown>();
             AddChild(wc);
 
             await wc.Start();
@@ -171,7 +172,18 @@ namespace WaveManagement
 
             IncrementWave();
 
+            await PlayWaveCompleteAnim();
+
             EventBus.Instance.RaiseWaveComplete();
+        }
+
+        private async Task PlayWaveCompleteAnim()
+        {
+            // Show the wave complete thingie.
+            WaveComplete wc = _completeScene.Instantiate<WaveComplete>();
+            AddChild(wc);
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+            await wc.AnimateWaveComplete();
         }
 
         /// <summary>

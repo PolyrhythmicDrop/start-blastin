@@ -233,7 +233,7 @@ namespace Autoloads
             }
         }
 
-        private async Task<List<Player>> AddPlayers()
+        private List<Player> AddPlayers()
         {
             List<Player> players = new();
             Vector2 startPos = GetViewport().GetVisibleRect().Size / 2;
@@ -310,7 +310,7 @@ namespace Autoloads
             wm.Difficulty = difficulty;
             _currentSceneRoot.AddChild(wm);
 
-            List<Player> players = await AddPlayers();
+            List<Player> players = AddPlayers();
 
             EventBus.Instance.RaiseGameInitialized([.. players], 1, wm.WaveTime);
 
@@ -331,7 +331,6 @@ namespace Autoloads
         public void LoadGameOverScreen()
         {
             PushOverlayScene(_gameOverScene);
-            // ChangeScene(_gameOverScene);
         }
 
         #endregion

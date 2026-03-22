@@ -33,7 +33,7 @@ void fragment() {
 	float shine_color_coord = clamp((shine_distance / (2.0 * shine_size)) + 0.5, 0.0, 1.0);
 
 	vec4 raw_color = texelFetch(gradient_texture, ivec2(int(shine_color_coord * gradient_width), 0), 0);
-
+/* 
     vec3 cycle = vec3(
     sin(TIME * 0.4) * 0.5 + 0.5,
     sin(TIME * 0.4 + 2.094) * 0.5 + 0.5,
@@ -44,13 +44,15 @@ void fragment() {
     vec4 mod_color = clamp(sin(vec4(1, 1, 1, raw_color.a) * TIME), vec4(0.5, 0.5, 0.5, 0.5), vec4(1, 1, 1, 1));
     vec4 new_color = vec4(mix(raw_color.rgb, cycle, 0.4), raw_color.a);
 
+	*/
+
     
 
 	float shine = step(shine_distance, shine_size) - step(shine_distance, -shine_size);
 	
 	float max_component = max(max(COLOR.r, COLOR.g), COLOR.b);
 
-	/* COLOR.rgb = mix(COLOR.rgb, raw_color.rgb, shine * raw_color.a * float(max_component >= threshold)); */
+	COLOR.rgb = mix(COLOR.rgb, raw_color.rgb, shine * raw_color.a * float(max_component >= threshold));
 
-    COLOR.rgb = mix(COLOR.rgb, new_color.rgb, shine * new_color.a * float(max_component >= threshold));
+   /*  COLOR.rgb = mix(COLOR.rgb, new_color.rgb, shine * new_color.a * float(max_component >= threshold)); */
 }

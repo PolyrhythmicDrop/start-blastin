@@ -352,7 +352,10 @@ namespace UI
                 AnimateLineEndings();
             }
 
-            if ((_labelsAnimating || _linesAnimating) && Input.IsAnythingPressed())
+            if (
+                (_labelsAnimating || _linesAnimating)
+                && Input.IsActionJustPressed("ui_close_dialog")
+            )
             {
                 // Cancel the animation.
                 _completeCts?.Cancel();

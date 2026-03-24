@@ -5,9 +5,9 @@
 [ext_resource type="Script" uid="uid://ce5t3ttfymoxp" path="res://nodes/ui/menus/splash-screen/StartupSplashSelectionMenu.cs" id="2_gssci"]
 [ext_resource type="Material" uid="uid://b6gvmhveb285y" path="res://resources/shaders/title-pixel-glint-shader-material.tres" id="3_xllb6"]
 [ext_resource type="Script" uid="uid://37gacqokmebj" path="res://nodes/ui/menus/SelectionEntry.cs" id="4_gssci"]
-[ext_resource type="Texture2D" uid="uid://bn3toq4mv3hkw" path="res://assets/ui/title-screen/star-text.png" id="4_xllb6"]
-[ext_resource type="Texture2D" uid="uid://cxiqis4wchixf" path="res://assets/ui/title-screen/blastin-text.png" id="5_61dn5"]
+[ext_resource type="Texture2D" uid="uid://bi7rm887dc4t4" path="res://assets/ui/title-screen/title-star-text-color-burn.png" id="4_xllb6"]
 [ext_resource type="PackedScene" uid="uid://2ayv1bqwmhoe" path="res://nodes/ui/menus/selection-menus/difficulty-selection-menu.tscn" id="5_gssci"]
+[ext_resource type="Texture2D" uid="uid://bor82vkwqndvr" path="res://assets/ui/title-screen/title-blastin-text-color-burn.png" id="5_xllb6"]
 [ext_resource type="Texture2D" uid="uid://dgecfbwp3thu3" path="res://assets/ui/title-screen/title-star.png" id="9_xllb6"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8nu2x"]
@@ -122,7 +122,12 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_i60o1")
+}],
+"loop": false,
+"name": &"condense",
+"speed": 40.0
 }, {
+"frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_5s74q")
 }, {
@@ -145,8 +150,8 @@ animations = [{
 "texture": SubResource("AtlasTexture_575mf")
 }],
 "loop": false,
-"name": &"condense",
-"speed": 15.0
+"name": &"explode",
+"speed": 25.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -219,9 +224,7 @@ material = SubResource("ShaderMaterial_8nu2x")
 position = Vector2(967.5074, 171.2816)
 skew = 0.20943952
 sprite_frames = SubResource("SpriteFrames_2n8uj")
-animation = &"menu"
-frame = 10
-frame_progress = 1.0
+animation = &"condense"
 offset = Vector2(3.9537964, -17.091919)
 
 [node name="TitleControl" type="Control" parent="." unique_id=1847239928]
@@ -244,8 +247,9 @@ unique_name_in_owner = true
 use_parent_material = true
 layout_direction = 2
 layout_mode = 1
-offset_right = 649.0
-offset_bottom = 216.0
+offset_left = -39.0
+offset_right = 625.0
+offset_bottom = 218.0
 pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("4_xllb6")
 stretch_mode = 2
@@ -263,7 +267,7 @@ offset_left = -1159.0
 offset_top = -224.0
 grow_horizontal = 0
 grow_vertical = 0
-texture = ExtResource("5_61dn5")
+texture = ExtResource("5_xllb6")
 stretch_mode = 2
 
 [node name="StartupMenu" type="VBoxContainer" parent="." unique_id=38752516]

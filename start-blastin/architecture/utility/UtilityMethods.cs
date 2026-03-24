@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Tracing;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Godot;
+using Godot.Collections;
 
 namespace Utility
 {
@@ -198,6 +200,14 @@ namespace Utility
             return offset / length;
         }
 
+        /// <summary>
+        /// Waits for the passed Tween to finish and returns a <see cref="Task"/> when complete.
+        /// Pass a <paramref name="token"/> to allow the tween to be cancelled.
+        /// </summary>
+        /// <param name="tween">The <see cref="Tween"/> to wait for.</param>
+        /// <param name="token">A cancellation token from a <see cref="CancellationTokenSource"/>. Pass something to this argument to allow the Tween to be cancelled.</param>
+        /// <returns></returns>
+        /// <remarks>Use this instead of a SignalAwaiter to convert the Tween Finished signal to a Task.</remarks>
         public static Task AwaitTweenFinished(Tween tween, CancellationToken token = default)
         {
             // If there's already a cancellation pending on the token, return a cancelled task using the token.
@@ -223,6 +233,67 @@ namespace Utility
                 {
                     // Kill the tween.
                     tween.Kill();
+                    // Cancel the manual task using the token.
+                    tcs.TrySetCanceled(token);
+                });
+            }
+
+            // Return the completed or cancelled TCS.
+            return tcs.Task;
+        }
+
+        /// <summary>
+        /// Converts a Godot Signal to a <see cref="Task"/> so you can do Task-y things with it.
+        /// Use this instead of a SignalAwaiter when you need the more robust Task functionality.
+        /// Currently only accepts signals that do not pass arguments.
+        /// </summary>
+        /// <param name="source">The source of the signal.</param>
+        /// <param name="signal">The signal to convert to a Task.</param>
+        /// <param name="token">Optional cancellation token. Pass this if you want to be able to cancel the Task.</param>
+        /// <returns>A <see cref="Task"/> that completes when the <paramref name="signal"/> is emitted.</returns>
+        public static Task GodotSignalToTask(
+            GodotObject source,
+            StringName signal,
+            CancellationToken token = default
+        )
+        {
+            // If there's already a cancellation pending on the token, return a cancelled task using the token.
+            if (token.IsCancellationRequested)
+            {
+                return Task.FromCanceled(token);
+            }
+
+            // Create a manual task to manage completion of the Task instead of relying on Godot's SignalAwaiter.
+            // This task is "pending" until you manually complete or cancel it.
+            TaskCompletionSource tcs = new();
+            Callable resultCallable = Callable.From(tcs.TrySetResult);
+
+            if (source.HasSignal(signal))
+            {
+                DebugLogger.LogMessage($"Signal {signal} found!");
+                source.Connect(
+                    signal,
+                    Callable.From(() =>
+                    {
+                        DebugLogger.LogMessage($"Ready callback called on {source}!", true);
+                        // Call TrySetResult().
+                        tcs.TrySetResult();
+                    }),
+                    flags: 4
+                );
+            }
+
+            // Connect the tween's Finished signal to the task completion callback.
+            // If the Tween finishes successfully without being cancelled/killed, the TaskCompletionSource's Task status is set to RanToCompletion.
+            // source.signalName += () => tcs.TrySetResult();
+
+            // Set up cancellation if the passed token can be cancelled.
+            if (token.CanBeCanceled)
+            {
+                // Register the cancellation token to a callback.
+                // The callback fires on cancel, and cancels the TCS task as well.
+                CancellationTokenRegistration registered = token.Register(() =>
+                {
                     // Cancel the manual task using the token.
                     tcs.TrySetCanceled(token);
                 });

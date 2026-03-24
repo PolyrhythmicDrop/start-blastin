@@ -142,7 +142,7 @@ namespace UI.Shop
             foreach (ShopItemContainer container in _itemContainers)
             {
                 container.RequestReady();
-                await ToSignal(container, Node.SignalName.Ready);
+                // await ToSignal(container, Node.SignalName.Ready);
             }
         }
 

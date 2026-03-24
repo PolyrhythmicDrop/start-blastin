@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Godot;
 using Utility;
@@ -8,6 +9,7 @@ namespace UI
     public partial class WaveComplete : Control
     {
         private bool _introAnimStarted = false;
+        private CancellationTokenSource _completeCts;
 
         // ~~ Label variables ~~ //
         private bool _labelsInitialized = false;
@@ -47,6 +49,8 @@ namespace UI
             _bottomLine = GetNode<Line2D>("%BottomLine");
             _bottomLineEndSprite = GetNode<Sprite2D>("%BottomLineEnd");
 
+            _completeCts = new();
+
             InitializeLines();
         }
 
@@ -61,8 +65,6 @@ namespace UI
                 _completeLabel.GetContentHeight()
             );
 
-            // DebugLogger.LogMessage($"Label sizes on initialize: {waveSize}, {completeSize}", true);
-
             // Get the size of the viewport
             Vector2 viewSize = GetViewportRect().Size;
 
@@ -71,8 +73,6 @@ namespace UI
             _waveFinalPos = new(viewSize.X / 20, waveFinalY);
 
             // Move the wave label offscreen.
-            // _waveLabel.GlobalPosition = new(-waveSize.X, waveFinalY); // <= Horizontal
-            // _waveLabel.GlobalPosition = new(-waveSize.X, -waveSize.Y); // <= Diagonal
             _waveLabel.GlobalPosition = new(_waveFinalPos.X, -waveSize.Y); // <= Vertical
 
             // Set the final position of the complete label.
@@ -81,11 +81,6 @@ namespace UI
             _completeFinalPos = new(completeFinalX, completeFinalY);
 
             // Move the complete label offscreen.
-            // _completeLabel.GlobalPosition = new(viewSize.X, completeFinalY); <= Horizontal
-            // _completeLabel.GlobalPosition = new(
-            //     viewSize.X + completeSize.X,
-            //     viewSize.Y + completeSize.Y
-            // ); <= Diagonal
             _completeLabel.GlobalPosition = new(completeFinalX, viewSize.Y + completeSize.Y); // <= Vertical
 
             // Show both labels now that they're moved.
@@ -139,15 +134,69 @@ namespace UI
             }
         }
 
-        public async Task AnimateWaveComplete()
+        public async Task PlayWaveCompleteAnimation()
         {
+            CancellationToken token = _completeCts.Token;
             _introAnimStarted = true;
-            await Task.WhenAll(TweenLineIntroAnimation(), TweenLabelIntroAnimation());
-            await ToSignal(GetTree().CreateTimer(1.5f, false), SceneTreeTimer.SignalName.Timeout);
-            await Task.WhenAll(TweenLineOutroAnimation(), TweenLabelOutroAnimation());
+
+            try
+            {
+                await Task.WhenAll(TweenLineIntroAnimation(token), TweenLabelIntroAnimation(token));
+                await ToSignal(
+                    GetTree().CreateTimer(1.5f, false),
+                    SceneTreeTimer.SignalName.Timeout
+                );
+                await Task.WhenAll(TweenLineOutroAnimation(token), TweenLabelOutroAnimation(token));
+            }
+            catch (OperationCanceledException e)
+            {
+                DebugLogger.LogMessage(
+                    $"Wave complete animation cancelled! {e.Message}, {e.Source}"
+                );
+                SkipAnimations();
+            }
+            finally
+            {
+                _completeCts.Dispose();
+                _completeCts = null;
+                _introAnimStarted = false;
+                OnAnimationEnd();
+            }
         }
 
-        private async Task TweenLineIntroAnimation()
+        private void SkipAnimations()
+        {
+            if (_lineTween != null && _lineTween.IsRunning())
+            {
+                _lineTween.Kill();
+            }
+            if (_labelTween != null && _labelTween.IsRunning())
+            {
+                _labelTween.Kill();
+            }
+        }
+
+        private void OnAnimationEnd()
+        {
+            QueueFree();
+        }
+
+        private void AnimateLineEndings()
+        {
+            int topCount = _topLine.GetPointCount();
+            int bottomCount = _bottomLine.GetPointCount();
+            // Set the end point sprites to the end point of each line.
+            if (topCount > 1)
+            {
+                _topLineEndSprite.Position = _topLine.GetPointPosition(topCount - 1);
+            }
+            if (bottomCount > 1)
+            {
+                _bottomLineEndSprite.Position = _bottomLine.GetPointPosition(bottomCount - 1);
+            }
+        }
+
+        private async Task TweenLineIntroAnimation(CancellationToken token)
         {
             _linesAnimating = true;
 
@@ -173,12 +222,15 @@ namespace UI
                     INTRO_ANIM_DUR
                 );
 
-            await ToSignal(_lineTween, Tween.SignalName.Finished);
+            // await ToSignal(_lineTween, Tween.SignalName.Finished);
+            await UtilityMethods.AwaitTweenFinished(_lineTween, token);
+
+            token.ThrowIfCancellationRequested();
 
             _linesAnimating = false;
         }
 
-        private async Task TweenLineOutroAnimation()
+        private async Task TweenLineOutroAnimation(CancellationToken token)
         {
             _linesAnimating = true;
 
@@ -213,12 +265,15 @@ namespace UI
                     INTRO_ANIM_DUR
                 );
 
-            await ToSignal(_lineTween, Tween.SignalName.Finished);
+            // await ToSignal(_lineTween, Tween.SignalName.Finished);
+            await UtilityMethods.AwaitTweenFinished(_lineTween, token);
+
+            token.ThrowIfCancellationRequested();
 
             _linesAnimating = false;
         }
 
-        private async Task TweenLabelIntroAnimation()
+        private async Task TweenLabelIntroAnimation(CancellationToken token)
         {
             _labelsAnimating = true;
 
@@ -239,12 +294,15 @@ namespace UI
                     INTRO_ANIM_DUR
                 );
 
-            await ToSignal(_labelTween, Tween.SignalName.Finished);
+            // await ToSignal(_labelTween, Tween.SignalName.Finished);
+            await UtilityMethods.AwaitTweenFinished(_labelTween, token);
+
+            token.ThrowIfCancellationRequested();
 
             _labelsAnimating = false;
         }
 
-        private async Task TweenLabelOutroAnimation()
+        private async Task TweenLabelOutroAnimation(CancellationToken token)
         {
             _labelsAnimating = true;
 
@@ -272,7 +330,10 @@ namespace UI
                 .Parallel()
                 .TweenProperty(_completeLabel, "global_position", completeFinal, INTRO_ANIM_DUR);
 
-            await ToSignal(_labelTween, Tween.SignalName.Finished);
+            // await ToSignal(_labelTween, Tween.SignalName.Finished);
+            await UtilityMethods.AwaitTweenFinished(_labelTween, token);
+
+            token.ThrowIfCancellationRequested();
 
             _labelsAnimating = false;
         }
@@ -285,24 +346,17 @@ namespace UI
             {
                 InitializeLabels();
             }
+
             if (_linesAnimating)
             {
-                int topCount = _topLine.GetPointCount();
-                int bottomCount = _bottomLine.GetPointCount();
-                // Set the end point sprites to the end point of each line.
-                if (topCount > 1)
-                {
-                    _topLineEndSprite.Position = _topLine.GetPointPosition(topCount - 1);
-                }
-                if (bottomCount > 1)
-                {
-                    _bottomLineEndSprite.Position = _bottomLine.GetPointPosition(bottomCount - 1);
-                }
+                AnimateLineEndings();
             }
-            // if (!_introAnimStarted)
-            // {
-            //     AnimateWaveComplete();
-            // }
+
+            if ((_labelsAnimating || _linesAnimating) && Input.IsAnythingPressed())
+            {
+                // Cancel the animation.
+                _completeCts?.Cancel();
+            }
         }
     }
 }

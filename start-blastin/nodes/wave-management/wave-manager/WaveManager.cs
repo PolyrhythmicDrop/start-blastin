@@ -183,7 +183,7 @@ namespace WaveManagement
             WaveComplete wc = _completeScene.Instantiate<WaveComplete>();
             AddChild(wc);
             await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
-            await wc.AnimateWaveComplete();
+            await wc.PlayWaveCompleteAnimation();
         }
 
         /// <summary>

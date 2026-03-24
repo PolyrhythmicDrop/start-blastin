@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Autoloads;
 using Godot;
@@ -15,8 +16,9 @@ namespace UI
 
         private AnimatedSprite2D _starSprite;
         private Vector2 _starFinalPos;
+        private float _starCondenseAnimDur;
         private const float STAR_FINAL_ROTATE_DEG = 180;
-        private Timer _twinkleTimer;
+        private Godot.Timer _twinkleTimer;
         private const double STAR_TWINKLE_TIME = 4.0f;
 
         private Control _titleControl;
@@ -27,13 +29,22 @@ namespace UI
         private Vector2 _blastinTextFinalPos;
 
         private ShaderMaterial _shineShader;
-        private Timer _shineTimer;
+        private Godot.Timer _shineTimer;
         private const float SHINE_DELAY_TIME = 6.0f;
         private const string SHINE_PROGRESS_PARAM = "shine_progress";
 
-        private Tween _splashIntroTween;
+        private Tween _starTween;
+        private Tween _titleTextTween;
         private Tween _shineTween;
         private Tween _outroTween;
+
+        /// <summary>
+        /// Cancellation token source for the set of intro Tweens.
+        /// </summary>
+        private CancellationTokenSource _introCts;
+
+        // State
+        private bool _introPlaying;
 
         public override void _Ready()
         {
@@ -44,6 +55,9 @@ namespace UI
 
             _starSprite = GetNode<AnimatedSprite2D>("%Star");
             _starFinalPos = _starSprite.GlobalPosition;
+
+            _starCondenseAnimDur =
+                UtilityMethods.GetAnimationDuration(_starSprite, "condense") ?? 2.0f;
 
             _starSprite.Hide();
 
@@ -117,7 +131,28 @@ namespace UI
             _initialized = true;
             _initMenu.Hide();
 
-            await TweenIntro();
+            _introCts = new CancellationTokenSource();
+
+            try
+            {
+                await TweenIntro(_introCts.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                DebugLogger.LogMessage(
+                    $"Skipping intro animation with a cancellation token...",
+                    true
+                );
+                // Skip the intro if any button was pressed.
+                SkipIntro();
+            }
+            finally
+            {
+                _introCts.Dispose();
+                _introCts = null;
+            }
+
+            // await OnIntroComplete();
             await OnIntroComplete();
             await SwitchMenu(_initMenu);
 
@@ -126,10 +161,15 @@ namespace UI
 
         private void SkipIntro()
         {
-            if (_splashIntroTween != null && _splashIntroTween.IsRunning())
+            if (_starTween != null && _starTween.IsRunning())
             {
-                _splashIntroTween.EmitSignal(Tween.SignalName.Finished);
-                _splashIntroTween.Kill();
+                _starTween.EmitSignal(Tween.SignalName.Finished);
+                _starTween.Kill();
+            }
+            if (_titleTextTween != null && _titleTextTween.IsRunning())
+            {
+                _titleTextTween.EmitSignal(Tween.SignalName.Finished);
+                _titleTextTween.Kill();
             }
 
             _starSprite.GlobalPosition = _starFinalPos;
@@ -137,13 +177,34 @@ namespace UI
             _starSprite.Scale = Vector2.One;
             _startTexture.GlobalPosition = _startTextFinalPos;
             _blastinTexture.GlobalPosition = _blastinTextFinalPos;
+            if (!_titleControl.Visible)
+            {
+                _titleControl.Show();
+            }
         }
 
-        private async Task TweenIntro()
+        private async Task TweenIntro(CancellationToken token)
         {
-            if (_splashIntroTween != null && _splashIntroTween.IsValid())
+            _menuTransitioning = true;
+            _introPlaying = true;
+
+            try
             {
-                _splashIntroTween.Kill();
+                await TweenStarInitialEntrance(token);
+                await Task.WhenAll(TweenStarburst(token), TweenTextEntrance(token));
+            }
+            finally
+            {
+                _introPlaying = false;
+                _menuTransitioning = false;
+            }
+        }
+
+        private async Task TweenStarInitialEntrance(CancellationToken token)
+        {
+            if (_starTween != null && _starTween.IsValid())
+            {
+                _starTween.Kill();
             }
 
             // Get variables
@@ -154,85 +215,153 @@ namespace UI
             _starSprite.Scale = new(0.01f, 0.01f);
             _starSprite.Show();
 
-            // Initialize title text variables
-            float startTextStartPosX = -_startTexture.Texture.GetWidth();
-            _startTexture.GlobalPosition = new(startTextStartPosX, _startTextFinalPos.Y);
-
-            float blastinTextStartPosX = viewSize.X + _blastinTexture.Texture.GetWidth();
-            _blastinTexture.GlobalPosition = new(blastinTextStartPosX, _blastinTextFinalPos.Y);
-
-            _titleControl.Show();
-
-            float condenseAnimDur =
-                UtilityMethods.GetAnimationDuration(_starSprite, "condense") ?? 2.0f;
-
-            // Create the text subtween
-            Tween textSubtween = CreateTween();
-            textSubtween.TweenInterval(condenseAnimDur / 2);
-            textSubtween.TweenProperty(
-                _startTexture,
-                "global_position",
-                _startTextFinalPos,
-                condenseAnimDur / 2
-            );
-            textSubtween
-                .Parallel()
-                .TweenProperty(
-                    _blastinTexture,
-                    "global_position",
-                    _blastinTextFinalPos,
-                    condenseAnimDur / 2
-                );
-
             _starSprite.Play("twinkle");
-            _splashIntroTween = CreateTween();
+            _starTween = CreateTween();
 
             // Tween the twinkle
-            _splashIntroTween
+            _starTween
                 .TweenProperty(_starSprite, "scale", Vector2.One, 3f)
                 .FromCurrent()
                 .SetTrans(Tween.TransitionType.Sine)
                 .SetEase(Tween.EaseType.In);
-            _splashIntroTween
+            _starTween
                 .Parallel()
                 .TweenProperty(_starSprite, "global_position", starCenter, 3f)
                 .SetTrans(Tween.TransitionType.Sine)
                 .SetEase(Tween.EaseType.In);
-            _splashIntroTween
+            _starTween
                 .Parallel()
                 .TweenProperty(_starSprite, "rotation_degrees", STAR_FINAL_ROTATE_DEG * 2, 3);
+            _starTween.TweenInterval(1);
+
+            await AwaitTweenFinished(_starTween, token);
+
+            // Throw a cancellation exception if we cancel the Task to propagate back up to Initialize().
+            token.ThrowIfCancellationRequested();
+
+            // await ToSignal(_starTween, Tween.SignalName.Finished);
+        }
+
+        private async Task TweenStarburst(CancellationToken token)
+        {
+            if (_starTween != null && _starTween.IsValid())
+            {
+                _starTween.Kill();
+            }
+
+            _starTween = CreateTween();
 
             // Tween the condense animation into the final position.
-            _splashIntroTween.TweenInterval(1);
-            _splashIntroTween.TweenCallback(Callable.From(() => _starSprite.Play("condense")));
-            _splashIntroTween.TweenProperty(
+            _starTween.TweenCallback(Callable.From(() => _starSprite.Play("condense")));
+            _starTween.TweenProperty(
                 _starSprite,
                 "global_position",
                 _starFinalPos,
-                condenseAnimDur
+                _starCondenseAnimDur
             );
-            // Tween in the text
-            _splashIntroTween.Parallel().TweenSubtween(textSubtween);
-            _splashIntroTween
+            _starTween
                 .Parallel()
                 .TweenProperty(
                     _starSprite,
                     "rotation_degrees",
                     STAR_FINAL_ROTATE_DEG * 5,
-                    condenseAnimDur
+                    _starCondenseAnimDur
                 );
 
-            await ToSignal(_splashIntroTween, Tween.SignalName.Finished);
+            await AwaitTweenFinished(_starTween, token);
+
+            // Throw a cancellation exception if we cancel the Task to propagate back up to Initialize().
+            token.ThrowIfCancellationRequested();
+
+            // await ToSignal(_starTween, Tween.SignalName.Finished);
+        }
+
+        private async Task TweenTextEntrance(CancellationToken token)
+        {
+            if (_titleTextTween != null && _titleTextTween.IsValid())
+            {
+                _titleTextTween.Kill();
+            }
+
+            // Get variables
+            Vector2 viewSize = GetViewport().GetVisibleRect().Size;
+
+            // Initialize title text variables
+            _startTexture.GlobalPosition = new(-viewSize.X, _startTextFinalPos.Y);
+            _blastinTexture.GlobalPosition = new(-viewSize.X, _blastinTextFinalPos.Y);
+
+            _titleControl.Show();
+
+            // Create the text subtween
+            _titleTextTween = CreateTween();
+
+            _titleTextTween.TweenInterval(_starCondenseAnimDur / 2);
+            _titleTextTween.TweenProperty(
+                _startTexture,
+                "global_position",
+                _startTextFinalPos,
+                _starCondenseAnimDur * 0.25
+            );
+            _titleTextTween
+                .Parallel()
+                .TweenProperty(
+                    _blastinTexture,
+                    "global_position",
+                    _blastinTextFinalPos,
+                    _starCondenseAnimDur * 0.25
+                );
+
+            await AwaitTweenFinished(_titleTextTween, token);
+
+            // Throw a cancellation exception if we cancel the Task to propagate back up to Initialize().
+            token.ThrowIfCancellationRequested();
+
+            // await ToSignal(_titleTextTween, Tween.SignalName.Finished);
+        }
+
+        private Task AwaitTweenFinished(Tween tween, CancellationToken token = default)
+        {
+            // If there's already a cancellation pending on the token, return a cancelled task using the token.
+            if (token.IsCancellationRequested)
+            {
+                return Task.FromCanceled(token);
+            }
+
+            // Create a manual task to manage completion of the tween instead of relying on Godot's SignalAwaiter.
+            // This task is "pending" until you manually complete or cancel it.
+            TaskCompletionSource tcs = new();
+
+            // Connect the tween's Finished signal to the task completion callback.
+            // If the Tween finishes successfully without being cancelled/killed, the TaskCompletionSource's Task status is set to RanToCompletion.
+            tween.Finished += () => tcs.TrySetResult();
+
+            // Set up cancellation if the passed token can be cancelled.
+            if (token.CanBeCanceled)
+            {
+                // Register the cancellation token to a callback.
+                // The callback fires on cancel, and cancels the TCS task as well.
+                CancellationTokenRegistration registered = token.Register(() =>
+                {
+                    // Kill the tween.
+                    tween.Kill();
+                    // Cancel the manual task using the token.
+                    tcs.TrySetCanceled(token);
+                });
+            }
+
+            // Return the completed or cancelled TCS.
+            return tcs.Task;
         }
 
         public override void _Process(double delta)
         {
-            if (_splashIntroTween != null && _splashIntroTween.IsRunning())
+            if (_introPlaying && Input.IsAnythingPressed())
             {
-                if (Input.IsAnythingPressed())
-                {
-                    SkipIntro();
-                }
+                // Requests cancellation of the intro.
+                // Any callbacks that use a token generated from this CTS are fired automatically.
+                _introCts?.Cancel();
+
+                // SkipIntro();
             }
             base._Process(delta);
         }
@@ -346,7 +475,6 @@ namespace UI
             // Wait for the menu transition and the splash screen outro to complete.
             await Task.WhenAll(TweenMenuTransition(_activeMenu, null), TweenOutro());
 
-            // await TweenMenuTransition(_activeMenu, null);
             SceneManager.Instance.LoadNewGame(difficulty);
         }
     }

@@ -219,7 +219,9 @@ material = SubResource("ShaderMaterial_8nu2x")
 position = Vector2(967.5074, 171.2816)
 skew = 0.20943952
 sprite_frames = SubResource("SpriteFrames_2n8uj")
-animation = &"condense"
+animation = &"menu"
+frame = 10
+frame_progress = 1.0
 offset = Vector2(3.9537964, -17.091919)
 
 [node name="TitleControl" type="Control" parent="." unique_id=1847239928]

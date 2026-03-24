@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Godot;
 
@@ -195,6 +196,40 @@ namespace Utility
             float offset = curve.GetClosestOffset(position);
             float length = curve.GetBakedLength();
             return offset / length;
+        }
+
+        public static Task AwaitTweenFinished(Tween tween, CancellationToken token = default)
+        {
+            // If there's already a cancellation pending on the token, return a cancelled task using the token.
+            if (token.IsCancellationRequested)
+            {
+                return Task.FromCanceled(token);
+            }
+
+            // Create a manual task to manage completion of the tween instead of relying on Godot's SignalAwaiter.
+            // This task is "pending" until you manually complete or cancel it.
+            TaskCompletionSource tcs = new();
+
+            // Connect the tween's Finished signal to the task completion callback.
+            // If the Tween finishes successfully without being cancelled/killed, the TaskCompletionSource's Task status is set to RanToCompletion.
+            tween.Finished += () => tcs.TrySetResult();
+
+            // Set up cancellation if the passed token can be cancelled.
+            if (token.CanBeCanceled)
+            {
+                // Register the cancellation token to a callback.
+                // The callback fires on cancel, and cancels the TCS task as well.
+                CancellationTokenRegistration registered = token.Register(() =>
+                {
+                    // Kill the tween.
+                    tween.Kill();
+                    // Cancel the manual task using the token.
+                    tcs.TrySetCanceled(token);
+                });
+            }
+
+            // Return the completed or cancelled TCS.
+            return tcs.Task;
         }
     }
 }

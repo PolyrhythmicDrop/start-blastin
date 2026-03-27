@@ -85,14 +85,13 @@ namespace UI
 
             _tween.TweenProperty(_label, TEXT_PROP, START_BLASTIN, 0);
             _tween.TweenProperty(_label, "scale", Vector2.One, NUM_FADE_DUR);
-            _tween.Parallel().TweenProperty(_label, "modulate", new Color("#8bfcee"), NUM_FADE_DUR);
+            _tween.Parallel().TweenProperty(_label, "modulate", opaque, NUM_FADE_DUR);
 
             _tween.Chain().TweenInterval(1.5f);
             _tween.TweenProperty(_label, "modulate", trans, 0.5f);
             _tween.TweenInterval(0.5f);
 
             await ToSignal(_tween, Tween.SignalName.Finished);
-            DebugLogger.LogMessage($"Countdown tween finished!", true);
         }
     }
 }

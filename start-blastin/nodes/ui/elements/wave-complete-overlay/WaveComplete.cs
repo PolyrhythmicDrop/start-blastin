@@ -36,7 +36,7 @@ namespace UI
 
         // ~~~~~~~~~~ //
 
-        private const float INTRO_ANIM_DUR = 0.4f;
+        private const float INTRO_ANIM_DUR = 0.25f;
 
         public override void _Ready()
         {
@@ -141,6 +141,11 @@ namespace UI
 
             try
             {
+                if (!_labelsInitialized)
+                {
+                    InitializeLabels();
+                }
+
                 await Task.WhenAll(TweenLineIntroAnimation(token), TweenLabelIntroAnimation(token));
                 await ToSignal(
                     GetTree().CreateTimer(1.5f, false),
@@ -178,7 +183,10 @@ namespace UI
 
         private void OnAnimationEnd()
         {
-            QueueFree();
+            if (!IsQueuedForDeletion())
+            {
+                QueueFree();
+            }
         }
 
         private void AnimateLineEndings()
@@ -294,7 +302,6 @@ namespace UI
                     INTRO_ANIM_DUR
                 );
 
-            // await ToSignal(_labelTween, Tween.SignalName.Finished);
             await UtilityMethods.AwaitTweenFinished(_labelTween, token);
 
             token.ThrowIfCancellationRequested();

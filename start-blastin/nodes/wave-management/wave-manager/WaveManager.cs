@@ -184,6 +184,10 @@ namespace WaveManagement
             AddChild(wc);
             await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
             await wc.PlayWaveCompleteAnimation();
+            if (!wc.IsQueuedForDeletion())
+            {
+                wc.QueueFree();
+            }
         }
 
         /// <summary>

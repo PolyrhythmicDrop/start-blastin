@@ -3,6 +3,7 @@
 [ext_resource type="FontFile" uid="uid://b8tj5tsi08onc" path="res://resources/fonts/dogica/dogicapixelbold.ttf" id="1_k2mcc"]
 [ext_resource type="FontFile" uid="uid://bdn20wteigtfk" path="res://resources/fonts/silkscreen/Silkscreen-Regular.ttf" id="2_k2mcc"]
 [ext_resource type="StyleBox" uid="uid://dr7nqwevwop52" path="res://resources/styleboxes/shop-price-panel.tres" id="2_n0ut1"]
+[ext_resource type="FontFile" uid="uid://813wy6754bc6" path="res://resources/fonts/Bungee-Regular.ttf" id="3_fabdl"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n0ut1"]
 content_margin_left = 16.0
@@ -101,3 +102,12 @@ StatusBarLabel/constants/outline_size = 1
 StatusBarLabel/constants/shadow_offset_x = 2
 StatusBarLabel/constants/shadow_offset_y = 2
 StatusBarLabel/font_sizes/normal_font_size = 28
+WaveStatusLabel/base_type = &"RichTextLabel"
+WaveStatusLabel/colors/default_color = Color(1, 1, 1, 1)
+WaveStatusLabel/colors/font_outline_color = Color(0.2784314, 0.2784314, 0.2784314, 1)
+WaveStatusLabel/colors/font_shadow_color = Color(1, 0.64705884, 0.50980395, 1)
+WaveStatusLabel/constants/outline_size = 16
+WaveStatusLabel/constants/shadow_offset_x = -8
+WaveStatusLabel/constants/shadow_offset_y = 5
+WaveStatusLabel/constants/shadow_outline_size = 16
+WaveStatusLabel/fonts/normal_font = ExtResource("3_fabdl")

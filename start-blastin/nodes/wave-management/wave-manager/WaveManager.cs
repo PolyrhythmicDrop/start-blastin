@@ -188,6 +188,7 @@ namespace WaveManagement
             {
                 wc.QueueFree();
             }
+            await ToSignal(GetTree().CreateTimer(0.25f), SceneTreeTimer.SignalName.Timeout);
         }
 
         /// <summary>

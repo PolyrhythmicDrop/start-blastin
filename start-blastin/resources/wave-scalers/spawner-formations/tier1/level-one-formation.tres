@@ -87,8 +87,8 @@ SpawnPool = Dictionary[Object, int]({
 SubResource("Resource_hijyx"): 3,
 SubResource("Resource_t5tfp"): 2
 })
-InitialProgressRatio = 0.5
-StopSpawnWaveRatio = 0.7
+InitialProgressRatio = 0.1
+StopSpawnWaveRatio = 0.15
 EnableSpawnTimerDelay = true
 MinDelayRatio = 0.4
 MaxDelayRatio = 0.6

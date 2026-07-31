@@ -23,6 +23,8 @@ namespace Enemies.Spawners
 
         private Timer _spawnTimer;
 
+        private Tween _moveTween;
+
         public bool SpawnImmediately = false;
 
         public bool StartMoveOnSpawnTimer = false;
@@ -130,21 +132,26 @@ namespace Enemies.Spawners
         /// </summary>
         private void TweenInitialProgress()
         {
+            if (_moveTween != null && _moveTween.IsValid())
+            {
+                _moveTween.Kill();
+            }
+
             // Set the initial move-to point if we start from a different spot than origin.
             _pathFollow.ProgressRatio = InitialProgressRatio;
             float initialDuration =
                 _pointMoveDuration - (_pointMoveDuration * InitialProgressRatio);
 
-            Tween initTween = _pathFollow.CreateTween();
+            _moveTween = CreateTween();
             // Go to the end of the curve using the new duration.
-            initTween.TweenProperty(_pathFollow, "progress_ratio", 1.0, initialDuration);
+            _moveTween.TweenProperty(_pathFollow, "progress_ratio", 1.0, initialDuration);
             // Go back to the beginning of the curve to reset the loop.
-            initTween
+            _moveTween
                 .TweenProperty(_pathFollow, "progress_ratio", 0, _pointMoveDuration)
                 .SetTrans(Tween.TransitionType.Sine)
                 .SetEase(Tween.EaseType.InOut);
             // Call the normal MoveSpawnPoint() method to begin normal looping.
-            initTween.TweenCallback(Callable.From(StartMoveLoop));
+            _moveTween.TweenCallback(Callable.From(StartMoveLoop));
         }
 
         /// <summary>
@@ -152,16 +159,21 @@ namespace Enemies.Spawners
         /// </summary>
         private void StartMoveLoop()
         {
-            Tween tween = CreateTween();
-            tween
+            if (_moveTween != null && _moveTween.IsValid())
+            {
+                _moveTween.Kill();
+            }
+
+            _moveTween = CreateTween();
+            _moveTween
                 .TweenProperty(_pathFollow, "progress_ratio", 1.0, _pointMoveDuration)
                 .SetTrans(Tween.TransitionType.Sine)
                 .SetEase(Tween.EaseType.OutIn);
-            tween
+            _moveTween
                 .TweenProperty(_pathFollow, "progress_ratio", 0, _pointMoveDuration)
                 .SetTrans(Tween.TransitionType.Sine)
                 .SetEase(Tween.EaseType.InOut);
-            tween.SetLoops();
+            _moveTween.SetLoops();
         }
 
         /// <summary>
@@ -212,7 +224,6 @@ namespace Enemies.Spawners
         )
         {
             float waveMultiplier = Mathf.Log(1 + wave);
-            // _spawnPool = spawnPool;
 
             // Don't apply scaling on the first wave.
             if (wave == 1)
@@ -240,7 +251,12 @@ namespace Enemies.Spawners
             }
 
             // Get spawn data from the pool.
-            base.SpawnEnemy(GetSpawnDataFromPool());
+            SpawnData spawnData = GetSpawnDataFromPool();
+            if (spawnData == null)
+            {
+                return;
+            }
+            base.SpawnEnemy(spawnData);
         }
 
         /// <summary>

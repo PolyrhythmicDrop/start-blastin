@@ -20,7 +20,7 @@ fractal_octaves = 3
 
 [node name="DebugLevel" type="Node" unique_id=1692219403 groups=["level"]]
 script = ExtResource("1_gl8ah")
-LevelOneOverride = "uid://8pspardp62ll"
+LevelOneOverride = "uid://bn15s23ioq83m"
 
 [node name="LevelCamera" type="Camera2D" parent="." unique_id=867151118]
 anchor_mode = 0

@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="EnemyResource" format=3 uid="uid://wedes4wgh6jt"]
+
+[ext_resource type="Script" uid="uid://cf7pn6qd7aa15" path="res://nodes/enemies/EnemyResource.cs" id="1_jlybx"]
+[ext_resource type="Curve2D" uid="uid://mjr63ghlss3t" path="res://resources/curves/spiral-curve.tres" id="1_o4aqo"]
+[ext_resource type="Script" uid="uid://bytfm61mpkr5u" path="res://nodes/weapons/WeaponStats.cs" id="1_ouxpg"]
+[ext_resource type="Script" uid="uid://dt02kxv7k56mm" path="res://architecture/data-structures/SoundSet.cs" id="2_fbb3p"]
+
+[sub_resource type="Resource" id="Resource_b2iec"]
+script = ExtResource("2_fbb3p")
+metadata/_custom_type_script = "uid://dt02kxv7k56mm"
+
+[sub_resource type="Resource" id="Resource_o4aqo"]
+script = ExtResource("1_ouxpg")
+ProjectileType = 1
+FireRate = 0.25
+ProjectileSpeed = 350.0
+BurstFire = true
+BurstTime = 1.0
+BurstCooldown = 2.0
+metadata/_custom_type_script = "uid://bytfm61mpkr5u"
+
+[resource]
+script = ExtResource("1_jlybx")
+ScenePath = "res://nodes/enemies/bumper/bumper.tscn"
+Speed = 200.0
+CrashDamage = 2
+MaxHealth = 5.0
+WeaponStats = SubResource("Resource_o4aqo")
+PathCurve = ExtResource("1_o4aqo")
+FluxReward = 200
+ByteReward = 500
+Sounds = SubResource("Resource_b2iec")
+metadata/_custom_type_script = "uid://cf7pn6qd7aa15"

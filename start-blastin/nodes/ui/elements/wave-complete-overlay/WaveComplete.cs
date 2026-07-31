@@ -41,7 +41,9 @@ namespace UI
         public override void _Ready()
         {
             _waveLabel = GetNode<RichTextLabel>("%WaveLabel");
+            _waveLabel.Hide();
             _completeLabel = GetNode<RichTextLabel>("%CompleteLabel");
+            _completeLabel.Hide();
 
             _topLine = GetNode<Line2D>("%TopLine");
             _topLineEndSprite = GetNode<Sprite2D>("%TopLineEnd");

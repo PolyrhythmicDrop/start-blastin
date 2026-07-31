@@ -1,0 +1,159 @@
+[gd_resource type="Resource" script_class="SpawnerFormationScaler" format=3 uid="uid://bn15s23ioq83m"]
+
+[ext_resource type="Script" uid="uid://b40t8najievo0" path="res://nodes/wave-management/wave-scalers/SpawnerFormationScaler.cs" id="1_5di1c"]
+[ext_resource type="Script" uid="uid://ci68p6xph38co" path="res://nodes/enemies/Spawners/SpawnStep.cs" id="1_5xnh5"]
+[ext_resource type="Script" uid="uid://dyer2c2n8y1v4" path="res://nodes/enemies/Spawners/SpawnData.cs" id="2_jtlyq"]
+[ext_resource type="Script" uid="uid://bneh110nwl6dl" path="res://nodes/enemies/Spawners/StaticSpawnerConfig.cs" id="3_xl0tf"]
+[ext_resource type="Script" uid="uid://85wl5t25bsmt" path="res://nodes/enemies/Spawners/RandomSpawnerConfig.cs" id="4_jtlyq"]
+
+[sub_resource type="Resource" id="Resource_msgaj"]
+script = ExtResource("2_jtlyq")
+EnemyType = "uid://wedes4wgh6jt"
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_nhjpu"]
+script = ExtResource("1_5xnh5")
+SpawnPosition = 0.5
+Data = SubResource("Resource_msgaj")
+metadata/_custom_type_script = "uid://ci68p6xph38co"
+
+[sub_resource type="Resource" id="Resource_5xnh5"]
+script = ExtResource("2_jtlyq")
+EnemyType = "uid://oepg1yh64jk4"
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_jtlyq"]
+script = ExtResource("1_5xnh5")
+SpawnPosition = 0.1
+Data = SubResource("Resource_5xnh5")
+metadata/_custom_type_script = "uid://ci68p6xph38co"
+
+[sub_resource type="Resource" id="Resource_xl0tf"]
+script = ExtResource("2_jtlyq")
+EnemyType = "uid://oepg1yh64jk4"
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_0r1pa"]
+script = ExtResource("1_5xnh5")
+SpawnPosition = 0.9
+Data = SubResource("Resource_xl0tf")
+metadata/_custom_type_script = "uid://ci68p6xph38co"
+
+[sub_resource type="Resource" id="Resource_oi3cc"]
+script = ExtResource("3_xl0tf")
+SpawnSteps = Array[ExtResource("1_5xnh5")]([SubResource("Resource_nhjpu"), SubResource("Resource_jtlyq"), SubResource("Resource_0r1pa")])
+metadata/_custom_type_script = "uid://bneh110nwl6dl"
+
+[sub_resource type="Resource" id="Resource_8vnru"]
+script = ExtResource("2_jtlyq")
+EnemyType = "uid://wedes4wgh6jt"
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_wg6u8"]
+script = ExtResource("1_5xnh5")
+WaveTimeRatio = 0.2
+SpawnPosition = 0.5
+Data = SubResource("Resource_8vnru")
+metadata/_custom_type_script = "uid://ci68p6xph38co"
+
+[sub_resource type="Resource" id="Resource_uqhgb"]
+script = ExtResource("3_xl0tf")
+SpawnSteps = Array[ExtResource("1_5xnh5")]([SubResource("Resource_wg6u8")])
+Location = 3
+metadata/_custom_type_script = "uid://bneh110nwl6dl"
+
+[sub_resource type="Resource" id="Resource_vcala"]
+script = ExtResource("2_jtlyq")
+EnemyType = "uid://b6vj8iih7r25c"
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_od55w"]
+script = ExtResource("2_jtlyq")
+EnemyType = "uid://oepg1yh64jk4"
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_hj512"]
+script = ExtResource("4_jtlyq")
+StartMoveOnSpawnTimer = true
+SpawnPool = Dictionary[Object, int]({
+SubResource("Resource_vcala"): 3,
+SubResource("Resource_od55w"): 5
+})
+StopSpawnWaveRatio = 0.8
+EnableSpawnTimerDelay = true
+MinDelayRatio = 0.4
+MaxDelayRatio = 0.5
+Location = 1
+metadata/_custom_type_script = "uid://85wl5t25bsmt"
+
+[sub_resource type="Resource" id="Resource_cqm45"]
+script = ExtResource("2_jtlyq")
+EnemyType = "uid://b6vj8iih7r25c"
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_76edg"]
+script = ExtResource("2_jtlyq")
+EnemyType = "uid://oepg1yh64jk4"
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_fi2rt"]
+script = ExtResource("4_jtlyq")
+StartMoveOnSpawnTimer = true
+SpawnPool = Dictionary[Object, int]({
+SubResource("Resource_cqm45"): 3,
+SubResource("Resource_76edg"): 5
+})
+StopSpawnWaveRatio = 0.8
+EnableSpawnTimerDelay = true
+MinDelayRatio = 0.4
+MaxDelayRatio = 0.5
+Location = 2
+metadata/_custom_type_script = "uid://85wl5t25bsmt"
+
+[sub_resource type="Resource" id="Resource_oh6oh"]
+script = ExtResource("2_jtlyq")
+EnemyType = "uid://wedes4wgh6jt"
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_kjvw7"]
+script = ExtResource("1_5xnh5")
+WaveTimeRatio = 0.8
+SpawnPosition = 0.2
+Data = SubResource("Resource_oh6oh")
+metadata/_custom_type_script = "uid://ci68p6xph38co"
+
+[sub_resource type="Resource" id="Resource_2jhuj"]
+script = ExtResource("2_jtlyq")
+EnemyType = "uid://npd2vaquluup"
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_jwwrh"]
+script = ExtResource("1_5xnh5")
+WaveTimeRatio = 0.85
+SpawnPosition = 0.5
+Data = SubResource("Resource_2jhuj")
+metadata/_custom_type_script = "uid://ci68p6xph38co"
+
+[sub_resource type="Resource" id="Resource_2t6qo"]
+script = ExtResource("2_jtlyq")
+EnemyType = "uid://dvifbtlwxf7nn"
+metadata/_custom_type_script = "uid://dyer2c2n8y1v4"
+
+[sub_resource type="Resource" id="Resource_ot8yb"]
+script = ExtResource("1_5xnh5")
+WaveTimeRatio = 0.85
+SpawnPosition = 0.5
+Data = SubResource("Resource_2t6qo")
+metadata/_custom_type_script = "uid://ci68p6xph38co"
+
+[sub_resource type="Resource" id="Resource_gogaa"]
+script = ExtResource("3_xl0tf")
+SpawnSteps = Array[ExtResource("1_5xnh5")]([SubResource("Resource_kjvw7"), SubResource("Resource_jwwrh"), SubResource("Resource_ot8yb")])
+metadata/_custom_type_script = "uid://bneh110nwl6dl"
+
+[resource]
+script = ExtResource("1_5di1c")
+FormationGD = Array[Object]([SubResource("Resource_oi3cc"), SubResource("Resource_uqhgb"), SubResource("Resource_hj512"), SubResource("Resource_fi2rt"), SubResource("Resource_gogaa")])
+MinWave = 2
+MaxWave = 10
+metadata/_custom_type_script = "uid://b40t8najievo0"
